@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 
-export default function SignInPage() {
+function SignInForm() {
   const router = useRouter();
   const search = useSearchParams();
   const callbackUrl = search.get("callbackUrl") || "/dashboard";
@@ -31,7 +31,6 @@ export default function SignInPage() {
 
   return (
     <>
-      <Navbar />
       <main className="mx-auto max-w-md px-4 py-16">
         <div className="card p-8">
           <h1 className="text-2xl font-bold text-slate-900">Sign in</h1>
@@ -59,6 +58,21 @@ export default function SignInPage() {
           </p>
         </div>
       </main>
+    </>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <>
+      <Navbar />
+      <Suspense fallback={
+        <main className="mx-auto max-w-md px-4 py-16">
+          <div className="card p-8 text-center text-slate-600">Se încarcă…</div>
+        </main>
+      }>
+        <SignInForm />
+      </Suspense>
     </>
   );
 }
