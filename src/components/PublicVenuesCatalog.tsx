@@ -163,7 +163,7 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
             </div>
             <div>
               <h2 className="text-lg sm:text-xl font-bold font-headline text-white uppercase tracking-tight">
-                Filtrare pe Harta României &amp; Județe
+                Filtrare pe Nationale &amp; Județe
               </h2>
               <p className="text-xs text-slate-400 font-label">
                 Apasă pe un județ pentru a vedea arenele, stadioanele și sălile polivalente disponibile
@@ -175,11 +175,10 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
             <button
               type="button"
               onClick={() => setSelectedCounty("all")}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold font-label transition ${
-                selectedCounty === "all"
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold font-label transition ${selectedCounty === "all"
                   ? "bg-lime-400 text-slate-950 font-black shadow-md"
                   : "bg-slate-800 text-slate-300 hover:text-white"
-              }`}
+                }`}
             >
               🇷🇴 Toate Județele ({initialVenues.length})
             </button>
@@ -199,17 +198,15 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                 key={c.id}
                 type="button"
                 onClick={() => setSelectedCounty(c.id)}
-                className={`px-3.5 py-2 rounded-2xl text-xs font-label font-bold transition flex items-center gap-2 border ${
-                  selectedCounty === c.id
+                className={`px-3.5 py-2 rounded-2xl text-xs font-label font-bold transition flex items-center gap-2 border ${selectedCounty === c.id
                     ? "bg-lime-400 text-slate-950 border-lime-400 font-black shadow-lg scale-105"
                     : "bg-slate-950/80 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
-                }`}
+                  }`}
               >
                 <span>{c.name.split(" (")[0]}</span>
                 <span
-                  className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
-                    selectedCounty === c.id ? "bg-slate-950 text-lime-400" : "bg-slate-800 text-slate-400"
-                  }`}
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-black ${selectedCounty === c.id ? "bg-slate-950 text-lime-400" : "bg-slate-800 text-slate-400"
+                    }`}
                 >
                   {count}
                 </span>
@@ -288,9 +285,8 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                 type="button"
                 onClick={() => setViewMode("grid")}
                 title="Vizualizare Grid Carduri"
-                className={`p-2 rounded-xl text-xs transition ${
-                  viewMode === "grid" ? "bg-lime-400 text-slate-950 font-black" : "text-slate-400 hover:text-white"
-                }`}
+                className={`p-2 rounded-xl text-xs transition ${viewMode === "grid" ? "bg-lime-400 text-slate-950 font-black" : "text-slate-400 hover:text-white"
+                  }`}
               >
                 <span className="material-symbols-outlined text-base">grid_view</span>
               </button>
@@ -298,9 +294,8 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                 type="button"
                 onClick={() => setViewMode("table")}
                 title="Vizualizare Tabel Comparativ"
-                className={`p-2 rounded-xl text-xs transition ${
-                  viewMode === "table" ? "bg-lime-400 text-slate-950 font-black" : "text-slate-400 hover:text-white"
-                }`}
+                className={`p-2 rounded-xl text-xs transition ${viewMode === "table" ? "bg-lime-400 text-slate-950 font-black" : "text-slate-400 hover:text-white"
+                  }`}
               >
                 <span className="material-symbols-outlined text-base">table_rows</span>
               </button>
@@ -531,19 +526,18 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                       </td>
                       <td className="p-4 font-label">
                         <span
-                          className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${
-                            v.status === "constructie"
+                          className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${v.status === "constructie"
                               ? "bg-amber-400/20 text-amber-400 border border-amber-400/30"
                               : v.status === "proiect"
-                              ? "bg-blue-400/20 text-blue-400 border border-blue-400/30"
-                              : "bg-lime-400/20 text-lime-300 border border-lime-400/30"
-                          }`}
+                                ? "bg-blue-400/20 text-blue-400 border border-blue-400/30"
+                                : "bg-lime-400/20 text-lime-300 border border-lime-400/30"
+                            }`}
                         >
                           {v.status === "constructie"
                             ? "În Construcție"
                             : v.status === "proiect"
-                            ? "Proiect"
-                            : "Inaugurată / Activă"}
+                              ? "Proiect"
+                              : "Inaugurată / Activă"}
                         </span>
                       </td>
                       <td className="p-4 font-label">{v.surface}</td>

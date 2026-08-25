@@ -34,7 +34,7 @@ export default async function PublicRefereesPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col font-body text-on-surface">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200">
       {/* Top Navbar */}
       <PublicHeader currentTab="referees" />
 
@@ -44,7 +44,7 @@ export default async function PublicRefereesPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200/60 dark:border-slate-800/60 py-8 text-center text-xs font-label text-slate-400">
+      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-950">
         © {new Date().getFullYear()} Ligue Pro România • Corp Oficial de Arbitraj. Toate drepturile rezervate.
       </footer>
     </div>

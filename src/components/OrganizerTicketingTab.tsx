@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import QRCode from "qrcode";
 
@@ -56,11 +56,27 @@ export function OrganizerTicketingTab({
 
   const activeMatch = matches.find((m) => m.id === selectedMatchId) || matches[0];
 
+  const loadTiers = useCallback(async () => {
+    if (!selectedMatchId) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/tickets/tiers?matchId=${selectedMatchId}`);
+      const data = await res.json();
+      if (data.tiers) {
+        setTiers(data.tiers);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedMatchId]);
+
   useEffect(() => {
     if (selectedMatchId) {
       loadTiers();
     }
-  }, [selectedMatchId]);
+  }, [selectedMatchId, loadTiers]);
 
   useEffect(() => {
     if (activeMatch) {
@@ -80,22 +96,6 @@ export function OrganizerTicketingTab({
       }).then(setScannerQrUrl);
     }
   }, [activeMatch]);
-
-  async function loadTiers() {
-    if (!selectedMatchId) return;
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/tickets/tiers?matchId=${selectedMatchId}`);
-      const data = await res.json();
-      if (data.tiers) {
-        setTiers(data.tiers);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   function showToast(msg: string) {
     setToast(msg);

@@ -270,30 +270,30 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Card: Venue & Access */}
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
-            <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl text-slate-900 dark:text-white">
+            <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
               <span className="w-3 h-7 bg-lime-400 rounded-full"></span>
-              <h3 className="text-lg font-bold font-headline uppercase text-white">
+              <h3 className="text-lg font-bold font-headline uppercase text-slate-900 dark:text-white">
                 🏟️ Locație &amp; Acces Stadion
               </h3>
             </div>
 
-            <p className="text-xs text-slate-300 font-body leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 font-body leading-relaxed">
               Meciul se dispută pe <strong>{match.venue || "Arena Oficială"}</strong>. Accesul suporterilor este permis cu 90 de minute înainte de fluierul de start.
             </p>
 
-            <div className="space-y-2 text-xs font-label text-slate-400">
-              <div className="flex justify-between py-1.5 border-b border-slate-800/60">
+            <div className="space-y-2 text-xs font-label text-slate-500 dark:text-slate-400">
+              <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/60">
                 <span>Parcare suporteri:</span>
-                <span className="text-lime-400 font-bold">Asigurată în incinta arenei</span>
+                <span className="text-lime-600 dark:text-lime-400 font-bold">Asigurată în incinta arenei</span>
               </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-800/60">
+              <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/60">
                 <span>Porți de acces:</span>
-                <span className="text-white font-bold">Poarta A (Nord) &amp; Poarta B (Sud)</span>
+                <span className="text-slate-900 dark:text-white font-bold">Poarta A (Nord) &amp; Poarta B (Sud)</span>
               </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-800/60">
+              <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/60">
                 <span>Transmisie Live:</span>
-                <span className="text-lime-400 font-bold">Ligue Pro TV HD Stream</span>
+                <span className="text-lime-600 dark:text-lime-400 font-bold">Ligue Pro TV HD Stream</span>
               </div>
             </div>
 
@@ -301,7 +301,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
               href={`https://maps.google.com/?q=${encodeURIComponent(match.venue || "Arena Nationala Bucuresti")}`}
               target="_blank"
               rel="noreferrer"
-              className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-lime-400 font-bold font-label text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 transition border border-slate-700"
+              className="w-full py-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-lime-400 font-bold font-label text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 transition border border-slate-200 dark:border-slate-700"
             >
               <span className="material-symbols-outlined text-sm">navigation</span>
               Deschide Navigație GPS Google Maps ↗
@@ -309,22 +309,22 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
           </div>
 
           {/* Card: Match Details & Official Sheet */}
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
-            <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
-              <span className="w-3 h-7 bg-blue-400 rounded-full"></span>
-              <h3 className="text-lg font-bold font-headline uppercase text-white">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl text-slate-900 dark:text-white">
+            <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+              <span className="w-3 h-7 bg-blue-500 rounded-full"></span>
+              <h3 className="text-lg font-bold font-headline uppercase text-slate-900 dark:text-white">
                 📄 Documente &amp; Scanare Porți
               </h3>
             </div>
 
-            <p className="text-xs text-slate-300 font-body leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 font-body leading-relaxed">
               Descărcați raportul oficial de arbitraj, foaia de joc cu primul 11 sau activați scannerul mobil de la porți.
             </p>
 
             <div className="space-y-3 pt-2">
               <Link
                 href={`/matches/${match.id}/report`}
-                className="w-full py-3.5 bg-slate-800 hover:bg-slate-700 text-white font-bold font-headline text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 transition border border-slate-700"
+                className="w-full py-3.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold font-headline text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 transition border border-slate-200 dark:border-slate-700"
               >
                 <span className="material-symbols-outlined text-sm">description</span>
                 Descarcă Fișă Joc Oficială PDF
@@ -343,21 +343,21 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
 
       {/* Multi-Gateway Ticket Purchase Modal */}
       {showTicketModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border-2 border-lime-400/60 rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-6 shadow-2xl text-white animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-start pb-3 border-b border-slate-800">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 border-2 border-lime-400 rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-6 shadow-2xl text-slate-900 dark:text-white animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-start pb-3 border-b border-slate-200 dark:border-slate-800">
               <div>
-                <span className="text-[10px] font-black uppercase font-label text-lime-400">
+                <span className="text-[10px] font-black uppercase font-label text-lime-600 dark:text-lime-400">
                   ACHIZIȚIE BILETE ONLINE • EMITERE INSTANTANEE
                 </span>
-                <h3 className="text-lg font-black font-headline uppercase text-white mt-0.5">
+                <h3 className="text-lg font-black font-headline uppercase text-slate-900 dark:text-white mt-0.5">
                   {match.homeTeam.name} vs {match.awayTeam.name}
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setShowTicketModal(false)}
-                className="w-7 h-7 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-xs"
+                className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-white flex items-center justify-center font-bold text-xs"
               >
                 ✕
               </button>
@@ -367,13 +367,13 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
               <div className="p-6 rounded-3xl bg-lime-400/10 border-2 border-lime-400 text-center space-y-4">
                 <span className="text-5xl block animate-bounce">🎟️</span>
                 <div>
-                  <span className="text-[10px] uppercase font-mono font-bold text-lime-400">
+                  <span className="text-[10px] uppercase font-mono font-bold text-lime-600 dark:text-lime-400">
                     PLATĂ CONFIRMATĂ CU SUCCES
                   </span>
-                  <h4 className="font-headline font-black text-xl text-white uppercase mt-1">
+                  <h4 className="font-headline font-black text-xl text-slate-900 dark:text-white uppercase mt-1">
                     Biletul tău este Gata!
                   </h4>
-                  <p className="text-xs font-mono font-bold text-lime-300 mt-1">
+                  <p className="text-xs font-mono font-bold text-lime-600 dark:text-lime-300 mt-1">
                     Cod Bilet: #{purchasedTicket.ticketCode}
                   </p>
                 </div>

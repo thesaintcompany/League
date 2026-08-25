@@ -181,11 +181,11 @@ export default async function PublicChampionshipPage({
   const upcomingMatches = rawMatches.filter((m) => m.status !== "finished");
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col font-body text-white">
-      {/* 1. Global Public Top Navbar */}
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex flex-col font-body transition-colors duration-200">
+      {/* Top Navbar */}
       <PublicHeader currentTab="campionat" />
 
-      {/* 2. Client-Rendered Kinetic Precision Pro Hub */}
+      {/* Main Interactive Client Hub */}
       <ChampionshipPublicClientView
         championship={championship ? {
           id: championship.id,
@@ -254,7 +254,7 @@ export default async function PublicChampionshipPage({
       />
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 py-8 text-center text-xs font-label text-slate-500 mt-auto bg-slate-950">
+      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 mt-auto bg-white dark:bg-slate-950 transition-colors duration-200">
         © {new Date().getFullYear()} Ligue Pro România • Format Kinetic High-Performance Championship. Toate drepturile rezervate.
       </footer>
     </div>

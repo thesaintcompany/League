@@ -21,7 +21,7 @@ interface PlayerItem {
   };
 }
 
-// Generate realistic FIFA Ultimate Team attributes based on position & rating
+// Generate realistic   Ultimate Team attributes based on position & rating
 function getFUTAttributes(position: string | null | undefined, rating: number = 8.5, goals: number = 10) {
   const base = Math.min(96, Math.max(75, Math.round(rating * 10)));
   const isAttacker = !position || position.includes("Atacant") || position.includes("Extremă") || position.includes("Ofensiv");
@@ -64,7 +64,7 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
 
   return (
     <div className="space-y-10 font-body">
-      {/* FIFA-Inspired Hero Header with B&W Legendary Player Shadow Background */}
+      {/*  -Inspired Hero Header with B&W Legendary Player Shadow Background */}
       <section className="relative rounded-3xl overflow-hidden bg-slate-950 text-white p-8 sm:p-12 border border-amber-400/30 shadow-2xl">
         {/* Black and White Legendary Player Shadow Background with high transparency */}
         <div
@@ -80,7 +80,7 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
         <div className="relative z-10 max-w-4xl space-y-4">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-lg flex items-center gap-1.5">
-              <span>⭐</span> EA FC / FIFA ULTIMATE EDITION
+              <span>⭐</span> EA FC /   ULTIMATE EDITION
             </span>
             <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-[10px] uppercase font-label">
               Top 10 Golgheteri • Liga Pro
@@ -125,11 +125,10 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                   key={pos.id}
                   type="button"
                   onClick={() => setSelectedPosition(pos.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${
-                    selectedPosition === pos.id
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${selectedPosition === pos.id
                       ? "bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black shadow-md"
                       : "text-slate-300 hover:text-white"
-                  }`}
+                    }`}
                 >
                   {pos.label}
                 </button>
@@ -139,7 +138,7 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
         </div>
       </section>
 
-      {/* FIFA Ultimate Team Cards Grid */}
+      {/*   Ultimate Team Cards Grid */}
       {filtered.length === 0 ? (
         <div className="card p-12 text-center text-slate-500 bg-surface-container-lowest rounded-3xl border border-slate-200/60 dark:border-slate-800">
           <span className="material-symbols-outlined text-4xl text-slate-400 mb-2 block">
@@ -164,17 +163,16 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                 href={`/players/${player.id}`}
                 className="group relative rounded-3xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col justify-between"
               >
-                {/* FIFA Ultimate Card Frame */}
+                {/*   Ultimate Card Frame */}
                 <div
-                  className={`relative rounded-3xl overflow-hidden p-1 border shadow-xl flex flex-col justify-between h-full ${
-                    idx === 0
+                  className={`relative rounded-3xl overflow-hidden p-1 border shadow-xl flex flex-col justify-between h-full ${idx === 0
                       ? "bg-gradient-to-b from-amber-300 via-amber-600 to-slate-950 border-amber-300/80 shadow-amber-500/20"
                       : idx === 1
-                      ? "bg-gradient-to-b from-slate-200 via-slate-500 to-slate-950 border-slate-300/80 shadow-slate-400/20"
-                      : idx === 2
-                      ? "bg-gradient-to-b from-amber-600 via-amber-900 to-slate-950 border-amber-600/80 shadow-amber-700/20"
-                      : "bg-gradient-to-b from-slate-700 via-slate-900 to-slate-950 border-slate-700/80 shadow-slate-900/40"
-                  }`}
+                        ? "bg-gradient-to-b from-slate-200 via-slate-500 to-slate-950 border-slate-300/80 shadow-slate-400/20"
+                        : idx === 2
+                          ? "bg-gradient-to-b from-amber-600 via-amber-900 to-slate-950 border-amber-600/80 shadow-amber-700/20"
+                          : "bg-gradient-to-b from-slate-700 via-slate-900 to-slate-950 border-slate-700/80 shadow-slate-900/40"
+                    }`}
                 >
                   <div className="bg-slate-950/95 rounded-[22px] p-5 flex flex-col justify-between h-full relative overflow-hidden">
                     {/* Carbon Fiber / FUT Texture Overlay */}
@@ -185,11 +183,10 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                       {/* Left: Overall Rating & Position */}
                       <div className="flex flex-col items-center">
                         <span
-                          className={`text-3xl sm:text-4xl font-black font-headline tracking-tighter leading-none ${
-                            idx === 0
+                          className={`text-3xl sm:text-4xl font-black font-headline tracking-tighter leading-none ${idx === 0
                               ? "text-amber-400 drop-shadow-[0_2px_10px_rgba(251,191,36,0.5)]"
                               : "text-white"
-                          }`}
+                            }`}
                         >
                           {fut.futRating}
                         </span>
@@ -211,15 +208,14 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                       {/* Right: Golden Boot Rank Badge */}
                       <div className="flex flex-col items-end gap-1">
                         <span
-                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase font-label shadow-md ${
-                            idx === 0
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase font-label shadow-md ${idx === 0
                               ? "bg-amber-400 text-slate-950 font-extrabold animate-pulse"
                               : idx === 1
-                              ? "bg-slate-200 text-slate-950"
-                              : idx === 2
-                              ? "bg-amber-700 text-white"
-                              : "bg-slate-800 text-slate-300"
-                          }`}
+                                ? "bg-slate-200 text-slate-950"
+                                : idx === 2
+                                  ? "bg-amber-700 text-white"
+                                  : "bg-slate-800 text-slate-300"
+                            }`}
                         >
                           {idx === 0 ? "👑 Top 1" : `#${idx + 1} Sezon`}
                         </span>
@@ -298,7 +294,7 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                     {/* Action CTA */}
                     <div className="mt-3 pt-2 text-center">
                       <span className="text-[10px] font-label font-bold uppercase tracking-wider text-amber-400 group-hover:underline flex items-center justify-center gap-1">
-                        Vezi Fișa Oficială FIFA ↗
+                        Vezi Fișa Oficială   ↗
                       </span>
                     </div>
                   </div>

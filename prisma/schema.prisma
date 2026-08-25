@@ -30,7 +30,7 @@ model User {
   instagramUrl   String? // retele sociale
   twitterUrl     String?
   facebookUrl    String?
-  refereeBadge   String? // for referees (FIFA, National, Regional)
+  refereeBadge   String? // for referees ( , National, Regional)
   experienceYears Int?   // for referees
 
   createdAt     DateTime @default(now())

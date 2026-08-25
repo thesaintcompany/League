@@ -84,7 +84,7 @@ export default async function PublicPlayerDetailPage({
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-                ⭐ FIFA ULTIMATE ATLET
+                ⭐   ULTIMATE ATLET
               </span>
               <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-xs font-label">
                 #{player.number || 10} • {player.position || "Atacant Central"}
@@ -125,11 +125,11 @@ export default async function PublicPlayerDetailPage({
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column: Giant FIFA FUT Gold Card (5 cols) */}
+          {/* Left Column: Giant   FUT Gold Card (5 cols) */}
           <div className="lg:col-span-5 space-y-6">
             <div className="relative rounded-3xl overflow-hidden p-1 bg-gradient-to-b from-amber-300 via-amber-600 to-slate-950 border border-amber-300/80 shadow-2xl shadow-amber-500/20">
               <div className="bg-slate-950/95 rounded-[22px] p-6 relative overflow-hidden space-y-6">
-                {/* Header: FIFA Rating, Position, Nation, Club */}
+                {/* Header:   Rating, Position, Nation, Club */}
                 <div className="flex justify-between items-start">
                   <div className="flex flex-col items-center">
                     <span className="text-5xl font-black font-headline text-amber-400 drop-shadow-[0_2px_12px_rgba(251,191,36,0.6)] leading-none">
@@ -242,7 +242,7 @@ export default async function PublicPlayerDetailPage({
             </div>
           </div>
 
-          {/* Right Column: FIFA Detailed Attributes & Match Statistics (7 cols) */}
+          {/* Right Column:   Detailed Attributes & Match Statistics (7 cols) */}
           <div className="lg:col-span-7 space-y-8">
             {/* Bento Season Telemetry */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -275,7 +275,7 @@ export default async function PublicPlayerDetailPage({
 
               <div className="card p-5 bg-slate-900/80 border-slate-800 rounded-2xl text-center">
                 <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
-                  Rating FIFA
+                  Rating
                 </span>
                 <span className="text-3xl font-black data-font text-amber-400 mt-1 block">
                   {fut.futRating} ⭐
@@ -294,7 +294,7 @@ export default async function PublicPlayerDetailPage({
                     Atribute Tehnice &amp; Parametri de Performanță
                   </h3>
                   <p className="text-xs text-slate-400 font-label">
-                    Statistici calibrate conform standardelor FIFA &amp; meciurilor oficiale
+                    Statistici calibrate conform standardelor   &amp; meciurilor oficiale
                   </p>
                 </div>
               </div>
@@ -432,7 +432,7 @@ export default async function PublicPlayerDetailPage({
 
       {/* Footer */}
       <footer className="border-t border-slate-800 py-8 text-center text-xs font-label text-slate-500">
-        © {new Date().getFullYear()} Ligue Pro România • FIFA Edition. Toate drepturile rezervate.
+        © {new Date().getFullYear()} Ligue Pro România •   Edition. Toate drepturile rezervate.
       </footer>
     </div>
   );

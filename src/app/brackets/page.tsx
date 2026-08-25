@@ -165,7 +165,7 @@ export default async function PublicBracketsPage({
               href="/harta-romaniei"
               className="px-4 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg"
             >
-              🗺️ Harta României
+              🗺️ Nationale
             </Link>
           </div>
         </div>
@@ -188,11 +188,10 @@ export default async function PublicBracketsPage({
                 <Link
                   key={c.id}
                   href={`/harta-campionat?id=${c.id}`}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-label font-bold transition border ${
-                    championship?.id === c.id
+                  className={`px-3 py-1.5 rounded-xl text-xs font-label font-bold transition border ${championship?.id === c.id
                       ? "bg-lime-400 text-slate-950 border-lime-400 font-black shadow-md"
                       : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
-                  }`}
+                    }`}
                 >
                   {c.name} {c.county ? `(${c.county})` : ""}
                 </Link>

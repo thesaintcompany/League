@@ -22,28 +22,28 @@ export function RefereeProfileForm({ initialUser }: RefereeProfileProps) {
   const [phone, setPhone] = useState(initialUser.phone || "+40 722 999 888");
   const [bio, setBio] = useState(
     initialUser.bio ||
-      "Arbitru licențiat FIFA cu peste 10 ani de experiență în meciuri naționale și internaționale de prim eșalon."
+    "Arbitru licențiat   cu peste 10 ani de experiență în meciuri naționale și internaționale de prim eșalon."
   );
   const [refereeBadge, setRefereeBadge] = useState(
-    initialUser.refereeBadge || "FIFA International"
+    initialUser.refereeBadge || "  International"
   );
   const [experienceYears, setExperienceYears] = useState(
     initialUser.experienceYears || 12
   );
   const [image, setImage] = useState(
     initialUser.image ||
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80"
+    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80"
   );
 
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
   const BADGE_OPTIONS = [
-    "Arbitru FIFA",
+    "Arbitru  ",
     "Arbitru UEFA Elite",
     "Arbitru Liga 1 (FRF)",
     "Arbitru Liga 2",
-    "Arbitru Asistent FIFA",
+    "Arbitru Asistent  ",
     "Arbitru VAR Certificat",
   ];
 
@@ -138,11 +138,10 @@ export function RefereeProfileForm({ initialUser }: RefereeProfileProps) {
       <div className="lg:col-span-8 space-y-8">
         {message && (
           <div
-            className={`p-4 rounded-2xl text-xs font-bold font-label flex items-center gap-2 shadow-sm ${
-              message.type === "success"
+            className={`p-4 rounded-2xl text-xs font-bold font-label flex items-center gap-2 shadow-sm ${message.type === "success"
                 ? "bg-lime-100 text-lime-900 border border-lime-300"
                 : "bg-red-50 text-red-700 border border-red-200"
-            }`}
+              }`}
           >
             <span className="material-symbols-outlined text-base">
               {message.type === "success" ? "check_circle" : "error"}

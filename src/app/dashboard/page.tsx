@@ -47,7 +47,7 @@ export default async function DashboardPage() {
   const totalMatches = championships.reduce((sum, c) => sum + c._count.matches, 0);
 
   return (
-    <div className="min-h-screen bg-surface flex">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
       {/* Sidebar Navigation */}
       <Sidebar />
 
@@ -59,7 +59,7 @@ export default async function DashboardPage() {
           action={
             <Link
               href="/dashboard/new"
-              className="btn btn-primary text-xs uppercase tracking-wider font-bold py-2.5 px-4 rounded-xl shadow-sm bg-primary text-white hover:bg-slate-800 flex items-center gap-1.5"
+              className="btn btn-primary text-xs uppercase tracking-wider font-bold py-2.5 px-4 rounded-xl shadow-sm bg-slate-950 dark:bg-lime-400 text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-lime-300 flex items-center gap-1.5"
             >
               <span className="material-symbols-outlined text-[18px]">add_circle</span>
               Campionat Nou
@@ -71,59 +71,59 @@ export default async function DashboardPage() {
           {/* Bento Stats Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {/* Metric 1 */}
-            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
+            <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
               <div>
-                <p className="text-xs font-label uppercase tracking-wider text-slate-500 font-semibold">
+                <p className="text-xs font-label uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold">
                   Campionate Active
                 </p>
-                <p className="text-3xl font-black text-blue-950 dark:text-white data-font mt-1">
+                <p className="text-3xl font-black text-slate-900 dark:text-white data-font mt-1">
                   {championships.length}
                 </p>
               </div>
-              <div className="w-12 h-12 rounded-2xl bg-lime-100 text-lime-800 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-2xl bg-lime-100 dark:bg-lime-950/50 text-lime-800 dark:text-lime-400 flex items-center justify-center">
                 <span className="material-symbols-outlined text-2xl">trophy</span>
               </div>
             </div>
 
             {/* Metric 2 */}
-            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
+            <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
               <div>
-                <p className="text-xs font-label uppercase tracking-wider text-slate-500 font-semibold">
+                <p className="text-xs font-label uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold">
                   Echipe Înscrise
                 </p>
-                <p className="text-3xl font-black text-blue-950 dark:text-white data-font mt-1">
+                <p className="text-3xl font-black text-slate-900 dark:text-white data-font mt-1">
                   {totalTeams}
                 </p>
               </div>
-              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-800 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-950/50 text-blue-800 dark:text-blue-400 flex items-center justify-center">
                 <span className="material-symbols-outlined text-2xl">groups</span>
               </div>
             </div>
 
             {/* Metric 3 */}
-            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
+            <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
               <div>
-                <p className="text-xs font-label uppercase tracking-wider text-slate-500 font-semibold">
+                <p className="text-xs font-label uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold">
                   Meciuri Programate
                 </p>
-                <p className="text-3xl font-black text-blue-950 dark:text-white data-font mt-1">
+                <p className="text-3xl font-black text-slate-900 dark:text-white data-font mt-1">
                   {totalMatches}
                 </p>
               </div>
-              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/50 text-amber-800 dark:text-amber-400 flex items-center justify-center">
                 <span className="material-symbols-outlined text-2xl">sports_soccer</span>
               </div>
             </div>
 
             {/* Metric 4 */}
-            <div className="card p-6 bg-primary text-white border-none flex items-center justify-between shadow-lg">
+            <div className="card p-6 bg-slate-950 text-white border border-slate-800 flex items-center justify-between shadow-lg">
               <div>
                 <p className="text-xs font-label uppercase tracking-wider text-lime-400 font-bold">
                   Status Sistem
                 </p>
                 <p className="text-2xl font-black data-font mt-1 flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
-                  OPERATIONAL
+                  OPERAȚIONAL
                 </p>
               </div>
               <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
@@ -137,27 +137,27 @@ export default async function DashboardPage() {
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2.5">
                 <span className="w-2 h-6 bg-lime-500 rounded-full"></span>
-                <h2 className="text-xl font-bold font-headline text-blue-950 dark:text-white">
+                <h2 className="text-xl font-bold font-headline text-slate-900 dark:text-white">
                   Competițiile Tale
                 </h2>
               </div>
             </div>
 
             {championships.length === 0 ? (
-              <div className="card p-12 text-center bg-surface-container-lowest border-dashed border-2 border-slate-300 dark:border-slate-700">
+              <div className="card p-12 text-center bg-white dark:bg-slate-900 border-dashed border-2 border-slate-300 dark:border-slate-700 rounded-3xl">
                 <div className="w-16 h-16 rounded-3xl bg-lime-100 dark:bg-lime-950/40 text-lime-700 mx-auto flex items-center justify-center mb-4">
                   <span className="material-symbols-outlined text-3xl">emoji_events</span>
                 </div>
-                <h3 className="text-lg font-bold font-headline text-blue-950 dark:text-white">
+                <h3 className="text-lg font-bold font-headline text-slate-900 dark:text-white">
                   Nu ai creat niciun campionat încă
                 </h3>
-                <p className="text-xs text-slate-500 max-w-md mx-auto mt-2 font-body">
+                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto mt-2 font-body">
                   Pornește propria ligă sau turneu eliminatoriu în câteva secunde. Adaugă echipe,
                   programează etapele și transmite rezultate în timp real.
                 </p>
                 <Link
                   href="/dashboard/new"
-                  className="btn btn-primary mt-6 inline-flex items-center gap-2 text-xs uppercase tracking-wider font-bold py-3 px-6 rounded-xl"
+                  className="btn btn-primary mt-6 inline-flex items-center gap-2 text-xs uppercase tracking-wider font-bold py-3 px-6 rounded-xl bg-slate-950 dark:bg-lime-400 text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-lime-300 shadow-md"
                 >
                   <span className="material-symbols-outlined text-[18px]">add_circle</span>
                   Creează Primul Campionat
@@ -168,7 +168,7 @@ export default async function DashboardPage() {
                 {championships.map((champ) => (
                   <div
                     key={champ.id}
-                    className="card p-6 bg-surface-container-lowest hover:shadow-lg transition-all duration-200 border-slate-200/60 dark:border-slate-800 flex flex-col justify-between group"
+                    className="card p-6 bg-white dark:bg-slate-900 hover:shadow-xl transition-all duration-200 border border-slate-200 dark:border-slate-800 rounded-3xl flex flex-col justify-between group"
                   >
                     <div>
                       <div className="flex justify-between items-start mb-3">
@@ -182,12 +182,12 @@ export default async function DashboardPage() {
                         )}
                       </div>
 
-                      <h3 className="text-lg font-bold font-headline text-blue-950 dark:text-white group-hover:text-lime-600 dark:group-hover:text-lime-400 transition-colors line-clamp-1">
+                      <h3 className="text-lg font-bold font-headline text-slate-900 dark:text-white group-hover:text-lime-600 dark:group-hover:text-lime-400 transition-colors line-clamp-1">
                         {champ.name}
                       </h3>
 
                       {champ.description && (
-                        <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
                           {champ.description}
                         </p>
                       )}
@@ -207,13 +207,13 @@ export default async function DashboardPage() {
                     <div className="mt-6 flex items-center gap-2">
                       <Link
                         href={`/dashboard/championships/${champ.id}`}
-                        className="btn btn-primary flex-1 text-xs uppercase tracking-wider font-bold py-2.5 rounded-xl bg-primary text-white hover:bg-slate-800 text-center"
+                        className="btn btn-primary flex-1 text-xs uppercase tracking-wider font-bold py-2.5 rounded-xl bg-slate-950 dark:bg-lime-400 text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-lime-300 text-center shadow-sm"
                       >
                         Administrează ⚙️
                       </Link>
                       <Link
                         href="/"
-                        className="btn btn-secondary px-3 py-2.5 rounded-xl text-xs"
+                        className="btn btn-secondary px-3 py-2.5 rounded-xl text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700"
                         title="Vizualizare Publică"
                       >
                         <span className="material-symbols-outlined text-[16px]">visibility</span>

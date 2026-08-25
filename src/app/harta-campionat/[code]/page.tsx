@@ -81,12 +81,12 @@ export default async function StandaloneChampionshipMapPage({
   const shareCode = championship?.shareCode || (championship?.id ? `LP-${championship.id.slice(-6).toUpperCase()}` : "LP-OFFICIAL");
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col font-body text-white">
-      {/* Top Bar Header */}
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200">
+      {/* Top Navbar */}
       <PublicHeader currentTab="brackets" />
 
-      {/* Hero Banner with Stadium Glow & Unique Share Code */}
-      <section className="relative overflow-hidden bg-slate-900 border-b border-lime-400/30 py-14 px-6 lg:px-12 shadow-2xl">
+      {/* Hero Header for Standalone Championship Map */}
+      <section className="relative overflow-hidden bg-slate-950 border-b border-lime-400/20 py-12 px-4 sm:px-6 lg:px-8 text-white">
         <div className="absolute top-0 right-0 w-96 h-96 bg-lime-400/10 rounded-full blur-3xl pointer-events-none"></div>
         <div
           className="absolute inset-0 bg-cover bg-center opacity-15 mix-blend-luminosity pointer-events-none"
@@ -132,7 +132,7 @@ export default async function StandaloneChampionshipMapPage({
               href="/harta-romaniei"
               className="px-4 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg"
             >
-              🗺️ Harta României
+              🗺️ Nationale
             </Link>
           </div>
         </div>
@@ -141,14 +141,14 @@ export default async function StandaloneChampionshipMapPage({
       {/* Main Interactive Bracket Visualizer Canvas */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-10">
         {isPrivate ? (
-          <div className="card p-12 text-center text-slate-400 bg-slate-900 border border-amber-400/40 rounded-3xl space-y-4">
+          <div className="card p-12 text-center text-slate-400 bg-white dark:bg-slate-900 border border-amber-400/40 rounded-3xl space-y-4">
             <span className="material-symbols-outlined text-5xl text-amber-400 block">
               lock
             </span>
-            <h2 className="text-xl font-bold font-headline text-white">
+            <h2 className="text-xl font-bold font-headline text-slate-900 dark:text-white">
               Harta acestui campionat este momentan Privată
             </h2>
-            <p className="text-xs text-slate-300 max-w-md mx-auto">
+            <p className="text-xs text-slate-600 dark:text-slate-300 max-w-md mx-auto">
               Organizatorul nu a făcut încă publică harta meciurilor pentru acest campionat. Te rugăm să revii mai târziu.
             </p>
             <Link
@@ -171,7 +171,7 @@ export default async function StandaloneChampionshipMapPage({
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 py-8 text-center text-xs font-label text-slate-500 mt-auto bg-slate-950">
+      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 mt-auto bg-white dark:bg-slate-950">
         © {new Date().getFullYear()} Ligue Pro România • Pagină Separată Oficială de Campionat. Toate drepturile rezervate.
       </footer>
     </div>

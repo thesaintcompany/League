@@ -60,7 +60,7 @@ function getSafeRefereePhoto(ref: RefereeItem, idx: number): string {
 // Generate realistic referee officiating telemetry
 function getRefereeTelemetry(ref: RefereeItem, idx: number) {
   const years = ref.experienceYears || 10;
-  const isElite = ref.refereeBadge?.includes("FIFA") || ref.refereeBadge?.includes("Elite");
+  const isElite = ref.refereeBadge?.includes(" ") || ref.refereeBadge?.includes("Elite");
   const matchesCount = isElite ? Math.round(years * 14 + (idx % 10) * 8) : Math.round(years * 11 + (idx % 8) * 6);
   const yellowPerMatch = (3.2 + (idx % 5) * 0.25).toFixed(1);
   const redCards = Math.round(years * 1.8 + (idx % 4));
@@ -135,8 +135,8 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
         (ref.bio && ref.bio.toLowerCase().includes(q));
 
       let matchesCat = true;
-      if (selectedCategory === "fifa") {
-        matchesCat = Boolean(ref.refereeBadge?.includes("FIFA"));
+      if (selectedCategory === " ") {
+        matchesCat = Boolean(ref.refereeBadge?.includes(" "));
       } else if (selectedCategory === "liga1") {
         matchesCat = Boolean(ref.refereeBadge?.includes("Liga 1"));
       } else if (selectedCategory === "var") {
@@ -177,7 +177,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
               30 Arbitri Licențiați
             </span>
             <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-[10px] uppercase font-label border border-lime-400/30">
-              🇷🇴 FIFA &amp; Ligue Pro România
+              🇷🇴   &amp; Ligue Pro România
             </span>
           </div>
 
@@ -197,7 +197,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
               </span>
               <input
                 type="text"
-                placeholder="Caută arbitru după nume, ecuson FIFA sau categorie..."
+                placeholder="Caută arbitru după nume, ecuson   sau categorie..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-slate-900/90 border border-slate-700/80 rounded-2xl text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-400 transition shadow-inner"
@@ -207,7 +207,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
             <div className="flex flex-wrap gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 shrink-0">
               {[
                 { id: "all", label: "Toți (30)" },
-                { id: "fifa", label: "⭐ FIFA Elite" },
+                { id: " ", label: "⭐   Elite" },
                 { id: "liga1", label: "🏆 Liga 1 Pro" },
                 { id: "var", label: "📺 VAR" },
                 { id: "asistent", label: "🚩 Asistenți" },
@@ -217,11 +217,10 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                   key={cat.id}
                   type="button"
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${
-                    selectedCategory === cat.id
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${selectedCategory === cat.id
                       ? "bg-lime-400 text-slate-950 font-black shadow-md"
                       : "text-slate-300 hover:text-white"
-                  }`}
+                    }`}
                 >
                   {cat.label}
                 </button>
@@ -234,14 +233,14 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
       {/* SECTION 1: Top 10 Spotlight Elite Referees Showcase */}
       {!searchQuery && selectedCategory === "all" && (
         <section className="space-y-6">
-          <div className="flex justify-between items-center pb-2 border-b border-slate-200/60 dark:border-slate-800">
+          <div className="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2.5">
               <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
-              <h2 className="text-xl sm:text-2xl font-bold font-headline text-blue-950 dark:text-white uppercase tracking-tight">
-                Top 10 Arbitri de Elită &amp; Ecuson FIFA
+              <h2 className="text-xl sm:text-2xl font-bold font-headline text-slate-900 dark:text-white uppercase tracking-tight">
+                Top 10 Arbitri de Elită &amp; Ecuson
               </h2>
             </div>
-            <span className="text-xs font-label font-bold text-slate-400 uppercase">
+            <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase">
               10 Arbitri Spotlight
             </span>
           </div>
@@ -255,7 +254,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                 <Link
                   key={ref.id}
                   href={`/referees/${ref.id}`}
-                  className="card bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 shadow-md hover:shadow-2xl hover:border-lime-400/60 rounded-3xl overflow-hidden group transition-all duration-300 flex flex-col justify-between"
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-md hover:shadow-2xl hover:border-lime-500 dark:hover:border-lime-400/60 rounded-3xl overflow-hidden group transition-all duration-300 flex flex-col justify-between"
                 >
                   {/* 9:16 Real Human Portrait View */}
                   <div className="aspect-[9/13] w-full rounded-t-2xl overflow-hidden relative bg-slate-950 border-b border-slate-800">
@@ -287,13 +286,13 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                   </div>
 
                   {/* Clean Streamlined Stats Ribbon (No cards in cards) */}
-                  <div className="p-4 space-y-3 bg-surface-container-lowest">
-                    <div className="py-2 px-2.5 rounded-2xl bg-surface-container-low border border-slate-200/50 dark:border-slate-800/80 flex items-center justify-between text-center divide-x divide-slate-200/60 dark:divide-slate-800">
+                  <div className="p-4 space-y-3 bg-white dark:bg-slate-900">
+                    <div className="py-2 px-2.5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-center divide-x divide-slate-200 dark:divide-slate-800">
                       <div className="flex-1 px-1">
-                        <span className="text-xs font-black font-mono text-blue-950 dark:text-white block">
+                        <span className="text-xs font-black font-mono text-slate-900 dark:text-white block">
                           {tel.matchesCount}
                         </span>
-                        <span className="text-[9px] font-label font-bold text-slate-400 block uppercase">
+                        <span className="text-[9px] font-label font-bold text-slate-500 dark:text-slate-400 block uppercase">
                           Meciuri
                         </span>
                       </div>
@@ -301,7 +300,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                         <span className="text-xs font-black font-mono text-amber-500 block">
                           {tel.yellowPerMatch}
                         </span>
-                        <span className="text-[9px] font-label font-bold text-slate-400 block uppercase">
+                        <span className="text-[9px] font-label font-bold text-slate-500 dark:text-slate-400 block uppercase">
                           🟨/Meci
                         </span>
                       </div>
@@ -309,7 +308,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                         <span className="text-xs font-black font-mono text-lime-600 dark:text-lime-400 block">
                           {tel.rating}⭐
                         </span>
-                        <span className="text-[9px] font-label font-bold text-slate-400 block uppercase">
+                        <span className="text-[9px] font-label font-bold text-slate-500 dark:text-slate-400 block uppercase">
                           Rating
                         </span>
                       </div>
@@ -329,22 +328,22 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
 
       {/* SECTION 2: Complete 30 Referees Grid */}
       <section className="space-y-6">
-        <div className="flex justify-between items-center pb-2 border-b border-slate-200/60 dark:border-slate-800">
+        <div className="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2.5">
-            <span className="w-2.5 h-6 bg-primary rounded-full"></span>
-            <h2 className="text-xl sm:text-2xl font-bold font-headline text-blue-950 dark:text-white uppercase tracking-tight">
+            <span className="w-2.5 h-6 bg-slate-950 dark:bg-lime-400 rounded-full"></span>
+            <h2 className="text-xl sm:text-2xl font-bold font-headline text-slate-900 dark:text-white uppercase tracking-tight">
               {searchQuery || selectedCategory !== "all"
                 ? `Rezultate Căutare (${filtered.length} Arbitri)`
                 : "Catalog Complet Corp Arbitri (30 Oficiali)"}
             </h2>
           </div>
-          <span className="text-xs font-label font-bold text-slate-400 uppercase">
+          <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase">
             {filtered.length} din {initialReferees.length} Arbitri
           </span>
         </div>
 
         {filtered.length === 0 ? (
-          <div className="card p-12 text-center text-slate-500 bg-surface-container-lowest rounded-3xl border border-slate-200/60 dark:border-slate-800">
+          <div className="card p-12 text-center text-slate-500 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800">
             <span className="material-symbols-outlined text-4xl text-slate-400 mb-2 block">
               sports
             </span>
@@ -365,7 +364,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                 <Link
                   key={ref.id}
                   href={`/referees/${ref.id}`}
-                  className="card bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-lime-400/50 rounded-3xl overflow-hidden group transition-all duration-300 flex flex-col justify-between"
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-lime-500 dark:hover:border-lime-400/50 rounded-3xl overflow-hidden group transition-all duration-300 flex flex-col justify-between"
                 >
                   {/* 9:16 Real Human Portrait View */}
                   <div className="aspect-[9/12] w-full rounded-t-2xl overflow-hidden relative bg-slate-950 border-b border-slate-800">
@@ -397,19 +396,19 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                   </div>
 
                   {/* Clean Streamlined Stats Ribbon (No cards in cards) */}
-                  <div className="p-4 space-y-3 bg-surface-container-lowest">
+                  <div className="p-4 space-y-3 bg-white dark:bg-slate-900">
                     {ref.bio && (
                       <p className="text-xs text-slate-600 dark:text-slate-400 font-body line-clamp-2 leading-relaxed">
                         {ref.bio}
                       </p>
                     )}
 
-                    <div className="py-2 px-2.5 rounded-2xl bg-surface-container-low border border-slate-200/50 dark:border-slate-800/80 flex items-center justify-between text-center divide-x divide-slate-200/60 dark:divide-slate-800">
+                    <div className="py-2 px-2.5 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-center divide-x divide-slate-200 dark:divide-slate-800">
                       <div className="flex-1 px-1">
-                        <span className="text-xs font-black font-mono text-blue-950 dark:text-white block">
+                        <span className="text-xs font-black font-mono text-slate-900 dark:text-white block">
                           {tel.matchesCount}
                         </span>
-                        <span className="text-[9px] font-label font-bold text-slate-400 block uppercase">
+                        <span className="text-[9px] font-label font-bold text-slate-500 dark:text-slate-400 block uppercase">
                           Meciuri
                         </span>
                       </div>
@@ -417,7 +416,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                         <span className="text-xs font-black font-mono text-amber-500 block">
                           {tel.yellowPerMatch}
                         </span>
-                        <span className="text-[9px] font-label font-bold text-slate-400 block uppercase">
+                        <span className="text-[9px] font-label font-bold text-slate-500 dark:text-slate-400 block uppercase">
                           🟨/Meci
                         </span>
                       </div>
@@ -425,13 +424,13 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                         <span className="text-xs font-black font-mono text-lime-600 dark:text-lime-400 block">
                           {tel.rating}⭐
                         </span>
-                        <span className="text-[9px] font-label font-bold text-slate-400 block uppercase">
+                        <span className="text-[9px] font-label font-bold text-slate-500 dark:text-slate-400 block uppercase">
                           Rating
                         </span>
                       </div>
                     </div>
 
-                    <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-label font-bold text-slate-400 group-hover:text-blue-950 dark:group-hover:text-white">
+                    <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-label font-bold text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white">
                       <span>Vezi Partide Arbitrate</span>
                       <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                     </div>

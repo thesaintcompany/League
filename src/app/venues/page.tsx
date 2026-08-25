@@ -11,12 +11,12 @@ export default async function PublicVenuesPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col font-body text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200">
       {/* Top Navbar */}
       <PublicHeader currentTab="venues" />
 
       {/* Hero Header with Panoramic Majestic Stadium Background */}
-      <section className="relative overflow-hidden bg-slate-950 border-b border-lime-400/30 py-20 px-6 lg:px-12 shadow-2xl min-h-[360px] flex items-center">
+      <section className="relative overflow-hidden bg-slate-950 border-b border-lime-400/30 py-20 px-6 lg:px-12 shadow-2xl min-h-[360px] flex items-center text-white">
         {/* Full-width High-Definition Stadium Image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none scale-105 transform duration-1000"
@@ -57,7 +57,7 @@ export default async function PublicVenuesPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 py-8 text-center text-xs font-label text-slate-500">
+      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-950">
         © {new Date().getFullYear()} Ligue Pro România • Catalog Oficial Arene &amp; Stadioane. Toate drepturile rezervate.
       </footer>
     </div>

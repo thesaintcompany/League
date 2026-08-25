@@ -98,10 +98,10 @@ const SEEDS = [
   },
   {
     email: "arbitru@leaguehub.local",
-    name: "Cristian Balaj - Arbitru FIFA",
+    name: "Cristian Balaj - Arbitru  ",
     password: "demo12345",
     role: "referee",
-    refereeBadge: "FIFA Pro Elite",
+    refereeBadge: "  Pro Elite",
     experienceYears: 14,
   },
   {
@@ -109,7 +109,7 @@ const SEEDS = [
     name: "István Kovács - Arbitru UEFA",
     password: "demo12345",
     role: "referee",
-    refereeBadge: "FIFA Pro Elite",
+    refereeBadge: "  Pro Elite",
     experienceYears: 12,
   },
   {
@@ -187,60 +187,60 @@ async function ensureReferees() {
     {
       email: "istvan.kovacs@leaguehub.local",
       name: "István Kovács",
-      refereeBadge: "FIFA Pro Elite",
+      refereeBadge: "  Pro Elite",
       experienceYears: 17,
       phone: "+40 722 101 001",
-      bio: "Arbitru FIFA Elite, delegat la finale europene UEFA și turnee finale mondiale.",
+      bio: "Arbitru   Elite, delegat la finale europene UEFA și turnee finale mondiale.",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
     },
     {
       email: "ovidiu.hategan@leaguehub.local",
       name: "Ovidiu Hațegan",
-      refereeBadge: "FIFA Pro Elite",
+      refereeBadge: "  Pro Elite",
       experienceYears: 19,
       phone: "+40 722 101 002",
-      bio: "Medic și arbitru internațional FIFA Elite de peste 15 ani în UEFA Champions League.",
+      bio: "Medic și arbitru internațional   Elite de peste 15 ani în UEFA Champions League.",
       image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop&q=80",
     },
     {
       email: "radu.petrescu@leaguehub.local",
       name: "Radu Petrescu",
-      refereeBadge: "FIFA International",
+      refereeBadge: "  International",
       experienceYears: 15,
       phone: "+40 722 101 003",
-      bio: "Arbitru internațional FIFA cu zeci de derby-uri naționale conduse impecabil.",
+      bio: "Arbitru internațional   cu zeci de derby-uri naționale conduse impecabil.",
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&auto=format&fit=crop&q=80",
     },
     {
       email: "horatiu.fesnic@leaguehub.local",
       name: "Horațiu Feșnic",
-      refereeBadge: "FIFA International",
+      refereeBadge: "  International",
       experienceYears: 13,
       phone: "+40 722 101 004",
-      bio: "Arbitru FIFA categorie First, stil atletic și decizii ferme în teren.",
+      bio: "Arbitru   categorie First, stil atletic și decizii ferme în teren.",
       image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
     },
     {
       email: "marian.barbu@leaguehub.local",
       name: "Marian Barbu",
-      refereeBadge: "FIFA International",
+      refereeBadge: "  International",
       experienceYears: 11,
       phone: "+40 722 101 005",
-      bio: "Arbitru FIFA tânăr și dinamic, cu prezențe regulate în cupele europene.",
+      bio: "Arbitru   tânăr și dinamic, cu prezențe regulate în cupele europene.",
       image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80",
     },
     {
       email: "andrei.chivulete@leaguehub.local",
       name: "Andrei Chivulete",
-      refereeBadge: "FIFA International",
+      refereeBadge: "  International",
       experienceYears: 12,
       phone: "+40 722 101 006",
-      bio: "Arbitru central FIFA, specializat pe meciuri de mare intensitate și presiune.",
+      bio: "Arbitru central  , specializat pe meciuri de mare intensitate și presiune.",
       image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop&q=80",
     },
@@ -257,30 +257,30 @@ async function ensureReferees() {
     {
       email: "iuliana.demetrescu@leaguehub.local",
       name: "Iuliana Demetrescu",
-      refereeBadge: "FIFA Women Elite",
+      refereeBadge: "  Women Elite",
       experienceYears: 12,
       phone: "+40 722 101 008",
-      bio: "Arbitru FIFA Elite, finalistă la Campionatele Mondiale și Europene.",
+      bio: "Arbitru   Elite, finalistă la Campionatele Mondiale și Europene.",
       image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
     },
     {
       email: "alina.pesu@leaguehub.local",
       name: "Alina Peșu",
-      refereeBadge: "FIFA Women Elite",
+      refereeBadge: "  Women Elite",
       experienceYears: 10,
       phone: "+40 722 101 009",
-      bio: "Arbitru FIFA cu ecuson internațional, arbitraj precis și poziționare impecabilă.",
+      bio: "Arbitru   cu ecuson internațional, arbitraj precis și poziționare impecabilă.",
       image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop&q=80",
     },
     {
       email: "catalin.popa@leaguehub.local",
       name: "Cătălin Popa",
-      refereeBadge: "FIFA VAR Pro",
+      refereeBadge: "  VAR Pro",
       experienceYears: 14,
       phone: "+40 722 101 010",
-      bio: "Specialist certificat FIFA în tehnologia VAR și analiza video a fazelor limită.",
+      bio: "Specialist certificat   în tehnologia VAR și analiza video a fazelor limită.",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&auto=format&fit=crop&q=80",
     },
@@ -319,27 +319,27 @@ async function ensureReferees() {
     {
       email: "vasile.marinescu@leaguehub.local",
       name: "Vasile Marinescu",
-      refereeBadge: "FIFA Asistent Elite",
+      refereeBadge: "  Asistent Elite",
       experienceYears: 16,
       phone: "+40 722 101 014",
-      bio: "Arbitru asistent FIFA Elite prezent la semifinale de UEFA Champions League.",
+      bio: "Arbitru asistent   Elite prezent la semifinale de UEFA Champions League.",
       image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
     },
     {
       email: "mihai.artene@leaguehub.local",
       name: "Mihai Artene",
-      refereeBadge: "FIFA Asistent Elite",
+      refereeBadge: "  Asistent Elite",
       experienceYears: 15,
       phone: "+40 722 101 015",
-      bio: "Arbitru asistent FIFA Elite în brigada de top a României.",
+      bio: "Arbitru asistent   Elite în brigada de top a României.",
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop&q=80",
     },
     {
       email: "mircea.grigoriu@leaguehub.local",
       name: "Mircea Grigoriu",
-      refereeBadge: "FIFA Asistent",
+      refereeBadge: "  Asistent",
       experienceYears: 12,
       phone: "+40 722 101 016",
       bio: "Arbitru asistent internațional cu mare acuratețe la semnalizările de ofsaid.",
@@ -349,10 +349,10 @@ async function ensureReferees() {
     {
       email: "sebastian.gheorghe@leaguehub.local",
       name: "Sebastian Gheorghe",
-      refereeBadge: "FIFA Asistent",
+      refereeBadge: "  Asistent",
       experienceYears: 13,
       phone: "+40 722 101 017",
-      bio: "Arbitru asistent FIFA de înalt nivel în partide internaționale.",
+      bio: "Arbitru asistent   de înalt nivel în partide internaționale.",
       image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
     },
@@ -479,10 +479,10 @@ async function ensureReferees() {
     {
       email: "cristian.balaj@leaguehub.local",
       name: "Cristian Balaj",
-      refereeBadge: "Expert FIFA & Observator",
+      refereeBadge: "Expert   & Observator",
       experienceYears: 24,
       phone: "+40 722 101 030",
-      bio: "Fost arbitru FIFA de legendă, consultant pe regulamente oficiale de joc.",
+      bio: "Fost arbitru   de legendă, consultant pe regulamente oficiale de joc.",
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
       coverPhotoUrl: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop&q=80",
     },
@@ -524,7 +524,7 @@ async function ensureReferees() {
     }
   }
 
-  console.log(`[seed] seeded/updated 30 official licensed referees with full-body photos and FIFA badges`);
+  console.log(`[seed] seeded/updated 30 official licensed referees with full-body photos and   badges`);
 }
 
 async function ensureVenues(arenaOwnerId) {
@@ -1564,7 +1564,7 @@ async function ensureDemoChampionship(ownerId) {
   }
 
   const venuesList = ["Arena Națională", "Stadionul Steaua Ghencea", "Cluj Arena", "Complexul Sportiv Craiova"];
-  const refereesList = ["Cristian Balaj - Arbitru FIFA", "István Kovács - Arbitru UEFA"];
+  const refereesList = ["Cristian Balaj - Arbitru  ", "István Kovács - Arbitru UEFA"];
 
   // Create Quarter Finals (bracket 0, 1, 2, 3)
   const quarterPairings = [
@@ -1583,11 +1583,11 @@ async function ensureDemoChampionship(ownerId) {
 
     const matchEvents = p.finished
       ? JSON.stringify([
-          { minute: 14, type: "goal", team: homeT.name, player: `Atacant ${homeT.shortName}`, note: "Șut din interiorul careului" },
-          { minute: 38, type: "yellow_card", team: awayT.name, player: `Fundaș ${awayT.shortName}`, note: "Fault tactic" },
-          { minute: 55, type: "goal", team: awayT.name, player: `Atacant ${awayT.shortName}`, note: "Finalizare din centrarea laterală" },
-          { minute: 82, type: "goal", team: homeT.name, player: `Atacant ${homeT.shortName}`, note: "Lovitură de cap la colțul scurt" },
-        ])
+        { minute: 14, type: "goal", team: homeT.name, player: `Atacant ${homeT.shortName}`, note: "Șut din interiorul careului" },
+        { minute: 38, type: "yellow_card", team: awayT.name, player: `Fundaș ${awayT.shortName}`, note: "Fault tactic" },
+        { minute: 55, type: "goal", team: awayT.name, player: `Atacant ${awayT.shortName}`, note: "Finalizare din centrarea laterală" },
+        { minute: 82, type: "goal", team: homeT.name, player: `Atacant ${homeT.shortName}`, note: "Lovitură de cap la colțul scurt" },
+      ])
       : null;
 
     await prisma.match.create({
@@ -1643,7 +1643,7 @@ async function ensureDemoChampionship(ownerId) {
       round: 2,
       status: "scheduled",
       venue: "Cluj Arena",
-      referee: "Cristian Balaj - Arbitru FIFA",
+      referee: "Cristian Balaj - Arbitru  ",
       stage: "semi_final",
       bracketIndex: 1,
     },
@@ -1658,7 +1658,7 @@ async function ensureDemoChampionship(ownerId) {
       round: 3,
       status: "scheduled",
       venue: "Arena Națională",
-      referee: "Cristian Balaj - Arbitru FIFA",
+      referee: "Cristian Balaj - Arbitru  ",
       stage: "final",
       bracketIndex: 0,
     },

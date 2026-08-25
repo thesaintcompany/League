@@ -26,7 +26,7 @@ export function RefereeControlModal({
   );
   const [venue, setVenue] = useState<string>(match.venue || "");
   const [refereeName, setRefereeName] = useState<string>(
-    match.referee || "Cristian Balaj - Arbitru FIFA"
+    match.referee || "Cristian Balaj - Arbitru  "
   );
 
   // Match telemetry
@@ -238,11 +238,10 @@ export function RefereeControlModal({
                 key={st.id}
                 type="button"
                 onClick={() => setStatus(st.id as any)}
-                className={`py-2.5 px-3 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition ${
-                  status === st.id
+                className={`py-2.5 px-3 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition ${status === st.id
                     ? "bg-lime-400 text-slate-950 shadow-sm font-black"
                     : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-                }`}
+                  }`}
               >
                 {st.label}
               </button>

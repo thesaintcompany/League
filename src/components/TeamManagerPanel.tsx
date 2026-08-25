@@ -320,11 +320,10 @@ export function TeamManagerPanel({ initialTeam }: { initialTeam: TeamData }) {
             key={t.id}
             type="button"
             onClick={() => setActiveTab(t.id as any)}
-            className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 border ${
-              activeTab === t.id
+            className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 border ${activeTab === t.id
                 ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
                 : "bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-white"
-            }`}
+              }`}
           >
             <span className="material-symbols-outlined text-base">{t.icon}</span>
             <span>{t.label}</span>
@@ -629,11 +628,10 @@ export function TeamManagerPanel({ initialTeam }: { initialTeam: TeamData }) {
                       key={f}
                       type="button"
                       onClick={() => setFormation(f)}
-                      className={`p-2.5 rounded-xl border text-xs font-headline font-bold uppercase transition ${
-                        formation === f
+                      className={`p-2.5 rounded-xl border text-xs font-headline font-bold uppercase transition ${formation === f
                           ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
                           : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700"
-                      }`}
+                        }`}
                     >
                       {f}
                     </button>
@@ -736,7 +734,7 @@ export function TeamManagerPanel({ initialTeam }: { initialTeam: TeamData }) {
                 Trimite Invitație pe Email pentru Creare Cont Jucător
               </h3>
               <p className="text-xs text-slate-400 font-label mt-1">
-                Jucătorul primește un link securizat prin care își creează contul propriu, își poate uploada poza de profil și își completează fișa atletică FIFA!
+                Jucătorul primește un link securizat prin care își creează contul propriu, își poate uploada poza de profil și își completează fișa atletică  !
               </p>
             </div>
 

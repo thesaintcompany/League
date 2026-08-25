@@ -333,15 +333,15 @@ export function AdminSuperPanel() {
       </div>
 
       {/* Main Tab Switcher & Action Bar */}
-      <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="flex items-center gap-2 bg-surface-container-low p-1.5 rounded-2xl">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-950 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800">
           <button
             type="button"
             onClick={() => setActiveTab("venues")}
             className={`px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition ${
               activeTab === "venues"
-                ? "bg-primary text-white shadow-sm font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-blue-950"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
             }`}
           >
             🏟️ Gestiune Arene ({venues.length})
@@ -351,8 +351,8 @@ export function AdminSuperPanel() {
             onClick={() => setActiveTab("users")}
             className={`px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition ${
               activeTab === "users"
-                ? "bg-primary text-white shadow-sm font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-blue-950"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
             }`}
           >
             👥 Toți Utilizatorii ({users.length})
@@ -362,8 +362,8 @@ export function AdminSuperPanel() {
             onClick={() => setActiveTab("tickets")}
             className={`px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition ${
               activeTab === "tickets"
-                ? "bg-primary text-white shadow-sm font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-blue-950"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
             }`}
           >
             🎟️ Vânzări Bilete &amp; Comisioane

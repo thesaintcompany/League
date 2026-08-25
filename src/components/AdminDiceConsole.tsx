@@ -32,7 +32,7 @@ export function AdminDiceConsole({
     "Complexul Sportiv Craiova",
   ]);
   const [selectedReferees, setSelectedReferees] = useState<string[]>([
-    "Cristian Balaj - Arbitru FIFA",
+    "Cristian Balaj - Arbitru  ",
     "István Kovács - Arbitru UEFA",
     "Ovidiu Hațegan - Arbitru Elite",
   ]);
@@ -169,16 +169,14 @@ export function AdminDiceConsole({
             {/* 3D Dice Display */}
             <div className="flex items-center gap-4">
               <div
-                className={`w-24 h-24 bg-primary rounded-2xl flex items-center justify-center shadow-2xl text-lime-400 text-5xl transition-transform ${
-                  rolling ? "animate-spin" : "rotate-3 hover:rotate-0"
-                }`}
+                className={`w-24 h-24 bg-primary rounded-2xl flex items-center justify-center shadow-2xl text-lime-400 text-5xl transition-transform ${rolling ? "animate-spin" : "rotate-3 hover:rotate-0"
+                  }`}
               >
                 {DICE_FACES[diceValues[0] - 1]}
               </div>
               <div
-                className={`w-24 h-24 bg-primary rounded-2xl flex items-center justify-center shadow-2xl text-lime-400 text-5xl transition-transform ${
-                  rolling ? "animate-spin" : "-rotate-6 hover:rotate-0"
-                }`}
+                className={`w-24 h-24 bg-primary rounded-2xl flex items-center justify-center shadow-2xl text-lime-400 text-5xl transition-transform ${rolling ? "animate-spin" : "-rotate-6 hover:rotate-0"
+                  }`}
               >
                 {DICE_FACES[diceValues[1] - 1]}
               </div>

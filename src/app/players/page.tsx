@@ -15,12 +15,12 @@ export default async function PublicPlayersPage() {
   });
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col font-body text-on-surface">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200">
       {/* Top Navbar */}
       <PublicHeader currentTab="players" />
 
       {/* Hero Header */}
-      <section className="bg-primary text-white py-16 px-6 lg:px-12 relative overflow-hidden">
+      <section className="bg-slate-950 text-white py-16 px-6 lg:px-12 relative overflow-hidden border-b border-lime-400/20 shadow-xl">
         <div className="absolute top-0 right-0 w-96 h-96 bg-lime-400/15 rounded-full blur-3xl pointer-events-none"></div>
         <div className="max-w-7xl mx-auto relative z-10">
           <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label inline-block mb-4 shadow-sm">
@@ -41,7 +41,7 @@ export default async function PublicPlayersPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200/60 dark:border-slate-800/60 py-8 text-center text-xs font-label text-slate-400">
+      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-950">
         © {new Date().getFullYear()} Ligue Pro. Toate drepturile rezervate.
       </footer>
     </div>

@@ -61,7 +61,7 @@ export default async function PublicRefereeDetailPage({
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-                ⚖️ OFICIAL ATESTAT FIFA / LIGUE PRO
+                ⚖️ OFICIAL ATESTAT   / LIGUE PRO
               </span>
               <RefereeBadgePill badge={referee.refereeBadge} />
               <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-xs font-label border border-lime-400/30">
@@ -124,7 +124,7 @@ export default async function PublicRefereeDetailPage({
                     {referee.name}
                   </h2>
                   <p className="text-xs text-slate-300 font-label">
-                    {referee.refereeBadge || "FIFA Pro"} • {referee.experienceYears || 12} ani experiență
+                    {referee.refereeBadge || "  Pro"} • {referee.experienceYears || 12} ani experiență
                   </p>
                 </div>
               </div>
@@ -140,7 +140,7 @@ export default async function PublicRefereeDetailPage({
                     {referee.name}
                   </h3>
                   <p className="text-xs text-lime-400 font-label font-bold uppercase mt-0.5">
-                    {referee.refereeBadge || "FIFA Pro Elite"}
+                    {referee.refereeBadge || "  Pro Elite"}
                   </p>
                   <p className="text-[11px] text-slate-400 font-label mt-1">
                     {referee.bio || "Arbitru atestat pentru ligile naționale și turnee de elită."}

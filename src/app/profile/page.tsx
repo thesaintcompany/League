@@ -36,7 +36,7 @@ export default async function ProfilePage() {
   const currentRole = user.role || "organizer";
 
   return (
-    <div className="min-h-screen bg-surface flex font-body">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
       <Sidebar />
 
       <div className="flex-1 ml-64 flex flex-col min-w-0">
@@ -47,17 +47,17 @@ export default async function ProfilePage() {
 
         <main className="p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-10">
           {/* Header Bar */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-slate-200/60 dark:border-slate-800">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
             <div>
               <div className="flex items-center gap-3">
                 <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label shadow-sm">
                   {roleLabels[currentRole] || "Utilizator Pro"}
                 </span>
-                <span className="text-xs text-slate-500 font-label">
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-label">
                   ID: {user.id.substring(0, 8).toUpperCase()}
                 </span>
               </div>
-              <h1 className="text-3xl font-black italic tracking-tight font-headline uppercase text-blue-950 dark:text-white mt-1">
+              <h1 className="text-3xl font-black italic tracking-tight font-headline uppercase text-slate-900 dark:text-white mt-1">
                 {user.name || "Profil Utilizator"}
               </h1>
             </div>

@@ -221,7 +221,7 @@ export function RefereeDashboardPanel({
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className="px-3 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
-                {refereeUser.refereeBadge || "FIFA Pro Elite"}
+                {refereeUser.refereeBadge || "  Pro Elite"}
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 text-[10px] font-bold font-label">
                 Oficial Atestat
@@ -271,8 +271,8 @@ export function RefereeDashboardPanel({
                 {upcomingMatch.status === "live"
                   ? "🔴 LIVE ÎN DESFĂȘURARE"
                   : upcomingMatch.status === "finished"
-                  ? "✓ FINALIZAT"
-                  : "⏳ PROGRAMAT"}
+                    ? "✓ FINALIZAT"
+                    : "⏳ PROGRAMAT"}
               </span>
             </div>
 
@@ -670,10 +670,10 @@ export function RefereeDashboardPanel({
                           {ev.type === "goal"
                             ? "⚽"
                             : ev.type === "yellow_card"
-                            ? "🟨"
-                            : ev.type === "red_card"
-                            ? "🟥"
-                            : "🎯"}
+                              ? "🟨"
+                              : ev.type === "red_card"
+                                ? "🟥"
+                                : "🎯"}
                         </span>
                         <span className="font-bold text-lime-400">Min. {ev.minute}&apos;</span>
                         <span className="text-white font-bold">{ev.playerName}</span>

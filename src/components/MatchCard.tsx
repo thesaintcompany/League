@@ -5,6 +5,7 @@ import React from "react";
 export interface MatchData {
   id: string;
   round?: number;
+  stage?: string | null;
   scheduledAt?: string | Date;
   status: "scheduled" | "live" | "finished" | "postponed" | "cancelled";
   homeTeam: { id: string; name: string; shortName?: string; color?: string };
@@ -13,6 +14,7 @@ export interface MatchData {
   awayScore?: number | null;
   venue?: string;
   referee?: string;
+  ticketPrice?: number | null;
 }
 
 interface MatchCardProps {

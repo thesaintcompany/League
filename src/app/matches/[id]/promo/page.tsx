@@ -34,7 +34,7 @@ export default async function PublicMatchPromoPage({
     if (!fallbackMatch) notFound();
 
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col font-body text-white">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200">
         <PublicHeader currentTab="campionat" />
         <MatchPromoClientView
           match={{
@@ -66,15 +66,15 @@ export default async function PublicMatchPromoPage({
             },
           }}
         />
-        <footer className="border-t border-slate-800 py-8 text-center text-xs font-label text-slate-500 mt-auto bg-slate-950">
-          © {new Date().getFullYear()} Ligue Pro România • Meciul Etapei Promo.
+        <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 mt-auto bg-white dark:bg-slate-950">
+          © {new Date().getFullYear()} Ligue Pro România • Pagina Oficială de Promovare Meci. Toate drepturile rezervate.
         </footer>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col font-body text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200">
       <PublicHeader currentTab="campionat" />
       <MatchPromoClientView
         match={{
@@ -106,8 +106,8 @@ export default async function PublicMatchPromoPage({
           },
         }}
       />
-      <footer className="border-t border-slate-800 py-8 text-center text-xs font-label text-slate-500 mt-auto bg-slate-950">
-        © {new Date().getFullYear()} Ligue Pro România • Meciul Etapei Promo.
+      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 mt-auto bg-white dark:bg-slate-950">
+        © {new Date().getFullYear()} Ligue Pro România • Pagina Oficială de Promovare Meci. Toate drepturile rezervate.
       </footer>
     </div>
   );

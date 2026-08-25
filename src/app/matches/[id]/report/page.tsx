@@ -253,7 +253,7 @@ export default async function OfficialMatchReportPage({
             <span className="text-[10px] uppercase text-slate-400 font-bold block mb-1">
               Arbitru Central Oficial
             </span>
-            <p className="font-bold text-slate-900">{match.referee || "Cristian Balaj - Arbitru FIFA"}</p>
+            <p className="font-bold text-slate-900">{match.referee || "Cristian Balaj - Arbitru  "}</p>
             <div className="mt-4 pt-2 border-t border-dashed border-slate-300 font-serif italic text-slate-500">
               {match.signedBy || match.referee || "Semnătură Digitală Înregistrată"}
             </div>

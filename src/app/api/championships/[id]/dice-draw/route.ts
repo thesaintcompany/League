@@ -53,7 +53,7 @@ export async function POST(
 
   const refereesList = dbReferees.length > 0
     ? dbReferees.map((r) => r.name || "Arbitru Oficial")
-    : body.referees || ["Cristian Balaj - Arbitru FIFA", "István Kovács - Arbitru UEFA"];
+    : body.referees || ["Cristian Balaj - Arbitru  ", "István Kovács - Arbitru UEFA"];
 
   const venuesList = dbVenues.length > 0
     ? dbVenues.map((v) => v.name)

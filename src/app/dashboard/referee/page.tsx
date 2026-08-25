@@ -71,10 +71,10 @@ export default async function RefereeDashboardPage() {
   // Convert Date objects to strings for serialization
   const upcomingMatch: MatchOfficiatingItem | null = upcomingMatchRaw
     ? {
-        ...upcomingMatchRaw,
-        scheduledAt: upcomingMatchRaw.scheduledAt.toISOString(),
-        signedAt: upcomingMatchRaw.signedAt ? upcomingMatchRaw.signedAt.toISOString() : null,
-      }
+      ...upcomingMatchRaw,
+      scheduledAt: upcomingMatchRaw.scheduledAt.toISOString(),
+      signedAt: upcomingMatchRaw.signedAt ? upcomingMatchRaw.signedAt.toISOString() : null,
+    }
     : null;
 
   const matchHistory: MatchOfficiatingItem[] = matchHistoryRaw.map((m) => ({
@@ -92,7 +92,7 @@ export default async function RefereeDashboardPage() {
       <div className="flex-1 ml-64 flex flex-col min-w-0">
         <TopHeader
           title="Panou Oficial de Arbitraj"
-          subtitle={`Bine ai venit, ${user.name || "Arbitru Oficial"} (${user.refereeBadge || "FIFA Pro"})!`}
+          subtitle={`Bine ai venit, ${user.name || "Arbitru Oficial"} (${user.refereeBadge || "  Pro"})!`}
         />
 
         <main className="p-6 sm:p-8 space-y-8 flex-1 max-w-7xl">

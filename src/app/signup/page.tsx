@@ -46,19 +46,19 @@ export default function SignUpPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden bg-surface">
-      <div className="absolute top-0 right-0 -mr-32 -mt-32 w-96 h-96 bg-secondary-container opacity-20 blur-3xl rounded-full pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 -ml-32 -mb-32 w-96 h-96 bg-primary-container opacity-10 blur-3xl rounded-full pointer-events-none"></div>
+    <main className="min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-200">
+      <div className="absolute top-0 right-0 -mr-32 -mt-32 w-96 h-96 bg-lime-400/10 blur-3xl rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 -ml-32 -mb-32 w-96 h-96 bg-blue-500/10 blur-3xl rounded-full pointer-events-none"></div>
 
-      <section className="w-full max-w-4xl bg-white dark:bg-slate-900 rounded-3xl shadow-[0_20px_40px_rgba(24,28,30,0.08)] flex flex-col md:flex-row overflow-hidden z-10 border border-slate-200/60 dark:border-slate-800">
+      <section className="w-full max-w-4xl bg-white dark:bg-slate-900 rounded-3xl shadow-[0_20px_40px_rgba(24,28,30,0.08)] flex flex-col md:flex-row overflow-hidden z-10 border border-slate-200 dark:border-slate-800">
         {/* Left Branding Visual */}
-        <div className="w-full md:w-5/12 bg-primary p-8 lg:p-10 flex flex-col justify-between relative overflow-hidden text-white">
+        <div className="w-full md:w-5/12 bg-slate-950 p-8 lg:p-10 flex flex-col justify-between relative overflow-hidden text-white">
           <div className="relative z-10">
             <Link href="/" className="flex items-center gap-2.5 mb-8 group">
-              <span className="text-secondary-fixed text-3xl material-symbols-outlined">
+              <span className="text-lime-400 text-3xl material-symbols-outlined">
                 sports_soccer
               </span>
-              <span className="text-2xl font-black italic tracking-tighter font-headline">
+              <span className="text-2xl font-black italic tracking-tighter font-headline text-white">
                 Ligue
               </span>
             </Link>
@@ -73,7 +73,7 @@ export default function SignUpPage() {
 
           <div className="relative z-10 mt-10">
             <div className="flex items-center gap-3.5 p-3.5 bg-white/10 rounded-2xl border border-white/15 backdrop-blur-md">
-              <div className="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center text-slate-950">
+              <div className="w-9 h-9 rounded-full bg-lime-400 flex items-center justify-center text-slate-950 font-bold">
                 <span className="material-symbols-outlined text-lg">verified</span>
               </div>
               <div>
@@ -89,21 +89,21 @@ export default function SignUpPage() {
         </div>
 
         {/* Right Form Side */}
-        <div className="w-full md:w-7/12 p-8 lg:p-10 bg-surface-container-lowest flex flex-col justify-between">
+        <div className="w-full md:w-7/12 p-8 lg:p-10 bg-white dark:bg-slate-900 flex flex-col justify-between">
           <div>
             <header className="mb-6 flex justify-between items-start">
               <div>
-                <h3 className="text-2xl font-headline font-bold text-primary dark:text-white">
+                <h3 className="text-2xl font-headline font-bold text-slate-900 dark:text-white">
                   Înregistrare Ligue
                 </h3>
-                <p className="text-on-surface-variant text-xs mt-1 font-label">
+                <p className="text-slate-500 dark:text-slate-400 text-xs mt-1 font-label">
                   Completează datele pentru a începe
                 </p>
               </div>
               <div className="text-right">
                 <p className="text-[10px] text-slate-400 font-label uppercase font-bold">AI CONT?</p>
                 <Link
-                  className="text-xs font-bold text-secondary-container dark:text-lime-400 text-slate-900 hover:underline"
+                  className="text-xs font-bold text-lime-600 dark:text-lime-400 hover:underline"
                   href="/signin"
                 >
                   Conectare ↗
@@ -114,94 +114,91 @@ export default function SignUpPage() {
             <form onSubmit={onSubmit} className="space-y-4">
               {/* Role Selection */}
               <div>
-                <label className="block text-[10px] font-label font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+                <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
                   Rol Principal
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {ROLES.map((r) => {
-                    const isSelected = selectedRole === r.id;
-                    return (
-                      <button
-                        key={r.id}
-                        type="button"
-                        onClick={() => setSelectedRole(r.id)}
-                        className={`p-2 rounded-xl transition-all text-center flex flex-col items-center justify-center gap-1 border ${
-                          isSelected
-                            ? "bg-secondary-container text-slate-950 border-secondary-container shadow-sm font-bold scale-95"
-                            : "bg-surface-container-low text-slate-600 dark:text-slate-400 border-transparent hover:bg-surface-container"
-                        }`}
-                      >
-                        <span className="material-symbols-outlined text-[18px]">{r.icon}</span>
-                        <span className="block text-[10px] font-label font-bold truncate w-full">
-                          {r.label}
-                        </span>
-                      </button>
-                    );
-                  })}
+                  {[
+                    { id: "organizer", label: "Organizator", icon: "emoji_events" },
+                    { id: "player", label: "Jucător", icon: "sports_soccer" },
+                    { id: "referee", label: "Arbitru", icon: "sports" },
+                    { id: "arena_owner", label: "Proprietar Arenă", icon: "stadium" },
+                  ].map((r) => (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onClick={() => setSelectedRole(r.id)}
+                      className={`p-2.5 rounded-xl border text-center transition flex flex-col items-center gap-1 ${
+                        selectedRole === r.id
+                          ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-transparent shadow-md font-bold"
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent hover:bg-slate-200 dark:hover:bg-slate-700"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-lg">{r.icon}</span>
+                      <span className="text-[10px] font-bold font-label">{r.label}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
 
+              {/* Name */}
               <div>
-                <label className="block text-[10px] font-label font-bold text-slate-500 uppercase tracking-widest mb-1">
+                <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
                   Nume Complet
                 </label>
-                <div className="flex items-center bg-surface-container-low rounded-xl px-3.5 py-2.5 border border-slate-200/60 dark:border-slate-800">
+                <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800">
                   <span className="material-symbols-outlined text-slate-400 text-lg mr-2.5">
                     person
                   </span>
                   <input
                     type="text"
                     required
-                    minLength={2}
-                    className="bg-transparent border-none p-0 w-full text-xs font-body focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-400"
-                    placeholder="Alex Popescu"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    placeholder="ex. Alexandru Popescu"
+                    className="bg-transparent border-none outline-none text-xs w-full text-slate-900 dark:text-white placeholder:text-slate-400 font-body"
                   />
                 </div>
               </div>
 
+              {/* Email */}
               <div>
-                <label className="block text-[10px] font-label font-bold text-slate-500 uppercase tracking-widest mb-1">
+                <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
                   Adresă Email
                 </label>
-                <div className="flex items-center bg-surface-container-low rounded-xl px-3.5 py-2.5 border border-slate-200/60 dark:border-slate-800">
-                  <span className="material-symbols-outlined text-slate-400 text-lg mr-2.5">
-                    mail
-                  </span>
+                <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800">
+                  <span className="material-symbols-outlined text-slate-400 text-lg mr-2.5">mail</span>
                   <input
                     type="email"
                     required
-                    className="bg-transparent border-none p-0 w-full text-xs font-body focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-400"
-                    placeholder="alex@organizator.ro"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    placeholder="nume@exemplu.ro"
+                    className="bg-transparent border-none outline-none text-xs w-full text-slate-900 dark:text-white placeholder:text-slate-400 font-body"
                   />
                 </div>
               </div>
 
+              {/* Password */}
               <div>
-                <label className="block text-[10px] font-label font-bold text-slate-500 uppercase tracking-widest mb-1">
-                  Parolă (min. 8 caractere)
+                <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+                  Parolă
                 </label>
-                <div className="flex items-center bg-surface-container-low rounded-xl px-3.5 py-2.5 border border-slate-200/60 dark:border-slate-800">
-                  <span className="material-symbols-outlined text-slate-400 text-lg mr-2.5">
-                    lock
-                  </span>
+                <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800">
+                  <span className="material-symbols-outlined text-slate-400 text-lg mr-2.5">lock</span>
                   <input
                     type="password"
                     required
-                    minLength={8}
-                    className="bg-transparent border-none p-0 w-full text-xs font-body focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-400"
-                    placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Minim 6 caractere"
+                    className="bg-transparent border-none outline-none text-xs w-full text-slate-900 dark:text-white placeholder:text-slate-400 font-body"
                   />
                 </div>
               </div>
 
               {error && (
-                <div className="p-3 bg-red-50 text-red-700 text-xs font-semibold rounded-xl border border-red-200">
+                <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-500 text-xs font-semibold font-body">
                   {error}
                 </div>
               )}
@@ -209,10 +206,16 @@ export default function SignUpPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary hover:bg-slate-800 text-white py-3 rounded-xl font-headline font-bold text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-2"
+                className="w-full bg-slate-950 dark:bg-lime-400 text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-lime-300 font-headline font-bold text-xs uppercase tracking-widest py-3.5 rounded-xl transition duration-150 shadow-md flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
               >
-                {loading ? "Se creează contul..." : "Finalizează Înregistrarea"}
-                <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                {loading ? (
+                  <span>Se creează contul...</span>
+                ) : (
+                  <>
+                    <span>Creează Contul</span>
+                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  </>
+                )}
               </button>
             </form>
           </div>

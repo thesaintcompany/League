@@ -205,19 +205,18 @@ export default function NewChampionshipPage() {
                       key={sc.value}
                       type="button"
                       onClick={() => update("scope", sc.value as any)}
-                      className={`p-3 rounded-xl border text-xs font-headline font-bold text-left transition flex flex-col justify-between gap-1.5 ${
-                        form.scope === sc.value
+                      className={`p-3 rounded-xl border text-xs font-headline font-bold text-left transition flex flex-col justify-between gap-1.5 ${form.scope === sc.value
                           ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md scale-[1.02]"
                           : "bg-slate-900 text-slate-300 border-slate-800 hover:border-lime-400"
-                      }`}
+                        }`}
                     >
                       <span className="text-xs">{sc.label}</span>
                       <span className="text-[10px] font-label font-normal opacity-80">
                         {sc.value === "national"
-                          ? "Vizibil pe toată harta României (în toate județele)"
+                          ? "Vizibil pe toată Nationale (în toate județele)"
                           : sc.value === "judetean"
-                          ? "Asociat unui județ specific"
-                          : "Asociat unui municipiu / oraș"}
+                            ? "Asociat unui județ specific"
+                            : "Asociat unui municipiu / oraș"}
                       </span>
                     </button>
                   ))}
