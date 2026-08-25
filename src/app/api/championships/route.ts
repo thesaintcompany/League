@@ -17,6 +17,12 @@ const createSchema = z.object({
   city: z.string().optional().nullable(),
 });
 
+function generateShareCode(name: string) {
+  const prefix = name.replace(/[^a-zA-Z]/g, "").slice(0, 3).toUpperCase() || "LP";
+  const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `${prefix}-${rand}`;
+}
+
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -58,23 +64,27 @@ export async function POST(req: Request) {
       if (!isNaN(d.getTime())) parsedEndDate = d;
     }
 
+    const shareCode = generateShareCode(name);
+
     const champ = await prisma.championship.create({
       data: {
         ownerId: (session.user as any).id,
         name: name.trim(),
         sport: sport?.trim() || "Fotbal",
         format: format?.trim() || "round_robin",
-        season: season || null,
+        season: season || "2026",
         startDate: parsedStartDate,
         endDate: parsedEndDate,
         description: description?.trim() || null,
         scope: scope || "national",
         county: county || (scope === "national" ? null : "Timiș"),
         city: city || null,
+        isBracketPublished: true,
+        shareCode,
       },
     });
 
-    return NextResponse.json({ championship: champ }, { status: 201 });
+    return NextResponse.json({ id: champ.id, championship: champ }, { status: 201 });
   } catch (err: any) {
     console.error("Error creating championship:", err);
     return NextResponse.json(

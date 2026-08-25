@@ -11,8 +11,8 @@ export default function NewChampionshipPage() {
   const [form, setForm] = useState({
     name: "",
     sport: "Fotbal",
-    format: "round_robin" as const,
-    season: "2025-2026",
+    format: "round_robin" as "round_robin" | "knockout" | "groups_knockout",
+    season: "2026",
     scope: "national" as "national" | "judetean" | "oras",
     county: "Timiș",
     city: "Timișoara",
@@ -23,74 +23,179 @@ export default function NewChampionshipPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  function update<K extends keyof typeof form>(key: K, value: typeof form[K]) {
+  function update<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  // Quick preset templates
+  function applyPreset(type: "national" | "judetean" | "knockout" | "friendly") {
+    if (type === "national") {
+      setForm((f) => ({
+        ...f,
+        name: "SuperLiga Națională România 2026",
+        sport: "Fotbal",
+        format: "round_robin",
+        scope: "national",
+        season: "2026",
+        description: "Campionat național de elită cu vizibilitate în toate județele României.",
+      }));
+    } else if (type === "judetean") {
+      setForm((f) => ({
+        ...f,
+        name: "Liga Județeană Timiș 2026",
+        sport: "Fotbal",
+        format: "round_robin",
+        scope: "judetean",
+        county: "Timiș",
+        season: "2026",
+        description: "Campionat oficial arondat Județului Timiș și arenelor sportive locale.",
+      }));
+    } else if (type === "knockout") {
+      setForm((f) => ({
+        ...f,
+        name: "Cupa Eliminatorie cu Zaruri 2026",
+        sport: "Fotbal",
+        format: "knockout",
+        scope: "national",
+        season: "2026",
+        description: "Turneu eliminatoriu direct cu tragere la sorți algoritmică prin zaruri (Sferturi -> Semifinale -> Finală).",
+      }));
+    } else if (type === "friendly") {
+      setForm((f) => ({
+        ...f,
+        name: "Turneu Demonstrativ & Meciuri Amicale Inter-Ligi",
+        sport: "Fotbal",
+        format: "round_robin",
+        scope: "national",
+        season: "2026",
+        description: "Partide amicale de verificare și jocuri demonstrative între cluburi din ligi diferite.",
+      }));
+    }
   }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    const res = await fetch("/api/championships", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    setLoading(false);
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error || "Eroare la creare.");
-      return;
+    try {
+      const res = await fetch("/api/championships", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      setLoading(false);
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "Eroare la crearea campionatului.");
+        return;
+      }
+      const data = await res.json();
+      const newId = data.id || data.championship?.id;
+      if (newId) {
+        router.push(`/dashboard/championships/${newId}`);
+      } else {
+        router.push("/dashboard");
+      }
+    } catch {
+      setLoading(false);
+      setError("Eroare de rețea. Te rugăm să reîncerci.");
     }
-    const data = await res.json();
-    router.push(`/dashboard/championships/${data.id || data.championship?.id}`);
   }
 
   return (
-    <div className="min-h-screen bg-surface flex">
+    <div className="min-h-screen bg-slate-950 flex font-body text-white">
       <Sidebar />
 
       <div className="flex-1 ml-64 flex flex-col min-w-0">
         <TopHeader
-          title="Turneu Nou"
-          subtitle="Configurează o competiție nouă cu arie de acoperire națională, județeană sau locală"
+          title="Creează o Ligă / Campionat Nou"
+          subtitle="Configurează o competiție nouă, un turneu eliminatoriu sau o cupă de jocuri amicale"
         />
 
-        <main className="p-6 lg:p-10 max-w-3xl">
-          <div className="card p-8 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 shadow-sm rounded-3xl">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100 dark:border-slate-800">
-              <div className="w-10 h-10 rounded-xl bg-lime-100 dark:bg-lime-950/50 text-lime-800 dark:text-lime-400 flex items-center justify-center font-bold">
+        <main className="p-6 lg:p-10 max-w-4xl space-y-8">
+          {/* Quick Presets Tray */}
+          <div className="card p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-3">
+            <span className="text-xs font-label font-bold text-slate-400 uppercase tracking-wider block">
+              ⚡ Șabloane Rapide (1-Click Fill)
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+              <button
+                type="button"
+                onClick={() => applyPreset("national")}
+                className="p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-lime-400 text-left transition"
+              >
+                <div className="text-base">🏆</div>
+                <div className="text-xs font-headline font-bold text-white mt-1">Ligă Națională</div>
+                <div className="text-[10px] text-slate-400">Vizibilă pe toată harta</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => applyPreset("judetean")}
+                className="p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-lime-400 text-left transition"
+              >
+                <div className="text-base">📍</div>
+                <div className="text-xs font-headline font-bold text-white mt-1">Ligă Județeană</div>
+                <div className="text-[10px] text-slate-400">Arondată unui județ (ex: Timiș)</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => applyPreset("knockout")}
+                className="p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-lime-400 text-left transition"
+              >
+                <div className="text-base">🎲</div>
+                <div className="text-xs font-headline font-bold text-white mt-1">Turneu cu Zaruri</div>
+                <div className="text-[10px] text-slate-400">Arbore eliminatoriu direct</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => applyPreset("friendly")}
+                className="p-3 rounded-2xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-lime-400 text-left transition"
+              >
+                <div className="text-base">🤝</div>
+                <div className="text-xs font-headline font-bold text-white mt-1">Meciuri Amicale</div>
+                <div className="text-[10px] text-slate-400">Jocuri demonstrative inter-ligi</div>
+              </button>
+            </div>
+          </div>
+
+          {/* Main Form */}
+          <div className="card p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+              <div className="w-10 h-10 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-bold">
                 <span className="material-symbols-outlined text-2xl">add_circle</span>
               </div>
               <div>
-                <h2 className="text-xl font-bold font-headline text-blue-950 dark:text-white">
-                  Detalii Competiție
+                <h2 className="text-xl font-bold font-headline text-white uppercase tracking-tight">
+                  Configurare Competiție
                 </h2>
-                <p className="text-xs text-slate-500 font-label">
-                  Poți adăuga echipele și programa meciurile imediat după creare.
+                <p className="text-xs text-slate-400 font-label">
+                  Campionatul va fi salvat instantaneu în baza de date și va apărea în selectorul public de ligi.
                 </p>
               </div>
             </div>
 
             <form onSubmit={onSubmit} className="space-y-6">
               <div>
-                <label className="label" htmlFor="name">
-                  Nume Campionat / Turneu *
+                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5" htmlFor="name">
+                  Nume Campionat / Ligă *
                 </label>
                 <input
                   id="name"
                   required
                   minLength={2}
-                  className="input text-xs"
+                  className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-lime-400"
                   value={form.name}
                   onChange={(e) => update("name", e.target.value)}
-                  placeholder="ex: Liga Pro România 2026"
+                  placeholder="ex: Liga Pro România 2026 sau Cupa Timișoarei"
                 />
               </div>
 
               {/* Scope Selection: Național vs Județean vs Local */}
-              <div className="p-5 rounded-2xl bg-surface-container-low border border-slate-200/60 dark:border-slate-800 space-y-4">
-                <label className="label block font-headline font-bold text-xs uppercase text-blue-950 dark:text-white">
+              <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
+                <label className="text-xs font-bold font-label text-slate-300 uppercase block">
                   Arie de Acoperire Teritorială (Amploare) *
                 </label>
 
@@ -102,8 +207,8 @@ export default function NewChampionshipPage() {
                       onClick={() => update("scope", sc.value as any)}
                       className={`p-3 rounded-xl border text-xs font-headline font-bold text-left transition flex flex-col justify-between gap-1.5 ${
                         form.scope === sc.value
-                          ? "bg-lime-400 text-slate-950 border-lime-500 shadow-md scale-[1.02]"
-                          : "bg-surface-container-lowest text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-lime-400"
+                          ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md scale-[1.02]"
+                          : "bg-slate-900 text-slate-300 border-slate-800 hover:border-lime-400"
                       }`}
                     >
                       <span className="text-xs">{sc.label}</span>
@@ -120,14 +225,14 @@ export default function NewChampionshipPage() {
 
                 {/* Conditional County & City Selectors */}
                 {form.scope !== "national" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200/50 dark:border-slate-800">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-800">
                     <div>
-                      <label className="label text-[11px]" htmlFor="county">
+                      <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5" htmlFor="county">
                         Județ Arondat *
                       </label>
                       <select
                         id="county"
-                        className="input text-xs"
+                        className="w-full p-3 rounded-2xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-lime-400"
                         value={form.county}
                         onChange={(e) => update("county", e.target.value)}
                       >
@@ -141,13 +246,13 @@ export default function NewChampionshipPage() {
 
                     {form.scope === "oras" && (
                       <div>
-                        <label className="label text-[11px]" htmlFor="city">
+                        <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5" htmlFor="city">
                           Oraș / Municipiu *
                         </label>
                         <input
                           id="city"
                           required
-                          className="input text-xs"
+                          className="w-full p-3 rounded-2xl bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-lime-400"
                           value={form.city}
                           onChange={(e) => update("city", e.target.value)}
                           placeholder="ex: Timișoara"
@@ -160,12 +265,12 @@ export default function NewChampionshipPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="label" htmlFor="sport">
+                  <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5" htmlFor="sport">
                     Sport
                   </label>
                   <select
                     id="sport"
-                    className="input text-xs"
+                    className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-lime-400"
                     value={form.sport}
                     onChange={(e) => update("sport", e.target.value)}
                   >
@@ -178,12 +283,12 @@ export default function NewChampionshipPage() {
                 </div>
 
                 <div>
-                  <label className="label" htmlFor="format">
+                  <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5" htmlFor="format">
                     Format Competiție
                   </label>
                   <select
                     id="format"
-                    className="input text-xs"
+                    className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-lime-400"
                     value={form.format}
                     onChange={(e) => update("format", e.target.value as any)}
                   >
@@ -198,27 +303,27 @@ export default function NewChampionshipPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="label" htmlFor="season">
+                  <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5" htmlFor="season">
                     Sezon
                   </label>
                   <input
                     id="season"
-                    className="input text-xs"
-                    placeholder="2025-2026"
+                    className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-lime-400"
+                    placeholder="2026"
                     value={form.season}
                     onChange={(e) => update("season", e.target.value)}
                   />
                 </div>
 
                 <div>
-                  <label className="label" htmlFor="startDate">
+                  <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5" htmlFor="startDate">
                     Data Începerii *
                   </label>
                   <input
                     id="startDate"
                     required
                     type="date"
-                    className="input text-xs"
+                    className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-lime-400"
                     value={form.startDate}
                     onChange={(e) => update("startDate", e.target.value)}
                   />
@@ -226,13 +331,13 @@ export default function NewChampionshipPage() {
               </div>
 
               <div>
-                <label className="label" htmlFor="description">
+                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5" htmlFor="description">
                   Descriere Competiție
                 </label>
                 <textarea
                   id="description"
                   rows={3}
-                  className="input text-xs"
+                  className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-lime-400"
                   placeholder="Regulament scurt, detalii locație sau organizator..."
                   value={form.description}
                   onChange={(e) => update("description", e.target.value)}
@@ -240,23 +345,23 @@ export default function NewChampionshipPage() {
               </div>
 
               {error && (
-                <div className="p-3 bg-red-50 text-red-700 text-xs font-semibold rounded-xl border border-red-200">
+                <div className="p-3 bg-red-950/80 text-red-300 text-xs font-semibold rounded-2xl border border-red-500/50">
                   {error}
                 </div>
               )}
 
-              <div className="flex gap-3 justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex gap-3 justify-end pt-4 border-t border-slate-800">
                 <button
                   type="button"
                   onClick={() => router.back()}
-                  className="btn btn-secondary text-xs uppercase tracking-wider font-bold"
+                  className="px-5 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase"
                 >
                   Anulează
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn btn-primary text-xs uppercase tracking-wider font-bold py-3 px-6 bg-lime-400 hover:bg-lime-500 text-slate-950"
+                  className="px-6 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg transition active:scale-95"
                 >
                   {loading ? "Se creează..." : "Lansează Campionatul 🚀"}
                 </button>
