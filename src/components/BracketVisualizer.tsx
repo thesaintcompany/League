@@ -69,15 +69,11 @@ export function BracketVisualizer({
     }
   }
 
-  // Get public URLs
+  // Get clean standalone public URLs
   const origin = typeof window !== "undefined" ? window.location.origin : "https://sp.buu.ro";
-  const publicShareUrl = championshipId
-    ? `${origin}/harta-campionat?id=${championshipId}`
-    : `${origin}/harta-campionat?code=${currentShareCode}`;
+  const publicShareUrl = `${origin}/harta-campionat/${currentShareCode}`;
 
-  const embedCode = `<iframe src="${publicShareUrl}" width="100%" height="700" frameborder="0" allowfullscreen></iframe>`;
-
-  function copyToClipboard(text: string, type: "link" | "code" | "embed") {
+  function copyToClipboard(text: string, type: "link" | "code") {
     navigator.clipboard.writeText(text);
     if (type === "link") {
       setCopiedLink(true);
@@ -85,9 +81,6 @@ export function BracketVisualizer({
     } else if (type === "code") {
       setCopiedCode(true);
       setTimeout(() => setCopiedCode(false), 2500);
-    } else if (type === "embed") {
-      setCopiedEmbed(true);
-      setTimeout(() => setCopiedEmbed(false), 2500);
     }
   }
 
@@ -325,10 +318,10 @@ export function BracketVisualizer({
               </button>
             </div>
 
-            {/* Instant Actions (WhatsApp, Embed) */}
+            {/* Instant Actions (WhatsApp, Standalone Page Direct Access) */}
             <div className="grid grid-cols-2 gap-3">
               <a
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`🏆 Urmărește Harta Live și Meciurile din ${championshipName || "Ligue Pro"}: ${publicShareUrl}`)}`}
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`🏆 Urmărește Harta Meciurilor din ${championshipName || "Ligue Pro"}: ${publicShareUrl}`)}`}
                 target="_blank"
                 rel="noreferrer"
                 className="p-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-label font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-lg"
@@ -336,14 +329,15 @@ export function BracketVisualizer({
                 <span>💬</span> Trimite pe WhatsApp
               </a>
 
-              <button
-                type="button"
-                onClick={() => copyToClipboard(embedCode, "embed")}
-                className="p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition border border-slate-700"
+              <a
+                href={publicShareUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lime-400 font-label font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition border border-slate-700"
               >
-                <span className="material-symbols-outlined text-sm">code</span>
-                {copiedEmbed ? "Cod iFrame Copiat! ✓" : "Cod Încorporare iFrame"}
-              </button>
+                <span className="material-symbols-outlined text-sm">open_in_new</span>
+                Deschide Pagina Separată ↗
+              </a>
             </div>
 
             {/* Modal Footer */}
