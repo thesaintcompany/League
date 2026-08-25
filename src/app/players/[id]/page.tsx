@@ -5,6 +5,30 @@ import { PublicHeader } from "@/components/PublicHeader";
 
 export const dynamic = "force-dynamic";
 
+function calculateFUTStats(position: string | null | undefined, rating: number = 8.8, goals: number = 10) {
+  const base = Math.min(96, Math.max(75, Math.round(rating * 10)));
+  const isAttacker = !position || position.includes("Atacant") || position.includes("Extremă") || position.includes("Ofensiv");
+  const isMidfielder = position?.includes("Mijlocaș") || position?.includes("Central");
+  const isDefender = position?.includes("Fundaș");
+
+  return {
+    pac: Math.min(98, base + (isAttacker ? 4 : isDefender ? -3 : 1)),
+    sho: Math.min(99, base + (isAttacker ? Math.min(6, Math.round(goals / 3)) : isDefender ? -15 : 2)),
+    pas: Math.min(95, base + (isMidfielder ? 5 : isAttacker ? 1 : -6)),
+    dri: Math.min(97, base + (isAttacker ? 3 : isMidfielder ? 4 : -8)),
+    def: Math.min(94, isDefender ? base + 6 : isMidfielder ? base - 8 : 42),
+    phy: Math.min(95, base + (isDefender ? 5 : 0)),
+    futRating: Math.min(95, Math.max(82, base + (goals > 12 ? 3 : 0))),
+    positionShort: isDefender ? "CB" : isMidfielder ? "CAM" : "ST",
+    finishing: Math.min(99, base + (isAttacker ? 7 : 0)),
+    sprintSpeed: Math.min(98, base + 3),
+    agility: Math.min(96, base + 2),
+    vision: Math.min(95, base + (isMidfielder ? 6 : 0)),
+    shotPower: Math.min(98, base + (isAttacker ? 6 : 2)),
+    stamina: Math.min(94, base + 1),
+  };
+}
+
 export default async function PublicPlayerDetailPage({
   params,
 }: {
@@ -33,6 +57,7 @@ export default async function PublicPlayerDetailPage({
     take: 6,
   });
 
+  const fut = calculateFUTStats(player.position, player.rating || 8.8, player.goals || 10);
   const defaultCover =
     "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80";
   const defaultAvatar =
@@ -40,95 +65,168 @@ export default async function PublicPlayerDetailPage({
     "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80";
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col font-body text-on-surface">
+    <div className="min-h-screen bg-slate-950 flex flex-col font-body text-white relative">
       {/* Top Navbar */}
       <PublicHeader currentTab="players" />
 
-      {/* Main Content Layout */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column: 9:16 Full-Body Visual Card & Headshot (4 cols) */}
-          <div className="lg:col-span-4 space-y-6">
-            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden relative group">
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-                  Profil Atletic Oficial
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
-                  PRO ATLET
-                </span>
-              </div>
+      {/* Hero Header with B&W Legendary Player Silhouette Shadow Background */}
+      <section className="relative overflow-hidden border-b border-amber-400/20 py-12 px-4 sm:px-6 lg:px-8">
+        {/* High Transparency B&W Silhouette Background */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-25 mix-blend-luminosity filter contrast-125 pointer-events-none"
+          style={{ backgroundImage: "url('/images/legend-player-shadow-bw.jpg')" }}
+        ></div>
 
-              {/* 9:16 Full-Body Shot with Link to Profile Editor */}
-              <Link
-                href="/profile"
-                title="Dublu-click în panou pentru a schimba poza în picioare (9:16)"
-                className="aspect-[9/14] w-full rounded-2xl overflow-hidden relative mb-4 bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-md block group/img"
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/90 pointer-events-none"></div>
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
+                ⭐ FIFA ULTIMATE ATLET
+              </span>
+              <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-xs font-label">
+                #{player.number || 10} • {player.position || "Atacant Central"}
+              </span>
+              <span
+                className="px-3 py-1 rounded-full text-white text-xs font-black uppercase font-label shadow-sm"
+                style={{ backgroundColor: player.team?.color || "#1e293b" }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={defaultCover}
-                  alt={player.name}
-                  className="w-full h-full object-cover object-center group-hover/img:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-5">
-                  <span className="text-[10px] font-label font-bold text-lime-400 uppercase tracking-widest">
-                    Poză în picioare (9:16)
-                  </span>
-                  <h2 className="font-headline font-bold text-white text-xl leading-tight">
-                    {player.name}
-                  </h2>
-                  <p className="text-xs text-slate-300 font-label">
-                    #{player.number || 10} • {player.position || "Atacant"}
-                  </p>
-                </div>
-              </Link>
+                {player.team?.name}
+              </span>
+            </div>
 
-              {/* Face Avatar Overlay */}
-              <div className="flex items-center gap-4 pt-2">
-                <Link
-                  href="/profile"
-                  className="w-16 h-16 rounded-2xl border-4 border-white dark:border-slate-900 overflow-hidden shadow-lg -mt-10 z-20 relative bg-slate-100 block"
-                >
+            <h1 className="text-4xl sm:text-6xl font-black italic tracking-tight font-headline uppercase leading-none text-white drop-shadow-lg">
+              {player.name}
+            </h1>
+
+            <p className="text-slate-300 text-sm sm:text-base font-body flex items-center gap-2">
+              <span className="text-amber-400 font-bold">🇷🇴 România</span>
+              <span>•</span>
+              <span>{player.team?.championship?.name || "Liga Pro România"}</span>
+              <span>•</span>
+              <span className="text-lime-400 font-bold">⚽ {player.goals || 0} Goluri Marcate</span>
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/profile"
+              className="px-5 py-3 rounded-2xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-400/20 transition active:scale-95 flex items-center gap-2"
+            >
+              <span className="material-symbols-outlined text-lg">edit</span>
+              Editează Profilul &amp; Pozele
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Container */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-12 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Giant FIFA FUT Gold Card (5 cols) */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="relative rounded-3xl overflow-hidden p-1 bg-gradient-to-b from-amber-300 via-amber-600 to-slate-950 border border-amber-300/80 shadow-2xl shadow-amber-500/20">
+              <div className="bg-slate-950/95 rounded-[22px] p-6 relative overflow-hidden space-y-6">
+                {/* Header: FIFA Rating, Position, Nation, Club */}
+                <div className="flex justify-between items-start">
+                  <div className="flex flex-col items-center">
+                    <span className="text-5xl font-black font-headline text-amber-400 drop-shadow-[0_2px_12px_rgba(251,191,36,0.6)] leading-none">
+                      {fut.futRating}
+                    </span>
+                    <span className="text-sm font-black font-headline uppercase text-amber-400 tracking-wider mt-1">
+                      {fut.positionShort}
+                    </span>
+                    <div className="w-6 h-4 rounded-sm overflow-hidden mt-1.5 border border-white/20 shadow-sm" title="România">
+                      <div className="w-full h-full flex">
+                        <span className="w-1/3 h-full bg-blue-600"></span>
+                        <span className="w-1/3 h-full bg-yellow-400"></span>
+                        <span className="w-1/3 h-full bg-red-600"></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-right">
+                    <span className="px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-black text-xs uppercase font-label shadow-md inline-block">
+                      GOLD CARD
+                    </span>
+                    <p className="text-xs font-bold text-slate-300 font-label mt-1">
+                      #{player.number || 10} • {player.team?.shortName || "CLUB"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* 9:16 Full-Body Shot in Card */}
+                <div className="aspect-[9/12] w-full rounded-2xl overflow-hidden relative bg-slate-900 border border-amber-400/30 shadow-inner group">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={defaultAvatar}
+                    src={defaultCover}
                     alt={player.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
-                </Link>
-                <div>
-                  <h3 className="font-headline font-bold text-sm text-blue-950 dark:text-white leading-tight">
-                    {player.name}
-                  </h3>
-                  <p className="font-label text-[11px] text-lime-600 dark:text-lime-400 font-bold uppercase tracking-wider">
-                    {player.team?.name || "Echipă Oficială"}
-                  </p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-5">
+                    <span className="text-[10px] font-label font-bold text-amber-400 uppercase tracking-widest">
+                      Fișă Oficială Atlet
+                    </span>
+                    <h2 className="font-headline font-black text-white text-2xl uppercase tracking-tight leading-tight">
+                      {player.name}
+                    </h2>
+                    <p className="text-xs text-slate-300 font-label">
+                      {player.position || "Atacant Central"} • {player.team?.name}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+                {/* FUT 6-Attributes Matrix */}
+                <div className="grid grid-cols-6 gap-2 pt-2 border-t border-slate-800 text-center font-headline">
+                  <div className="p-2 rounded-xl bg-slate-900/80 border border-slate-800">
+                    <span className="text-sm font-black text-white block">{fut.pac}</span>
+                    <span className="text-[10px] font-bold text-slate-400 block">PAC</span>
+                  </div>
+                  <div className="p-2 rounded-xl bg-slate-900/80 border border-amber-400/30">
+                    <span className="text-sm font-black text-amber-400 block">{fut.sho}</span>
+                    <span className="text-[10px] font-bold text-slate-400 block">SHO</span>
+                  </div>
+                  <div className="p-2 rounded-xl bg-slate-900/80 border border-slate-800">
+                    <span className="text-sm font-black text-white block">{fut.pas}</span>
+                    <span className="text-[10px] font-bold text-slate-400 block">PAS</span>
+                  </div>
+                  <div className="p-2 rounded-xl bg-slate-900/80 border border-slate-800">
+                    <span className="text-sm font-black text-white block">{fut.dri}</span>
+                    <span className="text-[10px] font-bold text-slate-400 block">DRI</span>
+                  </div>
+                  <div className="p-2 rounded-xl bg-slate-900/80 border border-slate-800">
+                    <span className="text-sm font-black text-slate-300 block">{fut.def}</span>
+                    <span className="text-[10px] font-bold text-slate-400 block">DEF</span>
+                  </div>
+                  <div className="p-2 rounded-xl bg-slate-900/80 border border-lime-400/30">
+                    <span className="text-sm font-black text-lime-400 block">{fut.phy}</span>
+                    <span className="text-[10px] font-bold text-slate-400 block">PHY</span>
+                  </div>
+                </div>
+
                 <Link
                   href="/profile"
-                  className="w-full py-2.5 rounded-xl bg-surface-container-low hover:bg-lime-400 hover:text-slate-950 text-slate-700 dark:text-slate-300 font-label text-xs font-bold uppercase tracking-wider transition flex items-center justify-center gap-1.5"
+                  className="w-full py-3 rounded-2xl bg-surface-container-low hover:bg-amber-400 hover:text-slate-950 text-slate-300 font-headline font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 border border-slate-800"
                 >
-                  <span className="material-symbols-outlined text-[16px]">edit</span>
-                  Editează Pozele Profilului Tău
+                  <span className="material-symbols-outlined text-base">photo_camera</span>
+                  Schimbă Pozele de Profil (Dublu-Click)
                 </Link>
               </div>
             </div>
 
-            {/* Fan Connectivity */}
-            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
-              <h4 className="font-headline font-bold text-xs text-blue-950 dark:text-white uppercase tracking-wider">
-                Fan Connectivity &amp; Social
+            {/* Social Connectivity */}
+            <div className="card p-6 bg-slate-900/80 border-slate-800 rounded-3xl space-y-3">
+              <h4 className="font-headline font-bold text-xs text-white uppercase tracking-wider">
+                Rețele Sociale Oficiale
               </h4>
               <div className="flex gap-2">
                 <a
                   href="https://instagram.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex-1 py-2.5 bg-pink-50 dark:bg-pink-950/40 text-pink-600 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition hover:bg-pink-100"
+                  className="flex-1 py-2.5 bg-pink-950/40 text-pink-400 hover:bg-pink-900/50 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition"
                 >
                   <span>📷</span> Instagram
                 </a>
@@ -136,91 +234,154 @@ export default async function PublicPlayerDetailPage({
                   href="https://x.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex-1 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition hover:bg-slate-200"
+                  className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition"
                 >
-                  <span>𝕏</span> Twitter
+                  <span>𝕏</span> Twitter / X
                 </a>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Player Telemetry & Match History (8 cols) */}
-          <div className="lg:col-span-8 space-y-8">
-            {/* Bento Player Telemetry */}
+          {/* Right Column: FIFA Detailed Attributes & Match Statistics (7 cols) */}
+          <div className="lg:col-span-7 space-y-8">
+            {/* Bento Season Telemetry */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-2xl shadow-sm text-center">
-                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
-                  Număr Tricou
-                </span>
-                <span className="text-3xl font-black data-font text-blue-950 dark:text-white mt-1 block">
-                  #{player.number || 10}
-                </span>
-              </div>
-
-              <div className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-2xl shadow-sm text-center">
-                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
-                  Poziție Teren
-                </span>
-                <span className="text-sm font-bold font-headline text-blue-950 dark:text-white mt-2 block truncate">
-                  {player.position || "Atacant"}
-                </span>
-              </div>
-
-              <div className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-2xl shadow-sm text-center">
+              <div className="card p-5 bg-slate-900/80 border-slate-800 rounded-2xl text-center">
                 <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
                   Goluri Înscrise
                 </span>
-                <span className="text-3xl font-black data-font text-lime-600 dark:text-lime-400 mt-1 block">
+                <span className="text-3xl font-black data-font text-amber-400 mt-1 block">
                   {player.goals || 0} ⚽
                 </span>
               </div>
 
-              <div className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-2xl shadow-sm text-center">
+              <div className="card p-5 bg-slate-900/80 border-slate-800 rounded-2xl text-center">
                 <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
-                  Rating Performanță
+                  Pase de Gol
                 </span>
-                <span className="text-3xl font-black data-font text-lime-600 dark:text-lime-400 mt-1 block">
-                  {player.rating || 8.8} ⭐
+                <span className="text-3xl font-black data-font text-lime-400 mt-1 block">
+                  {player.assists || 6} 👟
+                </span>
+              </div>
+
+              <div className="card p-5 bg-slate-900/80 border-slate-800 rounded-2xl text-center">
+                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
+                  Meciuri Jucate
+                </span>
+                <span className="text-3xl font-black data-font text-white mt-1 block">
+                  {player.matchesCount || 18} 🏟️
+                </span>
+              </div>
+
+              <div className="card p-5 bg-slate-900/80 border-slate-800 rounded-2xl text-center">
+                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
+                  Rating FIFA
+                </span>
+                <span className="text-3xl font-black data-font text-amber-400 mt-1 block">
+                  {fut.futRating} ⭐
                 </span>
               </div>
             </div>
 
-            {/* Team Affiliation Banner */}
-            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div className="flex items-center gap-4">
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xl text-white shadow-md"
-                  style={{ backgroundColor: player.team?.color || "#1e293b" }}
-                >
-                  {player.team?.shortName || player.team?.name.substring(0, 3).toUpperCase()}
+            {/* Detailed Attribute Breakdown Bars */}
+            <div className="card p-8 bg-slate-900/80 border-slate-800 rounded-3xl space-y-6 shadow-xl">
+              <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+                <div className="w-10 h-10 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xl">
+                  ⚡
                 </div>
                 <div>
-                  <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-                    Club Sportiv Afiliat
-                  </span>
-                  <h3 className="text-xl font-bold font-headline text-blue-950 dark:text-white">
-                    {player.team?.name}
+                  <h3 className="text-lg font-bold font-headline text-white">
+                    Atribute Tehnice &amp; Parametri de Performanță
                   </h3>
-                  <p className="text-xs text-slate-500 font-label">
-                    Competiție: {player.team?.championship?.name || "Liga Pro România"}
+                  <p className="text-xs text-slate-400 font-label">
+                    Statistici calibrate conform standardelor FIFA &amp; meciurilor oficiale
                   </p>
                 </div>
               </div>
 
-              <span className="px-3.5 py-1.5 rounded-full bg-lime-100 dark:bg-lime-950/40 text-lime-800 dark:text-lime-400 text-xs font-bold font-label uppercase">
-                Jucător Înregistrat ✓
-              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+                {/* Finishing */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-xs font-label">
+                    <span className="text-slate-300 font-bold">Finalizare &amp; Șut (Finishing)</span>
+                    <span className="text-amber-400 font-black">{fut.finishing} / 99</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full" style={{ width: `${fut.finishing}%` }}></div>
+                  </div>
+                </div>
+
+                {/* Sprint Speed */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-xs font-label">
+                    <span className="text-slate-300 font-bold">Viteză Maximă (Sprint Speed)</span>
+                    <span className="text-lime-400 font-black">{fut.sprintSpeed} / 99</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-lime-400 to-lime-500 rounded-full" style={{ width: `${fut.sprintSpeed}%` }}></div>
+                  </div>
+                </div>
+
+                {/* Agility */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-xs font-label">
+                    <span className="text-slate-300 font-bold">Agilitate &amp; Dribling</span>
+                    <span className="text-blue-400 font-black">{fut.agility} / 99</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full" style={{ width: `${fut.agility}%` }}></div>
+                  </div>
+                </div>
+
+                {/* Shot Power */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-xs font-label">
+                    <span className="text-slate-300 font-bold">Forță Șut (Shot Power)</span>
+                    <span className="text-amber-400 font-black">{fut.shotPower} / 99</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full" style={{ width: `${fut.shotPower}%` }}></div>
+                  </div>
+                </div>
+
+                {/* Vision */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-xs font-label">
+                    <span className="text-slate-300 font-bold">Viziune &amp; Pase Decisive</span>
+                    <span className="text-purple-400 font-black">{fut.vision} / 99</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-purple-400 to-purple-500 rounded-full" style={{ width: `${fut.vision}%` }}></div>
+                  </div>
+                </div>
+
+                {/* Stamina */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-xs font-label">
+                    <span className="text-slate-300 font-bold">Rezistență Fizică (Stamina)</span>
+                    <span className="text-lime-400 font-black">{fut.stamina} / 99</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-lime-400 to-lime-500 rounded-full" style={{ width: `${fut.stamina}%` }}></div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Recent Match Appearances */}
             <div className="space-y-4">
-              <h3 className="text-lg font-bold font-headline text-blue-950 dark:text-white flex items-center gap-2">
-                <span className="material-symbols-outlined text-lime-600">sports_soccer</span>
-                Meciuri Recente &amp; Programate
-              </h3>
+              <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+                <h3 className="text-lg font-bold font-headline text-white flex items-center gap-2">
+                  <span className="material-symbols-outlined text-amber-400">sports_soccer</span>
+                  Meciuri Oficiale &amp; Rapoarte
+                </h3>
+                <span className="text-xs text-slate-400 font-label">
+                  {matches.length} Partide
+                </span>
+              </div>
 
               {matches.length === 0 ? (
-                <div className="p-8 rounded-3xl bg-surface-container-low text-center text-xs text-slate-500 font-label">
+                <div className="p-8 rounded-3xl bg-slate-900/60 text-center text-xs text-slate-500 font-label border border-slate-800">
                   Momentan nu sunt meciuri înregistrate pentru acest jucător.
                 </div>
               ) : (
@@ -228,7 +389,7 @@ export default async function PublicPlayerDetailPage({
                   {matches.map((m) => (
                     <div
                       key={m.id}
-                      className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-2xl shadow-sm space-y-3"
+                      className="card p-5 bg-slate-900/80 border-slate-800 rounded-2xl space-y-3 hover:border-amber-400/50 transition"
                     >
                       <div className="flex justify-between items-center text-[10px] font-label font-bold text-slate-400 uppercase">
                         <span>Etapa {m.round}</span>
@@ -240,23 +401,24 @@ export default async function PublicPlayerDetailPage({
                         </span>
                       </div>
 
-                      <div className="flex justify-between items-center font-bold text-sm text-blue-950 dark:text-white font-headline">
+                      <div className="flex justify-between items-center font-bold text-sm text-white font-headline">
                         <span className="truncate">{m.homeTeam.name}</span>
-                        <span className="text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 data-font">
+                        <span className="text-xs px-2.5 py-0.5 rounded bg-slate-800 font-black data-font text-amber-400">
                           {m.status === "finished" ? `${m.homeScore} - ${m.awayScore}` : "VS"}
                         </span>
                         <span className="truncate">{m.awayTeam.name}</span>
                       </div>
 
-                      <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
-                        <span className="text-[11px] text-slate-500 font-label">
+                      <div className="pt-2 border-t border-slate-800 flex justify-between items-center text-xs">
+                        <span className="text-[11px] text-slate-400 font-label">
                           🏟️ {m.venue || "Arena Oficială"}
                         </span>
                         <Link
-                          href={`/matches/${m.id}/promo`}
-                          className="text-[11px] font-bold text-lime-600 hover:underline font-label"
+                          href={`/matches/${m.id}/report`}
+                          target="_blank"
+                          className="text-[11px] font-bold text-amber-400 hover:underline font-label"
                         >
-                          Promo ↗
+                          Raport PDF ↗
                         </Link>
                       </div>
                     </div>
@@ -269,8 +431,8 @@ export default async function PublicPlayerDetailPage({
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200/60 dark:border-slate-800/60 py-8 text-center text-xs font-label text-slate-400">
-        © {new Date().getFullYear()} Ligue Pro. Toate drepturile rezervate.
+      <footer className="border-t border-slate-800 py-8 text-center text-xs font-label text-slate-500">
+        © {new Date().getFullYear()} Ligue Pro România • FIFA Edition. Toate drepturile rezervate.
       </footer>
     </div>
   );
