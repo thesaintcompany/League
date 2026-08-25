@@ -108,26 +108,31 @@ export default async function PublicVenueDetailPage({
       )}
 
       {/* Hero Section with Stadium Glow */}
-      <section className="bg-primary text-white py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <section className="relative overflow-hidden bg-slate-950 text-white py-20 px-4 sm:px-6 lg:px-8 border-b border-lime-400/30 shadow-2xl">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none scale-105"
+          style={{ backgroundImage: `url('${venue.imageUrl || "/images/stadium-hero.jpg"}')` }}
+        ></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-slate-950/40 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/60 pointer-events-none"></div>
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-lime-400/15 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
             <div className="flex flex-wrap items-center gap-3 mb-4">
-              <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label shadow-sm">
+              <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label shadow-lg">
                 Arenă Oficială Ligue Pro
               </span>
-              <span className="px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold font-label uppercase">
+              <span className="px-3.5 py-1 rounded-full bg-slate-900/90 backdrop-blur-md text-white text-xs font-bold font-label uppercase border border-slate-700">
                 Sport: {venue.sport} • Gazon: {venue.surface}
               </span>
             </div>
 
-            <h1 className="text-4xl sm:text-6xl font-black italic tracking-tight font-headline uppercase leading-none text-white">
+            <h1 className="text-4xl sm:text-6xl font-black italic tracking-tight font-headline uppercase leading-none text-white drop-shadow-2xl">
               {venue.name}
             </h1>
 
-            <p className="mt-3 text-slate-300 text-sm sm:text-base flex items-center gap-2 font-label">
+            <p className="mt-3 text-slate-200 text-sm sm:text-base flex items-center gap-2 font-label drop-shadow">
               <span className="material-symbols-outlined text-lime-400">location_on</span>
               {venue.location} {venue.address ? `• ${venue.address}` : ""}
             </p>
@@ -138,7 +143,7 @@ export default async function PublicVenueDetailPage({
               href={`https://maps.google.com/?q=${encodeURIComponent(venue.name + " " + (venue.address || venue.location))}`}
               target="_blank"
               rel="noreferrer"
-              className="btn bg-lime-400 hover:bg-lime-500 text-slate-950 font-black text-xs uppercase tracking-wider py-3 px-5 rounded-xl shadow-lg transition flex items-center gap-2"
+              className="btn bg-lime-400 hover:bg-lime-300 text-slate-950 font-black text-xs uppercase tracking-wider py-3 px-5 rounded-2xl shadow-xl transition flex items-center gap-2"
             >
               <span className="material-symbols-outlined text-lg">map</span>
               Vezi Indicații Rutiere
