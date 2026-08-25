@@ -101,7 +101,15 @@ const SEEDS = [
     name: "Cristian Balaj - Arbitru FIFA",
     password: "demo12345",
     role: "referee",
-    refereeBadge: "FIFA Pro",
+    refereeBadge: "FIFA Pro Elite",
+    experienceYears: 14,
+  },
+  {
+    email: "kovacs@leaguehub.local",
+    name: "István Kovács - Arbitru UEFA",
+    password: "demo12345",
+    role: "referee",
+    refereeBadge: "FIFA Pro Elite",
     experienceYears: 12,
   },
   {
@@ -111,6 +119,15 @@ const SEEDS = [
     role: "player",
     position: "Fundaș Central",
     jerseyNumber: 3,
+    preferredFoot: "Drept",
+  },
+  {
+    email: "florin.tanase@leaguehub.local",
+    name: "Florin Tănase - Fotbalist",
+    password: "demo12345",
+    role: "player",
+    position: "Mijlocaș Ofensiv",
+    jerseyNumber: 10,
     preferredFoot: "Drept",
   },
   {
@@ -130,10 +147,23 @@ const SEEDS = [
 async function ensureUser(userData) {
   if (!userData.email) return null;
   const existing = await prisma.user.findUnique({ where: { email: userData.email } });
-  if (existing) {
-    return existing;
-  }
   const passwordHash = await hashPassword(userData.password);
+  if (existing) {
+    const updated = await prisma.user.update({
+      where: { id: existing.id },
+      data: {
+        name: userData.name,
+        passwordHash,
+        role: userData.role || "organizer",
+        position: userData.position,
+        jerseyNumber: userData.jerseyNumber,
+        preferredFoot: userData.preferredFoot,
+        refereeBadge: userData.refereeBadge,
+        experienceYears: userData.experienceYears,
+      },
+    });
+    return updated;
+  }
   const user = await prisma.user.create({
     data: {
       email: userData.email,
@@ -160,28 +190,37 @@ async function ensureVenues(arenaOwnerId) {
       {
         name: "Arena Națională",
         location: "Bulevardul Basarabia 37-39, București",
-        surface: "Gazon Natural",
+        surface: "Gazon Natural Hibrid",
         capacity: 55634,
         floodlights: true,
         pricePerHour: 1500,
         ownerId: arenaOwnerId,
       },
       {
-        name: "Baza Sportivă Sud",
-        location: "Strada Turnu Măgurele 5, București",
-        surface: "Sintetic Pro",
-        capacity: 800,
+        name: "Stadionul Steaua Ghencea",
+        location: "Bulevardul Ghencea 45, București",
+        surface: "Gazon Natural Pro",
+        capacity: 31254,
         floodlights: true,
-        pricePerHour: 250,
+        pricePerHour: 1200,
         ownerId: arenaOwnerId,
       },
       {
-        name: "Complexul Arcul de Triumf",
-        location: "Bulevardul Mărăști 18, București",
-        surface: "Mixt Hybrid",
-        capacity: 8207,
+        name: "Cluj Arena",
+        location: "Aleea Stadionului 2, Cluj-Napoca",
+        surface: "Gazon Natural",
+        capacity: 30201,
         floodlights: true,
-        pricePerHour: 800,
+        pricePerHour: 950,
+        ownerId: arenaOwnerId,
+      },
+      {
+        name: "Complexul Sportiv Craiova",
+        location: "Bulevardul Ilie Balaci 8, Craiova",
+        surface: "Gazon Mixt",
+        capacity: 30983,
+        floodlights: true,
+        pricePerHour: 900,
         ownerId: arenaOwnerId,
       },
     ],
@@ -191,50 +230,162 @@ async function ensureVenues(arenaOwnerId) {
 
 async function ensureDemoChampionship(ownerId) {
   const existing = await prisma.championship.findFirst({
-    where: { ownerId, name: "Liga Națională Ligue 2026" },
+    where: { ownerId, name: "Liga Pro România 2026" },
   });
   if (existing) {
     return existing;
   }
+
   const champ = await prisma.championship.create({
     data: {
       ownerId,
-      name: "Liga Națională Ligue 2026",
+      name: "Liga Pro România 2026",
       sport: "Fotbal",
       format: "round_robin",
       season: "2025-2026",
       startDate: new Date(),
-      description: "Campionat oficial cu clasament în timp real, arbitraj live și sistem de zaruri pentru tragerea la sorți.",
+      isBracketPublished: true,
+      description: "Campionat demonstrativ complet: 8 cluburi de elită, meciuri de campionat și faze eliminatorii cu zaruri 🎲, arbitraj live și rapoarte oficiale PDF.",
     },
   });
-  const teams = await Promise.all([
-    prisma.team.create({ data: { championshipId: champ.id, name: "FC Steaua", shortName: "STE", color: "#dc2626" } }),
-    prisma.team.create({ data: { championshipId: champ.id, name: "Dinamo", shortName: "DIN", color: "#1e3a8a" } }),
-    prisma.team.create({ data: { championshipId: champ.id, name: "Rapid", shortName: "RAP", color: "#fbbf24" } }),
-    prisma.team.create({ data: { championshipId: champ.id, name: "CFR Cluj", shortName: "CFR", color: "#7c2d12" } }),
-  ]);
-  const pairings = [[0, 1], [2, 3], [0, 2], [1, 3], [0, 3], [1, 2]];
+
+  // 8 Elite Teams
+  const teamsData = [
+    { name: "FCSB București", shortName: "FCS", color: "#dc2626" },
+    { name: "CFR 1907 Cluj", shortName: "CFR", color: "#7c2d12" },
+    { name: "Universitatea Craiova", shortName: "UCV", color: "#2563eb" },
+    { name: "Rapid București", shortName: "RAP", color: "#991b1b" },
+    { name: "Farul Constanța", shortName: "FAR", color: "#0284c7" },
+    { name: "Dinamo București", shortName: "DIN", color: "#b91c1c" },
+    { name: "Oțelul Galați", shortName: "OTE", color: "#ea580c" },
+    { name: "Sepsi OSK", shortName: "SEP", color: "#15803d" },
+  ];
+
+  const createdTeams = [];
+  for (const t of teamsData) {
+    const team = await prisma.team.create({
+      data: {
+        championshipId: champ.id,
+        name: t.name,
+        shortName: t.shortName,
+        color: t.color,
+      },
+    });
+
+    // Add 3 sample players for each team
+    await prisma.player.createMany({
+      data: [
+        { teamId: team.id, name: `Portar ${t.shortName}`, number: 1, position: "Portar" },
+        { teamId: team.id, name: `Fundaș ${t.shortName}`, number: 4, position: "Fundaș" },
+        { teamId: team.id, name: `Atacant ${t.shortName}`, number: 9, position: "Atacant" },
+      ],
+    });
+
+    createdTeams.push(team);
+  }
+
+  const venuesList = ["Arena Națională", "Stadionul Steaua Ghencea", "Cluj Arena", "Complexul Sportiv Craiova"];
+  const refereesList = ["Cristian Balaj - Arbitru FIFA", "István Kovács - Arbitru UEFA"];
+
+  // Create Quarter Finals (bracket 0, 1, 2, 3)
+  const quarterPairings = [
+    { home: 0, away: 1, hScore: 2, aScore: 1, finished: true, stage: "quarter_final", bIdx: 0, round: 1 },
+    { home: 2, away: 3, hScore: 3, aScore: 2, finished: true, stage: "quarter_final", bIdx: 1, round: 1 },
+    { home: 4, away: 5, hScore: null, aScore: null, finished: false, stage: "quarter_final", bIdx: 2, round: 1 },
+    { home: 6, away: 7, hScore: null, aScore: null, finished: false, stage: "quarter_final", bIdx: 3, round: 1 },
+  ];
+
   const now = Date.now();
-  for (let i = 0; i < pairings.length; i++) {
-    const [a, b] = pairings[i];
-    const finished = i < 2;
+
+  for (let i = 0; i < quarterPairings.length; i++) {
+    const p = quarterPairings[i];
+    const homeT = createdTeams[p.home];
+    const awayT = createdTeams[p.away];
+
+    const matchEvents = p.finished
+      ? JSON.stringify([
+          { minute: 14, type: "goal", team: homeT.name, player: `Atacant ${homeT.shortName}`, note: "Șut din interiorul careului" },
+          { minute: 38, type: "yellow_card", team: awayT.name, player: `Fundaș ${awayT.shortName}`, note: "Fault tactic" },
+          { minute: 55, type: "goal", team: awayT.name, player: `Atacant ${awayT.shortName}`, note: "Finalizare din centrarea laterală" },
+          { minute: 82, type: "goal", team: homeT.name, player: `Atacant ${homeT.shortName}`, note: "Lovitură de cap la colțul scurt" },
+        ])
+      : null;
+
     await prisma.match.create({
       data: {
         championshipId: champ.id,
-        homeTeamId: teams[a].id,
-        awayTeamId: teams[b].id,
-        scheduledAt: new Date(now + i * 86400000),
-        round: 1,
-        status: finished ? "finished" : "scheduled",
-        homeScore: finished ? (i === 0 ? 2 : 1) : null,
-        awayScore: finished ? (i === 0 ? 1 : 1) : null,
-        venue: i % 2 === 0 ? "Arena Națională" : "Baza Sportivă Sud",
-        referee: "Cristian Balaj - Arbitru FIFA",
-        stage: "group",
+        homeTeamId: homeT.id,
+        awayTeamId: awayT.id,
+        scheduledAt: new Date(now + (i - 2) * 86400000),
+        round: p.round,
+        status: p.finished ? "finished" : "scheduled",
+        homeScore: p.hScore,
+        awayScore: p.aScore,
+        venue: venuesList[i % venuesList.length],
+        referee: refereesList[i % refereesList.length],
+        stage: p.stage,
+        bracketIndex: p.bIdx,
+        homeOffsides: p.finished ? 2 : 0,
+        awayOffsides: p.finished ? 1 : 0,
+        homeFouls: p.finished ? 11 : 0,
+        awayFouls: p.finished ? 14 : 0,
+        homeCorners: p.finished ? 6 : 0,
+        awayCorners: p.finished ? 4 : 0,
+        events: matchEvents,
+        refereeNotes: p.finished ? "Partidă disputată într-un spirit deplin de fair-play. Nu au existat incidente disciplinare grave." : null,
+        signedBy: p.finished ? refereesList[i % refereesList.length] : null,
+        signedAt: p.finished ? new Date() : null,
       },
     });
   }
-  console.log("[seed] created demo championship");
+
+  // Create Semi-Finals & Grand Final Brackets
+  await prisma.match.create({
+    data: {
+      championshipId: champ.id,
+      homeTeamId: createdTeams[0].id,
+      awayTeamId: createdTeams[2].id,
+      scheduledAt: new Date(now + 3 * 86400000),
+      round: 2,
+      status: "scheduled",
+      venue: "Arena Națională",
+      referee: "István Kovács - Arbitru UEFA",
+      stage: "semi_final",
+      bracketIndex: 0,
+    },
+  });
+
+  await prisma.match.create({
+    data: {
+      championshipId: champ.id,
+      homeTeamId: createdTeams[4].id,
+      awayTeamId: createdTeams[6].id,
+      scheduledAt: new Date(now + 4 * 86400000),
+      round: 2,
+      status: "scheduled",
+      venue: "Cluj Arena",
+      referee: "Cristian Balaj - Arbitru FIFA",
+      stage: "semi_final",
+      bracketIndex: 1,
+    },
+  });
+
+  await prisma.match.create({
+    data: {
+      championshipId: champ.id,
+      homeTeamId: createdTeams[0].id,
+      awayTeamId: createdTeams[4].id,
+      scheduledAt: new Date(now + 7 * 86400000),
+      round: 3,
+      status: "scheduled",
+      venue: "Arena Națională",
+      referee: "Cristian Balaj - Arbitru FIFA",
+      stage: "final",
+      bracketIndex: 0,
+    },
+  });
+
+  console.log("[seed] created rich demo championship with 8 teams, matches, brackets, telemetry & PDF report data");
   return champ;
 }
 
@@ -253,7 +404,7 @@ async function main() {
 
   console.log("[seed] multi-role login accounts available:");
   for (const s of SEEDS) {
-    console.log(`  ${s.email.padEnd(25)} / ${s.password.padEnd(12)} [${s.role}]`);
+    console.log(`  ${s.email.padEnd(30)} / ${s.password.padEnd(12)} [${s.role}]`);
   }
 }
 
