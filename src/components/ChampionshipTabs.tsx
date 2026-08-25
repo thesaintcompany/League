@@ -38,7 +38,7 @@ const TABS = [
   { key: "standings", label: "Clasament General", icon: "leaderboard" },
   { key: "matches", label: "Program & Arbitraj", icon: "sports_soccer" },
   { key: "brackets", label: "Arbore Brackets & Zaruri 🎲", icon: "casino" },
-  { key: "teams", label: "Echipe & Lot", icon: "groups" },
+  { key: "teams", label: "Echipe Înscrise 🛡️", icon: "shield" },
   { key: "promo", label: "Promotion Hub 📢", icon: "campaign" },
 ] as const;
 
