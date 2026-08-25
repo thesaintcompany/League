@@ -36,10 +36,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Prisma
-prisma/dev.db
-prisma/dev.db-journal
+# SQLite databases & data directory
+prisma/*.db
+prisma/*.db-journal
+prisma/*.db-wal
+data/
+*.db
+*.db-journal
+*.db-wal
 
 # Logs
 *.log
 logs
+server.err.log
+server.log

@@ -49,9 +49,15 @@ export async function PATCH(
   if (parsed.data.venue !== undefined) data.venue = parsed.data.venue;
   if (parsed.data.notes !== undefined) data.notes = parsed.data.notes;
 
-  // if going live/finished, ensure scores are set
-  if ((data.status === "live" || data.status === "finished") &&
-      (data.homeScore == null || data.awayScore == null)) {
+  // if live/finished, ensure effective scores are present
+  const effectiveStatus = data.status || match.status;
+  const effectiveHomeScore = data.homeScore !== undefined ? data.homeScore : match.homeScore;
+  const effectiveAwayScore = data.awayScore !== undefined ? data.awayScore : match.awayScore;
+
+  if (
+    (effectiveStatus === "live" || effectiveStatus === "finished") &&
+    (effectiveHomeScore == null || effectiveAwayScore == null)
+  ) {
     return NextResponse.json(
       { error: "Scores required for live/finished" },
       { status: 400 }
