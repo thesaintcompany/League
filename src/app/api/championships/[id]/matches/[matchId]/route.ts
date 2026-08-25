@@ -33,20 +33,43 @@ export async function PATCH(
   ctx: { params: { id: string; matchId: string } }
 ) {
   const session = await getServerSession(authOptions);
-  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session?.user) {
+    return NextResponse.json({ error: "Autentificare necesară" }, { status: 401 });
+  }
 
+  const user = session.user as any;
   const match = await prisma.match.findUnique({
     where: { id: ctx.params.matchId },
     include: { championship: true },
   });
 
-  if (!match) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!match) return NextResponse.json({ error: "Meciul nu a fost găsit" }, { status: 404 });
+
+  // Check strict RBAC authorization:
+  // 1. Organizer owner or organizer role
+  // 2. Assigned referee matching name or referee role
+  const isOrganizer = user.role === "organizer" || match.championship.ownerId === user.id;
+  const isAssignedReferee =
+    user.role === "referee" &&
+    (!match.referee ||
+      match.referee.toLowerCase().includes(user.name?.toLowerCase() || "") ||
+      (user.name && user.name.toLowerCase().includes(match.referee.toLowerCase())));
+
+  if (!isOrganizer && !isAssignedReferee) {
+    return NextResponse.json(
+      {
+        error:
+          "Acces interzis: Doar arbitrul delegat la acest meci sau organizatorul campionatului pot modifica scorul, telemetria și raportul oficial.",
+      },
+      { status: 403 }
+    );
+  }
 
   const body = await req.json();
   const parsed = updateSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Invalid input", issues: parsed.error.flatten() },
+      { error: "Date invalide", issues: parsed.error.flatten() },
       { status: 400 }
     );
   }
@@ -87,13 +110,24 @@ export async function DELETE(
   ctx: { params: { id: string; matchId: string } }
 ) {
   const session = await getServerSession(authOptions);
-  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session?.user) {
+    return NextResponse.json({ error: "Autentificare necesară" }, { status: 401 });
+  }
 
+  const user = session.user as any;
   const match = await prisma.match.findUnique({
     where: { id: ctx.params.matchId },
     include: { championship: true },
   });
-  if (!match) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!match) return NextResponse.json({ error: "Meciul nu a fost găsit" }, { status: 404 });
+
+  const isOrganizer = user.role === "organizer" || match.championship.ownerId === user.id;
+  if (!isOrganizer) {
+    return NextResponse.json(
+      { error: "Doar organizatorul campionatului poate șterge meciuri." },
+      { status: 403 }
+    );
+  }
 
   await prisma.match.delete({ where: { id: match.id } });
   return NextResponse.json({ ok: true });

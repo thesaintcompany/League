@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import { MatchCard, MatchData } from "./MatchCard";
 import { RefereeControlModal } from "./RefereeControlModal";
 
@@ -9,6 +10,7 @@ type Match = {
   id: string;
   scheduledAt: string;
   venue: string | null;
+  referee?: string | null;
   round: number;
   status: string;
   homeScore: number | null;
@@ -28,6 +30,12 @@ export function MatchesTab({
   matches: Match[];
   onChanged: () => void;
 }) {
+  const { data: session } = useSession();
+  const user = session?.user as any;
+
+  const isOrganizer = user?.role === "organizer" || (!user?.role && !!session);
+  const isReferee = user?.role === "referee";
+
   const [showNew, setShowNew] = useState(false);
   const [editingMatch, setEditingMatch] = useState<MatchData | null>(null);
   const [form, setForm] = useState({
@@ -92,6 +100,7 @@ export function MatchesTab({
     homeScore: m.homeScore,
     awayScore: m.awayScore,
     venue: m.venue || undefined,
+    referee: m.referee || undefined,
     homeTeam: {
       id: m.homeTeam.id,
       name: m.homeTeam.name,
@@ -113,31 +122,33 @@ export function MatchesTab({
         <div className="flex items-center gap-2">
           <span className="w-2 h-5 bg-lime-500 rounded-full"></span>
           <h2 className="text-lg font-bold font-headline text-blue-950 dark:text-white">
-            Program Meciuri & Arbitraj ({matches.length})
+            Program Meciuri &amp; Arbitraj ({matches.length})
           </h2>
         </div>
 
-        <div className="flex items-center gap-2">
-          {matches.length === 0 && teams.length >= 2 && (
-            <button
-              onClick={generateRoundRobin}
-              disabled={busy}
-              className="btn btn-secondary text-xs uppercase tracking-wider font-bold py-2.5 px-4 rounded-xl flex items-center gap-1.5"
-            >
-              <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
-              {busy ? "Se generează..." : "Generare Automată Etape"}
-            </button>
-          )}
+        {isOrganizer && (
+          <div className="flex items-center gap-2">
+            {matches.length === 0 && teams.length >= 2 && (
+              <button
+                onClick={generateRoundRobin}
+                disabled={busy}
+                className="btn btn-secondary text-xs uppercase tracking-wider font-bold py-2.5 px-4 rounded-xl flex items-center gap-1.5"
+              >
+                <span className="material-symbols-outlined text-[16px]">auto_awesome</span>
+                {busy ? "Se generează..." : "Generare Automată Etape"}
+              </button>
+            )}
 
-          <button
-            onClick={() => setShowNew((s) => !s)}
-            disabled={teams.length < 2}
-            className="btn btn-primary text-xs uppercase tracking-wider font-bold py-2.5 px-4 rounded-xl flex items-center gap-1.5 bg-primary text-white hover:bg-slate-800 disabled:opacity-50"
-          >
-            <span className="material-symbols-outlined text-[16px]">add_circle</span>
-            {showNew ? "Închide Formular" : "Programează Meci"}
-          </button>
-        </div>
+            <button
+              onClick={() => setShowNew((s) => !s)}
+              disabled={teams.length < 2}
+              className="btn btn-primary text-xs uppercase tracking-wider font-bold py-2.5 px-4 rounded-xl flex items-center gap-1.5 bg-primary text-white hover:bg-slate-800 disabled:opacity-50"
+            >
+              <span className="material-symbols-outlined text-[16px]">add_circle</span>
+              {showNew ? "Închide Formular" : "Programează Meci"}
+            </button>
+          </div>
+        )}
       </div>
 
       {teams.length < 2 && (
@@ -148,7 +159,7 @@ export function MatchesTab({
       )}
 
       {/* New Match Form */}
-      {showNew && teams.length >= 2 && (
+      {showNew && teams.length >= 2 && isOrganizer && (
         <form
           onSubmit={addMatch}
           className="card p-6 bg-surface-container-lowest border-slate-200 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in"
@@ -253,14 +264,24 @@ export function MatchesTab({
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {matchDataList.map((m) => (
-            <MatchCard
-              key={m.id}
-              match={m}
-              isAdmin={true}
-              onEdit={(match) => setEditingMatch(match)}
-            />
-          ))}
+          {matchDataList.map((m) => {
+            // Strict match-level authorization: Organizer can edit all; Referee can edit assigned matches
+            const canEdit =
+              isOrganizer ||
+              (isReferee &&
+                (!m.referee ||
+                  m.referee.toLowerCase().includes(user?.name?.toLowerCase() || "") ||
+                  (user?.name && user.name.toLowerCase().includes(m.referee.toLowerCase()))));
+
+            return (
+              <MatchCard
+                key={m.id}
+                match={m}
+                isAdmin={canEdit}
+                onEdit={(match) => setEditingMatch(match)}
+              />
+            );
+          })}
         </div>
       )}
 

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { Sidebar } from "@/components/Sidebar";
 import { TopHeader } from "@/components/TopHeader";
 import { PlayerProfileForm } from "@/components/PlayerProfileForm";
+import { RefereeProfileForm } from "@/components/RefereeProfileForm";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -40,7 +41,7 @@ export default async function ProfilePage() {
 
       <div className="flex-1 ml-64 flex flex-col min-w-0">
         <TopHeader
-          title="Profil &amp; Setări Atlet"
+          title="Profil &amp; Setări Cont"
           subtitle={`Rol activ: ${roleLabels[currentRole] || "Utilizator"}`}
         />
 
@@ -50,14 +51,14 @@ export default async function ProfilePage() {
             <div>
               <div className="flex items-center gap-3">
                 <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label shadow-sm">
-                  {roleLabels[currentRole] || "Fotbalist Pro"}
+                  {roleLabels[currentRole] || "Utilizator Pro"}
                 </span>
                 <span className="text-xs text-slate-500 font-label">
                   ID: {user.id.substring(0, 8).toUpperCase()}
                 </span>
               </div>
               <h1 className="text-3xl font-black italic tracking-tight font-headline uppercase text-blue-950 dark:text-white mt-1">
-                {user.name || "Profil Atlet"}
+                {user.name || "Profil Utilizator"}
               </h1>
             </div>
 
@@ -70,17 +71,31 @@ export default async function ProfilePage() {
                   Panou Organizator ↗
                 </Link>
               )}
-              <Link
-                href="/players"
-                className="btn btn-primary text-xs uppercase tracking-wider font-bold py-2.5 px-5 rounded-xl bg-primary text-white hover:bg-slate-800 shadow-sm"
-              >
-                Catalog Public Jucători ↗
-              </Link>
+              {currentRole === "player" && (
+                <Link
+                  href="/players"
+                  className="btn btn-primary text-xs uppercase tracking-wider font-bold py-2.5 px-5 rounded-xl bg-primary text-white hover:bg-slate-800 shadow-sm"
+                >
+                  Catalog Public Jucători ↗
+                </Link>
+              )}
+              {currentRole === "referee" && (
+                <Link
+                  href="/referees"
+                  className="btn btn-primary text-xs uppercase tracking-wider font-bold py-2.5 px-5 rounded-xl bg-primary text-white hover:bg-slate-800 shadow-sm"
+                >
+                  Corp Arbitri ↗
+                </Link>
+              )}
             </div>
           </div>
 
-          {/* Interactive Player Profile Form (Visual Assets 9:16 + Headshot + Telemetry + Social Links) */}
-          <PlayerProfileForm initialUser={user} />
+          {/* Role-Adaptive Form */}
+          {currentRole === "referee" ? (
+            <RefereeProfileForm initialUser={user} />
+          ) : (
+            <PlayerProfileForm initialUser={user} />
+          )}
         </main>
       </div>
     </div>
