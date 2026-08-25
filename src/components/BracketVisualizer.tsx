@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { MatchData } from "./MatchCard";
 
 interface BracketVisualizerProps {
@@ -30,7 +31,7 @@ export function BracketVisualizer({
   const [showShareModal, setShowShareModal] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
-  const [copiedEmbed, setCopiedEmbed] = useState(false);
+  const [activeMobileStage, setActiveMobileStage] = useState<"quarters" | "semis" | "final">("quarters");
 
   // Filter matches by stage or round
   const quarterFinals = matches.filter(
@@ -85,21 +86,21 @@ export function BracketVisualizer({
   }
 
   return (
-    <div className="bg-slate-950 text-white rounded-3xl p-6 lg:p-10 shadow-2xl overflow-x-auto relative border border-slate-800 font-body">
+    <div className="w-full bg-slate-950 text-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl relative border border-slate-800 font-body">
       {/* Background glow effects */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-lime-400/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -ml-32 -mb-32 pointer-events-none"></div>
 
-      {/* Header & Controls */}
+      {/* Header & Controls Bar */}
       <div className="flex flex-wrap justify-between items-center gap-4 mb-8 pb-6 border-b border-white/10 relative z-10">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg">
-            🗺️
+          <div className="w-12 h-12 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg shadow-lime-400/20 shrink-0">
+            🎲
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl sm:text-2xl font-black italic font-headline text-white tracking-tight uppercase">
-                Harta Oficială a Turneului (Brackets)
+                Harta Oficială a Turneului (Arbore Eliminatoriu)
               </h2>
               {published ? (
                 <span className="px-2.5 py-0.5 rounded-full bg-lime-400/20 text-lime-400 text-[10px] font-black font-label uppercase border border-lime-400/30 flex items-center gap-1">
@@ -111,18 +112,18 @@ export function BracketVisualizer({
                   🔒 Ciornă Privată
                 </span>
               )}
-              <span className="px-2.5 py-0.5 rounded-full bg-slate-900 text-slate-300 text-[10px] font-black font-label border border-slate-700">
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-900 text-lime-400 text-[10px] font-black font-mono border border-slate-700">
                 #{currentShareCode}
               </span>
             </div>
             <p className="text-xs font-label text-slate-400 mt-0.5">
-              Fiecare campionat are o hartă unică generată prin zaruri • Distribuire în timp real
+              Fiecare campionat are o pagină web unică fără iframe-uri • Vizualizare completă în timp real
             </p>
           </div>
         </div>
 
         {/* Share & Admin Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"
             onClick={() => setShowShareModal(true)}
@@ -131,6 +132,15 @@ export function BracketVisualizer({
             <span className="material-symbols-outlined text-base">share</span>
             Distribuie Harta
           </button>
+
+          <Link
+            href={`/harta-campionat/${currentShareCode}`}
+            target="_blank"
+            className="px-4 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-lime-400 border border-slate-700 font-label font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition"
+          >
+            <span>Pagină Separată</span>
+            <span className="material-symbols-outlined text-sm">open_in_new</span>
+          </Link>
 
           {isAdmin && championshipId && (
             <button
@@ -156,19 +166,60 @@ export function BracketVisualizer({
         </div>
       </div>
 
-      {/* Mind Map Connection Lines & Bracket Columns Grid */}
-      <div className="relative min-w-[900px] z-10 py-6">
-        <div className="grid grid-cols-3 gap-8 relative">
+      {/* Mobile Stage Selector Tabs (Hidden on desktop) */}
+      <div className="flex md:hidden items-center justify-between gap-2 p-1.5 bg-slate-900 rounded-2xl border border-slate-800 mb-6">
+        <button
+          type="button"
+          onClick={() => setActiveMobileStage("quarters")}
+          className={`flex-1 py-2 rounded-xl text-[10px] font-headline font-black uppercase transition ${
+            activeMobileStage === "quarters"
+              ? "bg-lime-400 text-slate-950 shadow"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          Sferturi ({displayQuarters.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveMobileStage("semis")}
+          className={`flex-1 py-2 rounded-xl text-[10px] font-headline font-black uppercase transition ${
+            activeMobileStage === "semis"
+              ? "bg-lime-400 text-slate-950 shadow"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          Semifinale ({displaySemis.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveMobileStage("final")}
+          className={`flex-1 py-2 rounded-xl text-[10px] font-headline font-black uppercase transition ${
+            activeMobileStage === "final"
+              ? "bg-lime-400 text-slate-950 shadow"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          Finala 🏆
+        </button>
+      </div>
+
+      {/* Responsive Bracket Tournament Tree (No forced min-width or iframe scrolls) */}
+      <div className="relative z-10 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 relative items-stretch">
           {/* Column 1: Sferturi de Finală */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-2 mb-4 pb-2 border-b border-white/10">
+          <div
+            className={`space-y-6 flex flex-col justify-between ${
+              activeMobileStage === "quarters" ? "block" : "hidden md:flex"
+            }`}
+          >
+            <div className="flex items-center gap-2 pb-2.5 border-b border-white/10">
               <span className="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
-              <h3 className="font-headline font-bold text-sm tracking-wider uppercase text-slate-300">
+              <h3 className="font-headline font-bold text-xs sm:text-sm tracking-wider uppercase text-slate-300">
                 Sferturi de Finală (Etapa 1)
               </h3>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 my-auto">
               {displayQuarters.length === 0 ? (
                 <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-center text-xs text-slate-400 italic">
                   Meciurile de sferturi nu au fost încă trase la sorți.
@@ -187,44 +238,50 @@ export function BracketVisualizer({
           </div>
 
           {/* Column 2: Semifinale */}
-          <div className="space-y-6 flex flex-col justify-around">
-            <div>
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-white/10">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-                <h3 className="font-headline font-bold text-sm tracking-wider uppercase text-slate-300">
-                  Semifinale (Etapa 2)
-                </h3>
-              </div>
+          <div
+            className={`space-y-6 flex flex-col justify-between ${
+              activeMobileStage === "semis" ? "block" : "hidden md:flex"
+            }`}
+          >
+            <div className="flex items-center gap-2 pb-2.5 border-b border-white/10">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+              <h3 className="font-headline font-bold text-xs sm:text-sm tracking-wider uppercase text-slate-300">
+                Semifinale (Etapa 2)
+              </h3>
+            </div>
 
-              <div className="space-y-16 my-auto">
-                {displaySemis.length === 0 ? (
-                  <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-center text-xs text-slate-400 italic">
-                    Câștigătoarele din sferturi se califică automat aici.
-                  </div>
-                ) : (
-                  displaySemis.map((m) => (
-                    <BracketMatchNode
-                      key={m.id}
-                      match={m}
-                      onEdit={() => onEditMatch && onEditMatch(m)}
-                      canEdit={isAdmin}
-                    />
-                  ))
-                )}
-              </div>
+            <div className="space-y-8 my-auto">
+              {displaySemis.length === 0 ? (
+                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-center text-xs text-slate-400 italic">
+                  Câștigătoarele din sferturi se califică automat aici.
+                </div>
+              ) : (
+                displaySemis.map((m) => (
+                  <BracketMatchNode
+                    key={m.id}
+                    match={m}
+                    onEdit={() => onEditMatch && onEditMatch(m)}
+                    canEdit={isAdmin}
+                  />
+                ))
+              )}
             </div>
           </div>
 
           {/* Column 3: Marea Finală */}
-          <div className="space-y-6 flex flex-col justify-center">
-            <div className="my-auto">
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-lime-400/30">
-                <span className="w-3 h-3 rounded-full bg-lime-400 animate-pulse"></span>
-                <h3 className="font-headline font-black text-sm tracking-wider uppercase text-lime-400 flex items-center gap-1.5">
-                  🏆 Marea Finală a Campionatului
-                </h3>
-              </div>
+          <div
+            className={`space-y-6 flex flex-col justify-between ${
+              activeMobileStage === "final" ? "block" : "hidden md:flex"
+            }`}
+          >
+            <div className="flex items-center gap-2 pb-2.5 border-b border-lime-400/30">
+              <span className="w-3 h-3 rounded-full bg-lime-400 animate-pulse"></span>
+              <h3 className="font-headline font-black text-xs sm:text-sm tracking-wider uppercase text-lime-400 flex items-center gap-1.5">
+                🏆 Marea Finală a Campionatului
+              </h3>
+            </div>
 
+            <div className="my-auto">
               {displayFinal ? (
                 <div className="relative">
                   <div className="absolute -inset-1 bg-gradient-to-r from-lime-400 to-amber-400 rounded-3xl blur opacity-30 animate-pulse"></div>
@@ -236,9 +293,9 @@ export function BracketVisualizer({
                   />
                 </div>
               ) : (
-                <div className="p-8 rounded-3xl bg-gradient-to-br from-white/5 to-white/10 border border-lime-400/20 text-center space-y-2">
+                <div className="p-8 rounded-3xl bg-gradient-to-br from-white/5 to-white/10 border border-lime-400/20 text-center space-y-3">
                   <div className="text-4xl">👑</div>
-                  <h4 className="font-headline font-bold text-white text-sm">
+                  <h4 className="font-headline font-bold text-white text-sm uppercase">
                     Trofeul Ligue Pro 2026
                   </h4>
                   <p className="text-xs text-slate-400 font-label">
@@ -280,7 +337,7 @@ export function BracketVisualizer({
             {/* Public Link Input & Copy */}
             <div className="space-y-2">
               <label className="text-xs font-bold font-label text-slate-300 uppercase block">
-                Link Unic Public de Vizualizare
+                Link Unic Public Pagină Separată
               </label>
               <div className="flex gap-2">
                 <input
@@ -336,7 +393,7 @@ export function BracketVisualizer({
                 className="p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lime-400 font-label font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition border border-slate-700"
               >
                 <span className="material-symbols-outlined text-sm">open_in_new</span>
-                Deschide Pagina Separată ↗
+                Deschide Pagina ↗
               </a>
             </div>
 
@@ -370,6 +427,7 @@ function BracketMatchNode({
   canEdit?: boolean;
 }) {
   const isFinished = match.status === "finished";
+  const isLive = match.status === "live";
   const homeWinner = isFinished && (match.homeScore ?? 0) > (match.awayScore ?? 0);
   const awayWinner = isFinished && (match.awayScore ?? 0) > (match.homeScore ?? 0);
 
@@ -377,17 +435,25 @@ function BracketMatchNode({
     <div
       className={`card relative p-4 rounded-2xl border transition-all duration-300 ${
         isFinal
-          ? "bg-slate-900 border-lime-400/80 shadow-2xl"
+          ? "bg-slate-900 border-lime-400/80 shadow-2xl ring-1 ring-lime-400/30"
           : "bg-slate-900/90 border-slate-800 hover:border-lime-400/50 shadow-md"
       }`}
     >
       {/* Node Header */}
       <div className="flex justify-between items-center mb-2 pb-1.5 border-b border-white/5 text-[10px] font-label text-slate-400 uppercase">
-        <span className="font-bold text-slate-300">
-          {match.venue || "Stadion Oficial"}
+        <span className="font-bold text-slate-300 truncate max-w-[150px]">
+          🏟️ {match.venue || "Stadion Oficial"}
         </span>
-        <span className="px-2 py-0.5 rounded bg-white/5 font-bold text-lime-400">
-          {match.status === "finished" ? "Finalizat ✓" : match.status === "live" ? "🔴 Live" : "Programat"}
+        <span
+          className={`px-2 py-0.5 rounded font-bold ${
+            isFinished
+              ? "bg-lime-400/20 text-lime-400"
+              : isLive
+              ? "bg-red-500/20 text-red-400 animate-pulse"
+              : "bg-white/5 text-slate-400"
+          }`}
+        >
+          {isFinished ? "Finalizat ✓" : isLive ? "🔴 Live" : "Programat"}
         </span>
       </div>
 
@@ -395,62 +461,70 @@ function BracketMatchNode({
       <div className="space-y-1.5">
         {/* Home Team */}
         <div
-          className={`flex items-center justify-between p-2 rounded-xl transition ${
+          className={`flex items-center justify-between p-2.5 rounded-xl transition ${
             homeWinner
               ? "bg-lime-400/20 text-lime-300 font-black border border-lime-400/40"
               : "bg-slate-950/60 text-slate-300"
           }`}
         >
-          <div className="flex items-center gap-2 truncate">
+          <div className="flex items-center gap-2 truncate flex-1 min-w-0">
             <span
-              className="w-3 h-3 rounded-full shrink-0"
+              className="w-3.5 h-3.5 rounded-full shrink-0 border border-white/20"
               style={{ backgroundColor: match.homeTeam.color || "#84cc16" }}
             ></span>
             <span className="text-xs font-headline font-bold truncate">
               {match.homeTeam.name}
             </span>
           </div>
-          <span className="text-sm font-black font-headline data-font px-1.5">
+          <span className="text-sm font-black font-headline data-font px-2 shrink-0">
             {match.homeScore ?? "—"}
           </span>
         </div>
 
         {/* Away Team */}
         <div
-          className={`flex items-center justify-between p-2 rounded-xl transition ${
+          className={`flex items-center justify-between p-2.5 rounded-xl transition ${
             awayWinner
               ? "bg-lime-400/20 text-lime-300 font-black border border-lime-400/40"
               : "bg-slate-950/60 text-slate-300"
           }`}
         >
-          <div className="flex items-center gap-2 truncate">
+          <div className="flex items-center gap-2 truncate flex-1 min-w-0">
             <span
-              className="w-3 h-3 rounded-full shrink-0"
+              className="w-3.5 h-3.5 rounded-full shrink-0 border border-white/20"
               style={{ backgroundColor: match.awayTeam.color || "#38bdf8" }}
             ></span>
             <span className="text-xs font-headline font-bold truncate">
               {match.awayTeam.name}
             </span>
           </div>
-          <span className="text-sm font-black font-headline data-font px-1.5">
+          <span className="text-sm font-black font-headline data-font px-2 shrink-0">
             {match.awayScore ?? "—"}
           </span>
         </div>
       </div>
 
-      {/* Node Actions */}
-      {canEdit && (
-        <div className="mt-2 pt-2 border-t border-white/5 flex justify-end">
+      {/* Match Footer Actions */}
+      <div className="mt-2.5 pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-label">
+        <Link
+          href={`/matches/${match.id}/promo`}
+          target="_blank"
+          className="text-lime-400 font-bold uppercase hover:underline flex items-center gap-1"
+        >
+          <span>🎟️ Promo &amp; Bilete</span>
+        </Link>
+
+        {canEdit && (
           <button
             type="button"
             onClick={onEdit}
-            className="text-[10px] font-label font-bold text-lime-400 hover:underline uppercase flex items-center gap-1"
+            className="font-bold text-slate-300 hover:text-white uppercase flex items-center gap-1"
           >
             <span className="material-symbols-outlined text-[12px]">edit</span>
-            Editează Rezultat
+            Editează
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
