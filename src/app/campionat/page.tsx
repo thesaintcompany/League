@@ -207,6 +207,19 @@ export default async function PublicChampionshipPage({
           teamsCount: c._count.teams,
         }))}
         standings={standings}
+        allMatches={rawMatches.map((m) => ({
+          id: m.id,
+          round: m.round,
+          stage: m.stage || "Etapa " + m.round,
+          scheduledAt: m.scheduledAt ? m.scheduledAt.toISOString() : "",
+          homeScore: m.homeScore,
+          awayScore: m.awayScore,
+          status: m.status,
+          venue: m.venue || "Arenă Oficială",
+          bracketIndex: m.bracketIndex,
+          homeTeam: { id: m.homeTeam.id, name: m.homeTeam.name, shortName: m.homeTeam.shortName || m.homeTeam.name.substring(0, 3), color: m.homeTeam.color || "#84cc16" },
+          awayTeam: { id: m.awayTeam.id, name: m.awayTeam.name, shortName: m.awayTeam.shortName || m.awayTeam.name.substring(0, 3), color: m.awayTeam.color || "#38bdf8" },
+        }))}
         finishedMatches={finishedMatches.map((m) => ({
           id: m.id,
           round: m.round,
@@ -214,7 +227,9 @@ export default async function PublicChampionshipPage({
           scheduledAt: m.scheduledAt ? m.scheduledAt.toISOString() : "",
           homeScore: m.homeScore ?? 0,
           awayScore: m.awayScore ?? 0,
+          status: m.status,
           venue: m.venue || "Arenă Oficială",
+          bracketIndex: m.bracketIndex,
           homeTeam: { id: m.homeTeam.id, name: m.homeTeam.name, shortName: m.homeTeam.shortName || m.homeTeam.name.substring(0, 3), color: m.homeTeam.color || "#84cc16" },
           awayTeam: { id: m.awayTeam.id, name: m.awayTeam.name, shortName: m.awayTeam.shortName || m.awayTeam.name.substring(0, 3), color: m.awayTeam.color || "#38bdf8" },
         }))}
@@ -224,6 +239,8 @@ export default async function PublicChampionshipPage({
           stage: m.stage || "Etapa " + m.round,
           scheduledAt: m.scheduledAt ? m.scheduledAt.toISOString() : "",
           venue: m.venue || "Arenă Oficială",
+          status: m.status,
+          bracketIndex: m.bracketIndex,
           homeTeam: { id: m.homeTeam.id, name: m.homeTeam.name, shortName: m.homeTeam.shortName || m.homeTeam.name.substring(0, 3), color: m.homeTeam.color || "#84cc16" },
           awayTeam: { id: m.awayTeam.id, name: m.awayTeam.name, shortName: m.awayTeam.shortName || m.awayTeam.name.substring(0, 3), color: m.awayTeam.color || "#38bdf8" },
         }))}

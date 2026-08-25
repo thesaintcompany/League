@@ -73,7 +73,7 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
                 : "hover:text-lime-400"
             }`}
           >
-            <span>🎲</span> Harta Zaruri
+            <span>🎲</span> Harta Campionat (Zaruri)
           </Link>
           <Link
             href="/venues"
