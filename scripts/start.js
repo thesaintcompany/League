@@ -3,31 +3,27 @@ const path = require("node:path");
 const { spawn } = require("node:child_process");
 
 const cwd = process.cwd();
-const standaloneServerInRoot = path.join(cwd, "server.js");
-const standaloneServerInNext = path.join(cwd, ".next", "standalone", "server.js");
-
 const port = process.env.PORT || "3000";
 const hostname = process.env.HOSTNAME || "0.0.0.0";
 
 process.env.PORT = port;
 process.env.HOSTNAME = hostname;
 
-// 1. If running in a Docker container where server.js was copied to root /app/server.js
-if (fs.existsSync(standaloneServerInRoot)) {
+// 1. If running in a minimal Docker runner where only standalone server.js was copied (no next CLI)
+const standaloneServerInRoot = path.join(cwd, "server.js");
+const nextCliInNodeModules = path.join(cwd, "node_modules", ".bin", "next");
+
+if (fs.existsSync(standaloneServerInRoot) && !fs.existsSync(nextCliInNodeModules)) {
   console.log(`[start] Starting standalone server from ./server.js on ${hostname}:${port}...`);
   require(standaloneServerInRoot);
-}
-// 2. If running under Railpack / Nixpacks where standalone output is in .next/standalone
-else if (fs.existsSync(standaloneServerInNext)) {
-  console.log(`[start] Starting standalone server from .next/standalone/server.js on ${hostname}:${port}...`);
-  // Ensure public and static are linked/available if needed
-  process.chdir(path.join(cwd, ".next", "standalone"));
-  require(standaloneServerInNext);
-}
-// 3. Fallback to standard Next.js production server
-else {
+} else {
+  // 2. Standard Next.js server (Railpack / Nixpacks / local node)
   console.log(`[start] Starting Next.js via next start on ${hostname}:${port}...`);
-  const nextBin = path.join(cwd, "node_modules", ".bin", process.platform === "win32" ? "next.cmd" : "next");
+  const isWin = process.platform === "win32";
+  const nextBin = isWin
+    ? path.join(cwd, "node_modules", ".bin", "next.cmd")
+    : path.join(cwd, "node_modules", ".bin", "next");
+
   const cmd = fs.existsSync(nextBin) ? nextBin : "next";
   const child = spawn(cmd, ["start", "-p", port, "-H", hostname], {
     stdio: "inherit",

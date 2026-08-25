@@ -21,6 +21,7 @@ RUN npx prisma generate
 
 # Build Next.js standalone
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV BUILD_STANDALONE=true
 RUN npm run build
 
 # Production runner image
