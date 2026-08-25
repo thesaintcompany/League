@@ -21,6 +21,9 @@ export default async function DashboardPage() {
   if (userRole === "player") {
     redirect("/profile");
   }
+  if (userRole === "referee") {
+    redirect("/dashboard/referee");
+  }
 
   const championships = await prisma.championship.findMany({
     where: { ownerId: userId },

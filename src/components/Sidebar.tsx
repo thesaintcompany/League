@@ -10,38 +10,77 @@ interface NavItem {
   icon: string;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
-  { name: "Gestiune Arenă & Reclame", href: "/dashboard/arena", icon: "stadium" },
-  { name: "Harta României (Județe)", href: "/harta-romaniei", icon: "map" },
-  { name: "Consolă SuperAdmin", href: "/dashboard/admin", icon: "admin_panel_settings" },
-  { name: "Harta Zaruri", href: "/brackets", icon: "account_tree" },
-  { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
-  { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
-  { name: "Corp Arbitri", href: "/referees", icon: "sports" },
-  { name: "Pagina Publică", href: "/campionat", icon: "public" },
-  { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
-];
-
 export function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const role = (session?.user as any)?.role || "organizer";
+
+  // Build role-specific navigation menu
+  let navItems: NavItem[] = [];
+
+  if (role === "referee") {
+    // Dedicated Referee Menu: profile, matches to officiate, match history, and public pages
+    navItems = [
+      { name: "Meciuri & Panou Arbitraj", href: "/dashboard/referee", icon: "sports" },
+      { name: "Profil & Setări Oficiale", href: "/profile", icon: "account_circle" },
+      { name: "Harta României (Județe)", href: "/harta-romaniei", icon: "map" },
+      { name: "Harta Zaruri", href: "/brackets", icon: "account_tree" },
+      { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
+      { name: "Corp Arbitri", href: "/referees", icon: "badge" },
+      { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Pagina Publică", href: "/campionat", icon: "public" },
+    ];
+  } else if (role === "arena_owner") {
+    // Dedicated Arena Owner Menu
+    navItems = [
+      { name: "Gestiune Arenă & Reclame", href: "/dashboard/arena", icon: "stadium" },
+      { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
+      { name: "Harta României (Județe)", href: "/harta-romaniei", icon: "map" },
+      { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Pagina Publică", href: "/campionat", icon: "public" },
+    ];
+  } else if (role === "player") {
+    // Dedicated Player Menu
+    navItems = [
+      { name: "Profil Fotbalist FUT", href: "/profile", icon: "sports_soccer" },
+      { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
+      { name: "Harta României (Județe)", href: "/harta-romaniei", icon: "map" },
+      { name: "Harta Zaruri", href: "/brackets", icon: "account_tree" },
+      { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Corp Arbitri", href: "/referees", icon: "badge" },
+      { name: "Pagina Publică", href: "/campionat", icon: "public" },
+    ];
+  } else {
+    // Organizer / SuperAdmin Menu
+    navItems = [
+      { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
+      { name: "Consolă SuperAdmin", href: "/dashboard/admin", icon: "admin_panel_settings" },
+      { name: "Gestiune Arenă & Reclame", href: "/dashboard/arena", icon: "stadium" },
+      { name: "Harta României (Județe)", href: "/harta-romaniei", icon: "map" },
+      { name: "Harta Zaruri", href: "/brackets", icon: "account_tree" },
+      { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
+      { name: "Corp Arbitri", href: "/referees", icon: "sports" },
+      { name: "Pagina Publică", href: "/campionat", icon: "public" },
+      { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
+    ];
+  }
 
   return (
-    <aside className="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-100 dark:bg-slate-900 border-r border-slate-200/50 dark:border-slate-800/50 flex flex-col py-6">
+    <aside className="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-900 border-r border-slate-800 flex flex-col py-6">
       {/* Brand Header */}
       <div className="px-6 mb-6">
-        <Link href="/dashboard" className="block group">
+        <Link href={role === "referee" ? "/dashboard/referee" : role === "arena_owner" ? "/dashboard/arena" : "/dashboard"} className="block group">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-primary dark:bg-lime-400 flex items-center justify-center text-white dark:text-primary font-black text-lg shadow-sm">
+            <div className="w-8 h-8 rounded-lg bg-lime-400 flex items-center justify-center text-slate-950 font-black text-lg shadow-sm">
               ⚡
             </div>
             <div>
-              <span className="text-xl font-extrabold tracking-tighter text-blue-950 dark:text-white block leading-none">
+              <span className="text-xl font-extrabold tracking-tighter text-white block leading-none">
                 Ligue
               </span>
-              <span className="text-[10px] font-label text-slate-500 uppercase tracking-widest block mt-0.5 font-semibold">
-                Pro Organizer
+              <span className="text-[10px] font-label text-lime-400 uppercase tracking-widest block mt-0.5 font-bold">
+                {role === "referee" ? "Oficial Arbitraj" : role === "arena_owner" ? "Panou Arenă" : role === "player" ? "Fișă Jucător" : "Pro Organizer"}
               </span>
             </div>
           </div>
@@ -50,7 +89,7 @@ export function Sidebar() {
 
       {/* Navigation Links */}
       <nav className="flex-1 px-3 space-y-1.5 overflow-y-auto">
-        {NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
           return (
             <Link
@@ -58,8 +97,8 @@ export function Sidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium transition-all duration-200 ${
                 isActive
-                  ? "bg-slate-200 dark:bg-slate-800 text-blue-950 dark:text-lime-400 font-bold border-l-4 border-lime-500 shadow-sm"
-                  : "text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800/60"
+                  ? "bg-slate-800 text-lime-400 font-bold border-l-4 border-lime-400 shadow-sm"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/60"
               }`}
             >
               <span className="material-symbols-outlined text-[22px]">{item.icon}</span>
@@ -70,33 +109,45 @@ export function Sidebar() {
       </nav>
 
       {/* Footer / CTA */}
-      <div className="mt-auto px-4 pt-4 border-t border-slate-200/50 dark:border-slate-800/50 space-y-3">
-        <Link
-          href="/dashboard/new"
-          className="w-full bg-primary hover:bg-slate-800 text-white py-2.5 px-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95"
-        >
-          <span className="material-symbols-outlined text-sm">add_circle</span>
-          <span className="font-label text-xs uppercase tracking-wider">Turneu Nou</span>
-        </Link>
+      <div className="mt-auto px-4 pt-4 border-t border-slate-800 space-y-3">
+        {role === "organizer" && (
+          <Link
+            href="/dashboard/new"
+            className="w-full bg-lime-400 hover:bg-lime-300 text-slate-950 py-2.5 px-3 rounded-xl font-black flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 text-xs font-label uppercase tracking-wider"
+          >
+            <span className="material-symbols-outlined text-sm">add_circle</span>
+            Turneu Nou
+          </Link>
+        )}
+
+        {role === "referee" && (
+          <Link
+            href="/dashboard/referee"
+            className="w-full bg-lime-400 hover:bg-lime-300 text-slate-950 py-2.5 px-3 rounded-xl font-black flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 text-xs font-label uppercase tracking-wider"
+          >
+            <span className="material-symbols-outlined text-sm">sports</span>
+            Panou Arbitraj Live
+          </Link>
+        )}
 
         {session?.user && (
-          <div className="pt-2 border-t border-slate-200/40 dark:border-slate-800/40">
+          <div className="pt-2 border-t border-slate-800">
             <div className="flex items-center justify-between px-2">
               <div className="flex items-center gap-2 min-w-0">
-                <div className="w-7 h-7 rounded-full bg-slate-300 dark:bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-800 dark:text-slate-200">
+                <div className="w-7 h-7 rounded-full bg-lime-400 text-slate-950 flex items-center justify-center text-xs font-black">
                   {session.user.name ? session.user.name[0].toUpperCase() : "U"}
                 </div>
                 <div className="truncate">
-                  <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate leading-tight">
-                    {session.user.name || "Organizator"}
+                  <p className="text-xs font-bold text-white truncate leading-tight">
+                    {session.user.name || "Utilizator"}
                   </p>
-                  <p className="text-[10px] text-slate-500 truncate">{session.user.email}</p>
+                  <p className="text-[10px] text-slate-400 truncate">{session.user.email}</p>
                 </div>
               </div>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
                 title="Deconectare"
-                className="p-1.5 text-slate-400 hover:text-error transition-colors rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800"
+                className="p-1.5 text-slate-400 hover:text-red-400 transition-colors rounded-lg hover:bg-slate-800"
               >
                 <span className="material-symbols-outlined text-[18px]">logout</span>
               </button>
