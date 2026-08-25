@@ -36,7 +36,7 @@ export function Sidebar() {
             </div>
             <div>
               <span className="text-xl font-extrabold tracking-tighter text-blue-950 dark:text-white block leading-none">
-                Kinetic Hub
+                Ligue
               </span>
               <span className="text-[10px] font-label text-slate-500 uppercase tracking-widest block mt-0.5 font-semibold">
                 Pro Organizer

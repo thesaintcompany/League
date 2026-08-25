@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "Kinetic Hub | Pro League Organizer",
+  title: "Ligue | Pro League Organizer",
   description: "Platformă profesională pentru organizarea și managementul campionatelor, ligilor, meciurilor și statisticilor sportive.",
 };
 

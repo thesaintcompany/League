@@ -136,7 +136,7 @@ export default async function HomePage() {
               ⚡
             </div>
             <span className="text-xl font-black italic tracking-tight text-blue-950 dark:text-white uppercase font-headline">
-              Kinetic Hub
+              Ligue
             </span>
           </Link>
 
@@ -343,10 +343,10 @@ export default async function HomePage() {
       <footer className="border-t border-slate-200/60 dark:border-slate-800/60 py-10 mt-16 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs font-label text-slate-500">
           <p className="font-bold text-slate-700 dark:text-slate-300">
-            Kinetic Hub — Platformă Profesională de Organizare Sportivă
+            Ligue — Platformă Profesională de Organizare Sportivă
           </p>
           <p className="mt-1">
-            © {new Date().getFullYear()} Kinetic Hub. Toate drepturile rezervate.
+            © {new Date().getFullYear()} Ligue. Toate drepturile rezervate.
           </p>
         </div>
       </footer>
