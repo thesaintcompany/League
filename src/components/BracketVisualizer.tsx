@@ -6,6 +6,8 @@ import { MatchData } from "./MatchCard";
 interface BracketVisualizerProps {
   matches: MatchData[];
   championshipId?: string;
+  championshipName?: string;
+  shareCode?: string;
   isPublished?: boolean;
   onEditMatch?: (match: MatchData) => void;
   isAdmin?: boolean;
@@ -15,14 +17,20 @@ interface BracketVisualizerProps {
 export function BracketVisualizer({
   matches,
   championshipId,
+  championshipName,
+  shareCode = "LP-OFFICIAL",
   isPublished = true,
   onEditMatch,
   isAdmin = false,
   onVisibilityChanged,
 }: BracketVisualizerProps) {
   const [published, setPublished] = useState(isPublished);
+  const [currentShareCode, setCurrentShareCode] = useState(shareCode);
   const [loadingPublish, setLoadingPublish] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedEmbed, setCopiedEmbed] = useState(false);
 
   // Filter matches by stage or round
   const quarterFinals = matches.filter(
@@ -51,6 +59,7 @@ export function BracketVisualizer({
       const data = await res.json();
       if (res.ok) {
         setPublished(data.isBracketPublished);
+        if (data.shareCode) setCurrentShareCode(data.shareCode);
         if (onVisibilityChanged) onVisibilityChanged();
       }
     } catch (e) {
@@ -60,16 +69,30 @@ export function BracketVisualizer({
     }
   }
 
-  function copyPublicLink() {
-    if (typeof window === "undefined") return;
-    const url = `${window.location.origin}/#harta-campionat`;
-    navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+  // Get public URLs
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://sp.buu.ro";
+  const publicShareUrl = championshipId
+    ? `${origin}/harta-campionat?id=${championshipId}`
+    : `${origin}/harta-campionat?code=${currentShareCode}`;
+
+  const embedCode = `<iframe src="${publicShareUrl}" width="100%" height="700" frameborder="0" allowfullscreen></iframe>`;
+
+  function copyToClipboard(text: string, type: "link" | "code" | "embed") {
+    navigator.clipboard.writeText(text);
+    if (type === "link") {
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
+    } else if (type === "code") {
+      setCopiedCode(true);
+      setTimeout(() => setCopiedCode(false), 2500);
+    } else if (type === "embed") {
+      setCopiedEmbed(true);
+      setTimeout(() => setCopiedEmbed(false), 2500);
+    }
   }
 
   return (
-    <div className="bg-primary text-white rounded-3xl p-6 lg:p-10 shadow-2xl overflow-x-auto relative border border-slate-800">
+    <div className="bg-slate-950 text-white rounded-3xl p-6 lg:p-10 shadow-2xl overflow-x-auto relative border border-slate-800 font-body">
       {/* Background glow effects */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-lime-400/10 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -ml-32 -mb-32 pointer-events-none"></div>
@@ -81,260 +104,359 @@ export function BracketVisualizer({
             🗺️
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl sm:text-2xl font-black italic font-headline text-white tracking-tight uppercase">
-                Harta Campionatului &amp; Brackets Live
+                Harta Oficială a Turneului (Brackets)
               </h2>
               {published ? (
                 <span className="px-2.5 py-0.5 rounded-full bg-lime-400/20 text-lime-400 text-[10px] font-black font-label uppercase border border-lime-400/30 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse"></span>
-                  Public
+                  Public ✓
                 </span>
               ) : (
                 <span className="px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] font-black font-label uppercase border border-amber-400/30">
                   🔒 Ciornă Privată
                 </span>
               )}
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-900 text-slate-300 text-[10px] font-black font-label border border-slate-700">
+                #{currentShareCode}
+              </span>
             </div>
             <p className="text-xs font-label text-slate-400 mt-0.5">
-              Generată automat prin algoritmul de zaruri • Arbore eliminatoriu direct
+              Fiecare campionat are o hartă unică generată prin zaruri • Distribuire în timp real
             </p>
           </div>
         </div>
 
-        {/* Visibility Actions (Organizer only) */}
-        {isAdmin && championshipId && (
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={copyPublicLink}
-              className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-label font-bold text-white transition flex items-center gap-1.5 border border-white/10"
-            >
-              <span className="material-symbols-outlined text-[16px]">share</span>
-              {copied ? "Link Copiat! ✓" : "Distribuie Hartă"}
-            </button>
+        {/* Share & Admin Actions */}
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setShowShareModal(true)}
+            className="px-4 py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95"
+          >
+            <span className="material-symbols-outlined text-base">share</span>
+            Distribuie Harta
+          </button>
 
+          {isAdmin && championshipId && (
             <button
               type="button"
               onClick={togglePublish}
               disabled={loadingPublish}
-              className={`px-4 py-2 rounded-xl text-xs font-label font-black uppercase tracking-wider transition-all flex items-center gap-2 shadow-md ${
+              className={`px-4 py-2.5 rounded-2xl text-xs font-label font-bold uppercase tracking-wider transition-all flex items-center gap-2 shadow-md border ${
                 published
-                  ? "bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700"
-                  : "bg-lime-400 hover:bg-lime-500 text-slate-950 font-black"
+                  ? "bg-slate-900 hover:bg-slate-800 text-slate-300 border-slate-700"
+                  : "bg-amber-400 hover:bg-amber-300 text-slate-950 font-black border-amber-400"
               }`}
             >
-              <span className="material-symbols-outlined text-[18px]">
+              <span className="material-symbols-outlined text-base">
                 {published ? "visibility_off" : "public"}
               </span>
               {loadingPublish
                 ? "Se actualizează..."
                 : published
-                ? "Treci pe Mod Privat"
-                : "Publică Harta Live 🚀"}
+                ? "Treci pe Privat"
+                : "Fă Harta Publică 🚀"}
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Mind Map Connection Lines & Bracket Columns Grid */}
-      <div className="min-w-[820px] grid grid-cols-3 gap-8 relative z-10">
-        {/* Column 1: Sferturi de Finala (4 Meciuri) */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between pb-2.5 border-b border-white/10">
-            <span className="text-xs font-label font-black text-lime-400 uppercase tracking-wider flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-lime-400"></span>
-              Sferturi de Finală
-            </span>
-            <span className="text-[10px] text-slate-400 font-label uppercase font-bold">Runda 1</span>
+      <div className="relative min-w-[900px] z-10 py-6">
+        <div className="grid grid-cols-3 gap-8 relative">
+          {/* Column 1: Sferturi de Finală */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 mb-4 pb-2 border-b border-white/10">
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
+              <h3 className="font-headline font-bold text-sm tracking-wider uppercase text-slate-300">
+                Sferturi de Finală (Etapa 1)
+              </h3>
+            </div>
+
+            <div className="space-y-6">
+              {displayQuarters.length === 0 ? (
+                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-center text-xs text-slate-400 italic">
+                  Meciurile de sferturi nu au fost încă trase la sorți.
+                </div>
+              ) : (
+                displayQuarters.map((m) => (
+                  <BracketMatchNode
+                    key={m.id}
+                    match={m}
+                    onEdit={() => onEditMatch && onEditMatch(m)}
+                    canEdit={isAdmin}
+                  />
+                ))
+              )}
+            </div>
           </div>
 
-          <div className="space-y-4">
-            {displayQuarters.length === 0 ? (
-              <div className="p-8 rounded-3xl bg-white/5 border border-dashed border-white/15 text-center space-y-2">
-                <span className="text-3xl block">🎲</span>
-                <p className="text-xs font-bold text-slate-300 font-headline">
-                  Harta este în așteptare
-                </p>
-                <p className="text-[11px] text-slate-400 font-body">
-                  Aruncă zarurile din consolă pentru a distribui echipele în arborele de joc.
-                </p>
+          {/* Column 2: Semifinale */}
+          <div className="space-y-6 flex flex-col justify-around">
+            <div>
+              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-white/10">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                <h3 className="font-headline font-bold text-sm tracking-wider uppercase text-slate-300">
+                  Semifinale (Etapa 2)
+                </h3>
               </div>
-            ) : (
-              displayQuarters.map((m, idx) => (
-                <BracketMatchNode
-                  key={m.id}
-                  match={m}
-                  label={`Sfert #${idx + 1}`}
-                  onEdit={isAdmin && onEditMatch ? () => onEditMatch(m) : undefined}
-                />
-              ))
-            )}
-          </div>
-        </div>
 
-        {/* Column 2: Semifinale (2 Meciuri) */}
-        <div className="space-y-6 flex flex-col justify-around">
-          <div className="flex items-center justify-between pb-2.5 border-b border-white/10">
-            <span className="text-xs font-label font-black text-lime-400 uppercase tracking-wider flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-lime-400"></span>
-              Semifinale
-            </span>
-            <span className="text-[10px] text-slate-400 font-label uppercase font-bold">Runda 2</span>
-          </div>
-
-          <div className="space-y-8">
-            {displaySemis.length === 0 ? (
-              <div className="p-8 rounded-3xl bg-white/5 border border-dashed border-white/15 text-center space-y-2">
-                <span className="text-3xl block">⚡</span>
-                <p className="text-xs font-bold text-slate-300 font-headline">
-                  În așteptarea rezultatelor
-                </p>
-                <p className="text-[11px] text-slate-400 font-body">
-                  Echipele învingătoare din sferturi avansează aici automat.
-                </p>
+              <div className="space-y-16 my-auto">
+                {displaySemis.length === 0 ? (
+                  <div className="p-6 rounded-2xl bg-white/5 border border-white/10 text-center text-xs text-slate-400 italic">
+                    Câștigătoarele din sferturi se califică automat aici.
+                  </div>
+                ) : (
+                  displaySemis.map((m) => (
+                    <BracketMatchNode
+                      key={m.id}
+                      match={m}
+                      onEdit={() => onEditMatch && onEditMatch(m)}
+                      canEdit={isAdmin}
+                    />
+                  ))
+                )}
               </div>
-            ) : (
-              displaySemis.map((m, idx) => (
-                <BracketMatchNode
-                  key={m.id}
-                  match={m}
-                  label={`Semifinala ${idx + 1}`}
-                  onEdit={isAdmin && onEditMatch ? () => onEditMatch(m) : undefined}
-                />
-              ))
-            )}
-          </div>
-        </div>
-
-        {/* Column 3: Marea Finala (1 Meci) & Trofeu */}
-        <div className="space-y-6 flex flex-col justify-center">
-          <div className="flex items-center justify-between pb-2.5 border-b border-white/10">
-            <span className="text-xs font-label font-black text-amber-400 uppercase tracking-wider flex items-center gap-2">
-              🏆 Marea Finală
-            </span>
-            <span className="text-[10px] text-slate-400 font-label uppercase font-bold">Ultimul Act</span>
+            </div>
           </div>
 
-          <div>
-            {displayFinal ? (
-              <div className="border-2 border-amber-400/80 rounded-3xl p-1 bg-amber-400/10 shadow-2xl">
-                <BracketMatchNode
-                  match={displayFinal}
-                  label="FINALĂ DE CAMPIONAT"
-                  isGrandFinal={true}
-                  onEdit={isAdmin && onEditMatch ? () => onEditMatch(displayFinal) : undefined}
-                />
+          {/* Column 3: Marea Finală */}
+          <div className="space-y-6 flex flex-col justify-center">
+            <div className="my-auto">
+              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-lime-400/30">
+                <span className="w-3 h-3 rounded-full bg-lime-400 animate-pulse"></span>
+                <h3 className="font-headline font-black text-sm tracking-wider uppercase text-lime-400 flex items-center gap-1.5">
+                  🏆 Marea Finală a Campionatului
+                </h3>
               </div>
-            ) : (
-              <div className="p-10 rounded-3xl bg-white/5 border-2 border-dashed border-amber-400/40 text-center space-y-3 shadow-inner">
-                <span className="text-5xl block animate-bounce">🏆</span>
-                <p className="font-extrabold text-base text-white font-headline">Trofeul Ligue Pro</p>
-                <p className="text-xs text-slate-400 font-body">
-                  Cele mai bune două echipe din semifinale vor disputa marea finală pe stadionul oficial!
-                </p>
-              </div>
-            )}
+
+              {displayFinal ? (
+                <div className="relative">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-lime-400 to-amber-400 rounded-3xl blur opacity-30 animate-pulse"></div>
+                  <BracketMatchNode
+                    match={displayFinal}
+                    isFinal={true}
+                    onEdit={() => onEditMatch && onEditMatch(displayFinal)}
+                    canEdit={isAdmin}
+                  />
+                </div>
+              ) : (
+                <div className="p-8 rounded-3xl bg-gradient-to-br from-white/5 to-white/10 border border-lime-400/20 text-center space-y-2">
+                  <div className="text-4xl">👑</div>
+                  <h4 className="font-headline font-bold text-white text-sm">
+                    Trofeul Ligue Pro 2026
+                  </h4>
+                  <p className="text-xs text-slate-400 font-label">
+                    Învingătoarele din semifinale vor disputa marea finală pentru titlul de campioană.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* SHARE CHAMPIONSHIP MAP MODAL */}
+      {showShareModal && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-slate-900 border-2 border-lime-400/60 rounded-3xl p-6 sm:p-8 max-w-xl w-full space-y-6 shadow-2xl text-white animate-in fade-in zoom-in-95">
+            <div className="flex justify-between items-start pb-4 border-b border-slate-800">
+              <div>
+                <span className="px-3 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
+                  DISTRIBUIRE HARTĂ CAMPIONAT
+                </span>
+                <h3 className="text-xl sm:text-2xl font-black font-headline uppercase text-white mt-1">
+                  {championshipName || "Harta Oficială a Turneului"}
+                </h3>
+                <p className="text-xs text-slate-400 font-label">
+                  Cod Unic Public: <strong className="text-lime-400 font-mono">#{currentShareCode}</strong>
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowShareModal(false)}
+                className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Public Link Input & Copy */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold font-label text-slate-300 uppercase block">
+                Link Unic Public de Vizualizare
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  readOnly
+                  value={publicShareUrl}
+                  className="flex-1 p-3 bg-slate-950 border border-slate-700 rounded-2xl text-xs text-lime-400 font-mono select-all focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(publicShareUrl, "link")}
+                  className="px-5 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shrink-0"
+                >
+                  {copiedLink ? "Copiat! ✓" : "Copiază"}
+                </button>
+              </div>
+            </div>
+
+            {/* Share Code Copy */}
+            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex justify-between items-center">
+              <div>
+                <span className="text-[10px] font-label font-bold text-slate-400 uppercase block">
+                  Cod Unic pentru Căutare Rapidă
+                </span>
+                <span className="text-xl font-black font-mono text-white">
+                  {currentShareCode}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => copyToClipboard(currentShareCode, "code")}
+                className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase transition border border-slate-700"
+              >
+                {copiedCode ? "Copiat! ✓" : "Copiază Cod"}
+              </button>
+            </div>
+
+            {/* Instant Actions (WhatsApp, Embed) */}
+            <div className="grid grid-cols-2 gap-3">
+              <a
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`🏆 Urmărește Harta Live și Meciurile din ${championshipName || "Ligue Pro"}: ${publicShareUrl}`)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="p-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-label font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-lg"
+              >
+                <span>💬</span> Trimite pe WhatsApp
+              </a>
+
+              <button
+                type="button"
+                onClick={() => copyToClipboard(embedCode, "embed")}
+                className="p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition border border-slate-700"
+              >
+                <span className="material-symbols-outlined text-sm">code</span>
+                {copiedEmbed ? "Cod iFrame Copiat! ✓" : "Cod Încorporare iFrame"}
+              </button>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex justify-between items-center pt-3 border-t border-slate-800 text-xs text-slate-400 font-label">
+              <span>Status hartă: <strong className={published ? "text-lime-400" : "text-amber-400"}>{published ? "Publică pentru toată lumea" : "Privată"}</strong></span>
+              <button
+                type="button"
+                onClick={() => setShowShareModal(false)}
+                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold"
+              >
+                Închide
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 function BracketMatchNode({
   match,
-  label,
-  isGrandFinal = false,
+  isFinal = false,
   onEdit,
+  canEdit = false,
 }: {
   match: MatchData;
-  label: string;
-  isGrandFinal?: boolean;
+  isFinal?: boolean;
   onEdit?: () => void;
+  canEdit?: boolean;
 }) {
   const isFinished = match.status === "finished";
-  const homeWon = isFinished && (match.homeScore ?? 0) > (match.awayScore ?? 0);
-  const awayWon = isFinished && (match.awayScore ?? 0) > (match.homeScore ?? 0);
+  const homeWinner = isFinished && (match.homeScore ?? 0) > (match.awayScore ?? 0);
+  const awayWinner = isFinished && (match.awayScore ?? 0) > (match.homeScore ?? 0);
 
   return (
     <div
-      onClick={onEdit}
-      className={`rounded-2xl p-4 bg-white/5 hover:bg-white/10 transition-all duration-200 border border-white/10 ${
-        onEdit ? "cursor-pointer group hover:border-lime-400/60 shadow-lg" : ""
+      className={`card relative p-4 rounded-2xl border transition-all duration-300 ${
+        isFinal
+          ? "bg-slate-900 border-lime-400/80 shadow-2xl"
+          : "bg-slate-900/90 border-slate-800 hover:border-lime-400/50 shadow-md"
       }`}
     >
-      <div className="flex justify-between items-center mb-2.5">
-        <span
-          className={`text-[9px] font-label font-black uppercase tracking-widest ${
-            isGrandFinal ? "text-amber-400" : "text-slate-400"
+      {/* Node Header */}
+      <div className="flex justify-between items-center mb-2 pb-1.5 border-b border-white/5 text-[10px] font-label text-slate-400 uppercase">
+        <span className="font-bold text-slate-300">
+          {match.venue || "Stadion Oficial"}
+        </span>
+        <span className="px-2 py-0.5 rounded bg-white/5 font-bold text-lime-400">
+          {match.status === "finished" ? "Finalizat ✓" : match.status === "live" ? "🔴 Live" : "Programat"}
+        </span>
+      </div>
+
+      {/* Match Competitors */}
+      <div className="space-y-1.5">
+        {/* Home Team */}
+        <div
+          className={`flex items-center justify-between p-2 rounded-xl transition ${
+            homeWinner
+              ? "bg-lime-400/20 text-lime-300 font-black border border-lime-400/40"
+              : "bg-slate-950/60 text-slate-300"
           }`}
         >
-          {label}
-        </span>
-        {match.venue && (
-          <span className="text-[9px] font-label text-slate-400 truncate max-w-[130px] flex items-center gap-1">
-            <span className="material-symbols-outlined text-[11px]">location_on</span>
-            {match.venue}
-          </span>
-        )}
-      </div>
-
-      {/* Home team node */}
-      <div
-        className={`flex justify-between items-center p-2.5 rounded-xl transition ${
-          homeWon
-            ? "bg-lime-400/20 text-lime-300 font-bold border border-lime-400/30"
-            : "text-white bg-black/20"
-        }`}
-      >
-        <div className="flex items-center gap-2 truncate">
-          <div
-            className="w-5 h-5 rounded-md flex items-center justify-center font-bold text-[9px] text-white shrink-0"
-            style={{ backgroundColor: match.homeTeam.color || "#1e293b" }}
-          >
-            {match.homeTeam.shortName || match.homeTeam.name.substring(0, 2).toUpperCase()}
+          <div className="flex items-center gap-2 truncate">
+            <span
+              className="w-3 h-3 rounded-full shrink-0"
+              style={{ backgroundColor: match.homeTeam.color || "#84cc16" }}
+            ></span>
+            <span className="text-xs font-headline font-bold truncate">
+              {match.homeTeam.name}
+            </span>
           </div>
-          <span className="text-xs truncate font-headline">{match.homeTeam.name}</span>
-        </div>
-        <span className="text-sm font-black data-font ml-2">
-          {match.homeScore != null ? match.homeScore : "—"}
-        </span>
-      </div>
-
-      {/* Away team node */}
-      <div
-        className={`flex justify-between items-center p-2.5 rounded-xl mt-1.5 transition ${
-          awayWon
-            ? "bg-lime-400/20 text-lime-300 font-bold border border-lime-400/30"
-            : "text-white bg-black/20"
-        }`}
-      >
-        <div className="flex items-center gap-2 truncate">
-          <div
-            className="w-5 h-5 rounded-md flex items-center justify-center font-bold text-[9px] text-white shrink-0"
-            style={{ backgroundColor: match.awayTeam.color || "#047857" }}
-          >
-            {match.awayTeam.shortName || match.awayTeam.name.substring(0, 2).toUpperCase()}
-          </div>
-          <span className="text-xs truncate font-headline">{match.awayTeam.name}</span>
-        </div>
-        <span className="text-sm font-black data-font ml-2">
-          {match.awayScore != null ? match.awayScore : "—"}
-        </span>
-      </div>
-
-      {/* Referee footer info */}
-      <div className="mt-2.5 pt-2 border-t border-white/5 flex justify-between items-center text-[10px] text-slate-400">
-        <span className="truncate">
-          {match.referee ? `Arbitru: ${match.referee}` : "Fără arbitru delegat"}
-        </span>
-        {onEdit && (
-          <span className="font-bold text-lime-400 opacity-80 group-hover:opacity-100 flex items-center gap-0.5">
-            Scor ✏️
+          <span className="text-sm font-black font-headline data-font px-1.5">
+            {match.homeScore ?? "—"}
           </span>
-        )}
+        </div>
+
+        {/* Away Team */}
+        <div
+          className={`flex items-center justify-between p-2 rounded-xl transition ${
+            awayWinner
+              ? "bg-lime-400/20 text-lime-300 font-black border border-lime-400/40"
+              : "bg-slate-950/60 text-slate-300"
+          }`}
+        >
+          <div className="flex items-center gap-2 truncate">
+            <span
+              className="w-3 h-3 rounded-full shrink-0"
+              style={{ backgroundColor: match.awayTeam.color || "#38bdf8" }}
+            ></span>
+            <span className="text-xs font-headline font-bold truncate">
+              {match.awayTeam.name}
+            </span>
+          </div>
+          <span className="text-sm font-black font-headline data-font px-1.5">
+            {match.awayScore ?? "—"}
+          </span>
+        </div>
       </div>
+
+      {/* Node Actions */}
+      {canEdit && (
+        <div className="mt-2 pt-2 border-t border-white/5 flex justify-end">
+          <button
+            type="button"
+            onClick={onEdit}
+            className="text-[10px] font-label font-bold text-lime-400 hover:underline uppercase flex items-center gap-1"
+          >
+            <span className="material-symbols-outlined text-[12px]">edit</span>
+            Editează Rezultat
+          </button>
+        </div>
+      )}
     </div>
   );
 }

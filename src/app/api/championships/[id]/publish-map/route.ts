@@ -3,13 +3,18 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+function generateShareCode(id: string) {
+  const clean = id.replace(/[^a-zA-Z0-9]/g, "").slice(-6).toUpperCase();
+  return `LP-${clean || Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+}
+
 export async function POST(
   req: Request,
   ctx: { params: { id: string } }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Autentificare necesară" }, { status: 401 });
   }
 
   const championship = await prisma.championship.findFirst({
@@ -17,24 +22,33 @@ export async function POST(
   });
 
   if (!championship) {
-    return NextResponse.json({ error: "Championship not found" }, { status: 404 });
+    return NextResponse.json({ error: "Campionatul nu a fost găsit" }, { status: 404 });
   }
 
-  const body = await req.json();
-  const isBracketPublished = typeof body.isBracketPublished === "boolean"
-    ? body.isBracketPublished
-    : !championship.isBracketPublished;
+  const body = await req.json().catch(() => ({}));
+  const isBracketPublished =
+    typeof body.isBracketPublished === "boolean"
+      ? body.isBracketPublished
+      : !championship.isBracketPublished;
+
+  const shareCode = championship.shareCode || generateShareCode(championship.id);
 
   const updated = await prisma.championship.update({
     where: { id: championship.id },
-    data: { isBracketPublished },
+    data: {
+      isBracketPublished,
+      shareCode,
+    },
   });
 
   return NextResponse.json({
     ok: true,
     isBracketPublished: updated.isBracketPublished,
+    shareCode: updated.shareCode,
+    shareUrl: `/harta-campionat?id=${updated.id}`,
+    codeUrl: `/harta-campionat?code=${updated.shareCode}`,
     message: updated.isBracketPublished
-      ? "Harta Campionatului este acum PUBLICĂ și vizibilă pentru toată lumea!"
-      : "Harta Campionatului a fost trecută pe mod PRIVAT (doar organizatorul o poate vedea).",
+      ? `Harta campionatului "${updated.name}" este acum PUBLICĂ (Cod: ${updated.shareCode})!`
+      : `Harta campionatului a fost trecută pe mod PRIVAT.`,
   });
 }

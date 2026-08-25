@@ -117,6 +117,7 @@ model Championship {
   county      String?  // e.g. "Timiș", "București", "Cluj", "Iași", "Brașov"
   city        String?  // e.g. "Timișoara", "Cluj-Napoca", "București"
   isBracketPublished Boolean @default(true)
+  shareCode   String?  @unique // unique public share code e.g. "LP-2026-A1"
   ownerId     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
