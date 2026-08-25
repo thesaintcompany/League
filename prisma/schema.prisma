@@ -82,10 +82,15 @@ model Venue {
   id          String   @id @default(cuid())
   name        String
   location    String
-  surface     String   @default("Sintetic") // Sintetic, Gazon Natural, Parchet, Mixt
+  address     String?
+  specs       String?
+  sport       String   @default("fotbal") // fotbal, baschet, volei, multifunctional
+  surface     String   @default("Sintetic") // Sintetic, Gazon Natural, Parchet, Mixt, Nisip
   capacity    Int      @default(100)
   floodlights Boolean  @default(true)
+  isActive    Boolean  @default(true)
   pricePerHour Int?
+  imageUrl    String?
   ownerId     String?
   createdAt   DateTime @default(now())
 
