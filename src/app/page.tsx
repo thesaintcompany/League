@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { StandingsTable, StandingRow } from "@/components/StandingsTable";
 import { MatchCard, MatchData } from "@/components/MatchCard";
+import { BracketVisualizer } from "@/components/BracketVisualizer";
 
 export const dynamic = "force-dynamic";
 
@@ -352,6 +353,16 @@ export default async function HomePage() {
             </div>
           </div>
         </div>
+        {/* Harta Campionatului & Brackets Live Section */}
+        {championship?.isBracketPublished && matches.length > 0 && (
+          <section id="harta-campionat" className="space-y-4 pt-6">
+            <BracketVisualizer
+              matches={matches}
+              isPublished={true}
+              isAdmin={false}
+            />
+          </section>
+        )}
       </main>
 
       {/* Footer */}

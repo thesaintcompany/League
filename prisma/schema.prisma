@@ -95,6 +95,7 @@ model Championship {
   startDate   DateTime
   endDate     DateTime?
   description String?
+  isBracketPublished Boolean @default(true)
   ownerId     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

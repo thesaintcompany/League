@@ -148,11 +148,13 @@ export function ChampionshipTabs({
               onDrawCompleted={() => router.refresh()}
             />
 
-            {/* Live Knockout Bracket Visualizer */}
+            {/* Live Knockout Bracket Visualizer with Publish toggle */}
             <BracketVisualizer
+              championshipId={championshipId}
               matches={matchDataList}
               isAdmin={true}
               onEditMatch={(m) => setEditingMatch(m)}
+              onVisibilityChanged={() => router.refresh()}
             />
           </div>
         )}
