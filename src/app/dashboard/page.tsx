@@ -2,9 +2,9 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Navbar } from "@/components/Navbar";
 import Link from "next/link";
-import { Plus, Trophy } from "lucide-react";
+import { Sidebar } from "@/components/Sidebar";
+import { TopHeader } from "@/components/TopHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -12,64 +12,206 @@ export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/signin");
 
+  const userId = (session.user as any).id;
+
   const championships = await prisma.championship.findMany({
-    where: { ownerId: (session.user as any).id },
+    where: { ownerId: userId },
     orderBy: { createdAt: "desc" },
-    include: { _count: { select: { teams: true, matches: true } } },
+    include: {
+      _count: {
+        select: { teams: true, matches: true },
+      },
+      matches: {
+        take: 3,
+        orderBy: { scheduledAt: "asc" },
+        include: { homeTeam: true, awayTeam: true },
+      },
+    },
   });
 
-  return (
-    <>
-      <Navbar />
-      <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Campionatele tale</h1>
-            <p className="mt-1 text-sm text-slate-600">
-              Bun venit, {session.user.name || session.user.email}!
-            </p>
-          </div>
-          <Link href="/dashboard/new" className="btn-primary gap-1">
-            <Plus className="h-4 w-4" /> Campionat nou
-          </Link>
-        </div>
+  const totalTeams = championships.reduce((sum, c) => sum + c._count.teams, 0);
+  const totalMatches = championships.reduce((sum, c) => sum + c._count.matches, 0);
 
-        {championships.length === 0 ? (
-          <div className="mt-12 card p-12 text-center">
-            <Trophy className="mx-auto h-12 w-12 text-slate-300" />
-            <h2 className="mt-4 text-lg font-semibold text-slate-900">Niciun campionat încă</h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Creează primul campionat și începe să adaugi echipe și meciuri.
-            </p>
-            <Link href="/dashboard/new" className="btn-primary mt-6 inline-flex">
-              <Plus className="h-4 w-4 mr-1" /> Creează primul campionat
+  return (
+    <div className="min-h-screen bg-surface flex">
+      {/* Sidebar Navigation */}
+      <Sidebar />
+
+      {/* Main Content Area */}
+      <div className="flex-1 ml-64 flex flex-col min-w-0">
+        <TopHeader
+          title="Panou Organizator"
+          subtitle={`Bine ai revenit, ${session.user.name || session.user.email}!`}
+          action={
+            <Link
+              href="/dashboard/new"
+              className="btn btn-primary text-xs uppercase tracking-wider font-bold py-2.5 px-4 rounded-xl shadow-sm bg-primary text-white hover:bg-slate-800 flex items-center gap-1.5"
+            >
+              <span className="material-symbols-outlined text-[18px]">add_circle</span>
+              Campionat Nou
             </Link>
+          }
+        />
+
+        <main className="p-6 lg:p-10 space-y-8 max-w-7xl">
+          {/* Bento Stats Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {/* Metric 1 */}
+            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
+              <div>
+                <p className="text-xs font-label uppercase tracking-wider text-slate-500 font-semibold">
+                  Campionate Active
+                </p>
+                <p className="text-3xl font-black text-blue-950 dark:text-white data-font mt-1">
+                  {championships.length}
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-2xl bg-lime-100 text-lime-800 flex items-center justify-center">
+                <span className="material-symbols-outlined text-2xl">trophy</span>
+              </div>
+            </div>
+
+            {/* Metric 2 */}
+            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
+              <div>
+                <p className="text-xs font-label uppercase tracking-wider text-slate-500 font-semibold">
+                  Echipe Înscrise
+                </p>
+                <p className="text-3xl font-black text-blue-950 dark:text-white data-font mt-1">
+                  {totalTeams}
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-800 flex items-center justify-center">
+                <span className="material-symbols-outlined text-2xl">groups</span>
+              </div>
+            </div>
+
+            {/* Metric 3 */}
+            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 flex items-center justify-between">
+              <div>
+                <p className="text-xs font-label uppercase tracking-wider text-slate-500 font-semibold">
+                  Meciuri Programate
+                </p>
+                <p className="text-3xl font-black text-blue-950 dark:text-white data-font mt-1">
+                  {totalMatches}
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center">
+                <span className="material-symbols-outlined text-2xl">sports_soccer</span>
+              </div>
+            </div>
+
+            {/* Metric 4 */}
+            <div className="card p-6 bg-primary text-white border-none flex items-center justify-between shadow-lg">
+              <div>
+                <p className="text-xs font-label uppercase tracking-wider text-lime-400 font-bold">
+                  Status Sistem
+                </p>
+                <p className="text-2xl font-black data-font mt-1 flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
+                  OPERATIONAL
+                </p>
+              </div>
+              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-2xl text-lime-400">bolt</span>
+              </div>
+            </div>
           </div>
-        ) : (
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {championships.map((c) => (
-              <Link
-                key={c.id}
-                href={`/dashboard/championships/${c.id}`}
-                className="card p-6 transition hover:shadow-md hover:border-brand-300"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <span className="badge-slate">{c.sport}</span>
-                    <h3 className="mt-2 text-lg font-semibold text-slate-900 line-clamp-1">{c.name}</h3>
-                    {c.season && <p className="text-sm text-slate-500">{c.season}</p>}
+
+          {/* Championships Section */}
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-6 bg-lime-500 rounded-full"></span>
+                <h2 className="text-xl font-bold font-headline text-blue-950 dark:text-white">
+                  Competițiile Tale
+                </h2>
+              </div>
+            </div>
+
+            {championships.length === 0 ? (
+              <div className="card p-12 text-center bg-surface-container-lowest border-dashed border-2 border-slate-300 dark:border-slate-700">
+                <div className="w-16 h-16 rounded-3xl bg-lime-100 dark:bg-lime-950/40 text-lime-700 mx-auto flex items-center justify-center mb-4">
+                  <span className="material-symbols-outlined text-3xl">emoji_events</span>
+                </div>
+                <h3 className="text-lg font-bold font-headline text-blue-950 dark:text-white">
+                  Nu ai creat niciun campionat încă
+                </h3>
+                <p className="text-xs text-slate-500 max-w-md mx-auto mt-2 font-body">
+                  Pornește propria ligă sau turneu eliminatoriu în câteva secunde. Adaugă echipe,
+                  programează etapele și transmite rezultate în timp real.
+                </p>
+                <Link
+                  href="/dashboard/new"
+                  className="btn btn-primary mt-6 inline-flex items-center gap-2 text-xs uppercase tracking-wider font-bold py-3 px-6 rounded-xl"
+                >
+                  <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                  Creează Primul Campionat
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {championships.map((champ) => (
+                  <div
+                    key={champ.id}
+                    className="card p-6 bg-surface-container-lowest hover:shadow-lg transition-all duration-200 border-slate-200/60 dark:border-slate-800 flex flex-col justify-between group"
+                  >
+                    <div>
+                      <div className="flex justify-between items-start mb-3">
+                        <span className="px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold uppercase tracking-wider font-label">
+                          {champ.sport} • {champ.format === "knockout" ? "Turneu Eliminatoriu" : "Ligă"}
+                        </span>
+                        {champ.season && (
+                          <span className="text-[10px] text-slate-400 font-label font-semibold">
+                            {champ.season}
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="text-lg font-bold font-headline text-blue-950 dark:text-white group-hover:text-lime-600 dark:group-hover:text-lime-400 transition-colors line-clamp-1">
+                        {champ.name}
+                      </h3>
+
+                      {champ.description && (
+                        <p className="text-xs text-slate-500 mt-1 line-clamp-2">
+                          {champ.description}
+                        </p>
+                      )}
+
+                      <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-label text-slate-600 dark:text-slate-400">
+                        <span className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[16px]">groups</span>
+                          <strong>{champ._count.teams}</strong> echipe
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[16px]">sports_soccer</span>
+                          <strong>{champ._count.matches}</strong> meciuri
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 flex items-center gap-2">
+                      <Link
+                        href={`/dashboard/championships/${champ.id}`}
+                        className="btn btn-primary flex-1 text-xs uppercase tracking-wider font-bold py-2.5 rounded-xl bg-primary text-white hover:bg-slate-800 text-center"
+                      >
+                        Administrează ⚙️
+                      </Link>
+                      <Link
+                        href="/"
+                        className="btn btn-secondary px-3 py-2.5 rounded-xl text-xs"
+                        title="Vizualizare Publică"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">visibility</span>
+                      </Link>
+                    </div>
                   </div>
-                </div>
-                <div className="mt-4 flex gap-4 text-sm text-slate-600">
-                  <span>{c._count.teams} echipe</span>
-                  <span>•</span>
-                  <span>{c._count.matches} meciuri</span>
-                </div>
-              </Link>
-            ))}
+                ))}
+              </div>
+            )}
           </div>
-        )}
-      </main>
-    </>
+        </main>
+      </div>
+    </div>
   );
 }

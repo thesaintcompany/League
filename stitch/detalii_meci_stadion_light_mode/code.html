@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Match Details | Kinetic Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Lexend:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline": "#76777c",
+                        "on-tertiary-fixed": "#121c2c",
+                        "inverse-surface": "#2d3133",
+                        "tertiary": "#010817",
+                        "secondary-fixed-dim": "#8fdb00",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#a8f928",
+                        "on-surface": "#181c1e",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#c1c6d7",
+                        "inverse-on-surface": "#eef1f3",
+                        "background": "#f7fafc",
+                        "secondary-container": "#a5f624",
+                        "on-surface-variant": "#45474c",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#7d889b",
+                        "surface-tint": "#585e6c",
+                        "primary-fixed-dim": "#c1c6d7",
+                        "surface-variant": "#e0e3e5",
+                        "on-secondary-fixed": "#112000",
+                        "primary": "#030813",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#bdc7dc",
+                        "on-primary-fixed-variant": "#414754",
+                        "on-background": "#181c1e",
+                        "on-secondary-fixed-variant": "#314f00",
+                        "surface-dim": "#d7dadc",
+                        "on-primary-fixed": "#161c27",
+                        "primary-fixed": "#dde2f3",
+                        "on-tertiary-fixed-variant": "#3d4759",
+                        "surface-container-highest": "#e0e3e5",
+                        "error": "#ba1a1a",
+                        "surface": "#f7fafc",
+                        "surface-bright": "#f7fafc",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#d9e3f9",
+                        "on-primary-container": "#828796",
+                        "secondary": "#426900",
+                        "tertiary-container": "#162030",
+                        "primary-container": "#1a202c",
+                        "outline-variant": "#c6c6cc",
+                        "on-secondary-container": "#456e00",
+                        "surface-container": "#ebeef0",
+                        "surface-container-low": "#f1f4f6",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#e5e9eb"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Lexend"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #030813 0%, #1a202c 100%);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopNavBar -->
+<header class="fixed top-0 z-50 w-full bg-slate-50 flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black italic text-slate-900 tracking-tighter">Kinetic Hub</span>
+<nav class="hidden md:flex items-center gap-6 font-['Plus_Jakarta_Sans'] font-bold tracking-tight">
+<a class="text-slate-500 font-medium hover:text-lime-500 transition-colors" href="#">Match Center</a>
+<a class="text-slate-500 font-medium hover:text-lime-500 transition-colors" href="#">Scouting</a>
+<a class="text-slate-500 font-medium hover:text-lime-500 transition-colors" href="#">Analytics</a>
+<a class="text-slate-500 font-medium hover:text-lime-500 transition-colors" href="#">Schedule</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-secondary-fixed text-on-secondary-fixed px-4 py-2 rounded-full font-bold text-sm hover:opacity-90 transition-all active:scale-95">Go Live</button>
+<div class="flex gap-2">
+<span class="material-symbols-outlined p-2 text-slate-500 hover:bg-slate-100 rounded-full cursor-pointer">notifications</span>
+<span class="material-symbols-outlined p-2 text-slate-500 hover:bg-slate-100 rounded-full cursor-pointer">settings</span>
+</div>
+<img alt="User Profile Avatar" class="w-10 h-10 rounded-full object-cover" data-alt="close-up portrait of a professional man in a clean studio setting with neutral lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCALMdYCDISiPdqS9F3GRsoWdDCpvY9jgvLMxrHns0bzbkyrAEGjwr_6KH4pVAp7FSlSsYYcdD0DgmOg0W_N7Nso9oVXtqbPsnW9fj17uYko9IooLiB4LO3eVbWL7ovIe96Yn11OkT8G2UcZvH-x3oSNombzmDa3aYxm8NtY1erb0RoIohbb9WyI16I7j0PNWXFi-nulAMDGdWJh-075d4ifaJvNK5No4t7osCT9S0zOJQiwuwxBJT7GWMQ0M4ZnNaGUAZxE9cByc0"/>
+</div>
+</header>
+<main class="pt-20 pb-12 px-6 max-w-7xl mx-auto">
+<!-- Hero Match Section -->
+<section class="relative h-[450px] rounded-full overflow-hidden mb-12 mt-4 group">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="wide shot of a modern brightly lit football stadium at dusk with green grass and empty seating tiers" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB2eEJzt7prV4hin-nzYCHifiq4-GgZHT-6hxcbK3gA2ix440bJsJLAYRPIkyAlkNmOaNtQgRsMsA1dAu8fxOxG_HVxnOrc_ewJtbjgJ0iwQMnDaMx2DmaH08OjBS0oW1MI6vIRFBPVFS30dOZMtXJw2kgVayGH94JoDkwUD8celIpfwbJyHN1xQ1hYsJlLJ-UjSybn73i7ORnLxlg3FkRSTlcwA28kW3veHSpvOh5AMV-gpS3nCN58P40iA7e5S0OIyPKdrCAcsoo')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent"></div>
+<div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-white">
+<div class="flex items-center justify-between w-full max-w-4xl">
+<!-- Team 1 -->
+<a class="flex flex-col items-center gap-4 group/team transition-transform hover:scale-105" href="#">
+<div class="w-32 h-32 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center p-4 border border-white/20">
+<img alt="Elite Strikers Logo" class="w-24 h-24 object-contain" data-alt="professional sports logo featuring a stylized falcon in aggressive posture with sharp geometric lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSBNWOyrLtKo42rsDUdEdUkYQSg6ewRy8waHDKOlLPZNBCUSgOnDCAjWaZ9satKor4NIgHkVdD4GUWH4kKkLO_jKMWBEo6oIYE-G-gX8H0RbWnAP-RbAd0rL_PZsD0UHjlkJtT7yYPdRav4XR3IJM9sMxlu8Ig_a2AQYlaZK9zHV9G9-OpO6rWt-BY8_NH457QM7sxeTNWlbNunlFw6pnXP49CyhYwxJxLhRW44tGj9FS7ZEPzehuJLBZFaCI-YdVd8R0xtdcfcEE"/>
+</div>
+<span class="font-headline font-extrabold text-2xl tracking-tighter uppercase">Elite Strikers</span>
+</a>
+<!-- Match Status -->
+<div class="flex flex-col items-center gap-2">
+<div class="bg-secondary-fixed text-on-secondary-fixed px-4 py-1 rounded-full font-label text-xs font-bold tracking-widest uppercase">Upcoming</div>
+<div class="font-headline font-black text-6xl tracking-tighter">VS</div>
+<div class="text-center">
+<p class="font-label text-sm text-lime-400 font-semibold">National Arena</p>
+</div>
+</div>
+<!-- Team 2 -->
+<a class="flex flex-col items-center gap-4 group/team transition-transform hover:scale-105" href="#">
+<div class="w-32 h-32 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center p-4 border border-white/20">
+<img alt="Thunder FC Logo" class="w-24 h-24 object-contain" data-alt="dynamic circular sports emblem with a lightning bolt integrated into a classic shield shape" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCY7pwfMPHaKWYr5MljUaOqeFC-WNJJ7jzHbe7vzbCu697Yp17D04A3AzgHoOH69qU9OK_LQfJ13NuZ4F6cGDDXrbw03ee3OTsvfOqoPb0x-R7fDeqli7M-wf0nwI-stJdUazHP2JUkWbSSGUb-z2mvKEJExeGtNhLeGvFuzYZOjS8OjT6lVymvk6WTzWu_RHzST4sg39hlEFcbUfMz5Rjrps1Y3N6msZpHloFJ--BbL2Ar6a33Ip2dfVJtl8h-mzhhWL4GQbiYXU0"/>
+</div>
+<span class="font-headline font-extrabold text-2xl tracking-tighter uppercase">Thunder FC</span>
+</a>
+</div>
+</div>
+<!-- Match Time Overlay -->
+<div class="absolute bottom-8 left-1/2 -translate-x-1/2 glass-panel px-10 py-4 rounded-full flex items-center gap-8 shadow-2xl">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary font-bold">calendar_today</span>
+<span class="font-headline font-bold text-slate-900">Saturday, Oct 26, 2024</span>
+</div>
+<div class="w-px h-6 bg-slate-200"></div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary font-bold">schedule</span>
+<span class="font-headline font-bold text-slate-900">19:45</span>
+</div>
+</div>
+</section>
+<!-- Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Details -->
+<div class="lg:col-span-8 space-y-8">
+<!-- Referees Section -->
+<div class="bg-surface-container-lowest p-8 rounded-full">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-headline font-extrabold text-xl text-primary tracking-tight">Match Officials</h3>
+<span class="text-xs font-label uppercase tracking-widest text-slate-400 font-bold border border-slate-200 px-3 py-1 rounded-full">Pro Panel</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex items-center gap-4 group">
+<img alt="Referee Avatar" class="w-16 h-16 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="portrait of a focused athletic man with short hair wearing professional referee attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdDmNS26mifm6pm_x4JGhc8UbZRNQpyjUl2vGf_dOnle3zv_Etu9FKtyCe4J3OaQ6rS-TBS-1MRAQv_eNpg1HWlMXMUFsbG_lniXfeCm4OQcM8UKa4zlgZxU5Zy4vaOJFP-7YBeBxyYfsC294X4bFsGkcX_6BzYkkyxH8p1nuqH4I2u2X01_oLxpL_X5fL2vlcxh4z5jKTOm8a1r2um_cemOa3X5rmc9lg2K2idnf8FfgOaXtcUR8f6l3Jzx2GIwEM-4MqJFfmBrw"/>
+<div>
+<p class="font-headline font-bold text-slate-900">Markus Weber</p>
+<p class="font-label text-xs text-slate-500 uppercase tracking-tighter">Main Referee</p>
+</div>
+</div>
+<div class="flex items-center gap-4 group">
+<img alt="Referee Avatar" class="w-16 h-16 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="close-up of a professional middle-aged man looking directly at the camera with a neutral expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfmD7gPjXnnco3lDkK-Aoklrpqm8RPQ8p09kHewFik8XbQ5DxD4-tL2Q3sqEpltdNr4vxOD-KfK337d_ID544f7zwEF34DepyZYtIyj2b-_njIMPIxQV91lExINSaFGYOYxsMcOh3xM4zuBR_-1ueS2ZtBtZoY6im2cWLdudaEwqhpqnrFjjH2-ZYEBLSw00Dpw25w0p2RmZ1Jz3DE7yEljUB-qrx6ZAjy6vbyqkPu2ODzFKMLV87NiNrPTGMm8g6RBF9Yf8Th2bI"/>
+<div>
+<p class="font-headline font-bold text-slate-900">David Chen</p>
+<p class="font-label text-xs text-slate-500 uppercase tracking-tighter">Assistant 1</p>
+</div>
+</div>
+<div class="flex items-center gap-4 group">
+<img alt="Referee Avatar" class="w-16 h-16 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="headshot of a man with athletic build and professional expression in daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRH0jOc92CGVH0Qum52AUSzBVjLm76NQP04J2g9P_I0pu_I2SVOIR9MAKbXInXywFLzV981P-g4duV6Iznz2yRlpFcnyAxeWPwhc22i7RXxSEs5Tu6pbKPochAEpuU_j09LSvBMHmki-74pu7gAb6uF5Lawie4qWHqTiVUZoNFNEizTyb93x1e1RJ4VAt0ORY3-CEmK5fAuszZnFKNI94Ki_-N6Zbvld9J9woKwO-V5O8wDQ0Z6YIu-lFinNTZBtLPJ9LsdZHUjGQ"/>
+<div>
+<p class="font-headline font-bold text-slate-900">Sarah Thorne</p>
+<p class="font-label text-xs text-slate-500 uppercase tracking-tighter">Assistant 2</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Stadium / Location Section -->
+<div class="bg-surface-container-low rounded-full overflow-hidden flex flex-col md:flex-row h-72">
+<div class="md:w-1/2 p-10 flex flex-col justify-center">
+<span class="font-label text-xs font-bold text-secondary uppercase tracking-widest mb-2">Venue</span>
+<h2 class="font-headline font-black text-3xl text-primary mb-4 tracking-tighter">National Arena</h2>
+<p class="text-slate-600 font-body mb-6">Experience world-class football at the heart of the city. Capacity for 45,000 spectators with premium hospitality suites.</p>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 text-slate-900 font-bold hover:text-secondary transition-colors">
+<span class="material-symbols-outlined">map</span>
+<span>Get Directions</span>
+</button>
+</div>
+</div>
+<div class="md:w-1/2 relative">
+<img alt="Stadium Interior" class="absolute inset-0 w-full h-full object-cover" data-alt="interior view of an empty sports arena with rows of blue and red seats and modern architecture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBo5blqN9bqUbLqYZW6GzfpMWobniLZHGYWno5hxZA2_5f3JnMtkN7jv4fsNj0_kB24FM2dC_PI3nQxgzDeZVg-9EPpny10--QVQ7yX2TObaRN9yksCVmeJTmLee3MrTY-HiXFb9WCPRCkahKwc4EQivNzgGTZattfDGWLczKF59FP1IQH_HUzx9HzL-hzVuq17XKmbYP1W9hzrleEBSWqb8zn6zV0QwnBl6yl1FkYLxWdrhl1-B0gs7AvjL8TklSabbUFphaES1yE"/>
+<div class="absolute inset-0 bg-primary/20"></div>
+</div>
+</div>
+</div>
+<!-- Right Column: Sidebar Action -->
+<div class="lg:col-span-4 space-y-6">
+<!-- Ticket Card -->
+<div class="kinetic-gradient p-8 rounded-full text-white shadow-xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4">
+<span class="material-symbols-outlined text-secondary-fixed/20 text-8xl -mr-8 -mt-8 rotate-12 transition-transform group-hover:rotate-0">confirmation_number</span>
+</div>
+<div class="relative z-10">
+<h3 class="font-headline font-bold text-lg mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-fixed">local_activity</span>
+                            Match Entry
+                        </h3>
+<div class="mb-8">
+<span class="font-headline font-black text-5xl tracking-tighter">$15.00</span>
+<span class="font-label text-slate-400 text-sm ml-2">per person</span>
+</div>
+<button class="w-full bg-secondary-fixed text-on-secondary-fixed py-4 rounded-full font-headline font-extrabold text-lg hover:scale-105 active:scale-95 transition-all shadow-lg shadow-secondary/20">
+                            Book Now
+                        </button>
+<p class="text-xs text-slate-400 text-center mt-4 font-label">Taxes and processing fees included</p>
+</div>
+</div>
+<!-- Organizer Info -->
+<div class="bg-surface-container-high p-8 rounded-full">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center border border-slate-200">
+<img alt="Organization Logo" class="w-8 h-8 object-contain" data-alt="clean minimalist circular logo with a geometric sports trophy icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCa9nlM4O19-Q70BRFInnGM48pwq68I119ZL3c0sQF2ZhZ9WXlvSxJBCgeHBUy-te56G1_t7nrX4hRMmktdTGnayZK7Jd1L0v2b43FQThUuVwBo88ekvB83smHUyF_sxibZ3PTC3YKHhBIndUCYoKPj-QuctTXYMl1-xOK6YCWhwWfPG-ENF4ZtJZbaVx-vzT6jWqKTWHf5YOtT2EYEWWsJueqUu8WAHoTDXEg9Ev5fPpN_nqaEY7P93IbJaJ15gqF2_4ufng9SZvE"/>
+</div>
+<div>
+<h4 class="font-headline font-bold text-slate-900">Pro League Elite</h4>
+<p class="font-label text-xs text-slate-500">Global Division Organizers</p>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Tournament</span>
+<span class="font-bold text-slate-900">Elite Series A</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Season</span>
+<span class="font-bold text-slate-900">2024/25</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">Round</span>
+<span class="font-bold text-slate-900">Quarter Finals</span>
+</div>
+</div>
+</div>
+<!-- Social Sharing -->
+<div class="flex flex-col gap-4 items-center">
+<p class="font-label text-xs uppercase tracking-widest text-slate-400 font-bold">Share with fans</p>
+<div class="flex gap-4">
+<button class="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-900 hover:text-white transition-all hover:scale-110 active:scale-90">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"></path></svg>
+</button>
+<button class="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-900 hover:text-white transition-all hover:scale-110 active:scale-90">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Featured Match Gallery / Background Texture Section -->
+<section class="mt-16 bg-surface-container rounded-full p-12 overflow-hidden relative">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 relative z-10">
+<div class="aspect-square rounded-full overflow-hidden hover:scale-105 transition-transform">
+<img alt="Action Shot" class="w-full h-full object-cover" data-alt="close-up of a football player's boots on bright green grass with stadium lights in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoI5QCZ4H8c3W2fPuh_HGGFqF3wMY4ntfY5an5xuYDfrhOU2g1l7_z05sQ-twca6KlufEGAXPaDy2WZ1lXDDtrruhQOqdS54BhJaB-3IBxgNDsG_b8ddbVDiO_1sLJ64Gr2918J7wItKGEJAzJqKtw0FmPo9XXwUNq11r7ka9jtpWJh2n5iI_AXyOBRV6zivIgmstfGOx8i9ybk_FsexQHXFMYwsxmdocStRdSSsqbpYOGnyU2gcQnoaygtUy8s-J2lnyA61t5O6o"/>
+</div>
+<div class="aspect-square rounded-full overflow-hidden hover:scale-105 transition-transform mt-8">
+<img alt="Fans" class="w-full h-full object-cover" data-alt="crowd of enthusiastic fans cheering in a stadium with colorful jerseys and flags" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpcJe0zSDWPC67JckyTFiS4MBPjniPe7Gq25sWMmYK63RJ3BLZfQcrkwcSrwqegptFoLUo3n58Q-dpv_pGeHD775me308328XIIsa42AGNDwg-OjVgPXxU49oKBoL1n_XhntpoZq22qModt91vbVFfrcN7nUQQKYD_rezBpkICzx8q59VlgaMc5N-k9y1aPsriYmZnVSQmhO3EhTF0rWJZuFATYK5KjbOFT154Ne5pOfVrGWaTcBgL-5hKjfIb7H7OJ9GvHOYnoI4"/>
+</div>
+<div class="aspect-square rounded-full overflow-hidden hover:scale-105 transition-transform">
+<img alt="Stadium Lights" class="w-full h-full object-cover" data-alt="dramatic low angle shot of bright stadium floodlights against a dark blue twilight sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC-CLBi1tXxxgXZZCdyaGiCIcDlH7GW8D0u4toINlnOqTvOiwVAEqHXSzPhbwQjGTbbrV9Usn6kFVFf88EBINOxa55iF0oVZzZSHT66VvuitspdLb8DBdDQRzZR8QXUQqP0kuunzxPaLhV7YFE16GfJ3aTBFBArOIfuzBLj_jmTuaOOUVFllWZ3oerfDmsr31rTK1d9gooFbU4HSdtReyzj6kGq-CAW5F4eJZ2revFtKgAXRb2sAoij1uIcqY_DeSXJjHLIJgtXso"/>
+</div>
+<div class="aspect-square rounded-full overflow-hidden hover:scale-105 transition-transform mt-8">
+<img alt="Ball" class="w-full h-full object-cover" data-alt="crisp action shot of a professional soccer ball mid-air on a sunny pitch" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxrDRlJvToE0-S4fDFLZdtu-K9y7aLfH8ehKiEBcr3qI1ZW-FJ7nnHP4XItvtDflb_5vcy7GHBRwVRWbh0tH_9ykCnW-WAlNrSPRIgpn_VAlGFK7Gz6ncEug3OTRY03PJCVcxnx5M2r50lxBg2-mpsRcnTs_i0Pgt8-GD1AsusuXFexDtf7a7Gr3iKIhqj6r35ZImd65ZYYdqVrcvPu7Q2Fs-CQ8iLCgCLEkCeD2DVF3imstI7VuJOa0Vmun1Z3jenCoTePcGYMS4"/>
+</div>
+</div>
+<div class="absolute -bottom-24 -right-24 w-96 h-96 bg-secondary/10 rounded-full blur-3xl"></div>
+<div class="absolute -top-24 -left-24 w-96 h-96 bg-secondary/10 rounded-full blur-3xl"></div>
+</section>
+</main>
+<!-- SideNavBar (Simulated for Navigation Shell) -->
+<aside class="hidden md:flex h-screen w-64 fixed left-0 top-0 pt-20 flex flex-col p-4 gap-2 bg-slate-100/50 z-40">
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-200 rounded-lg transition-all font-['Inter'] text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">dashboard</span> Organizer
+        </a>
+<a class="flex items-center gap-3 bg-white text-slate-900 rounded-lg px-4 py-3 shadow-sm transition-all font-['Inter'] text-sm font-semibold" href="#">
+<span class="material-symbols-outlined text-lime-500">groups</span> Teams
+        </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-200 rounded-lg transition-all font-['Inter'] text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">person</span> Players
+        </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-200 rounded-lg transition-all font-['Inter'] text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">stadium</span> Venues
+        </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-200 rounded-lg transition-all font-['Inter'] text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">payments</span> Finance
+        </a>
+<div class="mt-auto pt-6 border-t border-slate-200 space-y-2">
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-200 rounded-lg transition-all font-['Inter'] text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">help</span> Support
+            </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-200 rounded-lg transition-all font-['Inter'] text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">logout</span> Logout
+            </a>
+</div>
+</aside>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white flex justify-around items-center p-4 shadow-2xl z-50 rounded-t-full">
+<span class="material-symbols-outlined text-slate-400">dashboard</span>
+<span class="material-symbols-outlined text-lime-500" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="material-symbols-outlined text-slate-400">person</span>
+<span class="material-symbols-outlined text-slate-400">stadium</span>
+<span class="material-symbols-outlined text-slate-400">payments</span>
+</nav>
+</body></html>

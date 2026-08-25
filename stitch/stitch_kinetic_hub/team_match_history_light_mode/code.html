@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Inter:wght@400;500;600&amp;family=Lexend:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#f8fafc",
+            "surface-bright": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed": "#d9e3f9",
+            "surface-dim": "#f1f5f9",
+            "on-primary-fixed": "#161c27",
+            "primary-fixed": "#dde2f3",
+            "on-tertiary-fixed-variant": "#3d4759",
+            "surface-container-highest": "#e2e8f0",
+            "error": "#ba1a1a",
+            "tertiary-fixed-dim": "#bdc7dc",
+            "on-primary-fixed-variant": "#414754",
+            "on-background": "#0f172a",
+            "on-secondary-fixed-variant": "#314f00",
+            "surface-variant": "#f1f5f9",
+            "on-secondary-fixed": "#112000",
+            "primary": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-error": "#ffffff",
+            "on-primary": "#0f172a",
+            "surface-container-high": "#f1f5f9",
+            "surface-container": "#f8fafc",
+            "surface-container-low": "#ffffff",
+            "secondary": "#426900",
+            "tertiary-container": "#f1f5f9",
+            "primary-container": "#f1f5f9",
+            "outline-variant": "#e2e8f0",
+            "on-secondary-container": "#426900",
+            "on-tertiary": "#ffffff",
+            "secondary-fixed": "#ADFF2F",
+            "on-surface": "#0f172a",
+            "secondary-fixed-dim": "#8fdb00",
+            "on-secondary": "#112000",
+            "outline": "#cbd5e1",
+            "on-tertiary-fixed": "#121c2c",
+            "inverse-surface": "#1e293b",
+            "tertiary": "#1e293b",
+            "primary-fixed-dim": "#c1c6d7",
+            "on-tertiary-container": "#475569",
+            "surface-tint": "#ADFF2F",
+            "secondary-container": "#e2ffb3",
+            "on-surface-variant": "#475569",
+            "error-container": "#ffdad6",
+            "inverse-primary": "#c1c6d7",
+            "inverse-on-surface": "#f8fafc",
+            "background": "#f8fafc"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Inter"],
+            "label": ["Lexend"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+    }
+    .card-bright {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl shadow-sm flex justify-between items-center px-8 h-16 w-full border-b border-slate-100">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold italic tracking-tighter text-slate-900 font-headline">Velocity Athletics</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<nav class="flex gap-8">
+<a class="text-slate-500 font-medium hover:text-lime-500 transition-colors duration-200 text-sm font-headline" href="#">Dashboard</a>
+<a class="text-slate-500 font-medium hover:text-lime-500 transition-colors duration-200 text-sm font-headline" href="#">Roster</a>
+<a class="text-lime-600 font-bold border-b-2 border-lime-400 py-1 text-sm font-headline" href="#">Match History</a>
+<a class="text-slate-500 font-medium hover:text-lime-500 transition-colors duration-200 text-sm font-headline" href="#">Promotion Hub</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="bg-slate-100 border-none text-sm rounded-full pl-10 pr-4 py-2 focus:ring-2 focus:ring-lime-400 w-64" placeholder="Search matches..." type="text"/>
+</div>
+<button class="p-2 text-slate-500 hover:text-lime-500 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:text-lime-500 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+<img alt="Manager Profile" class="w-8 h-8 rounded-full border border-slate-200" data-alt="professional portrait of a sports team manager in a dark suit with athletic facility background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtkMF02d0hFwWVT-YdyjU00mEix7jjx3DdR76epQeb8buYc9PXfzKRn0wtpyJmWayCA7r2DoT4e32kX_UOWcTuQk4tlInlJgnPP4aU0QpIFn6zWZy3H2ULZqNvjq2Et1jpX5q9XuTSOLgvCFo_kKznw_yT4u0ckvvlRPY4_ezq4N_wDcrNESuBdHFJpcSioqKO0ta_p2CW4TcVoijuI8W3x5UGfVBH-ntf6N3H8UjXFVA_IUUJguOa6-F33RxCfWYHV57D2JqdCuo"/>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-50 border-r border-slate-200 hidden lg:flex flex-col pt-20 pb-8 h-full">
+<div class="mb-8 px-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
+<img alt="Team Logo" data-alt="minimalist professional sports team logo with lightning bolt and shield icon in neon lime and navy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgldgA-a5LsjOEK-6hDt5eiK6MwHGvdUdr78N6m1_F9DtcjcdNI6AY3JaEdM8vzGHBm35Gu4LG5_LT6k5AntB9dpmzTSp0sY_ojgLjjesjTzhaJVHLllaHN-YlFnUhLPQb-mWPIp9btUnhBdFnO_aPLE60vKsXkYe3XAo_V7MQsmwEOs65r71PDiy4cDBjRKLnk4kT9SpeweDhk9WZXOIULVR67jmgk_XOWTxjC9kMprNOhnfFPWTc082liPoktPDhQpSjQbdx1vM"/>
+</div>
+<div>
+<h2 class="text-lg font-black text-slate-900 font-headline">Velocity</h2>
+<p class="text-[10px] text-slate-500 font-headline font-semibold uppercase tracking-widest">Elite Performance</p>
+</div>
+</div>
+</div>
+<div class="flex-1 space-y-1 pr-4">
+<a class="flex items-center gap-3 text-slate-500 py-3 px-6 hover:bg-slate-100 hover:text-slate-900 hover:translate-x-1 transition-all duration-300 font-headline text-sm font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+        Dashboard
+      </a>
+<a class="flex items-center gap-3 text-slate-500 py-3 px-6 hover:bg-slate-100 hover:text-slate-900 hover:translate-x-1 transition-all duration-300 font-headline text-sm font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+        Roster
+      </a>
+<a class="flex items-center gap-3 bg-white text-slate-900 rounded-r-full py-3 px-6 border-l-4 border-lime-400 shadow-sm font-headline text-sm font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+        Match History
+      </a>
+<a class="flex items-center gap-3 text-slate-500 py-3 px-6 hover:bg-slate-100 hover:text-slate-900 hover:translate-x-1 transition-all duration-300 font-headline text-sm font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+        Promotion Hub
+      </a>
+</div>
+<div class="px-6 mt-4">
+<button class="w-full bg-[#ADFF2F] text-slate-900 font-bold py-3 rounded-xl hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="sensors">sensors</span>
+      Go Live
+    </button>
+</div>
+<div class="mt-auto border-t border-slate-200 pt-4 px-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 transition-colors font-headline font-semibold text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+        Support
+      </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-error transition-colors font-headline font-semibold text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+        Logout
+      </a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="lg:ml-64 pt-24 min-h-screen p-6 md:p-10 space-y-8">
+<!-- Page Header & Filters -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="text-4xl md:text-5xl font-black font-headline text-slate-900 tracking-tighter uppercase italic">Match History</h1>
+<p class="text-slate-500 font-label mt-2">Season 2023/24 Performance Telemetry</p>
+</div>
+<div class="flex flex-wrap items-center gap-4">
+<div class="flex flex-col gap-1">
+<label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest ml-1">Competition</label>
+<select class="bg-white border border-slate-200 text-slate-900 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-lime-400 font-label text-sm min-w-[160px] shadow-sm">
+<option>All Competitions</option>
+<option>Premier League</option>
+<option>Champions Cup</option>
+<option>National Trophy</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-[10px] font-bold uppercase text-slate-400 tracking-widest ml-1">Season</label>
+<select class="bg-white border border-slate-200 text-slate-900 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-lime-400 font-label text-sm min-w-[120px] shadow-sm">
+<option>2023/24</option>
+<option>2022/23</option>
+<option>2021/22</option>
+</select>
+</div>
+<button class="bg-white border border-slate-200 p-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-lime-600 transition-all mt-auto shadow-sm">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+</section>
+<!-- Performance Stats Overview (Bento Grid Style) -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="card-bright p-6 rounded-2xl shadow-sm">
+<p class="text-slate-500 font-label text-xs uppercase tracking-widest">Total Matches</p>
+<h3 class="text-4xl font-black font-headline text-slate-900 mt-1">24</h3>
+<div class="mt-4 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-lime-400 w-3/4"></div>
+</div>
+</div>
+<div class="card-bright p-6 rounded-2xl shadow-sm">
+<p class="text-slate-500 font-label text-xs uppercase tracking-widest">Win Rate</p>
+<div class="flex items-baseline gap-2 mt-1">
+<h3 class="text-4xl font-black font-headline text-lime-600">68%</h3>
+<span class="text-lime-700 text-xs font-bold">+4.2%</span>
+</div>
+<p class="text-[10px] text-slate-400 mt-2">Versus last season average</p>
+</div>
+<div class="card-bright p-6 rounded-2xl shadow-sm">
+<p class="text-slate-500 font-label text-xs uppercase tracking-widest">Goals Scored</p>
+<h3 class="text-4xl font-black font-headline text-slate-900 mt-1">52</h3>
+<p class="text-[10px] text-slate-400 mt-2">2.16 Goals per match avg</p>
+</div>
+<div class="bg-slate-900 p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center">
+<div class="w-12 h-12 rounded-full bg-lime-400/20 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-lime-400" data-icon="trophy">trophy</span>
+</div>
+<p class="text-slate-400 font-label text-xs uppercase tracking-widest">League Rank</p>
+<h3 class="text-2xl font-black font-headline text-white italic">2nd PLACE</h3>
+</div>
+</section>
+<!-- Match List -->
+<section class="space-y-4">
+<!-- Match Card 1 -->
+<div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-lg transition-all duration-300">
+<div class="flex flex-col lg:flex-row items-stretch">
+<div class="w-2 lg:w-3 bg-lime-400"></div>
+<div class="flex-1 p-6 flex flex-col lg:flex-row items-center justify-between gap-8">
+<!-- Date & Competition -->
+<div class="flex flex-col items-center lg:items-start min-w-[120px]">
+<span class="text-slate-900 font-black font-headline text-xl">OCT 24</span>
+<span class="text-slate-500 font-label text-xs uppercase tracking-tighter">Premier League</span>
+</div>
+<!-- Teams & Score -->
+<div class="flex flex-1 items-center justify-center gap-6 md:gap-12">
+<div class="flex flex-col items-center gap-2 w-32">
+<img alt="Elite Strikers" class="w-12 h-12" data-alt="vibrant circular sports crest with neon green neon lighting and bold typography for elite strikers team" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZeelNYuaO9QgfL4b7wvUDLfzCQ-BAR4YRFUCr3ouaBhpclMLATZieEn28rew--wMMpLjqExy5j0atsa_Py8pU37XyMVJo_LLsqA1r7hogzGlmwlUzWLCpcMt4TYHkq7ahAqFqcKWwBfanRNAqiHbq5xts4f0sZ87lh4EnoA0JLQmiHrKBiDb4CjIpSsxx1tlRIbgosT5JBREOujqs-WdevB1ZUOi9MSdVYDIQiMCyCt2gYEWhVPzYjcBmK9ZyC8qv0CTiRkAj3bA"/>
+<span class="text-slate-700 font-bold text-sm text-center uppercase">Elite Strikers</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="text-5xl font-black font-headline italic tracking-tighter flex gap-4 text-slate-900">
+<span>3</span>
+<span class="text-slate-200">-</span>
+<span>1</span>
+</div>
+<span class="mt-2 px-3 py-1 bg-lime-100 text-lime-700 text-[10px] font-bold rounded-full uppercase tracking-widest">Victory</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-32">
+<img alt="Red Vipers" class="w-12 h-12" data-alt="professional sports logo of a stylized viper snake head in crimson and silver metallic textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_e0b6XE2GyjKDBY-SAQ7gqYAP4LtTJWnfubya2t2nA9tuISHIYvemeI9knqHaKoXwmLHLhS0VvuwIb7ZZX5aQ8fvYGYDygD3Z7AMLMEJYQREDxRLCbjTLJz8kD1VXhRzTc1kXKcNw7x65RBuCdlpE-MPGtwI5GcVpJSh5GclifZw8zNXlH0p4vpPbL6ZmWgKIkyRZ3Ij50pSU0hcfyL-oTPmVDzv9sS-QlsLVM--qky67A32ptfhcFtpXlkeXt54Unx7z_CF0Ks"/>
+<span class="text-slate-700 font-bold text-sm text-center uppercase">Red Vipers</span>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 text-slate-900 font-bold text-xs hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="analytics">analytics</span>
+                STATS
+              </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ADFF2F] text-slate-900 font-bold text-xs hover:opacity-90 transition-opacity shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="play_circle">play_circle</span>
+                REPLAY
+              </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Match Card 2 -->
+<div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-lg transition-all duration-300">
+<div class="flex flex-col lg:flex-row items-stretch">
+<div class="w-2 lg:w-3 bg-slate-300"></div>
+<div class="flex-1 p-6 flex flex-col lg:flex-row items-center justify-between gap-8">
+<div class="flex flex-col items-center lg:items-start min-w-[120px]">
+<span class="text-slate-900 font-black font-headline text-xl">OCT 18</span>
+<span class="text-slate-500 font-label text-xs uppercase tracking-tighter">Champions Cup</span>
+</div>
+<div class="flex flex-1 items-center justify-center gap-6 md:gap-12">
+<div class="flex flex-col items-center gap-2 w-32">
+<img alt="Night Blue" class="w-12 h-12" data-alt="modern football club crest with stylized owl icon in deep navy and electric blue colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcSt3Es3Py4BtHUWGiyfnDBWen1Ofez-QN6EkeMaDzSGo-b_JtN9EgIJ8Ndc-BT7lPVXNV9w1lB-DNZbJv2Q92hBJRjy9CXoMHW2tcmamoPZHfChvAOipNA4dSM81zlngt0goLBYNGuxaIyxF5x9dYx0MtSYYiKj95oF8-UXfOfBe4U3xoRvu0JKwstadYPMt3Hd7DF9S-GGkb5ZcUeg0jImVCOnnFyhuXJZ08Igx0g1D0Un6iLoxNU-QCau3s-n5HsoliH-1eSc0"/>
+<span class="text-slate-700 font-bold text-sm text-center uppercase">Night Blue</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="text-5xl font-black font-headline italic tracking-tighter flex gap-4 text-slate-900">
+<span>2</span>
+<span class="text-slate-200">-</span>
+<span>2</span>
+</div>
+<span class="mt-2 px-3 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded-full uppercase tracking-widest">Draw</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-32">
+<img alt="Elite Strikers" class="w-12 h-12" data-alt="vibrant circular sports crest with neon green neon lighting and bold typography for elite strikers team" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuTaAANTtLfGDiOFXbr-dqikNlqkkk1zVMFCriRD6OBZyfg2AriPgxTkJzWV5DZ6TcPdednJPu4QxQf1YXvE10qidyEXF5_Mc7cBGFhGIHcSHbVROxo8eGHGDESkgwiau7UJ6Zyrzy5DBYz_iDDJyewQPts6cHuI4d_viQoG79AvCN5hYuB8jSw9a0j6AgtB4Ag0LV-FZem4IE0V0TYGyo6ZueSIVgYHavJYB4Evg78nYukONtVLM-7ShyPE9AtI4uTt4kefJy4b8"/>
+<span class="text-slate-700 font-bold text-sm text-center uppercase">Elite Strikers</span>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 text-slate-900 font-bold text-xs hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="analytics">analytics</span>
+                STATS
+              </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ADFF2F] text-slate-900 font-bold text-xs hover:opacity-90 transition-opacity shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="play_circle">play_circle</span>
+                REPLAY
+              </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Match Card 3 -->
+<div class="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:shadow-lg transition-all duration-300">
+<div class="flex flex-col lg:flex-row items-stretch">
+<div class="w-2 lg:w-3 bg-error"></div>
+<div class="flex-1 p-6 flex flex-col lg:flex-row items-center justify-between gap-8">
+<div class="flex flex-col items-center lg:items-start min-w-[120px]">
+<span class="text-slate-900 font-black font-headline text-xl">OCT 12</span>
+<span class="text-slate-500 font-label text-xs uppercase tracking-tighter">Premier League</span>
+</div>
+<div class="flex flex-1 items-center justify-center gap-6 md:gap-12">
+<div class="flex flex-col items-center gap-2 w-32">
+<img alt="Elite Strikers" class="w-12 h-12" data-alt="vibrant circular sports crest with neon green neon lighting and bold typography for elite strikers team" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-ufB2KQsJNbhejZbNTYyIqBQd-GSZnEUKAzRx0Ey1zaA3vbQ8LNcaXihz6ek_TPvy0C-dv5cRYwHYSu_WBxljkrBXj4BGxgpxqEw2JZoMwJjapz5APKasRUbcWr-pV38Gis7Ovx3QpQ5WmhJbnXz3f42sogqJaF4RGB9cGDbvc8oB6RNP9l-fR5czm4GGeIQmh1IrNgd7M9hqz2P9LvwZrP4c305FO8zEkDlA7ZMl-tE0wQXRQxmYyUYoCUA-Vd6D9fKFAR7CYZ4"/>
+<span class="text-slate-700 font-bold text-sm text-center uppercase">Elite Strikers</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="text-5xl font-black font-headline italic tracking-tighter flex gap-4 text-slate-900">
+<span>0</span>
+<span class="text-slate-200">-</span>
+<span>1</span>
+</div>
+<span class="mt-2 px-3 py-1 bg-red-50 text-error text-[10px] font-bold rounded-full uppercase tracking-widest">Defeat</span>
+</div>
+<div class="flex flex-col items-center gap-2 w-32">
+<img alt="Titan City" class="w-12 h-12" data-alt="strong industrial sports logo featuring stylized skyscraper geometry in charcoal and gold" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMrghFcyVec-VmJoJwf788aUEGq5jwSgMrLSo5aNCwlYgNWYO1ckGrYaxFRRKq5Xr95_nnHpiNfffDURTZz1jm8LVpzDyzMo_RW9Jjmgx2Co3eG8_YI20e-TL_qSS4Ds3lVBxg4VvWEt2vLvseMs1yOKPo3OM5j1WmGvZKGi6769EyDI4LWJhF_ufHphwyowUYGKGvFdgHxB1d_xaQFC9vtnQXOLjfuV-IWbKYC9DdiQ5UUaFrz4u7xMbqudXbUmP5ze8WkuIFvGo"/>
+<span class="text-slate-700 font-bold text-sm text-center uppercase">Titan City</span>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 text-slate-900 font-bold text-xs hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="analytics">analytics</span>
+                STATS
+              </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ADFF2F] text-slate-900 font-bold text-xs hover:opacity-90 transition-opacity shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="play_circle">play_circle</span>
+                REPLAY
+              </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pagination/Load More -->
+<div class="flex justify-center py-8">
+<button class="group flex flex-col items-center gap-2 text-slate-400 hover:text-lime-600 transition-colors">
+<span class="text-[10px] font-black uppercase tracking-[0.3em]">Load More Matches</span>
+<span class="material-symbols-outlined text-3xl group-hover:translate-y-1 transition-transform" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-slate-200 z-50 flex justify-around items-center py-4 px-2">
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="text-[10px] font-bold">Roster</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-lime-600" href="#">
+<span class="material-symbols-outlined" data-icon="history" style="font-variation-settings: 'FILL' 1;">history</span>
+<span class="text-[10px] font-bold">History</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+<span class="text-[10px] font-bold">Hub</span>
+</a>
+</nav>
+</body></html>

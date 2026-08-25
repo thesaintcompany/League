@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>StadiaPerform | Venue Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Inter:wght@400;500;600&amp;family=Lexend:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-container": "#1a202c",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#3d4759",
+                        "surface-container": "#ebeef0",
+                        "on-secondary-fixed-variant": "#314f00",
+                        "inverse-on-surface": "#eef1f3",
+                        "surface-container-high": "#e5e9eb",
+                        "tertiary-fixed-dim": "#bdc7dc",
+                        "surface-bright": "#f7fafc",
+                        "secondary": "#426900",
+                        "surface-dim": "#d7dadc",
+                        "surface-variant": "#e0e3e5",
+                        "tertiary": "#010817",
+                        "on-surface-variant": "#45474c",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#c1c6d7",
+                        "on-background": "#181c1e",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary": "#030813",
+                        "background": "#f7fafc",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#162030",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#c1c6d7",
+                        "surface-container-low": "#f1f4f6",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#d9e3f9",
+                        "surface": "#f7fafc",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c6c6cc",
+                        "on-surface": "#181c1e",
+                        "on-primary-fixed": "#161c27",
+                        "primary-fixed": "#dde2f3",
+                        "on-secondary-container": "#456e00",
+                        "outline": "#76777c",
+                        "on-primary-fixed-variant": "#414754",
+                        "inverse-surface": "#2d3133",
+                        "secondary-fixed-dim": "#8fdb00",
+                        "surface-tint": "#585e6c",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#112000",
+                        "on-tertiary-container": "#7d889b",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#a5f624",
+                        "secondary-fixed": "#a8f928",
+                        "on-tertiary-fixed": "#121c2c"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Lexend"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #030813 0%, #1a202c 100%);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar Shell -->
+<header class="bg-[#1A202C] dark:bg-[#030813] docked full-width top-0 z-50 fixed w-full">
+<div class="flex justify-between items-center w-full px-6 h-16 md:px-12">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black italic text-[#ADFF2F] tracking-tighter">StadiaPerform</span>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="font-headline font-bold tracking-tight text-slate-400 hover:text-white transition-colors" href="#">Dashboard</a>
+<a class="font-headline font-bold tracking-tight text-[#ADFF2F] border-b-2 border-[#ADFF2F] pb-1" href="#">Venues</a>
+<a class="font-headline font-bold tracking-tight text-slate-400 hover:text-white transition-colors" href="#">Schedule</a>
+<a class="font-headline font-bold tracking-tight text-slate-400 hover:text-white transition-colors" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="bg-white/10 border-none rounded-full py-1.5 pl-10 pr-4 text-sm text-white focus:ring-2 focus:ring-[#ADFF2F] w-64" placeholder="Search venues..." type="text"/>
+</div>
+<button class="text-slate-400 hover:text-[#ADFF2F] transition-all duration-200 active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-white/20">
+<img alt="Organizer Profile" data-alt="professional portrait of a stadium operations manager in a dark suit against a blurred stadium background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1rScGeUKkRaJnUw9AehRMd9yvCfA7TAAA1NDlrU6SMXDpk4FjGaSFGba2tqW4gWyLaqUxWMQPgCF2amOrtixRBez2IXI_hvqtzv3JurZ2mRQG8SduB67GnKb9NKUX0scSwlKdudK-mKnSCy7bmHmczPlTzgSBIRrGhJE_d_sNDfktA8FQTqht33c2uEmm8DsADRHOUdoiUASmkDqVu-UjXTFEwuy32BUff04I_PE7ugyjas1yDM9_u5geUJiIdPEuHleBvbwDRq0"/>
+</div>
+</div>
+</div>
+<div class="bg-[#f1f4f6] dark:bg-[#1A202C] h-[1px] w-full"></div>
+</header>
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 hidden md:flex flex-col bg-[#f1f4f6] dark:bg-[#1A202C] py-8 pt-24">
+<div class="px-8 mb-8">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 bg-white dark:bg-[#030813] rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-[#426900] dark:text-[#ADFF2F]" data-icon="stadium">stadium</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-[#1A202C] dark:text-white font-headline leading-tight">Elite Arena</h3>
+<p class="text-xs text-slate-500 font-label uppercase tracking-wider">Venue Manager</p>
+</div>
+</div>
+</div>
+<nav class="flex flex-col h-full font-inter text-sm font-medium">
+<a class="text-slate-500 dark:text-slate-400 pl-8 py-3 hover:translate-x-1 transition-transform duration-200" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Overview
+                </div>
+</a>
+<a class="bg-white dark:bg-[#030813] text-[#426900] dark:text-[#ADFF2F] font-bold rounded-l-full ml-4 pl-4 py-3 shadow-sm" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="event_seat">event_seat</span>
+                    Seat Mapping
+                </div>
+</a>
+<a class="text-slate-500 dark:text-slate-400 pl-8 py-3 hover:translate-x-1 transition-transform duration-200" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon=" King_bed">king_bed</span>
+                    Amenities
+                </div>
+</a>
+<a class="text-slate-500 dark:text-slate-400 pl-8 py-3 hover:translate-x-1 transition-transform duration-200" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="photo_library">photo_library</span>
+                    Gallery
+                </div>
+</a>
+<a class="text-slate-500 dark:text-slate-400 pl-8 py-3 hover:translate-x-1 transition-transform duration-200" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="vpn_key">vpn_key</span>
+                    Access Control
+                </div>
+</a>
+<div class="mt-auto px-6">
+<button class="w-full kinetic-gradient text-white font-headline py-3 rounded-xl mb-8 active:opacity-80 transition-opacity">
+                    Go Live
+                </button>
+<div class="space-y-1 mb-4 border-t border-slate-200 pt-4">
+<a class="flex items-center gap-3 text-slate-500 py-2 hover:text-[#426900] transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                        Support
+                    </a>
+<a class="flex items-center gap-3 text-slate-500 py-2 hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                        Logout
+                    </a>
+</div>
+</div>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 pt-24 pb-24 md:pb-12 px-6 md:px-12">
+<!-- Dashboard Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div class="space-y-1">
+<p class="text-secondary font-label text-sm font-semibold uppercase tracking-widest">Administrative Hub</p>
+<h1 class="text-4xl md:text-5xl font-black font-headline text-primary tracking-tight">Venue Portfolio</h1>
+</div>
+<button class="bg-secondary-fixed text-on-secondary-fixed font-headline font-bold py-4 px-8 rounded-full flex items-center gap-3 shadow-lg shadow-secondary/10 hover:scale-[1.02] active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                Register New Stadium
+            </button>
+</div>
+<!-- Global Stats Grid (Asymmetric) -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
+<div class="md:col-span-4 bg-surface-container-low p-8 rounded-3xl flex flex-col justify-between min-h-[200px]">
+<span class="material-symbols-outlined text-secondary text-4xl" data-icon="groups">groups</span>
+<div>
+<p class="font-label text-on-surface-variant text-sm uppercase tracking-wider mb-1">Total Capacity</p>
+<h2 class="font-headline text-5xl font-extrabold text-primary">842,500</h2>
+</div>
+</div>
+<div class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+<div class="bg-surface-container p-6 rounded-3xl flex items-center gap-6">
+<div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="celebration">celebration</span>
+</div>
+<div>
+<p class="font-label text-on-surface-variant text-xs uppercase tracking-wider">Events Hosted</p>
+<h3 class="font-headline text-3xl font-bold text-primary">1,248</h3>
+</div>
+</div>
+<div class="bg-surface-container p-6 rounded-3xl flex items-center gap-6">
+<div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="sensors">sensors</span>
+</div>
+<div>
+<p class="font-label text-on-surface-variant text-xs uppercase tracking-wider">Live Venues</p>
+<h3 class="font-headline text-3xl font-bold text-primary">12 / 14</h3>
+</div>
+</div>
+<div class="sm:col-span-2 bg-secondary-container/30 p-6 rounded-3xl flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="trending_up">trending_up</span>
+<p class="text-secondary font-medium font-body">Revenue performance is up 12% across all stadiums this quarter.</p>
+</div>
+<button class="text-secondary font-bold font-label text-sm hover:underline">View Analytics</button>
+</div>
+</div>
+</div>
+<!-- Stadium List Section -->
+<section class="space-y-8">
+<div class="flex items-center justify-between">
+<h3 class="font-headline text-2xl font-bold text-primary">Registered Venues</h3>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-slate-400">
+<span class="material-symbols-outlined" data-icon="list">list</span>
+</button>
+</div>
+</div>
+<!-- Stadium Cards Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Stadium Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-[2rem] flex flex-col sm:flex-row gap-6 shadow-[0_20px_40px_rgba(24,28,30,0.06)] hover:shadow-[0_30px_60px_rgba(24,28,30,0.1)] transition-all duration-300">
+<div class="w-full sm:w-48 h-48 rounded-2xl overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="modern glass and steel stadium architecture at dusk with bright internal illumination reflecting off a sleek plaza" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCv14TJnDn-qPREMouUUcdeCs6S3mQqbMj8OSHUzr4U8fVDBFl6uBKHVVEmODE-6xalyTXt_kEwbpy35LGmuZZ55Tot5IA3IiE0qNE3OwAA-N8Nqgc7ND1KFhm4BnE8XCHd-_w5SupUJvkp2ahhnu7LoJH72yHpRqIQ0cX1IhKKJtnXItS3GPGKmycYyymLaZO8IZUs5g5Fu11a-MiHfEJmvn7T27L7Pr8o9Q7M5G0Vf4ScNgd0y6PuUOjQb1b4W3Wu_QD4tVH4E-s"/>
+</div>
+<div class="flex flex-col justify-between flex-1 py-1">
+<div>
+<div class="flex justify-between items-start mb-2">
+<span class="bg-secondary-fixed/20 text-secondary px-3 py-1 rounded-full text-[10px] font-bold font-label uppercase tracking-tighter border border-secondary/10">Active</span>
+<button class="text-slate-300 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<h4 class="font-headline text-2xl font-bold text-primary leading-tight mb-1">Grand National Stadium</h4>
+<div class="flex items-center gap-2 text-on-surface-variant text-sm mb-4">
+<span class="material-symbols-outlined text-xs" data-icon="location_on">location_on</span>
+<span>London, United Kingdom</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 border-t border-surface-container pt-4">
+<div>
+<p class="text-[10px] font-label text-slate-400 uppercase tracking-widest mb-1">Capacity</p>
+<p class="font-headline font-extrabold text-primary text-lg">90,000</p>
+</div>
+<div>
+<p class="text-[10px] font-label text-slate-400 uppercase tracking-widest mb-1">Events</p>
+<p class="font-headline font-extrabold text-primary text-lg">156</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Stadium Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-[2rem] flex flex-col sm:flex-row gap-6 shadow-[0_20px_40px_rgba(24,28,30,0.06)] hover:shadow-[0_30px_60px_rgba(24,28,30,0.1)] transition-all duration-300">
+<div class="w-full sm:w-48 h-48 rounded-2xl overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="interior view of a massive modern sports arena with red seating and professional stadium lighting system in soft focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeazW5Ne7ZtWQ9YgryTgEI62ks9xPRLf6lfxSVvXEj3p6tMzF05LAkN3xryLVbT2QNsf1oAkcZ3m_9Gow0PEn47Alz7ytvtnV6a6l6JTbvvEdVEYYqkeKkLpQnAzflp2Y3Lq8hGJq_74ZPKI7os0TP_fZz6vifdz-Zia18tEvxK7VcaK8ElZVvwtzFUqdifyFUuHw6mz0a94aWQHyZlRu8kfAXWeIFWh9wuMtWF4cKKqfgSAhPJus6XQxGlDqP3NR-vDxHaeAQoNM"/>
+</div>
+<div class="flex flex-col justify-between flex-1 py-1">
+<div>
+<div class="flex justify-between items-start mb-2">
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-bold font-label uppercase tracking-tighter border border-outline-variant/30">Maintenance</span>
+<button class="text-slate-300 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<h4 class="font-headline text-2xl font-bold text-primary leading-tight mb-1">Apex Indoor Arena</h4>
+<div class="flex items-center gap-2 text-on-surface-variant text-sm mb-4">
+<span class="material-symbols-outlined text-xs" data-icon="location_on">location_on</span>
+<span>Berlin, Germany</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 border-t border-surface-container pt-4">
+<div>
+<p class="text-[10px] font-label text-slate-400 uppercase tracking-widest mb-1">Capacity</p>
+<p class="font-headline font-extrabold text-primary text-lg">18,500</p>
+</div>
+<div>
+<p class="text-[10px] font-label text-slate-400 uppercase tracking-widest mb-1">Events</p>
+<p class="font-headline font-extrabold text-primary text-lg">482</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Stadium Card 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-[2rem] flex flex-col sm:flex-row gap-6 shadow-[0_20px_40px_rgba(24,28,30,0.06)] hover:shadow-[0_30px_60px_rgba(24,28,30,0.1)] transition-all duration-300">
+<div class="w-full sm:w-48 h-48 rounded-2xl overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="aerial drone shot of a classic circular football stadium nested within a dense urban city grid at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBjTOJFF78NOhG_36BRyrhOHPPUvwtESP30Hu3bZ8pMel08smMYYlkwYbXNF8M0LHHeBjtIYY-hij-NE2vGS-k0eojv9cZ-3WILwKom9p1EIFHIgXnkXAwl-cJsHygqMNNq05T7NPjlAlVkEfXL-4l_pKPFSBb-HNIAa3t5yKh9xDVJASQs2WNjNaTvrATCvhAs6IT3oMQDPWXCDGxpyJptfkeGEB6FyJqXp0QXGejRjMXvnSzUti9EoY4FCt2cR5xRhbtFwFcWzs"/>
+</div>
+<div class="flex flex-col justify-between flex-1 py-1">
+<div>
+<div class="flex justify-between items-start mb-2">
+<span class="bg-secondary-fixed/20 text-secondary px-3 py-1 rounded-full text-[10px] font-bold font-label uppercase tracking-tighter border border-secondary/10">Active</span>
+<button class="text-slate-300 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<h4 class="font-headline text-2xl font-bold text-primary leading-tight mb-1">Azure Coastal Bowl</h4>
+<div class="flex items-center gap-2 text-on-surface-variant text-sm mb-4">
+<span class="material-symbols-outlined text-xs" data-icon="location_on">location_on</span>
+<span>Barcelona, Spain</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 border-t border-surface-container pt-4">
+<div>
+<p class="text-[10px] font-label text-slate-400 uppercase tracking-widest mb-1">Capacity</p>
+<p class="font-headline font-extrabold text-primary text-lg">55,000</p>
+</div>
+<div>
+<p class="text-[10px] font-label text-slate-400 uppercase tracking-widest mb-1">Events</p>
+<p class="font-headline font-extrabold text-primary text-lg">94</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Stadium Card 4 (Registration CTA) -->
+<div class="bg-surface-container-low border-2 border-dashed border-outline-variant p-6 rounded-[2rem] flex flex-col items-center justify-center text-center gap-4 hover:bg-surface-container hover:border-secondary transition-all cursor-pointer min-h-[12rem]">
+<div class="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="add">add</span>
+</div>
+<div>
+<h4 class="font-headline text-xl font-bold text-primary">Expand Your Portfolio</h4>
+<p class="text-sm text-on-surface-variant max-w-[240px]">Quickly onboard your next venue to start managing events and seating.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Shell -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 dark:bg-[#1A202C]/80 backdrop-blur-xl docked full-width bottom-0 rounded-t-3xl z-50 md:hidden border-t border-slate-200/20 shadow-[0_-10px_30px_rgba(0,0,0,0.1)]">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 p-2 hover:text-[#ADFF2F] transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-lexend text-[10px] uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#ADFF2F] text-[#112000] rounded-2xl p-2 scale-110 shadow-lg shadow-[#ADFF2F]/20" href="#">
+<span class="material-symbols-outlined" data-icon="stadium">stadium</span>
+<span class="font-lexend text-[10px] uppercase tracking-widest mt-1 font-bold">Venues</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 p-2 hover:text-[#ADFF2F] transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-lexend text-[10px] uppercase tracking-widest mt-1">Stats</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 p-2 hover:text-[#ADFF2F] transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-lexend text-[10px] uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

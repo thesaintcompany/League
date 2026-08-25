@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ProLeague Admin - Tournament Configuration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-dim": "#4c5400",
+                        "on-surface-variant": "#595c5e",
+                        "surface": "#f5f7f9",
+                        "tertiary-fixed": "#fdf25c",
+                        "surface-bright": "#f5f7f9",
+                        "surface-tint": "#406600",
+                        "tertiary-container": "#fdf25c",
+                        "secondary": "#586100",
+                        "error": "#b02500",
+                        "primary-fixed-dim": "#95e400",
+                        "secondary-fixed-dim": "#cfde54",
+                        "surface-container-high": "#dfe3e6",
+                        "on-tertiary-container": "#605a00",
+                        "error-container": "#f95630",
+                        "on-primary-fixed": "#294300",
+                        "on-tertiary-fixed": "#4c4800",
+                        "on-secondary": "#eefd6f",
+                        "primary-container": "#a2f31f",
+                        "on-error": "#ffefec",
+                        "on-error-container": "#520c00",
+                        "outline-variant": "#abadaf",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#efe44f",
+                        "on-tertiary": "#fff690",
+                        "primary-dim": "#375900",
+                        "on-tertiary-fixed-variant": "#6b6500",
+                        "surface-variant": "#d9dde0",
+                        "on-secondary-fixed": "#3d4300",
+                        "inverse-on-surface": "#9a9d9f",
+                        "background": "#f5f7f9",
+                        "on-primary-fixed-variant": "#3d6200",
+                        "error-dim": "#b92902",
+                        "surface-container-low": "#eef1f3",
+                        "primary": "#406600",
+                        "tertiary-dim": "#565100",
+                        "secondary-container": "#ddec61",
+                        "inverse-surface": "#0b0f10",
+                        "on-primary": "#daffa7",
+                        "surface-container": "#e5e9eb",
+                        "on-primary-container": "#365700",
+                        "on-surface": "#2c2f31",
+                        "on-secondary-container": "#4f5600",
+                        "tertiary": "#635d00",
+                        "on-secondary-fixed-variant": "#586100",
+                        "on-background": "#2c2f31",
+                        "surface-dim": "#d0d5d8",
+                        "primary-fixed": "#a2f31f",
+                        "outline": "#747779",
+                        "surface-container-highest": "#d9dde0",
+                        "inverse-primary": "#a2f31f",
+                        "secondary-fixed": "#ddec61"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #406600 0%, #a2f31f 100%);
+        }
+        .frosted-precision {
+            backdrop-filter: blur(20px);
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<aside class="h-screen w-72 flex flex-col fixed left-0 top-0 bg-[#eef1f3] dark:bg-[#121416] py-8 px-6 space-y-4">
+<div class="mb-8 px-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg kinetic-gradient flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<div>
+<h1 class="text-lg font-black uppercase text-[#2c2f31] dark:text-white leading-tight">Elite Series</h1>
+<p class="text-[10px] tracking-widest uppercase text-outline">Admin Console</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#abadaf] dark:text-[#6c6e70] hover:bg-[#dfe3e6] dark:hover:bg-[#1e2022] transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#2c2f31] dark:text-white font-bold border-l-4 border-[#ADFF2F] bg-white/50 dark:bg-white/5 transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-medium">Teams</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#abadaf] dark:text-[#6c6e70] hover:bg-[#dfe3e6] dark:hover:bg-[#1e2022] transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">event_note</span>
+<span class="font-medium">Matches</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#abadaf] dark:text-[#6c6e70] hover:bg-[#dfe3e6] dark:hover:bg-[#1e2022] transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</nav>
+<div class="pt-8 border-t border-outline-variant/10 space-y-2">
+<button class="w-full kinetic-gradient text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-95 duration-150">
+<span class="material-symbols-outlined text-sm">add</span>
+                Create Tournament
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#abadaf] dark:text-[#6c6e70] hover:bg-[#dfe3e6] transition-all" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-medium">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-error/70 hover:bg-error-container/10 transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-72 min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 flex justify-between items-center px-8 h-20 bg-[#f5f7f9] dark:bg-[#1a1c1e] bg-opacity-70 backdrop-blur-xl">
+<div class="flex items-center gap-4">
+<h2 class="text-xl font-bold tracking-tight text-[#2c2f31] dark:text-white">ProLeague Admin</h2>
+<div class="h-6 w-px bg-outline-variant/20"></div>
+<div class="flex gap-2 text-xs font-bold uppercase tracking-widest text-outline">
+<span>Events</span>
+<span>/</span>
+<span class="text-on-surface">Configuration</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<input class="w-64 bg-surface-container-low border-none rounded-full px-6 py-2 text-sm focus:ring-2 focus:ring-primary-fixed transition-all" placeholder="Search teams or brackets..." type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-[#dfe3e6] dark:hover:bg-[#323538] transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-[#dfe3e6] dark:hover:bg-[#323538] transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-primary-container">
+<img alt="Organizer Profile" class="w-full h-full object-cover" data-alt="professional portrait of a tournament organizer in a clean modern office setting with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUo7GTsnhYTGxrFVTrHvrJJNG2I-hGCroJUZaMLkxoNNEGsP_nOVNRftPcMr7kSMI4Bkq7gvASyDwFQV7MsNvVU8B3DVtEKHE9Fo73LrXITihs7g7VbHCnTNmymZuz8HQ6vc2spQTTr0T13pxcLlQFfxN_8mqt5yfuPwAK3GEQlVXU-YDeInpaTw0Cd59CJXxBllFcwBiD87BzEp4N-qRzEm0NT81gx-fuGZx_HGR9zSjU0BWBODZBh2As5DEx2cjkAX2XQkwyfGI"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-8 space-y-8">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div>
+<h1 class="text-4xl font-extrabold tracking-tighter text-on-surface mb-2">Tournament Configuration</h1>
+<p class="text-on-surface-variant max-w-xl">Set your parameters, select participating teams, and visualize the initial bracket draft for the upcoming Elite Series.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-8 py-3 rounded-xl font-bold bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-all active:scale-95">
+                        Discard Changes
+                    </button>
+<button class="px-8 py-3 rounded-xl font-bold kinetic-gradient text-on-primary-fixed shadow-lg shadow-primary/20 active:scale-95 transition-all">
+                        Save Configuration
+                    </button>
+</div>
+</div>
+<!-- Bento Layout -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Left: Configuration & Selection (Col 8) -->
+<div class="col-span-8 space-y-8">
+<!-- Section 1: Setup Form -->
+<section class="bg-surface-container-lowest p-8 rounded-lg space-y-6">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">tune</span>
+<h3 class="text-xl font-bold">Tournament Setup</h3>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-widest text-outline pl-1">Number of Teams</label>
+<div class="grid grid-cols-3 gap-3">
+<button class="py-4 border-none bg-surface-container-low text-on-surface font-bold rounded-lg hover:bg-primary-container transition-colors">8</button>
+<button class="py-4 border-none bg-primary-container text-on-primary-container font-black rounded-lg ring-2 ring-primary">16</button>
+<button class="py-4 border-none bg-surface-container-low text-on-surface font-bold rounded-lg hover:bg-primary-container transition-colors">32</button>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-widest text-outline pl-1">Tournament Timeframe</label>
+<div class="flex gap-2">
+<div class="flex-1 relative">
+<input class="w-full bg-surface-container-low border-none rounded-lg py-3 pl-10 pr-4 text-sm font-semibold focus:ring-2 focus:ring-primary" readonly="" type="text" value="Oct 12, 2024"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">calendar_today</span>
+</div>
+<div class="flex items-center text-outline">to</div>
+<div class="flex-1 relative">
+<input class="w-full bg-surface-container-low border-none rounded-lg py-3 pl-10 pr-4 text-sm font-semibold focus:ring-2 focus:ring-primary" readonly="" type="text" value="Nov 05, 2024"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">calendar_today</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Team Selector -->
+<section class="bg-surface-container-low/50 rounded-lg p-8 space-y-6">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">group_add</span>
+<h3 class="text-xl font-bold">Team Selector</h3>
+</div>
+<span class="text-sm font-bold text-on-surface-variant bg-surface-container-high px-4 py-1 rounded-full">Selected: 12 / 16</span>
+</div>
+<!-- Search & Filter -->
+<div class="flex gap-4">
+<div class="flex-1 relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-xl py-4 pl-12 pr-4 shadow-sm focus:ring-2 focus:ring-primary" placeholder="Filter by region, rank or name..." type="text"/>
+</div>
+<button class="px-6 bg-surface-container-lowest text-on-surface rounded-xl flex items-center gap-2 hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">filter_list</span>
+<span class="font-bold">Filters</span>
+</button>
+</div>
+<!-- Team Grid -->
+<div class="grid grid-cols-3 gap-4">
+<!-- Team Card 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border-l-4 border-primary group cursor-pointer hover:scale-[1.02] transition-transform">
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 bg-surface-container-low rounded-lg flex items-center justify-center overflow-hidden">
+<img alt="Vortex Gaming" class="w-full h-full object-cover" data-alt="minimalist esports team logo with a stylized lightning bolt in neon green and slate grey" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZKXSLmX_fNbUnn9y-j9ETzUe8gysn31E4_vxmE41J_OvWsEZzBZvBf_Ux9RzX8ixODZJvqC7SUw-nnGsfvQNLosRM5rI-POHLAx08tZePWIC7qiFf84sNaT9DwrHgXBrdy_njYvg555Ou4oKWv9V-pGmoUACSiIBWVXNePIAElitRI_1bxE0l55Bs3836GxBdZRZS0jwmbQb6zM1To0dKvmPVOB2eUr21milSM8BVw8Un2VZdp0GdZUaphj1z45Hg6Do_hKade0Q"/>
+</div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h4 class="font-bold text-on-surface truncate">Vortex Gaming</h4>
+<p class="text-xs text-on-surface-variant">Lead: Marcus V.</p>
+<div class="mt-4 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-outline">
+<span>EU West</span>
+<span class="text-primary-dim">Rank #04</span>
+</div>
+</div>
+<!-- Team Card 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border-l-4 border-primary group cursor-pointer hover:scale-[1.02] transition-transform">
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 bg-surface-container-low rounded-lg flex items-center justify-center overflow-hidden">
+<img alt="Iron Wolves" class="w-full h-full object-cover" data-alt="professional esports logo featuring a geometric wolf head in dark steel grey and bright neon accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSpmsUmTsFFDK2vuT7VyySBHob4xw7ZVkuySML2TtVflIiLNoXwE34As8TeZejq_EP2JOmd5b-0LPUOTZPPekKyumtFzv87NP6dVHz5Behbn0uIcjf1oBvQkYQ8ruRplh5yGE5hzXaZDUjposq58bHixi_Hnv4vTRG1iEuXoiSKF7i26jjq8v2tFw7cCIVqv8PkKUxDAcre605KFBNmGPgzKeLMIeLlIiYItnAH1OnZHvU8StQo0T116L9vj0vuwgaAKD0wozuDPg"/>
+</div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h4 class="font-bold text-on-surface truncate">Iron Wolves</h4>
+<p class="text-xs text-on-surface-variant">Lead: Sarah J.</p>
+<div class="mt-4 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-outline">
+<span>NA East</span>
+<span class="text-primary-dim">Rank #12</span>
+</div>
+</div>
+<!-- Team Card 3 (Unselected) -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border-l-4 border-transparent group cursor-pointer hover:scale-[1.02] transition-transform opacity-70">
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 bg-surface-container-low rounded-lg flex items-center justify-center overflow-hidden">
+<img alt="Blaze Squad" class="w-full h-full object-cover" data-alt="sleek modern esports logo of a stylized flame icon in vibrant gradients" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCd4_7ScXcXGgEXAfnasKBQ1As648ID3yS6QffYLeutsaiYCJzvxp7vCmGHwkSbm26WHpva9pE-xnA6c4-fUiumNvtPWbLD95oIE89EYT5IkU-WnMqKDh2HE9RT8WV2QkzHga4-Mg4-KsIayBdY7GhSWKlnBQEiBL3rB1KsDLDOO24jAVutf-mgSu2HoargEGvn_vxWxwGcqOjqLqJeKfAFFFeDXmLjvgOJb3-mWHKKgka88Ppn4Sk3HtJH6NnrEODYNM6Dfjt4mk"/>
+</div>
+<span class="material-symbols-outlined text-outline">add_circle</span>
+</div>
+<h4 class="font-bold text-on-surface truncate">Blaze Squad</h4>
+<p class="text-xs text-on-surface-variant">Lead: Kenji T.</p>
+<div class="mt-4 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-outline">
+<span>Asia Pac</span>
+<span>Rank #28</span>
+</div>
+</div>
+<!-- Repeat cards... -->
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm border-l-4 border-primary group cursor-pointer hover:scale-[1.02] transition-transform">
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 bg-surface-container-low rounded-lg flex items-center justify-center overflow-hidden">
+<img alt="Nexus Elite" class="w-full h-full object-cover" data-alt="futuristic geometric gaming logo with diamond shapes and sharp edges in professional light slate colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMoBqSHINT90jT9d7YV4a3TGilS-raWISS49bLWdVJEbKKgIxr0PJdZmPvxL8-HylosMo5YDu98EWuUY5wdsNke7qVv6uoEbQo442pLqYMt-6x9VJBPf8wpkj8iLrxPyIx7nF1tXYZKD3sDBj5bzzczlA-ei8QHx1ZgjINkPoaVIDcMYRhhEQdKI7M2cM-v1ToKfPA9EXYpZErYRl3PnZ-s1gPcTSSG0_7sMf5DT5ZoVqUSUsmmK1IsjuwClAkWpDe5LAy1cYQtQI"/>
+</div>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h4 class="font-bold text-on-surface truncate">Nexus Elite</h4>
+<p class="text-xs text-on-surface-variant">Lead: Elena R.</p>
+<div class="mt-4 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-outline">
+<span>EU Central</span>
+<span class="text-primary-dim">Rank #02</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right: Bracket Preview (Col 4) -->
+<div class="col-span-4 space-y-8">
+<section class="bg-surface-container-high/30 border border-outline-variant/10 rounded-lg p-6 flex flex-col h-full min-h-[700px]">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">account_tree</span>
+<h3 class="text-lg font-bold">Bracket Preview</h3>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-widest text-outline">Live Draft</span>
+</div>
+<!-- Bracket Visualization (Conceptual Asymmetric) -->
+<div class="flex-1 space-y-12 py-4 hide-scrollbar overflow-y-auto">
+<!-- Match 1 -->
+<div class="relative pl-6 border-l-2 border-outline-variant/30">
+<div class="absolute -left-[5px] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary"></div>
+<div class="space-y-1">
+<div class="flex items-center justify-between bg-surface-container-lowest p-3 rounded-lg shadow-sm">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 bg-surface-container-low rounded flex items-center justify-center text-[10px] font-bold">V</div>
+<span class="text-sm font-bold">Vortex Gaming</span>
+</div>
+<span class="text-[10px] font-black text-primary">SEED 1</span>
+</div>
+<div class="flex items-center justify-between bg-surface-container-lowest p-3 rounded-lg shadow-sm opacity-50 border-dashed border border-outline-variant">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 bg-surface-container-low rounded flex items-center justify-center text-[10px] font-bold">?</div>
+<span class="text-sm">TBD Participant</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Match 2 -->
+<div class="relative pl-6 border-l-2 border-outline-variant/30">
+<div class="absolute -left-[5px] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-primary"></div>
+<div class="space-y-1">
+<div class="flex items-center justify-between bg-surface-container-lowest p-3 rounded-lg shadow-sm">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 bg-surface-container-low rounded flex items-center justify-center text-[10px] font-bold">IW</div>
+<span class="text-sm font-bold">Iron Wolves</span>
+</div>
+<span class="text-[10px] font-black text-primary">SEED 8</span>
+</div>
+<div class="flex items-center justify-between bg-surface-container-lowest p-3 rounded-lg shadow-sm">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 bg-surface-container-low rounded flex items-center justify-center text-[10px] font-bold">NE</div>
+<span class="text-sm font-bold">Nexus Elite</span>
+</div>
+<span class="text-[10px] font-black text-primary">SEED 9</span>
+</div>
+</div>
+</div>
+<!-- Round 2 Connector (Visual Only) -->
+<div class="ml-12 border-l-2 border-outline-variant/30 h-24 relative">
+<div class="absolute left-0 top-1/2 w-6 h-px bg-outline-variant/30"></div>
+<div class="absolute left-6 top-1/2 -translate-y-1/2 bg-surface-container-lowest p-4 rounded-xl shadow-md border border-primary/10 w-48">
+<p class="text-[10px] font-bold uppercase text-outline mb-1">Quarter Finals</p>
+<div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-primary w-1/3"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Bar in Sidebar -->
+<div class="mt-auto pt-6 border-t border-outline-variant/10 space-y-3">
+<button class="w-full group flex items-center justify-center gap-2 py-4 bg-on-surface text-surface rounded-xl font-bold hover:bg-on-surface-variant transition-all active:scale-95">
+<span class="material-symbols-outlined group-hover:rotate-180 transition-transform duration-500">casino</span>
+                                Generate Initial Seeding
+                            </button>
+<p class="text-[10px] text-center text-on-surface-variant px-4">Uses the ProLeague Dice Algorithm to weight historical performance and regional variety.</p>
+</div>
+</section>
+</div>
+</div>
+<!-- Kinetic Progress Bar (Footer Context) -->
+<div class="fixed bottom-0 left-72 right-0 px-8 py-4 frosted-precision border-t border-outline-variant/5">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#ADFF2F]"></div>
+<span class="text-xs font-bold uppercase tracking-widest">Auto-Save Enabled</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-on-surface-variant">Setup Integrity:</span>
+<div class="w-48 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full kinetic-gradient w-[85%] relative">
+<div class="absolute inset-0 blur-[4px] bg-primary-fixed opacity-50"></div>
+</div>
+</div>
+<span class="text-xs font-black text-primary">85%</span>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-slate-300"></div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-slate-400"></div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-primary-container flex items-center justify-center text-[10px] font-black">+4</div>
+</div>
+<span class="text-xs font-bold text-outline self-center">Co-Organizers Active</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

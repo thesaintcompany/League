@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KINETIC PRECISION - Team Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Lexend:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-container": "#162030",
+              "on-secondary-fixed-variant": "#314f00",
+              "on-surface": "#181c1e",
+              "outline-variant": "#c6c6cc",
+              "surface-container-high": "#e5e9eb",
+              "on-surface-variant": "#45474c",
+              "primary-container": "#1a202c",
+              "background": "#f7fafc",
+              "on-primary-fixed": "#161c27",
+              "inverse-primary": "#c1c6d7",
+              "tertiary-fixed-dim": "#bdc7dc",
+              "surface-container": "#ebeef0",
+              "outline": "#76777c",
+              "on-primary-fixed-variant": "#414754",
+              "surface-container-highest": "#e0e3e5",
+              "secondary-container": "#a5f624",
+              "on-tertiary-fixed": "#121c2c",
+              "tertiary-fixed": "#d9e3f9",
+              "secondary-fixed": "#a8f928",
+              "error": "#ba1a1a",
+              "surface-bright": "#f7fafc",
+              "primary": "#030813",
+              "on-secondary-container": "#456e00",
+              "on-tertiary": "#ffffff",
+              "on-tertiary-fixed-variant": "#3d4759",
+              "on-error": "#ffffff",
+              "primary-fixed": "#dde2f3",
+              "inverse-on-surface": "#eef1f3",
+              "tertiary": "#010817",
+              "surface-variant": "#e0e3e5",
+              "on-primary-container": "#828796",
+              "inverse-surface": "#2d3133",
+              "error-container": "#ffdad6",
+              "surface-container-lowest": "#ffffff",
+              "surface-tint": "#585e6c",
+              "surface": "#f7fafc",
+              "primary-fixed-dim": "#c1c6d7",
+              "on-secondary-fixed": "#112000",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d7dadc",
+              "secondary-fixed-dim": "#8fdb00",
+              "surface-container-low": "#f1f4f6",
+              "secondary": "#426900",
+              "on-tertiary-container": "#7d889b",
+              "on-primary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "on-background": "#181c1e"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Lexend"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        .carbon-gradient {
+            background: linear-gradient(135deg, #030813 0%, #1a202c 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 z-40 bg-slate-100 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 rounded-xl carbon-gradient flex items-center justify-center text-secondary-fixed">
+<span class="material-symbols-outlined" data-icon="sports_soccer">sports_soccer</span>
+</div>
+<div>
+<h1 class="text-lg font-bold text-blue-950 dark:text-white font-headline leading-tight">Pro League Admin</h1>
+<p class="text-[10px] text-on-surface-variant font-label uppercase tracking-widest">Season 2024/25</p>
+</div>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 text-blue-950 dark:text-lime-400 rounded-l-none border-r-4 border-lime-400 hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-headline font-semibold text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-headline font-semibold text-sm">Teams</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-headline font-semibold text-sm">Players</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="sports">sports</span>
+<span class="font-headline font-semibold text-sm">Referees</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-headline font-semibold text-sm">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="play_circle">play_circle</span>
+<span class="font-headline font-semibold text-sm">Video Hub</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-6">
+<button class="w-full bg-secondary-fixed text-on-secondary-fixed font-headline font-bold py-3 rounded-xl flex items-center justify-center gap-2 active:scale-95 duration-150 mb-6">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+                Start Match
+            </button>
+<div class="pt-6 border-t border-slate-200 dark:border-slate-800 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="text-sm font-semibold">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="text-sm font-semibold">Logout</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 min-h-screen">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-6 py-3 w-full border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 sticky top-0 z-50">
+<div class="flex items-center gap-4">
+<span class="text-xl font-black text-blue-950 dark:text-white tracking-tighter font-headline uppercase">KINETIC PRECISION</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center bg-surface-container rounded-full px-4 py-1.5 gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 font-body" placeholder="Search player or match..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors"><span class="material-symbols-outlined" data-icon="videocam">videocam</span></button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors"><span class="material-symbols-outlined" data-icon="settings">settings</span></button>
+<div class="ml-2 w-8 h-8 rounded-full overflow-hidden border-2 border-secondary-fixed">
+<img alt="User profile avatar" data-alt="close-up portrait of a professional sports manager in a sharp navy suit looking focused against a blurred stadium background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxb-TmA5iEIYzkeFmzxgTekqgboqDKvgTIU3Dc9PNHxI7E2FyfJD1sxb_Gsbb4KfJIceqduOZPnvcEBtAZwPhAAtGa0wvjkB5dZy1S8v84Gu7to00AwsdsPXl2ZCNo4Y1KE8AiJXod0kYA6aXSCyoI-PB58y5HiZkK2Do_NQ3Iloo5874ekXMK94s5g-k4nPOKkTHTUYyeszdzKDILdlcwDooe-PzKli5j8C3px-xBkoNjA6Bp6RbfbqYi22h0LWDBQykw-iv2lP4"/>
+</div>
+</div>
+</div>
+</header>
+<div class="p-8 max-w-7xl mx-auto">
+<!-- Hero Stats Bento -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<!-- Team Overview Header -->
+<div class="md:col-span-4 flex justify-between items-end mb-2">
+<div>
+<h2 class="text-3xl font-black font-headline text-primary tracking-tight">TEAM DASHBOARD</h2>
+<p class="text-on-surface-variant font-label uppercase text-xs tracking-widest mt-1">Real-time Performance Telemetry</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xs font-label text-on-surface-variant uppercase">Current Form</span>
+<div class="flex gap-1">
+<span class="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] text-white font-bold">W</span>
+<span class="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] text-white font-bold">W</span>
+<span class="w-6 h-6 rounded-full bg-slate-300 flex items-center justify-center text-[10px] text-on-surface-variant font-bold">D</span>
+<span class="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] text-white font-bold">W</span>
+<span class="w-6 h-6 rounded-full bg-error flex items-center justify-center text-[10px] text-white font-bold">L</span>
+</div>
+</div>
+</div>
+<!-- Main Stats Cards -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-b-2 border-secondary relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl" data-icon="sports_soccer">sports_soccer</span>
+</div>
+<p class="text-xs font-label text-on-surface-variant uppercase tracking-tighter mb-1">Goals Per Match</p>
+<p class="text-4xl font-black font-headline text-primary">2.8</p>
+<div class="mt-4 flex items-center gap-1 text-secondary font-bold text-sm">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span>+12% vs last month</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-b-2 border-blue-500 relative overflow-hidden">
+<p class="text-xs font-label text-on-surface-variant uppercase tracking-tighter mb-1">Clean Sheets</p>
+<p class="text-4xl font-black font-headline text-primary">14</p>
+<div class="mt-4 flex items-center gap-1 text-on-surface-variant font-medium text-sm">
+<span>Rank: 2nd in League</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-b-2 border-primary relative overflow-hidden">
+<p class="text-xs font-label text-on-surface-variant uppercase tracking-tighter mb-1">Possession Avg</p>
+<p class="text-4xl font-black font-headline text-primary">58%</p>
+<div class="mt-4 w-full bg-secondary-container/30 h-1.5 rounded-full">
+<div class="bg-secondary h-full rounded-full w-[58%]"></div>
+</div>
+</div>
+<!-- Upcoming Match (Highlight Card) -->
+<div class="carbon-gradient p-6 rounded-xl shadow-xl text-white md:row-span-1">
+<div class="flex justify-between items-start mb-4">
+<span class="text-[10px] font-label px-2 py-1 border border-white/20 rounded uppercase">Next Match</span>
+<span class="text-secondary-fixed text-xs font-bold">LIVE IN 02d:14h</span>
+</div>
+<div class="flex items-center justify-between gap-2 mb-4">
+<div class="text-center">
+<div class="w-10 h-10 mx-auto mb-2">
+<img alt="Kinetic Precision Logo" data-alt="minimalist sharp geometric football club crest with stylized navy and lime colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqKX1151tVxkTO8M2YoR7pF0H03luAihLJW47tNVqXAELrOON1HStKsRER3p4GeIopYCt0AYgHmk2D7Q0h4GgJKsxQKbU-4RiSMxxbOpHjbvxpq0i4aBwW5Fiq7vX3Glk5Th1qnYcJSGxq5oNusKY2u68ddOxih_P7GkHMynnyHQ2QiX3vcAI_oHRhR5KutfWSapVu0JaMUat4AqiBwfzZB2oM4nnr-C6SsZ8BrQiQdROzgbEX2OymfFoCBXc1J08iXJ5kaBaVbsM"/>
+</div>
+<p class="text-[10px] font-bold uppercase">KINETIC</p>
+</div>
+<span class="text-xl font-black text-white/30">VS</span>
+<div class="text-center">
+<div class="w-10 h-10 mx-auto mb-2">
+<img alt="United Titans Logo" data-alt="professional sports team logo featuring a stylized titan helmet in silver and crimson" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ3joRPWfsljS-5uQXwHMfeM_HX-4BApXtruJgttnPx2kkyuM7vI57GwPSsf5oiINlGyj96uXhg757kd_zwX1h1yAq1LObeOhMeFXSExACzYlOvHmm0rf6ofZ-MZ0LPjJA3IIOXMNS6ytV02N-Nz1-QtqRrIy2Z6_rvIYxMuNc3qAsgGRisM3SiYfY_O3w7g5WqsesDQQG1-lnZtxdF4kN6Vt5DoNp3l6ANo4vM5AhzOH1hqDn18uGiH8HV37fYdfznH8epLc9jTI"/>
+</div>
+<p class="text-[10px] font-bold uppercase">TITANS</p>
+</div>
+</div>
+<div class="flex items-center gap-2 text-[10px] text-white/60 uppercase font-label">
+<span class="material-symbols-outlined text-xs" data-icon="location_on">location_on</span>
+<span>Stadionul Central, Bucharest</span>
+</div>
+</div>
+</div>
+<!-- Main Dashboard Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left: Team Roster -->
+<div class="lg:col-span-2 space-y-8">
+<section>
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-xl font-bold font-headline text-primary">ACTIVE ROSTER</h3>
+<button class="text-sm font-label text-secondary font-bold hover:underline">View All Players</button>
+</div>
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant text-[10px] font-label uppercase tracking-widest">
+<th class="px-6 py-4">Player</th>
+<th class="px-6 py-4 text-center">Position</th>
+<th class="px-6 py-4 text-center">Goals</th>
+<th class="px-6 py-4 text-center">Cards</th>
+<th class="px-6 py-4 text-right">Fitness</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-slate-200">
+<img alt="Player" data-alt="determined young male professional athlete with short hair wearing a navy blue football jersey" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtNi0S2N1Za-zuMZsER4sC6xh3zZcZDZ7dqZTLsmafRX2N5JAaX1sZfeeFuBlTfX2ZudzgsdL7ELjLvGKukyJW_40uL2PPyypDzA0Xk2SVzNdvoPTr_KUhEXhoeBhsLs7aBBF3hXKrjv1fot-eNfNfATgViIlKw0MQvDvjBhZ77nrlIBIr5GdNaKKL5SCZLsWOVhxoAwB_WOqORAAGYG_74rJuCzThM7ga3c57KanTI0cA2hbEImIzRxvEgTkH-wScqYh3f-pxXrM"/>
+</div>
+<div>
+<p class="font-bold text-sm">Marcus V. Silva</p>
+<p class="text-xs text-on-surface-variant font-label">#10 · Brazil</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="text-[10px] font-bold px-2 py-0.5 border border-outline-variant/30 rounded uppercase">FWD</span>
+</td>
+<td class="px-6 py-4 text-center font-black text-lg font-headline">12</td>
+<td class="px-6 py-4 text-center">
+<div class="flex justify-center gap-1">
+<div class="w-3 h-4 bg-yellow-400 rounded-sm"></div>
+<div class="w-3 h-4 bg-slate-200 rounded-sm"></div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<span class="text-xs font-label text-secondary">98%</span>
+<div class="w-12 bg-surface-container rounded-full h-1">
+<div class="bg-secondary h-full rounded-full" style="width: 98%"></div>
+</div>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-slate-200">
+<img alt="Player" data-alt="focused athletic goalkeeper in a bright green jersey with gloves holding a football" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATU4VVpP8AYiIMAqR8444FuhiC-BJdmAJ0bUFOXC-IDqxGnhNbPdWKBzfXN5vnL3f6g19PShGfr0MFSJT5kif3ySw7JNkrDBjmOjCzvUSxvv9U_N8Ysnmz5yaI7kDGAwxn1BY9BxuoPE25kzsyEoKnYoE8k2E0mDLpb2T1XAUFnYWozfYh2tVw8SKVYcb2fGGuvaGsmKSJiSQjcEccG1_YfCSCZJBhsEiTgFqOnDYGX8X2Kzp_2DL_8GaLwdlu55OECLyRuQP2nCI"/>
+</div>
+<div>
+<p class="font-bold text-sm">Erik Hartmann</p>
+<p class="text-xs text-on-surface-variant font-label">#01 · Germany</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="text-[10px] font-bold px-2 py-0.5 border border-outline-variant/30 rounded uppercase">GK</span>
+</td>
+<td class="px-6 py-4 text-center font-black text-lg font-headline">0</td>
+<td class="px-6 py-4 text-center">
+<div class="flex justify-center gap-1">
+<div class="w-3 h-4 bg-slate-200 rounded-sm"></div>
+<div class="w-3 h-4 bg-error rounded-sm"></div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<span class="text-xs font-label text-secondary">100%</span>
+<div class="w-12 bg-surface-container rounded-full h-1">
+<div class="bg-secondary h-full rounded-full" style="width: 100%"></div>
+</div>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-slate-200">
+<img alt="Player" data-alt="intense professional defender shouting orders on a pitch during a night match under bright stadium lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq5NnLmwRxiBI3XItgIOa4kHF94FbEoyS9HNODKiEimF3TJJfToESTltDEGw2nRc70Vb8r7mJSqf6Fs0Kt_hlU4gxP6DmAVLV21o2SP5pqLM4S2FveDqM7nxQBHbhyT1DJwkYwcovY_ZLkq62nhqQnmqkR2IG8_UDCsyOwtd9B3UvUi0iqbzZZiC-jOk52tli1N6sTZLlOmapaCcbFEDfTD87rFsBumXJXqIKaHMqqVbRnKPJqkeBmfPpauicha0oDeRZCRWtQfVQ"/>
+</div>
+<div>
+<p class="font-bold text-sm">Luca Rossi</p>
+<p class="text-xs text-on-surface-variant font-label">#04 · Italy</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="text-[10px] font-bold px-2 py-0.5 border border-outline-variant/30 rounded uppercase">DEF</span>
+</td>
+<td class="px-6 py-4 text-center font-black text-lg font-headline">2</td>
+<td class="px-6 py-4 text-center">
+<div class="flex justify-center gap-1">
+<div class="w-3 h-4 bg-yellow-400 rounded-sm"></div>
+<div class="w-3 h-4 bg-yellow-400 rounded-sm"></div>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<span class="text-xs font-label text-error">65%</span>
+<div class="w-12 bg-surface-container rounded-full h-1">
+<div class="bg-error h-full rounded-full" style="width: 65%"></div>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Recent Results Section -->
+<section>
+<h3 class="text-xl font-bold font-headline text-primary mb-6">RECENT RESULTS</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between border-l-4 border-secondary shadow-sm">
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-label text-on-surface-variant uppercase">Nov 14, 2024</span>
+<p class="font-bold text-sm">KINETIC vs CITY STARS</p>
+</div>
+<div class="text-right">
+<p class="text-2xl font-black font-headline text-secondary">3 - 1</p>
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Victory</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl flex items-center justify-between border-l-4 border-slate-300 shadow-sm">
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-label text-on-surface-variant uppercase">Nov 10, 2024</span>
+<p class="font-bold text-sm">UNITED vs KINETIC</p>
+</div>
+<div class="text-right">
+<p class="text-2xl font-black font-headline text-primary">0 - 0</p>
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Draw</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Sidebar: Video Hub & Schedule -->
+<div class="space-y-8">
+<!-- Video Hub Teaser -->
+<section>
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-xl font-bold font-headline text-primary">VIDEO HUB</h3>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="videocam">videocam</span>
+</div>
+<div class="relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg">
+<div class="aspect-video w-full bg-slate-900 overflow-hidden">
+<img alt="Last match thumbnail" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500" data-alt="cinematic widescreen action shot of a soccer player striking a ball into the top corner of the net during a night match with light flares" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjNIobmw7_rs9AApsUhet_tWa9k1nMy0A5niAfjpa7bbWxtN1qP3TEOvKeiFcUqTnF9iwybGTCeSeUWIIJ85S9l8twI6OKPCy_SwPM9GR3LIxg9K55qYiaj6WsJKrZukjRZT9OKQ3O9kkRsUJmKJdEe0hW9vaPiwbXtVkfR9tLpYC16LnrjB7R7MW1gFsQ8dUZ6YKih-CCEIPeGDdXrwWI7-tIxQmJ3EZJUgkTUKGtt00yaUmerGdaDk2wobfajNvaBXuLaz4Kt7s"/>
+</div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-16 h-16 bg-secondary-fixed/90 text-on-secondary-fixed rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl" data-icon="play_arrow" data-weight="fill" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-4 glass-panel border-t border-white/10">
+<p class="text-xs font-black font-headline text-primary uppercase leading-tight">Match Recap: KINETIC vs CITY STARS</p>
+<p class="text-[10px] text-on-surface-variant font-label mt-1">Uploaded 12 hours ago · 08:42</p>
+</div>
+</div>
+</section>
+<!-- Upcoming Schedule List -->
+<section>
+<h3 class="text-xl font-bold font-headline text-primary mb-6">SCHEDULE</h3>
+<div class="space-y-4">
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center bg-surface-container text-primary p-2 rounded-lg w-12 shrink-0">
+<span class="text-[10px] font-black uppercase font-label">Nov</span>
+<span class="text-xl font-black font-headline">22</span>
+</div>
+<div class="flex-1">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Matchday 14</p>
+<p class="font-bold text-sm">vs United Titans</p>
+<p class="text-[10px] text-on-surface-variant font-label flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="location_on">location_on</span>
+                                            Bucharest National Arena
+                                        </p>
+</div>
+<button class="p-2 bg-surface-container hover:bg-surface-container-high rounded-lg transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="calendar_today">calendar_today</span>
+</button>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center bg-surface-container text-primary p-2 rounded-lg w-12 shrink-0">
+<span class="text-[10px] font-black uppercase font-label">Nov</span>
+<span class="text-xl font-black font-headline">28</span>
+</div>
+<div class="flex-1">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Cup Quarter Final</p>
+<p class="font-bold text-sm">vs Eagles FC</p>
+<p class="text-[10px] text-on-surface-variant font-label flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="location_on">location_on</span>
+                                            Away - Eagle Park
+                                        </p>
+</div>
+<button class="p-2 bg-surface-container hover:bg-surface-container-high rounded-lg transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="calendar_today">calendar_today</span>
+</button>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow opacity-60">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center bg-surface-container text-primary p-2 rounded-lg w-12 shrink-0">
+<span class="text-[10px] font-black uppercase font-label">Dec</span>
+<span class="text-xl font-black font-headline">05</span>
+</div>
+<div class="flex-1">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Matchday 15</p>
+<p class="font-bold text-sm">vs Rangers United</p>
+<p class="text-[10px] text-on-surface-variant font-label flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="location_on">location_on</span>
+                                            Stadionul Central
+                                        </p>
+</div>
+<button class="p-2 bg-surface-container hover:bg-surface-container-high rounded-lg transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="calendar_today">calendar_today</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button for Mobile -->
+<button class="md:hidden fixed bottom-6 right-6 w-14 h-14 carbon-gradient text-secondary-fixed rounded-full shadow-2xl flex items-center justify-center z-50 active:scale-90 duration-150">
+<span class="material-symbols-outlined text-3xl" data-icon="bolt">bolt</span>
+</button>
+</body></html>

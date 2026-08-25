@@ -3,14 +3,14 @@ import type { Metadata } from "next";
 import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "LeagueHub — Sport League Organizer",
-  description: "Creează și organizează campionate, ligi și meciuri sportive.",
+  title: "Kinetic Hub | Pro League Organizer",
+  description: "Platformă profesională pentru organizarea și managementul campionatelor, ligilor, meciurilor și statisticilor sportive.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ro">
-      <body>
+    <html lang="ro" className="light">
+      <body className="bg-surface text-on-surface antialiased font-body min-h-screen">
         <Providers>{children}</Providers>
       </body>
     </html>

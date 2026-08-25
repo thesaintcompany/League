@@ -1,53 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Lexend:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --bg: #f8fafc;
-  --fg: #0f172a;
-}
+@layer base {
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+    display: inline-block;
+    line-height: 1;
+  }
 
-html, body {
-  height: 100%;
-}
+  body {
+    font-family: 'Inter', sans-serif;
+  }
 
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: Inter, system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .font-headline {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .font-label, .data-font {
+    font-family: 'Lexend', sans-serif;
+  }
 }
 
 @layer components {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .glass-card-dark {
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
   .btn {
-    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm active:scale-95;
   }
+
   .btn-primary {
-    @apply btn bg-brand-600 text-white hover:bg-brand-700 focus:ring-brand-500;
+    @apply btn bg-primary text-white hover:bg-slate-800 focus:ring-primary;
   }
+
+  .btn-accent {
+    @apply btn bg-secondary-container text-on-secondary-fixed hover:brightness-105 font-bold focus:ring-secondary-container;
+  }
+
   .btn-secondary {
-    @apply btn bg-white text-slate-900 border border-slate-300 hover:bg-slate-50 focus:ring-brand-500;
+    @apply btn bg-surface-container-high text-on-surface hover:bg-surface-variant focus:ring-slate-400;
   }
+
+  .btn-outline {
+    @apply btn bg-transparent border border-outline-variant text-on-surface hover:bg-surface-container-low;
+  }
+
   .btn-danger {
-    @apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+    @apply btn bg-error text-white hover:bg-red-700 focus:ring-red-500;
   }
-  .btn-ghost {
-    @apply btn text-slate-700 hover:bg-slate-100;
-  }
+
   .input {
-    @apply block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500;
+    @apply block w-full rounded-xl border border-outline-variant bg-white px-3.5 py-2.5 text-sm shadow-sm placeholder:text-on-surface-variant/60 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary font-body;
   }
+
   .label {
-    @apply block text-sm font-medium text-slate-700 mb-1;
+    @apply block text-xs font-semibold uppercase tracking-wider text-on-surface-variant font-label mb-1.5;
   }
+
   .card {
-    @apply rounded-xl border border-slate-200 bg-white shadow-sm;
+    @apply rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-6 shadow-sm;
   }
-  .badge {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
-  }
-  .badge-green { @apply badge bg-emerald-100 text-emerald-800; }
-  .badge-red   { @apply badge bg-red-100 text-red-800; }
-  .badge-amber { @apply badge bg-amber-100 text-amber-800; }
-  .badge-slate { @apply badge bg-slate-100 text-slate-700; }
 }

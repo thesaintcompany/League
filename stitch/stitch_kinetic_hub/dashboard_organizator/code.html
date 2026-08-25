@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kinetic Hub | Organizer Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Inter:wght@400;500;600&amp;family=Lexend:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-container": "#a5f624",
+              "on-error": "#ffffff",
+              "on-surface-variant": "#45474c",
+              "on-primary-fixed": "#161c27",
+              "surface-dim": "#d7dadc",
+              "on-primary-fixed-variant": "#414754",
+              "error": "#ba1a1a",
+              "tertiary-container": "#162030",
+              "inverse-primary": "#c1c6d7",
+              "primary-container": "#1a202c",
+              "on-tertiary-container": "#7d889b",
+              "primary-fixed-dim": "#c1c6d7",
+              "tertiary": "#010817",
+              "on-primary": "#ffffff",
+              "inverse-surface": "#2d3133",
+              "surface-container-low": "#f1f4f6",
+              "surface-variant": "#e0e3e5",
+              "inverse-on-surface": "#eef1f3",
+              "surface-container-highest": "#e0e3e5",
+              "on-secondary-fixed": "#112000",
+              "on-background": "#181c1e",
+              "surface-container-lowest": "#ffffff",
+              "primary": "#030813",
+              "secondary": "#426900",
+              "surface": "#f7fafc",
+              "background": "#f7fafc",
+              "surface-container": "#ebeef0",
+              "secondary-fixed-dim": "#8fdb00",
+              "on-tertiary-fixed-variant": "#3d4759",
+              "primary-fixed": "#dde2f3",
+              "surface-container-high": "#e5e9eb",
+              "surface-tint": "#585e6c",
+              "on-tertiary": "#ffffff",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed-variant": "#314f00",
+              "tertiary-fixed": "#d9e3f9",
+              "on-tertiary-fixed": "#121c2c",
+              "error-container": "#ffdad6",
+              "on-surface": "#181c1e",
+              "tertiary-fixed-dim": "#bdc7dc",
+              "surface-bright": "#f7fafc",
+              "on-secondary-container": "#456e00",
+              "on-primary-container": "#828796",
+              "outline": "#76777c",
+              "secondary-fixed": "#a8f928",
+              "outline-variant": "#c6c6cc",
+              "on-secondary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Lexend"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-data { font-family: 'Lexend', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-100 dark:bg-slate-900 border-none flex flex-col h-full py-6">
+<div class="px-6 mb-8">
+<div class="text-xl font-bold tracking-tighter text-blue-950 dark:text-white">Kinetic Hub</div>
+<div class="text-[10px] font-label text-slate-500 uppercase tracking-widest mt-1">Pro Organizer</div>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<!-- Active Tab: Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 text-blue-950 dark:text-lime-400 font-bold border-r-4 border-lime-400 bg-slate-200 dark:bg-slate-800/50 scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="trophy">trophy</span>
+<span class="font-label text-sm">Championships</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="sports_soccer">sports_soccer</span>
+<span class="font-label text-sm">Matches</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-label text-sm">Standings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-label text-sm">Teams</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4 pt-6 border-t border-slate-200/50 dark:border-slate-800/50">
+<button class="w-full bg-primary-container text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 mb-6 hover:opacity-90 transition-all">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span class="font-label text-xs uppercase tracking-wider">Create Tournament</span>
+</button>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 hover:text-blue-950 transition-colors" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help">help</span>
+<span class="font-label text-xs">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="logout">logout</span>
+<span class="font-label text-xs">Sign Out</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-30 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl flex justify-between items-center px-8 h-20 shadow-sm dark:shadow-none border-none">
+<div class="flex items-center gap-8">
+<div class="text-lg font-black italic text-blue-950 dark:text-white uppercase tracking-tighter">Championship Pro</div>
+<div class="hidden lg:flex items-center bg-surface-container rounded-full px-4 py-2 gap-2 w-80">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full font-body" placeholder="Search tournaments, teams..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden xl:flex items-center gap-6">
+<a class="text-sm font-label font-bold text-lime-600 dark:text-lime-400 transition-all" href="#">Live Scores</a>
+<a class="text-sm font-label text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-lime-400 transition-all" href="#">Schedule</a>
+<a class="text-sm font-label text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-lime-400 transition-all" href="#">Archives</a>
+</nav>
+<div class="h-6 w-px bg-surface-container"></div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" data-icon="account_balance_wallet">account_balance_wallet</button>
+<div class="flex items-center gap-3 ml-2 group cursor-pointer">
+<img alt="Current user avatar" class="w-10 h-10 rounded-full border-2 border-surface-container-highest group-hover:border-secondary transition-all" data-alt="Close up portrait of a professional sports executive man in a tailored suit smiling with soft office lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx7DBAuAXWwGC2ExzJgiA03zkfQWcLhfubuBSmpOWH3DzYQAOoKskaRsco2fUUriU05EyvsFaHqKegS3uVrlAiPBzclmbe1EmoeKPmIpak6t4CL0Hqh_WexrUJZqzuhuKXOaCm5wXg-S6sfFkz7O3YgDW76Mi54dNAhWeXI_zIYi9nHlGAkWPI74LrVlHDFUy0eqWtmk0Nl-z4ZKRBwyrzggmYzCrSU5JxvjwYubMp56bQ1gFr_j2_VMe11Lhj01Z_b1ecq_CzZDM"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 pt-20 min-h-screen bg-surface p-8">
+<!-- Dashboard Header & Subscription -->
+<section class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="text-4xl font-extrabold tracking-tight text-primary mb-2">Organizer Hub</h1>
+<p class="text-on-surface-variant font-body max-w-lg">Monitor your championship performance, manage tournament pipelines, and track athlete growth in real-time.</p>
+</div>
+<!-- Subscription Card (Glassmorphism) -->
+<div class="glass-panel p-6 rounded-xl w-full md:w-80 shadow-2xl shadow-blue-900/5 relative overflow-hidden">
+<div class="flex items-center justify-between mb-4">
+<span class="font-label text-xs font-bold tracking-widest text-on-surface-variant">SUBSCRIPTION</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed text-[10px] px-2 py-0.5 rounded-full font-bold">PRO</span>
+</div>
+<div class="mb-4">
+<div class="text-sm font-label font-bold text-primary mb-1">Modul Plătit: 2/3 Campionate Anuale</div>
+<div class="w-full h-2 bg-secondary-container/30 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 66%;"></div>
+</div>
+</div>
+<button class="text-[10px] font-label font-bold text-secondary uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all">
+                    Upgrade Plan <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Stats Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<div class="bg-surface-container-lowest p-8 rounded-xl flex flex-col justify-between h-40 group hover:bg-primary-container transition-all duration-300">
+<span class="font-label text-xs text-on-surface-variant group-hover:text-on-primary-container font-bold tracking-widest">TOTAL TEAMS</span>
+<div class="flex items-end justify-between">
+<span class="text-5xl font-headline font-extrabold text-primary group-hover:text-white">124</span>
+<span class="material-symbols-outlined text-secondary text-4xl" data-icon="groups">groups</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-xl flex flex-col justify-between h-40 group hover:bg-primary-container transition-all duration-300">
+<span class="font-label text-xs text-on-surface-variant group-hover:text-on-primary-container font-bold tracking-widest">TOTAL PLAYERS</span>
+<div class="flex items-end justify-between">
+<span class="text-5xl font-headline font-extrabold text-primary group-hover:text-white">1,842</span>
+<span class="material-symbols-outlined text-secondary text-4xl" data-icon="person">person</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-xl flex flex-col justify-between h-40 group hover:bg-primary-container transition-all duration-300">
+<span class="font-label text-xs text-on-surface-variant group-hover:text-on-primary-container font-bold tracking-widest">UPCOMING MATCHES</span>
+<div class="flex items-end justify-between">
+<span class="text-5xl font-headline font-extrabold text-primary group-hover:text-white">12</span>
+<span class="material-symbols-outlined text-secondary text-4xl" data-icon="event_available">event_available</span>
+</div>
+</div>
+</section>
+<!-- Main Workspace: Asymmetric Layout -->
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Active Tournaments Column -->
+<div class="lg:w-2/3">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-extrabold text-primary">Active Tournaments</h2>
+<button class="bg-secondary-fixed text-on-secondary-fixed px-4 py-2 rounded-xl font-label text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-secondary/20">
+<span class="material-symbols-outlined text-sm" data-icon="add_circle">add_circle</span>
+                        Create New
+                    </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Tournament Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden group">
+<div class="relative h-48 overflow-hidden">
+<img alt="Soccer stadium tournament" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Cinematic low angle shot of a professional soccer stadium at night with bright floodlights and green turf" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANSb49FcQhDLdgbjHO1l4pjcoeH6fI4OUqDABtvlHLeaRvlxk_ij0cPXn2zWtwXv8Rf_P9pyifD81guLj3xkQcpLXDY0so6eyBekM6epKn7scUVakSTq_eAax6iDXyNAxxgBRAo2bkhrBcZLfPMr2LMuHGmsjl2QTjB6X-3YOksD_VWSjoAtXvVGRkDg-ECyBCFHSqT2BVOcICal2y8Bv-PGL9jXqZClWUCPNElPrJyqUqqRobFOQ1ey9aE2c2w0S2DhNW4e0spJQ"/>
+<div class="absolute top-4 left-4 bg-primary/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-label font-bold text-white tracking-widest uppercase">Ongoing</div>
+</div>
+<div class="p-6">
+<h3 class="text-lg font-bold text-primary mb-2">Summer Elite Series 2024</h3>
+<div class="flex items-center gap-4 mb-6">
+<div class="flex flex-col">
+<span class="text-[10px] font-label text-on-surface-variant font-bold uppercase tracking-widest">Teams</span>
+<span class="font-data font-bold">32/32</span>
+</div>
+<div class="w-px h-8 bg-surface-container"></div>
+<div class="flex flex-col">
+<span class="text-[10px] font-label text-on-surface-variant font-bold uppercase tracking-widest">Stage</span>
+<span class="font-data font-bold text-secondary">Quarter-Finals</span>
+</div>
+</div>
+<button class="w-full border border-outline-variant py-2 rounded-xl font-label text-xs font-bold text-primary hover:bg-surface-container transition-colors">Manage Pipeline</button>
+</div>
+</div>
+<!-- Tournament Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden group">
+<div class="relative h-48 overflow-hidden">
+<img alt="Basketball court tournament" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Interior of a modern high-end basketball arena with polished wooden floors and vibrant lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvMbIaneX8kKgGxr_sLSNNiqyaFAfkK8HcRZ70I-2s_MFd60ZOnvOR5AcT-S0VbovcGJGBWFJSnh7Zp9JCV3rZW7jIEsbfG0KgiCzMffYXoav-L0JWgmdcWcNknkuCTF7rQ3zlpRd8nvo2aqb7gW_zznq4S_laKzq64c-D0jrE-h3ZV7N9FHqrEYCZfyb95tKb6XxU7hL00iWoxwMgxsVg6EfapcgfO-yzcg2LeS3-EHKXvL5vXHyaacQ0kYCazeeazF-YQSCD_9I"/>
+<div class="absolute top-4 left-4 bg-primary/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-label font-bold text-white tracking-widest uppercase">Registration</div>
+</div>
+<div class="p-6">
+<h3 class="text-lg font-bold text-primary mb-2">Regional Hoopmasters '24</h3>
+<div class="flex items-center gap-4 mb-6">
+<div class="flex flex-col">
+<span class="text-[10px] font-label text-on-surface-variant font-bold uppercase tracking-widest">Teams</span>
+<span class="font-data font-bold">14/24</span>
+</div>
+<div class="w-px h-8 bg-surface-container"></div>
+<div class="flex flex-col">
+<span class="text-[10px] font-label text-on-surface-variant font-bold uppercase tracking-widest">Deadline</span>
+<span class="font-data font-bold">12 Days</span>
+</div>
+</div>
+<button class="w-full border border-outline-variant py-2 rounded-xl font-label text-xs font-bold text-primary hover:bg-surface-container transition-colors">Open Dashboard</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Content: Upcoming Matches & Alerts -->
+<div class="lg:w-1/3 flex flex-col gap-6">
+<!-- Upcoming Matches Sidebar -->
+<div class="bg-surface-container-low rounded-xl p-8 border-none">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-xl font-extrabold text-primary">Live Schedule</h2>
+<span class="material-symbols-outlined text-secondary" data-icon="live_tv">live_tv</span>
+</div>
+<div class="space-y-6">
+<!-- Match Item 1 -->
+<div class="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-secondary before:rounded-full">
+<div class="text-[10px] font-label font-bold text-secondary uppercase tracking-widest mb-2">Starts in 15m</div>
+<div class="flex items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<span class="font-label text-sm font-bold text-primary">Vipers FC</span>
+<span class="font-label text-sm font-bold text-primary">Titans Utd</span>
+</div>
+<div class="text-right">
+<span class="font-data text-xs font-bold text-on-surface-variant">Pitch 4</span>
+<div class="mt-1">
+<button class="bg-primary text-white p-1 rounded-lg">
+<span class="material-symbols-outlined text-sm leading-none" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Match Item 2 -->
+<div class="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-surface-container-highest before:rounded-full">
+<div class="text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-widest mb-2">Today, 18:30</div>
+<div class="flex items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<span class="font-label text-sm font-bold text-primary">Iron Lions</span>
+<span class="font-label text-sm font-bold text-primary">Swift Strikers</span>
+</div>
+<div class="text-right">
+<span class="font-data text-xs font-bold text-on-surface-variant">Arena A</span>
+</div>
+</div>
+</div>
+<!-- Match Item 3 -->
+<div class="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-surface-container-highest before:rounded-full">
+<div class="text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-widest mb-2">Today, 20:00</div>
+<div class="flex items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<span class="font-label text-sm font-bold text-primary">Nomads SC</span>
+<span class="font-label text-sm font-bold text-primary">Wolves XI</span>
+</div>
+<div class="text-right">
+<span class="font-data text-xs font-bold text-on-surface-variant">Pitch 2</span>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full mt-8 py-3 bg-surface-container text-on-surface-variant font-label text-[10px] font-bold uppercase tracking-widest hover:text-primary transition-all">View Full Schedule</button>
+</div>
+<!-- Live Performance Insight -->
+<div class="bg-primary-container text-white rounded-xl p-8 relative overflow-hidden">
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-secondary/10 rounded-full blur-3xl"></div>
+<span class="font-label text-[10px] font-bold tracking-widest text-secondary uppercase mb-4 block">PLATFORM HEALTH</span>
+<h4 class="text-lg font-bold mb-4">Real-time engagement is peaking at 140% vs last week.</h4>
+<p class="text-on-primary-container text-xs font-body mb-6">User activity across live streams and brackets has surged. Consider enabling additional server clusters.</p>
+<div class="flex items-center gap-2">
+<div class="h-1.5 w-1.5 rounded-full bg-secondary animate-pulse"></div>
+<span class="font-label text-[10px] font-bold text-white uppercase tracking-widest">Systems Nominal</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Hidden on Mobile) -->
+<button class="fixed bottom-8 right-8 w-16 h-16 bg-secondary-fixed text-on-secondary-fixed rounded-full shadow-2xl flex items-center justify-center hover:rotate-90 transition-all duration-500 group">
+<span class="material-symbols-outlined text-3xl" data-icon="add" style="font-variation-settings: 'wght' 600;">add</span>
+<span class="absolute right-20 bg-primary text-white px-4 py-2 rounded-xl text-xs font-label font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Quick Create Tournament</span>
+</button>
+</body></html>

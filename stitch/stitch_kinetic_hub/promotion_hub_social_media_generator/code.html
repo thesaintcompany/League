@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Promotion Hub | Velocity Athletics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Inter:wght@400;500;600&amp;family=Lexend:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f7fafc",
+              "surface-bright": "#f7fafc",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed": "#d9e3f9",
+              "surface-dim": "#d7dadc",
+              "on-primary-fixed": "#161c27",
+              "primary-fixed": "#dde2f3",
+              "on-tertiary-fixed-variant": "#3d4759",
+              "surface-container-highest": "#e0e3e5",
+              "error": "#ba1a1a",
+              "tertiary-fixed-dim": "#bdc7dc",
+              "on-primary-fixed-variant": "#414754",
+              "on-background": "#181c1e",
+              "on-secondary-fixed-variant": "#314f00",
+              "surface-variant": "#e0e3e5",
+              "on-secondary-fixed": "#112000",
+              "primary": "#030813",
+              "on-error-container": "#93000a",
+              "on-error": "#ffffff",
+              "on-primary": "#ffffff",
+              "surface-container-high": "#e5e9eb",
+              "surface-container": "#ebeef0",
+              "surface-container-low": "#f1f4f6",
+              "secondary": "#426900",
+              "tertiary-container": "#162030",
+              "primary-container": "#1a202c",
+              "outline-variant": "#c6c6cc",
+              "on-secondary-container": "#456e00",
+              "on-primary-container": "#828796",
+              "on-tertiary": "#ffffff",
+              "secondary-fixed": "#a8f928",
+              "on-surface": "#181c1e",
+              "secondary-fixed-dim": "#8fdb00",
+              "on-secondary": "#ffffff",
+              "outline": "#76777c",
+              "on-tertiary-fixed": "#121c2c",
+              "inverse-surface": "#2d3133",
+              "tertiary": "#010817",
+              "primary-fixed-dim": "#c1c6d7",
+              "on-tertiary-container": "#7d889b",
+              "surface-tint": "#585e6c",
+              "secondary-container": "#a5f624",
+              "on-surface-variant": "#45474c",
+              "error-container": "#ffdad6",
+              "inverse-primary": "#c1c6d7",
+              "inverse-on-surface": "#eef1f3",
+              "background": "#f7fafc"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Lexend"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #030813 0%, #1a202c 100%);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 w-full z-50 bg-[#1A202C] dark:bg-[#030813] shadow-[0_20px_40px_rgba(24,28,30,0.06)] flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black italic text-[#ADFF2F] tracking-tighter font-headline">Velocity Athletics</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-slate-400 font-medium hover:bg-[#ADFF2F]/10 hover:text-[#ADFF2F] transition-colors duration-200 px-3 py-1 rounded" href="#">Dashboard</a>
+<a class="text-slate-400 font-medium hover:bg-[#ADFF2F]/10 hover:text-[#ADFF2F] transition-colors duration-200 px-3 py-1 rounded" href="#">Roster</a>
+<a class="text-[#ADFF2F] font-bold px-3 py-1 rounded" href="#">Promotion Hub</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#ADFF2F] p-2 hover:bg-[#ADFF2F]/10 rounded-full transition-transform active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-[#ADFF2F] p-2 hover:bg-[#ADFF2F]/10 rounded-full transition-transform active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-10 w-10 rounded-full overflow-hidden border-2 border-secondary-fixed">
+<img alt="Manager Profile" data-alt="professional portrait of a sports manager with a confident expression and neutral lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHAWQfPF4Gi9L7jU8977LsLBo2_EgZoVjQNqbTU0whtosui7MjQPquPC25PJF48y7LqfPufhw2_d7kjoK1ukpOnG22WiNl3OrtVnK55GG0Plyb2fjDuSiZYUTXYiKJXTBQO6CsYWYjsjYHeOZ_JJuyeYl7ZuUORrsCOjoOtnVZy0EvbWV6ts-HyW48kU3nD69jSGdndp5zvWN4IfDcLN9QL4uaqzs3bVIJl8FLucg8AO7urzpUncoSRuuUtK9URNufdDp6ircjiY0"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-40 bg-[#f1f4f6] dark:bg-[#1A202C] hidden lg:flex flex-col p-4 gap-y-2 pt-24">
+<div class="mb-8 px-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-[#ADFF2F]">sports_soccer</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-[#1A202C] dark:text-white font-headline leading-tight">Elite Strikers</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-label">Pro League Div 1</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<div class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-[#1A202C] dark:hover:text-white hover:translate-x-1 transition-transform duration-200 cursor-pointer">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-semibold text-sm">Dashboard</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-[#1A202C] dark:hover:text-white hover:translate-x-1 transition-transform duration-200 cursor-pointer">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-semibold text-sm">Roster</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-[#1A202C] dark:hover:text-white hover:translate-x-1 transition-transform duration-200 cursor-pointer">
+<span class="material-symbols-outlined">history_toggle_off</span>
+<span class="font-semibold text-sm">Match History</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-[#1A202C] dark:text-[#ADFF2F] bg-white dark:bg-[#030813] rounded-lg shadow-sm cursor-pointer">
+<span class="material-symbols-outlined">campaign</span>
+<span class="font-semibold text-sm">Promotion Hub</span>
+</div>
+</nav>
+<div class="mt-auto pt-4 flex flex-col gap-1">
+<button class="bg-secondary-fixed text-on-secondary-fixed font-bold py-3 px-4 rounded-xl mb-4 flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">sensors</span>
+                Go Live
+            </button>
+<div class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-[#1A202C] cursor-pointer">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-semibold text-sm">Support</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-[#1A202C] cursor-pointer">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-semibold text-sm">Logout</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-24 min-h-screen bg-surface">
+<div class="max-w-7xl mx-auto px-6 pb-12">
+<!-- Header Section with Asymmetry -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+<div class="lg:col-span-8">
+<h1 class="text-5xl font-extrabold font-headline tracking-tighter text-primary mb-4">Promotion Hub</h1>
+<p class="text-on-surface-variant text-lg max-w-2xl font-body">
+                        Elevate your team's digital presence. Generate professional broadcast-quality match graphics in seconds with our automated kinetic templates.
+                    </p>
+</div>
+<div class="lg:col-span-4 flex items-end justify-end">
+<div class="flex gap-2">
+<button class="p-3 bg-surface-container-highest rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="p-3 bg-primary text-white rounded-full hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined">view_carousel</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left: Fixture Selection (Bento Item 1) -->
+<div class="lg:col-span-4 space-y-6">
+<div class="bg-surface-container-low p-6 rounded-xl">
+<h3 class="text-sm font-label font-bold text-on-surface-variant uppercase tracking-widest mb-6">Upcoming Fixtures</h3>
+<div class="space-y-4">
+<!-- Fixture Item -->
+<div class="bg-surface-container-lowest p-4 rounded-lg shadow-sm border-l-4 border-secondary-fixed cursor-pointer hover:translate-x-1 transition-transform">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-label font-bold text-secondary uppercase bg-secondary-container/20 px-2 py-0.5 rounded">Match Day 14</span>
+<span class="text-xs font-label text-on-surface-variant">Tomorrow, 19:45</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex flex-col items-center gap-1 w-1/3 text-center">
+<div class="w-8 h-8 bg-surface-container-highest rounded-full flex items-center justify-center font-bold text-[10px]">EST</div>
+<span class="text-xs font-bold font-headline">Strikers</span>
+</div>
+<span class="text-lg font-black text-outline-variant italic">VS</span>
+<div class="flex flex-col items-center gap-1 w-1/3 text-center">
+<div class="w-8 h-8 bg-surface-container-highest rounded-full flex items-center justify-center font-bold text-[10px]">TCH</div>
+<span class="text-xs font-bold font-headline">Tech FC</span>
+</div>
+</div>
+</div>
+<!-- Fixture Item -->
+<div class="bg-surface-container-lowest/50 p-4 rounded-lg cursor-pointer hover:bg-surface-container-lowest transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-label font-bold text-on-surface-variant uppercase">Match Day 15</span>
+<span class="text-xs font-label text-on-surface-variant">Sat, Oct 24</span>
+</div>
+<div class="flex items-center justify-between opacity-70">
+<div class="flex flex-col items-center gap-1 w-1/3 text-center">
+<div class="w-8 h-8 bg-surface-container-highest rounded-full"></div>
+<span class="text-xs font-bold font-headline">Strikers</span>
+</div>
+<span class="text-sm font-black text-outline-variant italic">VS</span>
+<div class="flex flex-col items-center gap-1 w-1/3 text-center">
+<div class="w-8 h-8 bg-surface-container-highest rounded-full"></div>
+<span class="text-xs font-bold font-headline">Raiders</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-primary text-white p-6 rounded-xl kinetic-gradient">
+<h3 class="text-sm font-label font-bold text-[#ADFF2F] uppercase tracking-widest mb-4">Template Style</h3>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex flex-col gap-2 items-center p-3 rounded-lg bg-white/10 border border-white/20 hover:bg-[#ADFF2F]/20 transition-colors">
+<span class="material-symbols-outlined">bolt</span>
+<span class="text-[10px] font-label font-bold">KINETIC</span>
+</button>
+<button class="flex flex-col gap-2 items-center p-3 rounded-lg bg-white/5 hover:bg-[#ADFF2F]/20 transition-colors">
+<span class="material-symbols-outlined">grid_4x4</span>
+<span class="text-[10px] font-label font-bold">GRID</span>
+</button>
+<button class="flex flex-col gap-2 items-center p-3 rounded-lg bg-white/5 hover:bg-[#ADFF2F]/20 transition-colors">
+<span class="material-symbols-outlined">blur_on</span>
+<span class="text-[10px] font-label font-bold">MINIMAL</span>
+</button>
+<button class="flex flex-col gap-2 items-center p-3 rounded-lg bg-white/5 hover:bg-[#ADFF2F]/20 transition-colors">
+<span class="material-symbols-outlined">local_fire_department</span>
+<span class="text-[10px] font-label font-bold">HYPER</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Middle: Live Preview (Bento Item 2) -->
+<div class="lg:col-span-5 flex flex-col items-center">
+<div class="flex gap-4 mb-6 bg-surface-container-high p-1.5 rounded-full">
+<button class="px-6 py-2 rounded-full bg-white text-primary font-bold shadow-sm text-sm">Story (9:16)</button>
+<button class="px-6 py-2 rounded-full text-on-surface-variant font-medium text-sm hover:bg-white/50 transition-colors">Post (1:1)</button>
+</div>
+<!-- Phone Preview Container -->
+<div class="relative w-full max-w-[320px] aspect-[9/16] rounded-[2.5rem] border-[8px] border-primary-container shadow-2xl overflow-hidden bg-black">
+<!-- Dynamic Content Layer -->
+<div class="absolute inset-0 bg-cover bg-center" data-alt="dramatic wide shot of a professional football stadium at night under bright stadium lights with a packed crowd" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCScEZOQ6FcHWdE5NEAg93UCLz-2kPCggQX927lsI0fg-cEX1u5Hh8NNo-fEVDz7yS0H1J8JREBU7-6SCr5NJ6OEQRsn_JRGjIABrMm6PWln04Cr289LJY-AEGm15vrnmIA7Qm-Qs6vhOaLZ-GtqBqKrmHLJpdE1WJ9aZyAwYn6kfQ6Uh2loaLnMjDGDKFn1S5YxISwCJ0nTWdn0oOd_DMslMB0AOhutBQofbvm7QLTVaX_7te8eGnczmyzFbFbxViJF-z8qox-yLQ')">
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-transparent"></div>
+<!-- Story UI -->
+<div class="absolute inset-0 p-8 flex flex-col justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-secondary-fixed rounded-lg flex items-center justify-center font-black text-xs">V</div>
+<span class="text-white font-headline font-bold tracking-tight text-sm">Velocity Athletics</span>
+</div>
+<div class="space-y-4">
+<div class="space-y-0">
+<p class="text-[#ADFF2F] font-label text-sm font-bold italic tracking-wider">NEXT MATCH</p>
+<h2 class="text-white text-4xl font-black italic font-headline leading-none">STRIKERS <span class="text-outline-variant font-light">VS</span> TECH FC</h2>
+</div>
+<div class="flex gap-4">
+<div class="bg-white/10 backdrop-blur-md px-3 py-1 rounded border border-white/20">
+<p class="text-[10px] text-white/70 font-label">STADIUM</p>
+<p class="text-xs text-white font-bold">CYBER ARENA</p>
+</div>
+<div class="bg-white/10 backdrop-blur-md px-3 py-1 rounded border border-white/20">
+<p class="text-[10px] text-white/70 font-label">TIME</p>
+<p class="text-xs text-white font-bold">19:45 GMT</p>
+</div>
+</div>
+<div class="w-full h-1 bg-white/20 rounded-full overflow-hidden">
+<div class="w-1/3 h-full bg-[#ADFF2F]"></div>
+</div>
+<p class="text-white/60 text-[10px] font-label tracking-[0.2em]">TICKETS AT VELOCITY.ATHLETICS</p>
+</div>
+</div>
+</div>
+<!-- Camera Notch -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-primary-container rounded-b-2xl"></div>
+</div>
+</div>
+<!-- Right: Actions & Stats (Bento Item 3) -->
+<div class="lg:col-span-3 space-y-6">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_20px_40px_rgba(24,28,30,0.06)] flex flex-col gap-4">
+<h3 class="text-sm font-label font-bold text-on-surface-variant uppercase tracking-widest">Publish Actions</h3>
+<button class="w-full flex items-center justify-between p-4 bg-surface-container rounded-xl hover:bg-secondary-container/20 group transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">add_to_photos</span>
+<span class="font-bold text-sm">Instagram Story</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 bg-surface-container rounded-xl hover:bg-secondary-container/20 group transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">feed</span>
+<span class="font-bold text-sm">Facebook Post</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<button class="w-full flex items-center gap-3 justify-center py-4 bg-primary text-white rounded-xl font-bold hover:scale-[1.02] transition-transform active:scale-95 shadow-lg">
+<span class="material-symbols-outlined">download</span>
+                            Download Asset
+                        </button>
+<div class="mt-4 pt-4 border-t border-surface-container flex justify-between items-center">
+<div>
+<p class="text-[10px] font-label text-on-surface-variant font-bold">FORMAT</p>
+<p class="text-xs font-bold">MP4 / 4K</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-label text-on-surface-variant font-bold">SIZE</p>
+<p class="text-xs font-bold">12.4 MB</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl">
+<h3 class="text-sm font-label font-bold text-on-surface-variant uppercase tracking-widest mb-4">Account Usage</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="text-xs font-bold font-headline">Monthly Exports</span>
+<span class="text-xs font-label text-on-surface-variant">42 / 50</span>
+</div>
+<!-- Custom Subscription Progress Bar from Design System -->
+<div class="w-full h-2 bg-secondary-container/30 rounded-full overflow-hidden">
+<div class="w-[84%] h-full bg-secondary"></div>
+</div>
+<p class="text-[10px] font-label text-on-surface-variant leading-relaxed">
+                                You are approaching your monthly limit. Upgrade to Pro for unlimited exports and 8K resolution.
+                            </p>
+<button class="w-full text-xs font-bold text-secondary border border-secondary/20 py-2 rounded-lg hover:bg-secondary/10 transition-colors">
+                                UPGRADE PLAN
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Asymmetry: Brand Text Overlay -->
+<div class="mt-24 relative overflow-hidden h-40 flex items-center">
+<span class="absolute left-0 text-[12rem] font-black italic text-surface-container leading-none pointer-events-none uppercase -translate-x-12">SPEED</span>
+<div class="relative z-10 flex gap-12 items-center">
+<div class="flex flex-col">
+<span class="text-xs font-label text-on-surface-variant font-bold tracking-[0.3em]">ENGINEERED FOR</span>
+<span class="text-2xl font-headline font-extrabold text-primary">PERFORMANCE</span>
+</div>
+<div class="h-10 w-px bg-surface-container-highest"></div>
+<div class="flex flex-col">
+<span class="text-xs font-label text-on-surface-variant font-bold tracking-[0.3em]">VERSION</span>
+<span class="text-2xl font-headline font-extrabold text-primary">v2.4.0-BETA</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-[#1A202C] dark:bg-[#030813] flex justify-around items-center py-4 z-50">
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-bold">DASH</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-[10px] font-bold">TEAM</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-[#ADFF2F]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">campaign</span>
+<span class="text-[10px] font-bold">HUB</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-bold">ME</span>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Elite Arena | StadiaPerform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Inter:wght@400;500;600&amp;family=Lexend:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-container": "#1a202c",
+              "error": "#ba1a1a",
+              "on-tertiary-fixed-variant": "#3d4759",
+              "surface-container": "#ebeef0",
+              "on-secondary-fixed-variant": "#314f00",
+              "inverse-on-surface": "#eef1f3",
+              "surface-container-high": "#e5e9eb",
+              "tertiary-fixed-dim": "#bdc7dc",
+              "surface-bright": "#f7fafc",
+              "secondary": "#426900",
+              "surface-dim": "#d7dadc",
+              "surface-variant": "#e0e3e5",
+              "tertiary": "#010817",
+              "on-surface-variant": "#45474c",
+              "on-primary": "#ffffff",
+              "primary-fixed-dim": "#c1c6d7",
+              "on-background": "#181c1e",
+              "surface-container-highest": "#e0e3e5",
+              "primary": "#030813",
+              "background": "#f7fafc",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-container": "#162030",
+              "on-error-container": "#93000a",
+              "inverse-primary": "#c1c6d7",
+              "surface-container-low": "#f1f4f6",
+              "on-tertiary": "#ffffff",
+              "tertiary-fixed": "#d9e3f9",
+              "surface": "#f7fafc",
+              "error-container": "#ffdad6",
+              "outline-variant": "#c6c6cc",
+              "on-surface": "#181c1e",
+              "on-primary-fixed": "#161c27",
+              "primary-fixed": "#dde2f3",
+              "on-secondary-container": "#456e00",
+              "outline": "#76777c",
+              "on-primary-fixed-variant": "#414754",
+              "inverse-surface": "#2d3133",
+              "secondary-fixed-dim": "#8fdb00",
+              "surface-tint": "#585e6c",
+              "on-error": "#ffffff",
+              "on-secondary-fixed": "#112000",
+              "on-tertiary-container": "#7d889b",
+              "on-secondary": "#ffffff",
+              "secondary-container": "#a5f624",
+              "secondary-fixed": "#a8f928",
+              "on-tertiary-fixed": "#121c2c"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Lexend"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .kinetic-gradient {
+        background: linear-gradient(135deg, #030813 0%, #1a202c 100%);
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+      }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-[#1A202C] dark:bg-[#030813] docked full-width top-0 z-50 fixed w-full">
+<div class="flex justify-between items-center w-full px-6 h-16 md:px-12">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black italic text-[#ADFF2F] tracking-tighter">StadiaPerform</span>
+<nav class="hidden md:flex gap-6">
+<a class="font-plus-jakarta-sans font-bold tracking-tight text-slate-400 hover:text-white transition-colors" href="#">Dashboard</a>
+<a class="font-plus-jakarta-sans font-bold tracking-tight text-[#ADFF2F] border-b-2 border-[#ADFF2F] pb-1" href="#">Venues</a>
+<a class="font-plus-jakarta-sans font-bold tracking-tight text-slate-400 hover:text-white transition-colors" href="#">Schedule</a>
+<a class="font-plus-jakarta-sans font-bold tracking-tight text-slate-400 hover:text-white transition-colors" href="#">Analytics</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-[#ADFF2F] hover:bg-white/5 transition-all duration-200 p-2 rounded-full">notifications</button>
+<button class="material-symbols-outlined text-[#ADFF2F] hover:bg-white/5 transition-all duration-200 p-2 rounded-full">settings</button>
+<div class="h-8 w-8 rounded-full bg-secondary overflow-hidden">
+<img alt="Organizer Profile" data-alt="close-up portrait of a professional stadium manager in a sharp suit with stadium lights blurred in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWrsAZVRgV4X6g8IWaNVCQWjhWdfeTRem6v8NkJ_XNoLG2mR4CxbwOWs9foOu-Yq__A-cy8yzA0KKv84jT-t77hmZbhu9PQix4AoggZNnecxSPdFwS9wKMvVi7rwGvHiP0SXz8eASOD3P3TdMfot0F4fFPwbnYuLAP_2NsBFrTktv4bSdsvOVgrP5WKzFlAdPGQPjMi0csgYOWk22me_1tWaNEhkTKetn_EY13jvUjuB4xTUBN0h-NYeQvwR-sFDiSEYhdg50cEKg"/>
+</div>
+</div>
+</div>
+<div class="bg-[#f1f4f6] dark:bg-[#1A202C] h-[1px] w-full"></div>
+</header>
+<main class="pt-16 pb-24 md:pb-0">
+<!-- Hero Section -->
+<section class="relative h-[819px] w-full overflow-hidden">
+<img alt="Elite Arena Main View" class="absolute inset-0 w-full h-full object-cover" data-alt="Ultra-modern stadium exterior at dusk with vibrant green glow lighting and a crowd of people walking towards the entrance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSizN5-MAc7t7jxbVZcFAA9gWRX4jLzXdvMe6fxPD8ezM4DZnjg7ozp_RoywcGv7kbDm4RNsWclUw37YBPWSnrifeU2ASxea8xCkI8AvHEJkw9YlBKJZHv5Y3CtAd_POVtWiLwY8QkWS43luNoU5qu48GvxKlc9ybYhVmVQTZLzHi01Xn0phMvWeckHdiP-blAFvUjHy-BVzKiUhfezNoclACVbrfItKNc1bSu1cpGZz7UKeBznLrXvkABY4TnDIgrzA6TPqNJCao"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 w-full p-6 md:p-20 flex flex-col md:flex-row md:items-end justify-between gap-8">
+<div class="max-w-3xl">
+<h1 class="font-headline text-5xl md:text-8xl font-extrabold text-white tracking-tighter uppercase italic leading-none mb-4">Elite Arena</h1>
+<p class="font-body text-xl text-slate-300 max-w-xl">The pinnacle of athletic performance and fan engagement. Experience sports like never before in our state-of-the-art facility.</p>
+</div>
+<div class="flex gap-4">
+<button class="bg-secondary-fixed text-on-secondary-fixed font-headline font-bold px-8 py-4 rounded-xl flex items-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">map</span> Get Directions
+                    </button>
+<button class="bg-white/10 backdrop-blur-md text-white border border-white/20 font-headline font-bold px-8 py-4 rounded-xl hover:bg-white/20 transition-all active:scale-95">
+                        View Schedule
+                    </button>
+</div>
+</div>
+</section>
+<!-- Bento Stats Grid -->
+<section class="px-6 md:px-20 py-12 -mt-16 relative z-10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Capacity Card -->
+<div class="md:col-span-2 bg-surface-container-lowest rounded-xl p-8 shadow-[0_20px_40px_rgba(24,28,30,0.06)] flex flex-col justify-between overflow-hidden relative">
+<div class="relative z-10">
+<span class="font-label text-secondary font-semibold uppercase tracking-widest text-sm">Total Capacity</span>
+<h2 class="font-headline text-6xl font-black text-primary mt-2">68,500</h2>
+<p class="font-body text-on-surface-variant mt-2">Fully retractable roof and climate control.</p>
+</div>
+<div class="absolute -right-8 -bottom-8 opacity-5">
+<span class="material-symbols-outlined text-[12rem]">groups</span>
+</div>
+</div>
+<!-- Location Card -->
+<div class="bg-surface-container-low rounded-xl p-8 flex flex-col justify-between">
+<div>
+<span class="font-label text-on-surface-variant font-semibold uppercase tracking-widest text-sm">Location</span>
+<h3 class="font-headline text-2xl font-bold text-primary mt-2">Downtown Performance District</h3>
+</div>
+<div class="mt-4 rounded-lg overflow-hidden h-32">
+<img class="w-full h-full object-cover grayscale" data-alt="stylized architectural map showing stadium location with minimalist line art and dark accents" data-location="Los Angeles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGG2kVImXuIh4slAkbwsGU7mPUHP81aS67FhbFiaGeoVZ7awmE9xcTojEzEPmgaUGB23qFOj_6QYb8MDDA2K_Gglivszwsc0J17C-55TkVw8DEs6a6IofAraqiG-MX0mUqZdonnYeFPHKGamSbVRcZnGvSh8x0ap0-_lH0T6lDvbM1_KMwOsOAXrW5NHGNWXOAsgmerL1Azx9Js9_4HB63GZgZcF5i_YkWS1U0aKkE9F5E-1YusrSfMX3JP4iUXojuvR45wpfXiU8"/>
+</div>
+</div>
+<!-- Hub Card -->
+<div class="bg-primary text-white rounded-xl p-8 flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-secondary-fixed text-5xl mb-4">hub</span>
+<h3 class="font-headline text-xl font-bold">Media Hub</h3>
+<p class="font-body text-slate-400 text-sm mt-2">4K Broadcasting Ready &amp; 500+ Journalist Stations</p>
+</div>
+</div>
+</section>
+<!-- Amenities Layout -->
+<section class="px-6 md:px-20 py-12 bg-surface-container">
+<div class="flex flex-col md:flex-row gap-12 items-center">
+<div class="flex-1 space-y-8">
+<h2 class="font-headline text-4xl font-extrabold text-primary uppercase tracking-tighter">Elite Amenities</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-start gap-4">
+<div class="bg-secondary-container p-3 rounded-lg text-secondary">
+<span class="material-symbols-outlined">local_parking</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-primary">Smart Parking</h4>
+<p class="font-body text-sm text-on-surface-variant">12,000 spaces with AI-guided navigation.</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-start gap-4">
+<div class="bg-secondary-container p-3 rounded-lg text-secondary">
+<span class="material-symbols-outlined">workspace_premium</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-primary">VIP Suites</h4>
+<p class="font-body text-sm text-on-surface-variant">250 luxury lounges with field-side views.</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-start gap-4">
+<div class="bg-secondary-container p-3 rounded-lg text-secondary">
+<span class="material-symbols-outlined">wifi</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-primary">Hyper-Wifi</h4>
+<p class="font-body text-sm text-on-surface-variant">Uninterrupted 6E connectivity for every fan.</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-start gap-4">
+<div class="bg-secondary-container p-3 rounded-lg text-secondary">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-primary">Culinary Hub</h4>
+<p class="font-body text-sm text-on-surface-variant">45 unique vendors from local artisans.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex-1 w-full relative">
+<div class="aspect-square bg-surface-container-highest rounded-3xl overflow-hidden relative">
+<img alt="VIP Suite View" class="w-full h-full object-cover" data-alt="Luxurious modern stadium suite interior with leather seats looking out onto a perfectly manicured green football field under bright lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsWNxm4IfwRaqgf-Msm_KnnacKxcAwK33lf0Ew47n2lywBMYqTqEMinVvjmvlBa4fS8MFqGhY81C6chI3RQWcTGM_dXYNsyUtGIul1ztdulFHR6JLnBzlDF02akMw1cVkkNdhys3PGRO9pNJeSdvWus2o9EKSeVkPJmYmhkLRyRGp0oDvQjGgxqqCOY6LUmcpDs5VxMTUv729rKewzjfyRyfRLXXzWjA9QLvttRPfon2cz2LZbKG6Z-968F2_Fo8Bi36zCxD3dhP8"/>
+<div class="absolute bottom-6 left-6 right-6 glass-card p-6 rounded-2xl">
+<h5 class="font-headline font-bold text-primary">The Platinum Lounge</h5>
+<p class="font-body text-sm text-on-surface-variant">Premium dining &amp; exclusive athlete tunnel access.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Gallery & Seating Chart -->
+<section class="px-6 md:px-20 py-20">
+<div class="flex justify-between items-end mb-12">
+<div>
+<span class="font-label text-secondary font-bold uppercase tracking-widest text-sm">Visual Discovery</span>
+<h2 class="font-headline text-4xl font-extrabold text-primary uppercase">Venue Gallery</h2>
+</div>
+<button class="text-primary font-bold flex items-center gap-2 hover:underline">
+                    View Full Map <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-4 h-[600px]">
+<div class="col-span-2 row-span-2 rounded-2xl overflow-hidden relative group">
+<img alt="Arena Wide" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Wide angle interior shot of a packed stadium during a major sports event with thousands of glowing phone lights in the stands" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVJPiF9jjHGRG8r9PQIE3tscHsNzXLOT3j2_jBcx4HlMoJReu4WFMiPy6RON9aK5FAXQs1dIGFmFk0RF4xJMoY5Abt6uLpctK7twnTFgnmmY0rgOMTSFjU8t82lFkiCz_bjs0nwwsvQDwRuWPxj5BlbuFvUx4KnKpP4vXesE4f7maeydH1IwT6h7LoDHfFzPg759knSsA89Sw3sOqACICIur4uVl_05RKorgyNtaY6j-tZIaLYqkvdsBF37_xDwklm1VYOcYj8Q3g"/>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="rounded-2xl overflow-hidden relative group">
+<img alt="Seating detail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Close up of modern ergonomic stadium seating in bright lime green and deep navy blue colors arranged in perfect rows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrEgN4KeUZMUH5bjPVrbJRQEdxzMwBakBAlrTSbvkoH2be5ezk2mboExdEP_AJ6kOc6FmqS6Rg7I6gAOHdefZEoSNddzGZwzyClki6GYBFoA8j2DmHGbzwDZ9qEa00_R2VJYnG8IWKT-FEYSGAGF-RVhFgG4ncmTCrAhjti9IY5htEU6ZWQeUXOU6DxdRRkyI4FHEstoGWcJaLB4oLQhtnUh0uML3m2WkXzdE7pppWsCKJtoJPTMZAH-dRUndfjg_akxK69WgpGWU"/>
+</div>
+<div class="rounded-2xl overflow-hidden relative group">
+<img alt="Arena Night" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Dramatic night shot of the stadium's glowing architectural structure reflecting in a nearby body of water" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcq1zd4-urXaZSZHBPYN7NxYyyJ2rBGGVZw14H9nbZuKGSwjWARChSfcgdSfDjX3ihEWTspCqz9CjfBQiEpPQ0ig8rmrpk4BZh-hfTX3VEPLNsArH4-6pClcmEwLwaD_gUC-5cduWkUiGFaAx49V17bYi3DT5bg7bWq6C2M9vwBIE7F70ZrvguxcP6R35G-hUwa4MC_b-8XHXTNOsqhZWvtN5UBoq9G04v7D1iEc56m_gHDdLdpHdWLN4tIBkAbGMGqDhvjrIJBjc"/>
+</div>
+<div class="col-span-2 rounded-2xl overflow-hidden relative group">
+<img alt="Stadium Entrance" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Modern geometric stadium entrance plaza with clean concrete lines and digital signage showing match information" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPDM_vbBDwAR6klm9b0EKvQ4uQomWlBd-RzCNwxtKRBjlm-WcG11Y6gs3dkLi4Leu9t6UvTN_o56ZcbYH9diQ2izweVYCrLXEh6r3osQ5xPW2tWMQVGNTjWlh4Xqo-gJ22dc49ECGX1t5L8rUcn0Vdki_NdLWbzmE9lRlUCrZaf6eZd1eGYUIx75PChpXj4nY57BNsMvUqlvMY4ivMgvJNpqon3fUE_ZV2xI2HmFUbjaLgSNNm3BdSYWLgtehVEXSebj3DlNT6eGg"/>
+</div>
+</div>
+</section>
+<!-- Upcoming Matches -->
+<section class="px-6 md:px-20 py-20 bg-primary text-white overflow-hidden relative">
+<div class="relative z-10">
+<h2 class="font-headline text-4xl font-extrabold uppercase tracking-tighter mb-12">Next on the Turf</h2>
+<div class="space-y-4">
+<!-- Match Card 1 -->
+<div class="bg-white/5 hover:bg-white/10 transition-colors p-8 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-8 border border-white/5">
+<div class="flex items-center gap-12 w-full md:w-auto justify-center md:justify-start">
+<div class="text-center">
+<div class="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-4xl">shield</span>
+</div>
+<span class="font-headline font-bold text-sm">TITANS FC</span>
+</div>
+<span class="font-headline text-4xl font-black italic text-secondary-fixed">VS</span>
+<div class="text-center">
+<div class="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-4xl">bolt</span>
+</div>
+<span class="font-headline font-bold text-sm">STORM UNITED</span>
+</div>
+</div>
+<div class="flex flex-col md:items-end text-center md:text-right">
+<span class="font-label text-secondary-fixed font-bold">SATURDAY, OCT 14</span>
+<span class="text-2xl font-headline font-bold uppercase">Championship Final</span>
+<span class="text-slate-400">KO: 19:30 Local Time</span>
+</div>
+<button class="bg-white text-primary font-headline font-bold px-8 py-4 rounded-xl active:scale-95 transition-transform w-full md:w-auto">
+                            Get Tickets
+                        </button>
+</div>
+<!-- Match Card 2 -->
+<div class="bg-white/5 hover:bg-white/10 transition-colors p-8 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-8 border border-white/5">
+<div class="flex items-center gap-12 w-full md:w-auto justify-center md:justify-start">
+<div class="text-center">
+<div class="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-4xl">stadium</span>
+</div>
+<span class="font-headline font-bold text-sm">HOME STARS</span>
+</div>
+<span class="font-headline text-4xl font-black italic text-secondary-fixed">VS</span>
+<div class="text-center">
+<div class="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-4xl">public</span>
+</div>
+<span class="font-headline font-bold text-sm">GLOBAL XI</span>
+</div>
+</div>
+<div class="flex flex-col md:items-end text-center md:text-right">
+<span class="font-label text-secondary-fixed font-bold">WEDNESDAY, OCT 18</span>
+<span class="text-2xl font-headline font-bold uppercase">International Friendly</span>
+<span class="text-slate-400">KO: 20:00 Local Time</span>
+</div>
+<button class="bg-white text-primary font-headline font-bold px-8 py-4 rounded-xl active:scale-95 transition-transform w-full md:w-auto">
+                            Get Tickets
+                        </button>
+</div>
+</div>
+</div>
+<!-- Background Graphic -->
+<div class="absolute right-0 top-0 h-full w-1/3 kinetic-gradient skew-x-12 translate-x-32 opacity-20"></div>
+</section>
+</main>
+<!-- Footer / Legal -->
+<footer class="bg-surface-container-low px-6 md:px-20 py-12 border-t border-surface-container-high">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8">
+<span class="text-xl font-black italic text-primary tracking-tighter">StadiaPerform</span>
+<div class="flex gap-8 font-label text-sm font-medium text-on-surface-variant">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Use</a>
+<a class="hover:text-primary transition-colors" href="#">Press Kit</a>
+<a class="hover:text-primary transition-colors" href="#">Contact Support</a>
+</div>
+<p class="text-on-surface-variant text-sm">© 2024 Elite Arena Management. All rights reserved.</p>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 dark:bg-[#1A202C]/80 backdrop-blur-xl docked full-width bottom-0 rounded-t-3xl z-50 md:hidden border-t border-slate-200/20 shadow-[0_-10px_30px_rgba(0,0,0,0.1)]">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 p-2 hover:text-[#ADFF2F] transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-lexend text-[10px] uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#ADFF2F] text-[#112000] rounded-2xl p-2 scale-110" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">stadium</span>
+<span class="font-lexend text-[10px] uppercase tracking-widest mt-1">Venues</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 p-2 hover:text-[#ADFF2F] transition-colors" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-lexend text-[10px] uppercase tracking-widest mt-1">Stats</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 p-2 hover:text-[#ADFF2F] transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-lexend text-[10px] uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

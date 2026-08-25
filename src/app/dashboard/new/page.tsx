@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Navbar } from "@/components/Navbar";
+import { Sidebar } from "@/components/Sidebar";
+import { TopHeader } from "@/components/TopHeader";
 import { SPORTS, FORMATS } from "@/lib/constants";
 
 export default function NewChampionshipPage() {
@@ -11,8 +12,8 @@ export default function NewChampionshipPage() {
     name: "",
     sport: "Fotbal",
     format: "round_robin" as const,
-    season: "",
-    startDate: "",
+    season: "2025-2026",
+    startDate: new Date().toISOString().split("T")[0],
     endDate: "",
     description: "",
   });
@@ -43,72 +44,154 @@ export default function NewChampionshipPage() {
   }
 
   return (
-    <>
-      <Navbar />
-      <main className="mx-auto max-w-2xl px-4 py-10 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-slate-900">Campionat nou</h1>
-        <p className="mt-1 text-sm text-slate-600">Completează detaliile de bază. Poți adăuga echipe și meciuri imediat.</p>
+    <div className="min-h-screen bg-surface flex">
+      <Sidebar />
 
-        <form onSubmit={onSubmit} className="mt-8 card p-6 space-y-5">
-          <div>
-            <label className="label" htmlFor="name">Nume campionat *</label>
-            <input id="name" required minLength={2} className="input"
-              value={form.name} onChange={(e) => update("name", e.target.value)}
-              placeholder="Liga Studențească 2026" />
-          </div>
+      <div className="flex-1 ml-64 flex flex-col min-w-0">
+        <TopHeader
+          title="Turneu Nou"
+          subtitle="Configurează o competiție nouă în câteva secunde"
+        />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="label" htmlFor="sport">Sport</label>
-              <select id="sport" className="input" value={form.sport}
-                onChange={(e) => update("sport", e.target.value)}>
-                {SPORTS.map((s) => <option key={s} value={s}>{s}</option>)}
-              </select>
+        <main className="p-6 lg:p-10 max-w-3xl">
+          <div className="card p-8 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 shadow-sm rounded-3xl">
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="w-10 h-10 rounded-xl bg-lime-100 dark:bg-lime-950/50 text-lime-800 dark:text-lime-400 flex items-center justify-center font-bold">
+                <span className="material-symbols-outlined text-2xl">add_circle</span>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold font-headline text-blue-950 dark:text-white">
+                  Detalii Competiție
+                </h2>
+                <p className="text-xs text-slate-500 font-label">
+                  Poți adăuga echipele și programa meciurile imediat după creare.
+                </p>
+              </div>
             </div>
-            <div>
-              <label className="label" htmlFor="format">Format</label>
-              <select id="format" className="input" value={form.format}
-                onChange={(e) => update("format", e.target.value as any)}>
-                {FORMATS.map((f) => <option key={f.value} value={f.value}>{f.label}</option>)}
-              </select>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="label" htmlFor="season">Sezon</label>
-              <input id="season" className="input" placeholder="2025-2026"
-                value={form.season} onChange={(e) => update("season", e.target.value)} />
-            </div>
-            <div>
-              <label className="label" htmlFor="startDate">Data start *</label>
-              <input id="startDate" required type="date" className="input"
-                value={form.startDate} onChange={(e) => update("startDate", e.target.value)} />
-            </div>
-          </div>
+            <form onSubmit={onSubmit} className="space-y-6">
+              <div>
+                <label className="label" htmlFor="name">
+                  Nume Campionat / Turneu *
+                </label>
+                <input
+                  id="name"
+                  required
+                  minLength={2}
+                  className="input"
+                  value={form.name}
+                  onChange={(e) => update("name", e.target.value)}
+                  placeholder="ex: Liga Națională Pro 2026"
+                />
+              </div>
 
-          <div>
-            <label className="label" htmlFor="endDate">Data sfârșit (opțional)</label>
-            <input id="endDate" type="date" className="input"
-              value={form.endDate} onChange={(e) => update("endDate", e.target.value)} />
-          </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="label" htmlFor="sport">
+                    Sport
+                  </label>
+                  <select
+                    id="sport"
+                    className="input"
+                    value={form.sport}
+                    onChange={(e) => update("sport", e.target.value)}
+                  >
+                    {SPORTS.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-          <div>
-            <label className="label" htmlFor="description">Descriere</label>
-            <textarea id="description" rows={3} className="input"
-              value={form.description} onChange={(e) => update("description", e.target.value)} />
-          </div>
+                <div>
+                  <label className="label" htmlFor="format">
+                    Format Competiție
+                  </label>
+                  <select
+                    id="format"
+                    className="input"
+                    value={form.format}
+                    onChange={(e) => update("format", e.target.value as any)}
+                  >
+                    {FORMATS.map((f) => (
+                      <option key={f.value} value={f.value}>
+                        {f.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="label" htmlFor="season">
+                    Sezon
+                  </label>
+                  <input
+                    id="season"
+                    className="input"
+                    placeholder="2025-2026"
+                    value={form.season}
+                    onChange={(e) => update("season", e.target.value)}
+                  />
+                </div>
 
-          <div className="flex gap-2 justify-end">
-            <button type="button" onClick={() => router.back()} className="btn-secondary">Anulează</button>
-            <button type="submit" disabled={loading} className="btn-primary">
-              {loading ? "Se creează..." : "Creează campionat"}
-            </button>
+                <div>
+                  <label className="label" htmlFor="startDate">
+                    Data Începerii *
+                  </label>
+                  <input
+                    id="startDate"
+                    required
+                    type="date"
+                    className="input"
+                    value={form.startDate}
+                    onChange={(e) => update("startDate", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="label" htmlFor="description">
+                  Descriere Competiție
+                </label>
+                <textarea
+                  id="description"
+                  rows={3}
+                  className="input"
+                  placeholder="Regulament scurt, detalii locație sau organizator..."
+                  value={form.description}
+                  onChange={(e) => update("description", e.target.value)}
+                />
+              </div>
+
+              {error && (
+                <div className="p-3 bg-red-50 text-red-700 text-xs font-semibold rounded-xl border border-red-200">
+                  {error}
+                </div>
+              )}
+
+              <div className="flex gap-3 justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => router.back()}
+                  className="btn btn-secondary text-xs uppercase tracking-wider font-bold"
+                >
+                  Anulează
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="btn btn-primary text-xs uppercase tracking-wider font-bold py-3 px-6 bg-primary text-white hover:bg-slate-800"
+                >
+                  {loading ? "Se creează..." : "Lansează Campionatul 🚀"}
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
-      </main>
-    </>
+        </main>
+      </div>
+    </div>
   );
 }

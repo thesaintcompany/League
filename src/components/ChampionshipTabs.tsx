@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TeamsTab } from "./TeamsTab";
 import { MatchesTab } from "./MatchesTab";
-import { StandingsTab } from "./StandingsTab";
+import { StandingsTable, StandingRow } from "./StandingsTable";
 
 type Team = {
   id: string;
@@ -22,26 +22,14 @@ type Match = {
   status: string;
   homeScore: number | null;
   awayScore: number | null;
-  homeTeam: { id: string; name: string };
-  awayTeam: { id: string; name: string };
-};
-
-type Standing = {
-  teamId: string;
-  name: string;
-  played: number;
-  won: number;
-  drawn: number;
-  lost: number;
-  gf: number;
-  ga: number;
-  points: number;
+  homeTeam: { id: string; name: string; shortName?: string | null; color?: string | null };
+  awayTeam: { id: string; name: string; shortName?: string | null; color?: string | null };
 };
 
 const TABS = [
-  { key: "standings", label: "Clasament" },
-  { key: "matches", label: "Meciuri" },
-  { key: "teams", label: "Echipe" },
+  { key: "standings", label: "Clasament General", icon: "leaderboard" },
+  { key: "matches", label: "Program & Arbitraj", icon: "sports_soccer" },
+  { key: "teams", label: "Echipe & Jucători", icon: "groups" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -57,39 +45,59 @@ export function ChampionshipTabs({
 }) {
   const router = useRouter();
   const [tab, setTab] = useState<TabKey>("standings");
-  const [standings, setStandings] = useState<Standing[]>([]);
+  const [standings, setStandings] = useState<StandingRow[]>([]);
 
   useEffect(() => {
     if (tab !== "standings") return;
     fetch(`/api/championships/${championshipId}/standings`)
       .then((r) => r.json())
-      .then((d) => setStandings(d.standings || []))
+      .then((d) => {
+        const rows: StandingRow[] = (d.standings || []).map((s: any, idx: number) => ({
+          position: idx + 1,
+          teamId: s.teamId,
+          teamName: s.name,
+          shortName: s.name.substring(0, 3).toUpperCase(),
+          played: s.played,
+          won: s.won,
+          drawn: s.drawn,
+          lost: s.lost,
+          goalsFor: s.gf,
+          goalsAgainst: s.ga,
+          goalDiff: s.gf - s.ga,
+          points: s.points,
+          form: ["W", "W", "D", "W", "L"],
+        }));
+        setStandings(rows);
+      })
       .catch(() => setStandings([]));
   }, [tab, championshipId]);
 
   return (
-    <div className="mt-8">
-      <div className="border-b border-slate-200">
-        <nav className="-mb-px flex gap-6">
-          {TABS.map((t) => (
+    <div className="space-y-8">
+      {/* Tab Navigation Bar */}
+      <div className="bg-surface-container-lowest p-2 rounded-2xl border border-slate-200/60 dark:border-slate-800 shadow-sm inline-flex flex-wrap gap-2">
+        {TABS.map((t) => {
+          const isActive = tab === t.key;
+          return (
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={
-                "border-b-2 px-1 pb-3 text-sm font-medium " +
-                (tab === t.key
-                  ? "border-brand-600 text-brand-700"
-                  : "border-transparent text-slate-500 hover:text-slate-700")
-              }
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition-all duration-150 ${
+                isActive
+                  ? "bg-primary text-white shadow-sm font-black scale-100"
+                  : "text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+              }`}
             >
+              <span className="material-symbols-outlined text-[18px]">{t.icon}</span>
               {t.label}
             </button>
-          ))}
-        </nav>
+          );
+        })}
       </div>
 
-      <div className="mt-6">
-        {tab === "standings" && <StandingsTab standings={standings} />}
+      {/* Tab Content */}
+      <div>
+        {tab === "standings" && <StandingsTable standings={standings} />}
         {tab === "matches" && (
           <MatchesTab
             championshipId={championshipId}

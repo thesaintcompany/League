@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Player Profile &amp; Settings | AthleticPulse</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Lexend:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-container": "#7d889b",
+                        "tertiary": "#010817",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d7dadc",
+                        "on-secondary-fixed-variant": "#314f00",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "surface-tint": "#585e6c",
+                        "secondary-container": "#a5f624",
+                        "primary-fixed": "#dde2f3",
+                        "on-surface": "#181c1e",
+                        "outline": "#76777c",
+                        "inverse-on-surface": "#eef1f3",
+                        "primary-container": "#1a202c",
+                        "on-tertiary-fixed": "#121c2c",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#112000",
+                        "inverse-primary": "#c1c6d7",
+                        "surface-container-low": "#f1f4f6",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-tertiary-fixed-variant": "#3d4759",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#828796",
+                        "primary-fixed-dim": "#c1c6d7",
+                        "outline-variant": "#c6c6cc",
+                        "primary": "#030813",
+                        "on-primary-fixed-variant": "#414754",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f7fafc",
+                        "tertiary-fixed-dim": "#bdc7dc",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container": "#ebeef0",
+                        "surface": "#f7fafc",
+                        "tertiary-container": "#162030",
+                        "on-secondary-container": "#456e00",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#45474c",
+                        "surface-container-high": "#e5e9eb",
+                        "secondary-fixed": "#a8f928",
+                        "on-primary-fixed": "#161c27",
+                        "secondary-fixed-dim": "#8fdb00",
+                        "secondary": "#426900",
+                        "on-background": "#181c1e",
+                        "background": "#f7fafc",
+                        "tertiary-fixed": "#d9e3f9",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Lexend"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #030813 0%, #1a202c 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="h-screen sticky left-0 w-64 bg-slate-100 dark:bg-slate-950 flex flex-col py-8 gap-2 border-r-0 hidden md:flex z-50">
+<div class="px-8 mb-8">
+<span class="text-2xl font-black text-slate-900 dark:text-white">AthleticPulse</span>
+<p class="font-label text-xs text-on-surface-variant mt-1 uppercase tracking-widest opacity-60">Pro League Admin</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-slate-500 dark:text-slate-400 px-10 py-3 hover:text-slate-900 dark:hover:text-white flex items-center gap-3 transition-all duration-200 hover:translate-x-1 font-headline text-sm font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span> Dashboard
+                </a>
+<a class="text-slate-500 dark:text-slate-400 px-10 py-3 hover:text-slate-900 dark:hover:text-white flex items-center gap-3 transition-all duration-200 hover:translate-x-1 font-headline text-sm font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span> Teams
+                </a>
+<a class="text-slate-500 dark:text-slate-400 px-10 py-3 hover:text-slate-900 dark:hover:text-white flex items-center gap-3 transition-all duration-200 hover:translate-x-1 font-headline text-sm font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span> Players
+                </a>
+<a class="text-slate-500 dark:text-slate-400 px-10 py-3 hover:text-slate-900 dark:hover:text-white flex items-center gap-3 transition-all duration-200 hover:translate-x-1 font-headline text-sm font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="sports_soccer">sports_soccer</span> Matches
+                </a>
+<a class="text-slate-500 dark:text-slate-400 px-10 py-3 hover:text-slate-900 dark:hover:text-white flex items-center gap-3 transition-all duration-200 hover:translate-x-1 font-headline text-sm font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span> Analytics
+                </a>
+<a class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-l-full ml-4 pl-6 py-3 shadow-sm flex items-center gap-3 font-headline text-sm font-semibold" href="#">
+<span class="material-symbols-outlined text-lime-500" data-icon="settings">settings</span> Settings
+                </a>
+</nav>
+<div class="mt-auto px-4 space-y-1">
+<a class="text-slate-500 dark:text-slate-400 px-6 py-3 hover:text-slate-900 dark:hover:text-white flex items-center gap-3 transition-all duration-200 font-headline text-sm font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span> Help
+                </a>
+<a class="text-slate-500 dark:text-slate-400 px-6 py-3 hover:text-slate-900 dark:hover:text-white flex items-center gap-3 transition-all duration-200 font-headline text-sm font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span> Sign Out
+                </a>
+</div>
+</aside>
+<main class="flex-1 flex flex-col min-w-0">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-40 flex justify-between items-center px-6 py-4 bg-slate-50 dark:bg-slate-900">
+<div class="flex items-center gap-4">
+<h1 class="font-headline font-bold text-lg text-slate-900 dark:text-slate-50">Player Profile Settings</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-icon="search">search</span>
+<input class="bg-surface-container-highest border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-secondary transition-all w-64" placeholder="Search athletes..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 hover:text-lime-500 transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="close-up portrait of professional athlete with intense expression and dramatic side lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnKnnqMrhL_gfrQuVhzg_g5NkN8-1zWl3vH1Zyc-r_h7xU8trjElbqFaZuEzPxa7Zzo9m6UxKWoNXcUy9XA2tRK81wgp7hlklygyFjo1HiCJO7C3afDhu9rNY_XKHKWZZ8zN5MwFZPRGxyhKd831jA1pc5uecTwwcDOETBTZ_Wtai4MisbUGr8QH7LyGXSzoFV7A8EldU3SelHjuQp0ur6I_JEH0xiS4IzbjY9K_AkyIoUJyRMV2fnbKJiALYhJWgGMw4nZZ4XmwI"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-6 md:p-10 max-w-7xl mx-auto w-full">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Visual Assets -->
+<div class="lg:col-span-4 space-y-8">
+<!-- Profile Main Card -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_20px_40px_rgba(24,28,30,0.06)] overflow-hidden relative group">
+<div class="absolute top-0 right-0 p-4 z-10">
+<button class="bg-white/80 backdrop-blur-md p-2 rounded-full shadow-sm hover:text-secondary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="aspect-[9/16] w-full rounded-lg overflow-hidden relative mb-6">
+<img class="w-full h-full object-cover" data-alt="full body action shot of athlete in sports gear standing in a moody modern gym with neon lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeSxGlH7fkElZdFasLFnQCt_ZRhKMekS_f1J9xuxCvrWPtCPkvjQPEBE5lPs-TO6GP6lGe_ak09cD3diJDOcLu1-i4Jv6Vna5X9nwbh_iWsKYJ4vGbae6HDmZD8Po_WcxzbRXvUzdoxa33nrrqIQ9afwDPgnY5pQtTlLZYBBo7I5140V-TRIIAx8dg_yq03xZXJTCbMcXNQG2qMIH9gixnoLxlb3wg-atzr8C20I6JWy5SGLpT6ZwlmjKQcrFbMJ0k4SVvDLUWarc"/>
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-primary/80 to-transparent">
+<p class="font-headline font-bold text-white text-xl">Cover Photo</p>
+<p class="font-body text-white/70 text-sm">Visible on Public Profile</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-full border-4 border-surface-container-lowest overflow-hidden shadow-md -mt-12 z-20 relative">
+<img class="w-full h-full object-cover" data-alt="close-up studio headshot of a professional soccer player with neutral expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdeXna01oRcxjI5lVa1YmLdVwy_1NTq72-tlde2uXWLPH95meZ8waCzlFfjZcLn_eQNKHooGD-HLVwPAZz9-5olJPPJdc7jC4JsXU-Y_TWtALtGQ_AcuiXL1opMdrGSztlqPTCgBB_ToKfEwdHwrhZbk6OtIbnwk5n7kHnkO0NmyPjDAEAGdJgDJpCfEvnfgBHq1KxpIOaBGeWdbLfSQQS8KcY3TFUOGlYb_IhgINYC_gGmMJsZs1iFvhoTS9-hzLqri1JoXtsp-o"/>
+</div>
+<div class="pt-2">
+<h2 class="font-headline font-bold text-lg leading-tight">Marcus Sterling</h2>
+<p class="font-label text-xs uppercase tracking-tighter text-secondary font-bold">Center Forward</p>
+</div>
+</div>
+</div>
+<!-- Visibility Card -->
+<div class="bg-surface-container-low rounded-xl p-6 border-l-4 border-secondary">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="lock">lock</span>
+<div>
+<h4 class="font-headline font-bold text-sm">Privacy Information</h4>
+<p class="font-body text-xs text-on-surface-variant mt-1">Personal contact details are only visible to the Team Leader and Official Event Organizers.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Form Data -->
+<div class="lg:col-span-8 space-y-8">
+<!-- Personal & Contact Info -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_20px_40px_rgba(24,28,30,0.06)]">
+<div class="mb-8">
+<h3 class="font-headline font-extrabold text-2xl tracking-tight text-primary">Identity &amp; Contact</h3>
+<div class="h-1 w-12 bg-secondary mt-2"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+<div class="space-y-2">
+<label class="font-label text-xs font-bold text-on-surface-variant uppercase tracking-widest">First Name</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-b-2 focus:ring-secondary transition-all font-body" type="text" value="Marcus"/>
+</div>
+<div class="space-y-2">
+<label class="font-label text-xs font-bold text-on-surface-variant uppercase tracking-widest">Surname</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-b-2 focus:ring-secondary transition-all font-body" type="text" value="Sterling"/>
+</div>
+<div class="space-y-2">
+<div class="flex items-center gap-2 mb-1">
+<label class="font-label text-xs font-bold text-on-surface-variant uppercase tracking-widest">Email Address</label>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant" data-icon="lock">lock</span>
+</div>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-b-2 focus:ring-secondary transition-all font-body italic" type="email" value="m.sterling@proleague.com"/>
+</div>
+<div class="space-y-2">
+<div class="flex items-center gap-2 mb-1">
+<label class="font-label text-xs font-bold text-on-surface-variant uppercase tracking-widest">Phone Number</label>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant" data-icon="lock">lock</span>
+</div>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-b-2 focus:ring-secondary transition-all font-body italic" type="tel" value="+44 7700 900542"/>
+</div>
+</div>
+</section>
+<!-- Social Media Links -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_20px_40px_rgba(24,28,30,0.06)]">
+<div class="mb-8">
+<h3 class="font-headline font-extrabold text-2xl tracking-tight text-primary">Fan Connectivity</h3>
+<p class="font-body text-sm text-on-surface-variant">Manage how fans find you across social platforms.</p>
+</div>
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary group hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined" data-icon="photo_camera">photo_camera</span>
+</div>
+<div class="flex-1 space-y-1">
+<label class="font-label text-[10px] font-bold text-on-surface-variant uppercase">Instagram</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-2 text-sm focus:ring-b-2 focus:ring-secondary transition-all font-body" placeholder="instagram.com/yourhandle" type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary group hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+</div>
+<div class="flex-1 space-y-1">
+<label class="font-label text-[10px] font-bold text-on-surface-variant uppercase">Twitter / X</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-2 text-sm focus:ring-b-2 focus:ring-secondary transition-all font-body" placeholder="x.com/yourhandle" type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary group hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined" data-icon="public">public</span>
+</div>
+<div class="flex-1 space-y-1">
+<label class="font-label text-[10px] font-bold text-on-surface-variant uppercase">Facebook</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-2 text-sm focus:ring-b-2 focus:ring-secondary transition-all font-body" placeholder="facebook.com/yourprofile" type="text"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Actions -->
+<div class="flex flex-col sm:flex-row items-center justify-end gap-4 pt-4">
+<button class="w-full sm:w-auto px-8 py-3 rounded-xl font-headline font-bold text-on-surface hover:bg-surface-container transition-all active:scale-95 border border-outline-variant/20">
+                                View Public Profile
+                            </button>
+<button class="w-full sm:w-auto px-10 py-3 rounded-xl font-headline font-bold text-on-secondary primary-gradient shadow-lg hover:shadow-secondary/20 transition-all active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="check_circle">check_circle</span>
+                                Save Changes
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

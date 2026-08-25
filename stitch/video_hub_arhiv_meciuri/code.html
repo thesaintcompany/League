@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Video Hub | KINETIC PRECISION</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Lexend:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "tertiary-container": "#162030",
+                "on-secondary-fixed-variant": "#314f00",
+                "on-surface": "#181c1e",
+                "outline-variant": "#c6c6cc",
+                "surface-container-high": "#e5e9eb",
+                "on-surface-variant": "#45474c",
+                "primary-container": "#1a202c",
+                "background": "#f7fafc",
+                "on-primary-fixed": "#161c27",
+                "inverse-primary": "#c1c6d7",
+                "tertiary-fixed-dim": "#bdc7dc",
+                "surface-container": "#ebeef0",
+                "outline": "#76777c",
+                "on-primary-fixed-variant": "#414754",
+                "surface-container-highest": "#e0e3e5",
+                "secondary-container": "#a5f624",
+                "on-tertiary-fixed": "#121c2c",
+                "tertiary-fixed": "#d9e3f9",
+                "secondary-fixed": "#a8f928",
+                "error": "#ba1a1a",
+                "surface-bright": "#f7fafc",
+                "primary": "#030813",
+                "on-secondary-container": "#456e00",
+                "on-tertiary": "#ffffff",
+                "on-tertiary-fixed-variant": "#3d4759",
+                "on-error": "#ffffff",
+                "primary-fixed": "#dde2f3",
+                "inverse-on-surface": "#eef1f3",
+                "tertiary": "#010817",
+                "surface-variant": "#e0e3e5",
+                "on-primary-container": "#828796",
+                "inverse-surface": "#2d3133",
+                "error-container": "#ffdad6",
+                "surface-container-lowest": "#ffffff",
+                "surface-tint": "#585e6c",
+                "surface": "#f7fafc",
+                "primary-fixed-dim": "#c1c6d7",
+                "on-secondary-fixed": "#112000",
+                "on-error-container": "#93000a",
+                "surface-dim": "#d7dadc",
+                "secondary-fixed-dim": "#8fdb00",
+                "surface-container-low": "#f1f4f6",
+                "secondary": "#426900",
+                "on-tertiary-container": "#7d889b",
+                "on-primary": "#ffffff",
+                "on-secondary": "#ffffff",
+                "on-background": "#181c1e"
+              },
+              fontFamily: {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Inter"],
+                "label": ["Lexend"]
+              },
+              borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        .dark .glass-card {
+            background: rgba(3, 8, 19, 0.8);
+        }
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #030813 0%, #1a202c 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-slate-50 dark:bg-slate-900 docked full-width top-0 sticky z-50 shadow-none border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between px-6 py-3 w-full">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black text-blue-950 dark:text-white tracking-tighter plus-jakarta-sans uppercase">KINETIC PRECISION</span>
+<div class="hidden md:flex items-center bg-slate-200 dark:bg-slate-800 rounded-xl px-3 py-1.5 w-64">
+<span class="material-symbols-outlined text-slate-500 text-lg mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder-slate-500" placeholder="Search archives..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined">videocam</span>
+</button>
+<button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-150 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-lime-400 rounded-full"></span>
+</button>
+<button class="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-slate-300 overflow-hidden ml-2">
+<img alt="User profile avatar" data-alt="User profile avatar of a professional administrator in a sharp suit with neutral lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2KzbyBgNNOQG2Ulq66scS0KbqS0a4CuHYCORgPh6aDDYV0wLFTr9Hbmmyc7Hc9pGj3KkiYoO2lAmy6k1N-ns2bKvOAeuzjUl-Zf10d4UPbnseXtKx5XtbROKgmBZPf7x57yE6wlQsR_xzAsQK0vvHEvsJ320EJvxycA78pNX6pl8FipTtkC_aICvnARgiwhzMPsk_YqJcZL9H-FV31QsCpkMFV8athrk1btWxRhVcGpBjzOBeNG0FThKbK1oASJ2ZZ61EpKHQjJU"/>
+</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-100 dark:bg-slate-950 shadow-xl dark:shadow-none hidden md:flex flex-col border-r border-slate-200 dark:border-slate-800">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 bg-blue-950 dark:bg-white rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white dark:text-blue-950">sports_soccer</span>
+</div>
+<div>
+<h2 class="text-lg font-bold text-blue-950 dark:text-white plus-jakarta-sans leading-tight">Pro League Admin</h2>
+<p class="text-[10px] text-slate-500 font-semibold uppercase tracking-widest">Season 2024/25</p>
+</div>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white plus-jakarta-sans font-semibold text-sm hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span> Dashboard
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white plus-jakarta-sans font-semibold text-sm hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">group</span> Teams
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white plus-jakarta-sans font-semibold text-sm hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">person</span> Players
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white plus-jakarta-sans font-semibold text-sm hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">sports</span> Referees
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white plus-jakarta-sans font-semibold text-sm hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span> Analytics
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 text-blue-950 dark:text-lime-400 rounded-l-none border-r-4 border-lime-400 plus-jakarta-sans font-semibold text-sm" href="#">
+<span class="material-symbols-outlined">play_circle</span> Video Hub
+                </a>
+</nav>
+<div class="mt-8">
+<button class="w-full bg-secondary-fixed hover:bg-lime-500 text-on-secondary-fixed font-bold py-3 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add_circle</span>
+                    Start Match
+                </button>
+</div>
+</div>
+<div class="mt-auto p-6 border-t border-slate-200 dark:border-slate-900">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white text-sm font-semibold" href="#">
+<span class="material-symbols-outlined text-lg">help</span> Support
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white text-sm font-semibold mt-1" href="#">
+<span class="material-symbols-outlined text-lg">logout</span> Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 min-h-screen">
+<!-- Hero: Featured Video Section (Cinematic Feel) -->
+<section class="p-6 md:p-8 bg-primary text-white">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col lg:flex-row gap-8 items-center lg:items-start mb-12">
+<div class="flex-1 w-full">
+<div class="relative aspect-video rounded-2xl overflow-hidden shadow-2xl group border border-on-primary-container/20">
+<img alt="Featured Match" class="w-full h-full object-cover brightness-75 group-hover:scale-105 transition-transform duration-700" data-alt="Professional cinematic shot of a floodlit football stadium at night with players in action under a slight mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0MErvsiti-7fl7-gt1LKL8DqTQ-02HV1XmBKAKOZ067eIDbGIITngrvrmjHERAbWEFBzPaxBvooks3VGVg_iQOYgjxiXjjJZLAQDqxNyi3MBZ_KKorTPTG0X3fPy1Pzh1pB0Dg_HwxqzEhlEfVrFVbqs63Lj-E_bhWDWBxpnTToRX-19qTKm9garw-YwAboOCplnnvZ5l0u2rvBlI-x6SPRswnDwtWMauNLY8Z0vvXVUdI_hU92Go2NHUHseTrFDcFyAqW_FV8ys"/>
+<div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all">
+<button class="w-20 h-20 bg-secondary-fixed text-on-secondary-fixed rounded-full flex items-center justify-center shadow-xl active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<div class="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+<div class="flex items-center gap-3 mb-2">
+<span class="px-2 py-1 bg-red-600 text-[10px] font-bold uppercase rounded">Live Archive</span>
+<span class="text-sm font-label text-lime-400">Grand Finals 2024</span>
+</div>
+<h1 class="text-3xl md:text-4xl font-black plus-jakarta-sans tracking-tight">KINGS UNITED vs. TITAN ELITE</h1>
+</div>
+</div>
+</div>
+<div class="w-full lg:w-96 flex flex-col gap-6 h-full justify-between">
+<div class="space-y-4">
+<h2 class="text-xl font-bold font-headline border-l-4 border-lime-400 pl-4">MATCH HIGHLIGHTS</h2>
+<p class="text-on-primary-container text-sm leading-relaxed">Relive the most intense battle of the season. Featuring tactical breakdowns, player focus cams, and the game-winning goal in the 94th minute.</p>
+<div class="grid grid-cols-2 gap-4 pt-4">
+<div class="bg-primary-container p-4 rounded-xl">
+<p class="text-[10px] uppercase text-on-primary-container font-label">Possession</p>
+<p class="text-2xl font-black font-headline text-lime-400">54% / 46%</p>
+</div>
+<div class="bg-primary-container p-4 rounded-xl">
+<p class="text-[10px] uppercase text-on-primary-container font-label">Shots on Target</p>
+<p class="text-2xl font-black font-headline text-lime-400">12 / 8</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<button class="w-full bg-secondary text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-on-secondary-container transition-colors">
+<span class="material-symbols-outlined">analytics</span> FULL ANALYTICS DATA
+                            </button>
+<button class="w-full border border-on-primary-container/30 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined">download</span> DOWNLOAD RECORDING
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Search, Filters and Upload -->
+<section class="p-6 md:px-8 -mt-8 relative z-10">
+<div class="max-w-7xl mx-auto">
+<div class="glass-card p-6 rounded-2xl shadow-xl flex flex-col xl:flex-row gap-6 items-end">
+<div class="flex-1 w-full space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 pl-1">Quick Search</label>
+<div class="relative flex items-center bg-surface-container-highest rounded-xl px-4 py-3">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full ml-3" placeholder="Filter by team, tournament or player..." type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 flex-[2] w-full">
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 pl-1">Tournament</label>
+<select class="w-full bg-surface-container-highest border-none rounded-xl py-3 text-sm focus:ring-2 focus:ring-secondary">
+<option>All Tournaments</option>
+<option>Grand Finals</option>
+<option>Qualifiers</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 pl-1">Match Type</label>
+<select class="w-full bg-surface-container-highest border-none rounded-xl py-3 text-sm focus:ring-2 focus:ring-secondary">
+<option>Group Stage</option>
+<option>Playoffs</option>
+<option>Finals</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 pl-1">Date</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl py-3 text-sm focus:ring-2 focus:ring-secondary" type="date"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 pl-1">Quality</label>
+<select class="w-full bg-surface-container-highest border-none rounded-xl py-3 text-sm focus:ring-2 focus:ring-secondary">
+<option>4K UHD</option>
+<option>1080p</option>
+<option>720p</option>
+</select>
+</div>
+</div>
+<button class="w-full xl:w-auto bg-primary text-white px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-container transition-all shadow-lg active:translate-y-0.5">
+<span class="material-symbols-outlined">upload_file</span>
+                        UPLOAD VIDEO
+                    </button>
+</div>
+</div>
+</section>
+<!-- Video Grid -->
+<section class="p-6 md:p-8">
+<div class="max-w-7xl mx-auto">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-2xl font-black font-headline text-blue-950 uppercase tracking-tighter">Recent Recordings</h3>
+<div class="flex gap-2">
+<button class="p-2 bg-white rounded-lg shadow-sm text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="p-2 bg-white rounded-lg shadow-sm text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">list</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Video Card 1 -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden group shadow-md hover:shadow-2xl transition-all duration-300">
+<div class="relative h-48 overflow-hidden">
+<img alt="Match Recording" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Close up of a football match in progress with players running on a vivid green field with stadium seats in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoDzD9ushFiyTkSqDzlOfJQxw841hSVOoZAAMM1-hCHmUYQIbFwVflLQMchKdRb7qwdxI-i3vXDX4vJUlkgGJCO8FWG90RVA0wbMiPf4KIxBsdppcnwUHpeHWPrY_9_PQfVwMdTzvVuBaLqwGxxgI_8Va8aqnpZ-q6keFxPQHqfnLnyIeNRpky-tn8fK_4J8VFPOClVgzzqeIqs9GolxH69aaY3CL29h-J-rUKeh58LJgmtdTL3BSi0U5AkJYIBWsrFi_LxI9fBsI"/>
+<div class="absolute bottom-3 right-3 bg-black/70 text-white text-[10px] font-bold px-2 py-1 rounded">94:12</div>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<div>
+<p class="text-[10px] font-label font-bold text-secondary uppercase tracking-widest">Premier League</p>
+<h4 class="font-bold text-lg text-primary leading-tight mt-1">Strikers FC vs. Iron Gate</h4>
+</div>
+<div class="bg-surface-container-high px-3 py-1 rounded-full text-xs font-bold text-primary">2 - 1</div>
+</div>
+<div class="flex items-center justify-between text-xs text-on-surface-variant font-medium mt-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                    Nov 12, 2024
+                                </div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">visibility</span>
+                                    1.2k
+                                </div>
+</div>
+</div>
+</div>
+<!-- Video Card 2 -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden group shadow-md hover:shadow-2xl transition-all duration-300">
+<div class="relative h-48 overflow-hidden">
+<img alt="Match Recording" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="High angle shot of a soccer field during a professional match with bright floodlights and dramatic shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDH5dRGUDQsFRptWFmkV-GktLGI4Sb7u6742hAveqsj9tnxC0vQKGL2Q3gHWe8T7yLtSXNcWCyPQSGEfSQrEZ0cxTMjKKPC_FeXYPH3iJsaNnnjGNHimW7XkKLNks3ph1G6JUlhTlVfpWmj7kyw0f2mahXfzCCGMYmMKRJzp2onxjO7HutymnXLCpKPq9HRWaTJqE004Rimc7s72gsqTTnvLNB21cP1UGaQqGsiH6O0TDK2x-w-o34xJPjtp6nZetEBE1aJbHnb-s8"/>
+<div class="absolute bottom-3 right-3 bg-black/70 text-white text-[10px] font-bold px-2 py-1 rounded">105:00</div>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<div>
+<p class="text-[10px] font-label font-bold text-secondary uppercase tracking-widest">Cup Qualifiers</p>
+<h4 class="font-bold text-lg text-primary leading-tight mt-1">Apex Lions vs. Coastal City</h4>
+</div>
+<div class="bg-surface-container-high px-3 py-1 rounded-full text-xs font-bold text-primary">0 - 3</div>
+</div>
+<div class="flex items-center justify-between text-xs text-on-surface-variant font-medium mt-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                    Nov 10, 2024
+                                </div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">visibility</span>
+                                    842
+                                </div>
+</div>
+</div>
+</div>
+<!-- Video Card 3 -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden group shadow-md hover:shadow-2xl transition-all duration-300">
+<div class="relative h-48 overflow-hidden">
+<img alt="Match Recording" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Dramatic silhouette of soccer players on the field against a setting sun, highlighting movement and intensity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzRCEtHprS27BO327h_4-uRX2djO_2B7Ql9f7llyXeuagQ522MXE9pXJtygYX5ydQ6SacJHaocy6q_dVffTtqoChN3YDjXCcmp4XSYqPbdOkoT-miwyZD-P1uSPyCPflCjaoxCTSNm1XB7l3aUca8NtLzL2CK0xCmnzTHCmO-UuFW37iHohq_LTITCLS3zotIbU9n6klpExR-0nuPXMQ6keLRRvxVPU8NQwLE3PpMNEMO5Ru_isAD4tYaeedG9T44rRDPy0TMt2Hc"/>
+<div class="absolute bottom-3 right-3 bg-black/70 text-white text-[10px] font-bold px-2 py-1 rounded">88:30</div>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<div>
+<p class="text-[10px] font-label font-bold text-secondary uppercase tracking-widest">Youth League</p>
+<h4 class="font-bold text-lg text-primary leading-tight mt-1">Academy Star vs. Junior FC</h4>
+</div>
+<div class="bg-surface-container-high px-3 py-1 rounded-full text-xs font-bold text-primary">4 - 4</div>
+</div>
+<div class="flex items-center justify-between text-xs text-on-surface-variant font-medium mt-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                    Nov 08, 2024
+                                </div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">visibility</span>
+                                    3.5k
+                                </div>
+</div>
+</div>
+</div>
+<!-- Video Card 4 -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden group shadow-md hover:shadow-2xl transition-all duration-300">
+<div class="relative h-48 overflow-hidden">
+<img alt="Match Recording" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Extreme close up of a football on the white chalk line of a soccer pitch with shallow depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5kEnisvh701ef2_N-yRxu_kkS5wEXdDQZH605WGCaEC7lu_isYW0iCrA1jqyKQpFuf5_QLfMCrNPW612PiHKeCoVYtftSARTYbl9XzFDcqDy1JkbgGEFh6tEN8dRn_IgZVKNr1gT4xQCsBRzlMlID8cORcoY39fS-0P5_84LsrpXfGQ6qeBl-OuSgqWIuLwHaAelNFFjz-Djd4tw6hTCZOXpqx4e7Lp93PzwLuph6j_72fWe7zppCQAZZ0vHH0LqCtGzXa9E6P_4"/>
+<div class="absolute bottom-3 right-3 bg-black/70 text-white text-[10px] font-bold px-2 py-1 rounded">90:00</div>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<div>
+<p class="text-[10px] font-label font-bold text-secondary uppercase tracking-widest">Regional Division</p>
+<h4 class="font-bold text-lg text-primary leading-tight mt-1">West United vs. East Peak</h4>
+</div>
+<div class="bg-surface-container-high px-3 py-1 rounded-full text-xs font-bold text-primary">1 - 0</div>
+</div>
+<div class="flex items-center justify-between text-xs text-on-surface-variant font-medium mt-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                    Nov 05, 2024
+                                </div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">visibility</span>
+                                    512
+                                </div>
+</div>
+</div>
+</div>
+<!-- Video Card 5 -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden group shadow-md hover:shadow-2xl transition-all duration-300">
+<div class="relative h-48 overflow-hidden">
+<img alt="Match Recording" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Action photography of a soccer player kicking a ball with high speed motion blur in a bright outdoor stadium" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMEAe9r9ufKEf_bVq9uMGXPtTtz4piB5iAb_1RBg3r41DZ0TeWL9dL7nsR5PXF0if9xMDtjZxnHIssZMfYvQ_jwLWS9Q7_kQaQb8mX_Q9K567ErqcHudMvE8Zo2eY07kdnHr8G2zurWKCYpITBoS3o_lZzTSYFjsoLSgNwi-FqmBmheJ5MA0qiBfRJUR5Fe-1V5py0p-baDHzU4lmqCzN6GOA4QL9_w9AZZN-IKRaqrJO8gHKe2ZIKKSU2VWC9vvwhU_4-b-zQx64"/>
+<div class="absolute bottom-3 right-3 bg-black/70 text-white text-[10px] font-bold px-2 py-1 rounded">92:45</div>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+<span class="material-symbols-outlined text-white text-5xl">play_circle</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-3">
+<div>
+<p class="text-[10px] font-label font-bold text-secondary uppercase tracking-widest">Invitational</p>
+<h4 class="font-bold text-lg text-primary leading-tight mt-1">Global Titans vs. Euro Star</h4>
+</div>
+<div class="bg-surface-container-high px-3 py-1 rounded-full text-xs font-bold text-primary">2 - 3</div>
+</div>
+<div class="flex items-center justify-between text-xs text-on-surface-variant font-medium mt-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                    Nov 02, 2024
+                                </div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">visibility</span>
+                                    6.1k
+                                </div>
+</div>
+</div>
+</div>
+<!-- Add New Card Placeholder -->
+<div class="border-2 border-dashed border-outline-variant rounded-2xl flex flex-col items-center justify-center p-8 group hover:border-secondary transition-colors cursor-pointer bg-surface-container-low">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center mb-4 group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-3xl text-outline group-hover:text-secondary">add</span>
+</div>
+<p class="font-bold text-primary">Add New Recording</p>
+<p class="text-xs text-on-surface-variant mt-1">Upload mp4 or provide link</p>
+</div>
+</div>
+<div class="mt-12 flex justify-center">
+<button class="px-8 py-3 border border-outline text-primary font-bold rounded-xl hover:bg-surface-container transition-colors flex items-center gap-2">
+                        LOAD MORE ARCHIVES
+                        <span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button for Upload (Mobile Only) -->
+<div class="fixed bottom-6 right-6 md:hidden">
+<button class="w-16 h-16 bg-secondary-fixed text-on-secondary-fixed rounded-full shadow-2xl flex items-center justify-center active:scale-95">
+<span class="material-symbols-outlined text-3xl">upload</span>
+</button>
+</div>
+</body></html>

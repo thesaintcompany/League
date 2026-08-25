@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KINETIC PRECISION - Player Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Lexend:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-container": "#162030",
+                        "on-secondary-fixed-variant": "#314f00",
+                        "on-surface": "#181c1e",
+                        "outline-variant": "#c6c6cc",
+                        "surface-container-high": "#e5e9eb",
+                        "on-surface-variant": "#45474c",
+                        "primary-container": "#1a202c",
+                        "background": "#f7fafc",
+                        "on-primary-fixed": "#161c27",
+                        "inverse-primary": "#c1c6d7",
+                        "tertiary-fixed-dim": "#bdc7dc",
+                        "surface-container": "#ebeef0",
+                        "outline": "#76777c",
+                        "on-primary-fixed-variant": "#414754",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-container": "#a5f624",
+                        "on-tertiary-fixed": "#121c2c",
+                        "tertiary-fixed": "#d9e3f9",
+                        "secondary-fixed": "#a8f928",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f7fafc",
+                        "primary": "#030813",
+                        "on-secondary-container": "#456e00",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#3d4759",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#dde2f3",
+                        "inverse-on-surface": "#eef1f3",
+                        "tertiary": "#010817",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-container": "#828796",
+                        "inverse-surface": "#2d3133",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#585e6c",
+                        "surface": "#f7fafc",
+                        "primary-fixed-dim": "#c1c6d7",
+                        "on-secondary-fixed": "#112000",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d7dadc",
+                        "secondary-fixed-dim": "#8fdb00",
+                        "surface-container-low": "#f1f4f6",
+                        "secondary": "#426900",
+                        "on-tertiary-container": "#7d889b",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#181c1e"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Lexend"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        .carbon-gradient {
+            background: linear-gradient(135deg, #030813 0%, #1a202c 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-slate-50 dark:bg-slate-900 flex items-center justify-between px-6 py-3 w-full border-b border-slate-200 dark:border-slate-800 docked full-width top-0 sticky z-50 shadow-none">
+<div class="flex items-center gap-4">
+<span class="plus-jakarta-sans font-black text-blue-950 dark:text-white tracking-tighter text-xl">KINETIC PRECISION</span>
+</div>
+<div class="flex-1 max-w-md mx-8">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-slate-400">search</span>
+<input class="w-full bg-surface-container-highest border-none rounded-xl py-2 pl-10 pr-4 focus:ring-2 focus:ring-secondary text-sm" placeholder="Search players, matches..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors p-2 rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined">videocam</span>
+</button>
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors p-2 rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors p-2 rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border-2 border-secondary">
+<img alt="User profile avatar" data-alt="professional headshot of a sports executive in a clean studio setting with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6MCI1spSCf-yifIk9_Y5DKfR6Hwu2IL_o7UBg1ceTyGYJ_g9e4SWwimwxvLNwTFaarFTdg8UZm2dWrS_JXtOZxlkAyIGqDfllghbUzJgVW2TGKQl3Bz7zXij9_dclweIeY3zbUlvZ0_iuW89V4G1XUXV7Lsrn4JFLG_yH2_6JMiwPoH6-tuJBH-H0exSeIQ2mp6b9rFVQCc-0xNNG-fa3ibDxWYHf7rD_BwTor_ZLPRw7bul6LlNLdxv8yQOEJ_6ZJ-lbgwkl1jk"/>
+</div>
+</div>
+</header>
+<div class="flex">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 z-40 bg-slate-100 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 shadow-xl dark:shadow-none pt-20">
+<div class="px-6 py-4">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">sports_soccer</span>
+</div>
+<div>
+<p class="text-lg font-bold text-blue-950 dark:text-white plus-jakarta-sans leading-none">Pro League Admin</p>
+<p class="text-xs text-slate-500">Season 2024/25</p>
+</div>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="plus-jakarta-sans font-semibold text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="plus-jakarta-sans font-semibold text-sm">Teams</span>
+</a>
+<!-- Active Tab: Players -->
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 text-blue-950 dark:text-lime-400 rounded-l-none border-r-4 border-lime-400 transition-all translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="plus-jakarta-sans font-semibold text-sm">Players</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">sports</span>
+<span class="plus-jakarta-sans font-semibold text-sm">Referees</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="plus-jakarta-sans font-semibold text-sm">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-all hover:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined">play_circle</span>
+<span class="plus-jakarta-sans font-semibold text-sm">Video Hub</span>
+</a>
+</nav>
+<div class="mt-8">
+<button class="w-full bg-secondary-fixed text-on-secondary-fixed font-bold py-3 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">bolt</span>
+<span>Start Match</span>
+</button>
+</div>
+</div>
+<div class="mt-auto p-6 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="plus-jakarta-sans font-semibold text-sm">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="plus-jakarta-sans font-semibold text-sm">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 p-8 bg-surface-container-low min-h-screen">
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Player Bio Hero (Asymmetric Large Card) -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden shadow-none flex flex-col md:flex-row">
+<div class="md:w-1/3 relative h-80 md:h-auto">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="professional action shot of an elite soccer player in a dark navy jersey looking determined against a stadium background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe4t8fblSpze4FdV_rKAohmfXdY8tDiiPGOAXU0qlj86GHqH-Q9ycbO1QGVK9XGjjVBGx4bOr--70t0s1_I5lrj18u22_P4H-aQa4t1HdNfQHu7YxnKZcPYgIMxDQHIyJ_neoeFoeiTwub5QHvfTC_gP9Mn338A-jkinx6uhliOjzNYuSlMByeo13TG373tqK-khjf1oPMxn3frylKofPKzE5dUhZUhLNo2aORMi8saaERLC6zAAVj4JnSuWjEEJ0zR-rCuMM2GEw"/>
+<div class="absolute bottom-4 left-4">
+<span class="bg-secondary text-on-secondary px-3 py-1 rounded-full text-xs font-bold font-label tracking-widest uppercase">Elite Performer</span>
+</div>
+</div>
+<div class="md:w-2/3 p-8 flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div>
+<h1 class="font-headline font-extrabold text-5xl text-primary tracking-tighter">ELIAS VANCE</h1>
+<p class="text-on-surface-variant font-label text-sm uppercase tracking-[0.2em] mt-1">Center Forward • #9</p>
+</div>
+<div class="text-right">
+<span class="text-6xl font-headline font-black text-surface-container-highest">09</span>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10">
+<div>
+<p class="text-on-surface-variant text-[10px] font-label uppercase tracking-widest">Age</p>
+<p class="text-xl font-bold font-headline">24 Years</p>
+</div>
+<div>
+<p class="text-on-surface-variant text-[10px] font-label uppercase tracking-widest">Position</p>
+<p class="text-xl font-bold font-headline">Striker</p>
+</div>
+<div>
+<p class="text-on-surface-variant text-[10px] font-label uppercase tracking-widest">Preferred Foot</p>
+<p class="text-xl font-bold font-headline">Right</p>
+</div>
+<div>
+<p class="text-on-surface-variant text-[10px] font-label uppercase tracking-widest">Nationality</p>
+<p class="text-xl font-bold font-headline">Portugal</p>
+</div>
+</div>
+</div>
+<div class="flex gap-3 mt-8">
+<button class="carbon-gradient text-on-primary px-6 py-3 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity">Full Bio Details</button>
+<button class="border border-outline-variant text-on-surface px-6 py-3 rounded-xl font-bold text-sm hover:bg-surface-container transition-colors">Compare Stats</button>
+</div>
+</div>
+</div>
+<!-- Discipline Tracker (Small Card) -->
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<div class="bg-surface-container-highest p-8 rounded-xl h-full flex flex-col justify-center">
+<h3 class="font-headline font-bold text-sm uppercase tracking-widest text-on-surface-variant mb-6">Discipline Record</h3>
+<div class="flex justify-around items-center">
+<div class="text-center group">
+<div class="w-16 h-24 bg-yellow-400 rounded-lg shadow-lg group-hover:-translate-y-2 transition-transform flex items-center justify-center">
+<span class="text-yellow-900 font-headline font-black text-3xl">04</span>
+</div>
+<p class="mt-4 font-label text-xs uppercase font-bold text-on-surface">Yellow Cards</p>
+</div>
+<div class="text-center group">
+<div class="w-16 h-24 bg-red-600 rounded-lg shadow-lg group-hover:-translate-y-2 transition-transform flex items-center justify-center">
+<span class="text-white font-headline font-black text-3xl">01</span>
+</div>
+<p class="mt-4 font-label text-xs uppercase font-bold text-on-surface">Red Cards</p>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant/20">
+<p class="text-xs text-on-surface-variant leading-relaxed">Recent infringement: Foul against United FC (Min 74'). Performance caution level: <span class="text-secondary font-bold">LOW</span></p>
+</div>
+</div>
+</div>
+<!-- Key Performance Indicators (Wide Grid) -->
+<div class="col-span-12 grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-center gap-5">
+<div class="w-14 h-14 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl">sports_score</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-xs font-label uppercase tracking-widest">Total Goals</p>
+<p class="text-3xl font-headline font-extrabold text-primary">24</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-center gap-5">
+<div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-blue-600 text-3xl">handshake</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-xs font-label uppercase tracking-widest">Assists</p>
+<p class="text-3xl font-headline font-extrabold text-primary">12</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-center gap-5">
+<div class="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-orange-600 text-3xl">timer</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-xs font-label uppercase tracking-widest">Minutes Played</p>
+<p class="text-3xl font-headline font-extrabold text-primary">2,140</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl flex items-center gap-5">
+<div class="w-14 h-14 rounded-full bg-lime-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-lime-700 text-3xl">target</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-xs font-label uppercase tracking-widest">Pass Accuracy</p>
+<p class="text-3xl font-headline font-extrabold text-primary">89.4%</p>
+</div>
+</div>
+</div>
+<!-- Performance Trend Chart (Mid-Large) -->
+<div class="col-span-12 lg:col-span-7 bg-surface-container-lowest p-8 rounded-xl">
+<div class="flex justify-between items-end mb-10">
+<div>
+<h3 class="font-headline font-bold text-lg text-primary">Performance Trend</h3>
+<p class="text-on-surface-variant text-sm">Goals per match (Last 10 Games)</p>
+</div>
+<div class="flex gap-2">
+<span class="inline-block w-3 h-3 bg-secondary rounded-full"></span>
+<span class="text-xs font-label uppercase font-bold text-on-surface-variant">Goals Scored</span>
+</div>
+</div>
+<div class="h-64 flex items-end justify-between gap-4 px-4">
+<div class="flex-1 bg-surface-container-highest rounded-t-lg relative group h-[40%] hover:bg-secondary/40 transition-colors">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold font-label opacity-0 group-hover:opacity-100">0</div>
+</div>
+<div class="flex-1 bg-secondary rounded-t-lg relative group h-[80%] hover:brightness-110 transition-colors">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold font-label">2</div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-lg relative group h-[40%] hover:bg-secondary/40 transition-colors"></div>
+<div class="flex-1 bg-secondary rounded-t-lg relative group h-[40%] hover:brightness-110 transition-colors">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold font-label">1</div>
+</div>
+<div class="flex-1 bg-secondary rounded-t-lg relative group h-[100%] hover:brightness-110 transition-colors">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold font-label">3</div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-lg relative group h-[40%] hover:bg-secondary/40 transition-colors"></div>
+<div class="flex-1 bg-secondary rounded-t-lg relative group h-[40%] hover:brightness-110 transition-colors">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold font-label">1</div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-lg relative group h-[40%] hover:bg-secondary/40 transition-colors"></div>
+<div class="flex-1 bg-secondary rounded-t-lg relative group h-[80%] hover:brightness-110 transition-colors">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold font-label">2</div>
+</div>
+<div class="flex-1 bg-secondary rounded-t-lg relative group h-[40%] hover:brightness-110 transition-colors">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-bold font-label">1</div>
+</div>
+</div>
+<div class="flex justify-between mt-4 px-4 text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-tighter">
+<span>G1</span><span>G2</span><span>G3</span><span>G4</span><span>G5</span><span>G6</span><span>G7</span><span>G8</span><span>G9</span><span>G10</span>
+</div>
+</div>
+<!-- Career History Timeline -->
+<div class="col-span-12 lg:col-span-5 bg-primary-container text-on-primary p-8 rounded-xl">
+<h3 class="font-headline font-bold text-lg mb-8 text-secondary">Career History</h3>
+<div class="space-y-6">
+<div class="flex items-center gap-4 group">
+<div class="text-sm font-label font-bold text-on-primary-container w-20">2023/24</div>
+<div class="w-3 h-3 rounded-full bg-secondary ring-4 ring-secondary/20"></div>
+<div class="flex-1 bg-white/5 p-3 rounded-lg border-l-2 border-secondary group-hover:bg-white/10 transition-colors">
+<p class="text-sm font-bold">KINETIC PRECISION</p>
+<p class="text-xs text-on-primary-container">24 Goals • 32 Apps</p>
+</div>
+</div>
+<div class="flex items-center gap-4 group">
+<div class="text-sm font-label font-bold text-on-primary-container w-20">2022/23</div>
+<div class="w-3 h-3 rounded-full bg-on-primary-container"></div>
+<div class="flex-1 bg-white/5 p-3 rounded-lg group-hover:bg-white/10 transition-colors">
+<p class="text-sm font-bold">VORTEX UNITED</p>
+<p class="text-xs text-on-primary-container">18 Goals • 30 Apps</p>
+</div>
+</div>
+<div class="flex items-center gap-4 group">
+<div class="text-sm font-label font-bold text-on-primary-container w-20">2021/22</div>
+<div class="w-3 h-3 rounded-full bg-on-primary-container"></div>
+<div class="flex-1 bg-white/5 p-3 rounded-lg group-hover:bg-white/10 transition-colors">
+<p class="text-sm font-bold">ALPHA ACADEMY</p>
+<p class="text-xs text-on-primary-container">12 Goals • 22 Apps</p>
+</div>
+</div>
+<div class="flex items-center gap-4 group">
+<div class="text-sm font-label font-bold text-on-primary-container w-20">2020/21</div>
+<div class="w-3 h-3 rounded-full bg-on-primary-container"></div>
+<div class="flex-1 bg-white/5 p-3 rounded-lg group-hover:bg-white/10 transition-colors">
+<p class="text-sm font-bold">ALPHA ACADEMY (U21)</p>
+<p class="text-xs text-on-primary-container">30 Goals • 28 Apps</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Match Highlights (Video Thumbnails) -->
+<div class="col-span-12">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline font-bold text-xl text-primary uppercase tracking-tight">Match Highlights</h3>
+<a class="text-secondary font-bold text-sm hover:underline flex items-center gap-1" href="#">
+                            View All Videos <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="group cursor-pointer">
+<div class="relative rounded-xl overflow-hidden aspect-video shadow-lg">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="vibrant stadium lighting illuminating a lush green soccer pitch during a high stakes night match" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeBx4OAW_Fm6HzEW2vV2nFKNMUDrXlNABeJbQrSICgJbi87YNlN8FJ_ljOSwHRRbjHvqhe35pNxn_UIAZ31FOmFZY7KEyBLwa_XvPCQa-uC3l5xJCBcSKhS1834lPybTI9xlOJGng4EwXBH2gMnV8qdpGC8KWm9amZXCp3VPZt-YiNRDx8HKoIpGCvtk30eY-Sqk8DCY5S6Xj2iZELhLO05FMja8Cmg4Vb9Mu0rOhu3w5Z9Wv7Nd1gGNYJv2f8s5Utk-LE7hVvMFw"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-16 h-16 rounded-full bg-secondary/90 flex items-center justify-center text-on-secondary shadow-xl">
+<span class="material-symbols-outlined text-4xl" data-weight="fill">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-3 left-3 bg-primary/80 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white uppercase tracking-widest">vs City Strikers</div>
+</div>
+<h4 class="mt-4 font-headline font-bold text-primary group-hover:text-secondary transition-colors">Long-range screamer into top corner</h4>
+<p class="text-xs text-on-surface-variant font-label">Gameweek 28 • 02:45</p>
+</div>
+<div class="group cursor-pointer">
+<div class="relative rounded-xl overflow-hidden aspect-video shadow-lg">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="close up of a professional soccer ball on the grass at field level with blurred stadium background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpvmyF1pWScTiJJec2T8rM8bO3pc-F6TVOD7PKDgG-jFVB3cmEXTZZeLgCsszz8YTojWUXL2WbIJpJNMziQ0SJh0tWhLubqMG7JI0EheZUloHarVAHhZCLrOwDHa_89Ff3vwQx8G9u3SUZG-XCS7EvtZo58Lqvl_GbSZf4MU9sfw7h5O4o1FJZDO_MWaR_ikyHJGB4DK3m96WamXM6wGDugCIFQxBg8JIk5YjVCq9si2RCF1F29AexntnpLvoUlo13pE2unp76zOY"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-16 h-16 rounded-full bg-secondary/90 flex items-center justify-center text-on-secondary shadow-xl">
+<span class="material-symbols-outlined text-4xl" data-weight="fill">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-3 left-3 bg-primary/80 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white uppercase tracking-widest">vs Northern Stars</div>
+</div>
+<h4 class="mt-4 font-headline font-bold text-primary group-hover:text-secondary transition-colors">Clinical hat-trick performance</h4>
+<p class="text-xs text-on-surface-variant font-label">Gameweek 26 • 05:12</p>
+</div>
+<div class="group cursor-pointer">
+<div class="relative rounded-xl overflow-hidden aspect-video shadow-lg">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="energetic crowd at a soccer stadium with team scarves raised high under bright stadium lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFfQKy78esYzHd8Q14oxcbMoi_nDU7-dixHIe4eQK6qshRrB7Ys9qAGjxyk-4OXdXXB5P52pS1BxPI6n0zco88rAjJmpTB2-HhtxrEt3rvi3jACLQvd4lz1zBIuSiJf6QF8Kew4HzHS6TpfBxo31oB2IVkrymSqyPRsj35Yi1xGCLzRJXUNOIfQLjUNVQ7VxvZyz6IZCyXmSPdZ4jepA_I5H-fBccUKGhrQiIw49Rr8EWJJwASriGg1qiNpORGXCfOKml3FdTxVPU"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<div class="w-16 h-16 rounded-full bg-secondary/90 flex items-center justify-center text-on-secondary shadow-xl">
+<span class="material-symbols-outlined text-4xl" data-weight="fill">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-3 left-3 bg-primary/80 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white uppercase tracking-widest">vs United FC</div>
+</div>
+<h4 class="mt-4 font-headline font-bold text-primary group-hover:text-secondary transition-colors">Last-minute solo winning goal</h4>
+<p class="text-xs text-on-surface-variant font-label">Gameweek 22 • 01:20</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
