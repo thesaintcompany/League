@@ -55,7 +55,7 @@ export default async function PublicBracketsPage() {
       {/* Top Bar Header */}
       <header className="sticky top-0 z-50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60 h-20 px-6 lg:px-12 flex justify-between items-center">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2.5">
+          <Link href="/campionat" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-primary dark:bg-lime-400 flex items-center justify-center text-white dark:text-primary font-black text-lg shadow-sm">
               ⚡
             </div>
@@ -66,11 +66,11 @@ export default async function PublicBracketsPage() {
 
           <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lime-100 dark:bg-lime-950/50 text-lime-800 dark:text-lime-400 border border-lime-300/60 text-xs font-bold font-label">
             <span className="w-2 h-2 rounded-full bg-lime-500 animate-pulse"></span>
-            HARTA LIVE
+            HARTĂ OFICIALĂ PUBLICĂ
           </div>
 
           <nav className="hidden lg:flex items-center gap-6 text-xs font-label font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 ml-4">
-            <Link href="/" className="hover:text-primary dark:hover:text-lime-400 transition">
+            <Link href="/campionat" className="hover:text-primary dark:hover:text-lime-400 transition">
               Campionat
             </Link>
             <Link href="/brackets" className="text-primary dark:text-lime-400 font-black border-b-2 border-primary dark:border-lime-400 pb-1">

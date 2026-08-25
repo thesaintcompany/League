@@ -14,7 +14,7 @@ export default async function PublicRefereesPage() {
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
+          <Link href="/campionat" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-primary dark:bg-lime-400 flex items-center justify-center text-white dark:text-primary font-black text-lg shadow-sm">
               ⚡
             </div>
@@ -24,7 +24,7 @@ export default async function PublicRefereesPage() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 text-xs font-label font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
-            <Link href="/" className="hover:text-primary dark:hover:text-lime-400 transition">
+            <Link href="/campionat" className="hover:text-primary dark:hover:text-lime-400 transition">
               Campionat Live
             </Link>
             <Link href="/brackets" className="hover:text-primary dark:hover:text-lime-400 transition flex items-center gap-1">

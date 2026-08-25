@@ -17,7 +17,7 @@ const NAV_ITEMS: NavItem[] = [
   { name: "Arene & Stadioane", href: "/venues", icon: "stadium" },
   { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
   { name: "Corp Arbitri", href: "/referees", icon: "sports" },
-  { name: "Pagina Publică", href: "/", icon: "public" },
+  { name: "Pagina Publică", href: "/campionat", icon: "public" },
   { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
 ];
 
