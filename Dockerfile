@@ -51,6 +51,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 # Copy Prisma CLI and engines so bootstrap can run migrations offline
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/bcryptjs ./node_modules/bcryptjs
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.bin ./node_modules/.bin
 
 # Set the correct permission for prerender cache

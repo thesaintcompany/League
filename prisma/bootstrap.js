@@ -57,8 +57,35 @@ try {
 }
 
 // ---- 2. Seed users + demo data (always safe, idempotent) ----
-const { PrismaClient } = require("@prisma/client");
-const bcrypt = require("bcryptjs");
+let PrismaClient;
+try {
+  PrismaClient = require("@prisma/client").PrismaClient;
+} catch (e) {
+  console.error("[bootstrap] PrismaClient not found, skipping seed:", e.message);
+  process.exit(0);
+}
+
+let bcrypt = null;
+try {
+  bcrypt = require("bcryptjs");
+} catch {
+  // bcryptjs not available, pre-computed hashes will be used
+}
+
+const DEFAULT_HASHES = {
+  Admin12345: "$2a$10$pt.uEyiSK9nqI.wmjVTzN.v0wp6SaXMXpA4M/o8vCt3trXV80I7CO",
+  demo12345: "$2a$10$dENLUmMASeSpb4yXvMbdtOCHVittyfQ4m6WEZPZlip0NXmo.F0JH.",
+};
+
+async function hashPassword(password) {
+  if (DEFAULT_HASHES[password]) {
+    return DEFAULT_HASHES[password];
+  }
+  if (bcrypt && bcrypt.hash) {
+    return await bcrypt.hash(password, 10);
+  }
+  return DEFAULT_HASHES.Admin12345;
+}
 
 const prisma = new PrismaClient();
 
@@ -82,7 +109,7 @@ async function ensureUser(email, name, password) {
     console.log(`[seed] user ${email} already exists, skipping`);
     return existing;
   }
-  const passwordHash = await bcrypt.hash(password, 10);
+  const passwordHash = await hashPassword(password);
   const user = await prisma.user.create({
     data: { email, name, passwordHash },
   });
