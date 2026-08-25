@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
+import { PrintReportButton } from "@/components/PrintReportButton";
+
 export const dynamic = "force-dynamic";
 
 export default async function OfficialMatchReportPage({
@@ -44,6 +46,8 @@ export default async function OfficialMatchReportPage({
     ];
   }
 
+  const champName = match.championship?.name || "Ligue Pro";
+
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-950 p-4 sm:p-8 font-body print:p-0 print:bg-white print:text-black">
       {/* Top Bar Actions (Hidden in Print) */}
@@ -55,15 +59,7 @@ export default async function OfficialMatchReportPage({
           ← Înapoi la Panou
         </Link>
 
-        <button
-          onClick={() => {
-            if (typeof window !== "undefined") window.print();
-          }}
-          className="btn btn-primary bg-primary text-white hover:bg-slate-800 text-xs font-label font-bold uppercase tracking-wider py-2.5 px-5 rounded-xl flex items-center gap-2 shadow-md"
-        >
-          <span className="material-symbols-outlined text-[18px]">print</span>
-          Descarcă / Imprimă Raport PDF
-        </button>
+        <PrintReportButton />
       </div>
 
       {/* Official Match Sheet Container */}
