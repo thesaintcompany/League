@@ -27,6 +27,9 @@ export default async function PublicRefereesPage() {
             <Link href="/" className="hover:text-primary dark:hover:text-lime-400 transition">
               Campionat Live
             </Link>
+            <Link href="/brackets" className="hover:text-primary dark:hover:text-lime-400 transition flex items-center gap-1">
+              <span>🗺️</span> Harta Campionatului
+            </Link>
             <Link href="/venues" className="hover:text-primary dark:hover:text-lime-400 transition">
               Arene &amp; Stadioane
             </Link>

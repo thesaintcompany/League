@@ -12,6 +12,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
+  { name: "Harta Campionatului", href: "/brackets", icon: "account_tree" },
   { name: "Arene & Stadioane", href: "/venues", icon: "stadium" },
   { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
   { name: "Corp Arbitri", href: "/referees", icon: "sports" },
