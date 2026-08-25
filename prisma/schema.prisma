@@ -111,6 +111,9 @@ model Championship {
   startDate   DateTime
   endDate     DateTime?
   description String?
+  scope       String   @default("national") // "national" | "judetean" | "oras"
+  county      String?  // e.g. "Timiș", "București", "Cluj", "Iași", "Brașov"
+  city        String?  // e.g. "Timișoara", "Cluj-Napoca", "București"
   isBracketPublished Boolean @default(true)
   ownerId     String
   createdAt   DateTime @default(now())

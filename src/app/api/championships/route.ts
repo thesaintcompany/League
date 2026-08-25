@@ -12,6 +12,9 @@ const createSchema = z.object({
   startDate: z.string().optional().nullable(),
   endDate: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
+  scope: z.enum(["national", "judetean", "oras"]).default("national"),
+  county: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
 });
 
 export async function GET() {
@@ -41,7 +44,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { name, sport, format, season, startDate, endDate, description } = parsed.data;
+    const { name, sport, format, season, startDate, endDate, description, scope, county, city } = parsed.data;
 
     let parsedStartDate = new Date();
     if (startDate && startDate.trim() !== "") {
@@ -61,10 +64,13 @@ export async function POST(req: Request) {
         name: name.trim(),
         sport: sport?.trim() || "Fotbal",
         format: format?.trim() || "round_robin",
-        season: season?.trim() || "2025-2026",
+        season: season || null,
         startDate: parsedStartDate,
         endDate: parsedEndDate,
         description: description?.trim() || null,
+        scope: scope || "national",
+        county: county || (scope === "national" ? null : "Timiș"),
+        city: city || null,
       },
     });
 

@@ -5,13 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 interface PublicHeaderProps {
-  currentTab?: "campionat" | "brackets" | "venues" | "players" | "referees";
+  currentTab?: "campionat" | "romania-map" | "brackets" | "venues" | "players" | "referees";
 }
 
 export function PublicHeader({ currentTab }: PublicHeaderProps) {
   const pathname = usePathname();
 
   const isCampionat = currentTab === "campionat" || pathname === "/campionat" || pathname === "/liga";
+  const isRomaniaMap = currentTab === "romania-map" || pathname === "/harta-romaniei";
   const isBrackets = currentTab === "brackets" || pathname === "/brackets" || pathname === "/harta-campionat";
   const isVenues = currentTab === "venues" || pathname.startsWith("/venues");
   const isPlayers = currentTab === "players" || pathname.startsWith("/players");
@@ -43,7 +44,7 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
         </div>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-6 text-xs font-label font-bold uppercase tracking-wider text-slate-300 ml-4">
+        <nav className="hidden lg:flex items-center gap-5 text-xs font-label font-bold uppercase tracking-wider text-slate-300 ml-4">
           <Link
             href="/campionat"
             className={`transition py-1 ${
@@ -55,14 +56,24 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
             Campionat
           </Link>
           <Link
+            href="/harta-romaniei"
+            className={`transition py-1 flex items-center gap-1 ${
+              isRomaniaMap
+                ? "text-lime-400 font-black border-b-2 border-lime-400"
+                : "hover:text-lime-400"
+            }`}
+          >
+            <span>🇷🇴</span> Harta României
+          </Link>
+          <Link
             href="/brackets"
-            className={`transition py-1 flex items-center gap-1.5 ${
+            className={`transition py-1 flex items-center gap-1 ${
               isBrackets
                 ? "text-lime-400 font-black border-b-2 border-lime-400"
                 : "hover:text-lime-400"
             }`}
           >
-            <span>🗺️</span> Harta Campionatului
+            <span>🎲</span> Harta Zaruri
           </Link>
           <Link
             href="/venues"
@@ -72,7 +83,7 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
                 : "hover:text-lime-400"
             }`}
           >
-            Arene &amp; Stadioane (33)
+            Arene &amp; Stadioane
           </Link>
           <Link
             href="/players"
@@ -82,7 +93,7 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
                 : "hover:text-lime-400"
             }`}
           >
-            Jucători &amp; Golgheteri
+            Golgheteri
           </Link>
           <Link
             href="/referees"

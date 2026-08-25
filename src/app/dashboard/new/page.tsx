@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { TopHeader } from "@/components/TopHeader";
-import { SPORTS, FORMATS } from "@/lib/constants";
+import { SPORTS, FORMATS, CHAMPIONSHIP_SCOPES, ROMANIAN_COUNTIES } from "@/lib/constants";
 
 export default function NewChampionshipPage() {
   const router = useRouter();
@@ -13,6 +13,9 @@ export default function NewChampionshipPage() {
     sport: "Fotbal",
     format: "round_robin" as const,
     season: "2025-2026",
+    scope: "national" as "national" | "judetean" | "oras",
+    county: "Timiș",
+    city: "Timișoara",
     startDate: new Date().toISOString().split("T")[0],
     endDate: "",
     description: "",
@@ -40,7 +43,7 @@ export default function NewChampionshipPage() {
       return;
     }
     const data = await res.json();
-    router.push(`/dashboard/championships/${data.championship.id}`);
+    router.push(`/dashboard/championships/${data.id || data.championship?.id}`);
   }
 
   return (
@@ -50,7 +53,7 @@ export default function NewChampionshipPage() {
       <div className="flex-1 ml-64 flex flex-col min-w-0">
         <TopHeader
           title="Turneu Nou"
-          subtitle="Configurează o competiție nouă în câteva secunde"
+          subtitle="Configurează o competiție nouă cu arie de acoperire națională, județeană sau locală"
         />
 
         <main className="p-6 lg:p-10 max-w-3xl">
@@ -78,11 +81,81 @@ export default function NewChampionshipPage() {
                   id="name"
                   required
                   minLength={2}
-                  className="input"
+                  className="input text-xs"
                   value={form.name}
                   onChange={(e) => update("name", e.target.value)}
                   placeholder="ex: Liga Pro România 2026"
                 />
+              </div>
+
+              {/* Scope Selection: Național vs Județean vs Local */}
+              <div className="p-5 rounded-2xl bg-surface-container-low border border-slate-200/60 dark:border-slate-800 space-y-4">
+                <label className="label block font-headline font-bold text-xs uppercase text-blue-950 dark:text-white">
+                  Arie de Acoperire Teritorială (Amploare) *
+                </label>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  {CHAMPIONSHIP_SCOPES.map((sc) => (
+                    <button
+                      key={sc.value}
+                      type="button"
+                      onClick={() => update("scope", sc.value as any)}
+                      className={`p-3 rounded-xl border text-xs font-headline font-bold text-left transition flex flex-col justify-between gap-1.5 ${
+                        form.scope === sc.value
+                          ? "bg-lime-400 text-slate-950 border-lime-500 shadow-md scale-[1.02]"
+                          : "bg-surface-container-lowest text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-lime-400"
+                      }`}
+                    >
+                      <span className="text-xs">{sc.label}</span>
+                      <span className="text-[10px] font-label font-normal opacity-80">
+                        {sc.value === "national"
+                          ? "Vizibil pe toată harta României (în toate județele)"
+                          : sc.value === "judetean"
+                          ? "Asociat unui județ specific"
+                          : "Asociat unui municipiu / oraș"}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Conditional County & City Selectors */}
+                {form.scope !== "national" && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200/50 dark:border-slate-800">
+                    <div>
+                      <label className="label text-[11px]" htmlFor="county">
+                        Județ Arondat *
+                      </label>
+                      <select
+                        id="county"
+                        className="input text-xs"
+                        value={form.county}
+                        onChange={(e) => update("county", e.target.value)}
+                      >
+                        {ROMANIAN_COUNTIES.map((c) => (
+                          <option key={c} value={c}>
+                            Județul {c}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {form.scope === "oras" && (
+                      <div>
+                        <label className="label text-[11px]" htmlFor="city">
+                          Oraș / Municipiu *
+                        </label>
+                        <input
+                          id="city"
+                          required
+                          className="input text-xs"
+                          value={form.city}
+                          onChange={(e) => update("city", e.target.value)}
+                          placeholder="ex: Timișoara"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -92,7 +165,7 @@ export default function NewChampionshipPage() {
                   </label>
                   <select
                     id="sport"
-                    className="input"
+                    className="input text-xs"
                     value={form.sport}
                     onChange={(e) => update("sport", e.target.value)}
                   >
@@ -110,7 +183,7 @@ export default function NewChampionshipPage() {
                   </label>
                   <select
                     id="format"
-                    className="input"
+                    className="input text-xs"
                     value={form.format}
                     onChange={(e) => update("format", e.target.value as any)}
                   >
@@ -130,7 +203,7 @@ export default function NewChampionshipPage() {
                   </label>
                   <input
                     id="season"
-                    className="input"
+                    className="input text-xs"
                     placeholder="2025-2026"
                     value={form.season}
                     onChange={(e) => update("season", e.target.value)}
@@ -145,7 +218,7 @@ export default function NewChampionshipPage() {
                     id="startDate"
                     required
                     type="date"
-                    className="input"
+                    className="input text-xs"
                     value={form.startDate}
                     onChange={(e) => update("startDate", e.target.value)}
                   />
@@ -159,7 +232,7 @@ export default function NewChampionshipPage() {
                 <textarea
                   id="description"
                   rows={3}
-                  className="input"
+                  className="input text-xs"
                   placeholder="Regulament scurt, detalii locație sau organizator..."
                   value={form.description}
                   onChange={(e) => update("description", e.target.value)}
@@ -183,7 +256,7 @@ export default function NewChampionshipPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn btn-primary text-xs uppercase tracking-wider font-bold py-3 px-6 bg-primary text-white hover:bg-slate-800"
+                  className="btn btn-primary text-xs uppercase tracking-wider font-bold py-3 px-6 bg-lime-400 hover:bg-lime-500 text-slate-950"
                 >
                   {loading ? "Se creează..." : "Lansează Campionatul 🚀"}
                 </button>

@@ -911,6 +911,206 @@ async function ensureDemoChampionship(ownerId) {
   return champ;
 }
 
+async function ensureCountyAndCityChampionships(ownerId) {
+  // Update main national championship scope
+  await prisma.championship.updateMany({
+    where: { name: "Liga Pro România 2026" },
+    data: { scope: "national", county: null, city: null },
+  });
+
+  const COUNTY_CHAMPIONSHIPS = [
+    {
+      name: "Cupa Națională a României 2026",
+      sport: "Fotbal",
+      format: "knockout",
+      season: "2025-2026",
+      scope: "national",
+      county: null,
+      city: null,
+      description: "Competiție cu eliminare directă deschisă tuturor cluburilor din România.",
+      teams: ["FCSB", "CFR Cluj", "Universitatea Craiova", "Rapid"],
+    },
+    {
+      name: "Superliga Națională de Baschet Pro",
+      sport: "Baschet",
+      format: "round_robin",
+      season: "2025-2026",
+      scope: "national",
+      county: null,
+      city: null,
+      description: "Campionat Național de Baschet cu participarea echipelor din toate regiunile.",
+      teams: ["U-BT Cluj-Napoca", "CSM CSU Oradea", "CS Dinamo București", "SCM Timișoara"],
+    },
+    {
+      name: "Campionatul Județean Timiș - Liga 4",
+      sport: "Fotbal",
+      format: "round_robin",
+      season: "2025-2026",
+      scope: "judetean",
+      county: "Timiș",
+      city: "Timișoara",
+      description: "Campionatul județean de elită al Județului Timiș cu meciuri pe arenele locale.",
+      teams: ["CS Timișul Șag", "CS Sânandrei Timiș", "Unirea Sânnicolau Mare", "CSM Lugoj"],
+    },
+    {
+      name: "Campionatul Municipal Timișoara",
+      sport: "Fotbal",
+      format: "groups_knockout",
+      season: "2025-2026",
+      scope: "oras",
+      county: "Timiș",
+      city: "Timișoara",
+      description: "Turneu municipal de minifotbal și fotbal amator din municipiul Timișoara.",
+      teams: ["Galaxy Timișoara", "Vasport United", "Bega Ripensia", "Poli Studențesc"],
+    },
+    {
+      name: "Liga Județeană Cluj - Elite",
+      sport: "Fotbal",
+      format: "round_robin",
+      season: "2025-2026",
+      scope: "judetean",
+      county: "Cluj",
+      city: "Cluj-Napoca",
+      description: "Competiție județeană de minifotbal și fotbal din Județul Cluj.",
+      teams: ["Viitorul Cluj", "Someșul Dej", "Sticla Arieșul Turda", "Unirea Florești"],
+    },
+    {
+      name: "Cupa Municipiului București",
+      sport: "Fotbal",
+      format: "knockout",
+      season: "2025-2026",
+      scope: "oras",
+      county: "București",
+      city: "București",
+      description: "Cupa municipală a Capitalei disputată pe arenele sportive din București.",
+      teams: ["Progresul Spartac", "Daco-Getica", "Sportul Studențesc", "Metaloglobus"],
+    },
+    {
+      name: "Campionatul Județean Iași",
+      sport: "Fotbal",
+      format: "round_robin",
+      season: "2025-2026",
+      scope: "judetean",
+      county: "Iași",
+      city: "Iași",
+      description: "Liga județeană a Moldovei organizată în Județul Iași.",
+      teams: ["Știința Miroslava", "Unirea Pașcani", "CSM Pașcani", "Juniorul Iași"],
+    },
+    {
+      name: "Liga Județeană Brașov",
+      sport: "Fotbal",
+      format: "round_robin",
+      season: "2025-2026",
+      scope: "judetean",
+      county: "Brașov",
+      city: "Brașov",
+      description: "Competiție sportivă a Județului Brașov cu meciuri la poalele Tâmpei.",
+      teams: ["Olimpic Cetate Râșnov", "Kids Tâmpa Brașov", "Precizia Săcele", "Colțea Brașov"],
+    },
+    {
+      name: "Cupa Litoralului Constanța",
+      sport: "Volei",
+      format: "groups_knockout",
+      season: "2025-2026",
+      scope: "judetean",
+      county: "Constanța",
+      city: "Constanța",
+      description: "Turneu de volei pe plajă și sală din Județul Constanța.",
+      teams: ["Tomis Constanța", "Marina Mangalia", "Axiopolis Cernavodă", "CS Năvodari"],
+    },
+    {
+      name: "Campionatul Municipal Oradea",
+      sport: "Baschet",
+      format: "round_robin",
+      season: "2025-2026",
+      scope: "oras",
+      county: "Bihor",
+      city: "Oradea",
+      description: "Liga urbană de baschet din municipiul Oradea, Județul Bihor.",
+      teams: ["Crișul Oradea", "Bihoreana Lions", "Lotus Oradea", "Vulturii Bihor"],
+    },
+    {
+      name: "Liga Banatului Arad",
+      sport: "Fotbal",
+      format: "round_robin",
+      season: "2025-2026",
+      scope: "judetean",
+      county: "Arad",
+      city: "Arad",
+      description: "Campionat județean în Județul Arad.",
+      teams: ["Șoimii Lipova", "Progresul Pecica", "Gloria Lunca-Teuz Cermei", "Frontiera Curtici"],
+    },
+    {
+      name: "Cupa Olteniei Craiova",
+      sport: "Fotbal",
+      format: "knockout",
+      season: "2025-2026",
+      scope: "judetean",
+      county: "Dolj",
+      city: "Craiova",
+      description: "Turneu de fotbal județean din Județul Dolj.",
+      teams: ["Metaloglobus Craiova", "Tractorul Cetate", "Viitorul Cârcea", "Dunărea Calafat"],
+    },
+    {
+      name: "Liga Municipală Sibiu",
+      sport: "Fotbal",
+      format: "round_robin",
+      season: "2025-2026",
+      scope: "oras",
+      county: "Sibiu",
+      city: "Sibiu",
+      description: "Campionat de fotbal municipal din Sibiu.",
+      teams: ["Voința Sibiu", "Inter Sibiu", "FC Avrig", "Sparta Mediaș"],
+    },
+  ];
+
+  for (const c of COUNTY_CHAMPIONSHIPS) {
+    const existing = await prisma.championship.findFirst({
+      where: { name: c.name },
+    });
+
+    if (!existing) {
+      const created = await prisma.championship.create({
+        data: {
+          ownerId,
+          name: c.name,
+          sport: c.sport,
+          format: c.format,
+          season: c.season,
+          scope: c.scope,
+          county: c.county,
+          city: c.city,
+          startDate: new Date(),
+          isBracketPublished: true,
+          description: c.description,
+        },
+      });
+
+      for (const tName of c.teams) {
+        await prisma.team.create({
+          data: {
+            championshipId: created.id,
+            name: tName,
+            shortName: tName.substring(0, 3).toUpperCase(),
+            color: "#1e293b",
+          },
+        });
+      }
+    } else {
+      await prisma.championship.update({
+        where: { id: existing.id },
+        data: {
+          scope: c.scope,
+          county: c.county,
+          city: c.city,
+        },
+      });
+    }
+  }
+
+  console.log(`[seed] seeded/updated county, city, and national championships across Romania`);
+}
+
 async function main() {
   let arenaOwner = null;
   for (const s of SEEDS) {
@@ -922,7 +1122,10 @@ async function main() {
   }
   const adminEmail = SEEDS[0].email;
   const admin = await prisma.user.findUnique({ where: { email: adminEmail } });
-  if (admin) await ensureDemoChampionship(admin.id);
+  if (admin) {
+    await ensureDemoChampionship(admin.id);
+    await ensureCountyAndCityChampionships(admin.id);
+  }
 
   console.log("[seed] multi-role login accounts available:");
   for (const s of SEEDS) {
