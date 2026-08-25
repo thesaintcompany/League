@@ -21,9 +21,15 @@ model User {
   // Profile fields for various roles
   phone          String?
   bio            String?
+  coverPhotoUrl  String? // poză în picioare / full-body action shot
   position       String? // for players (ex: Atacant, Mijlocas, Portar)
   jerseyNumber   Int?    // for players
   preferredFoot  String? // for players (Drept, Stang, Ambele)
+  heightCm       Int?    // inaltime cm
+  weightKg       Int?    // greutate kg
+  instagramUrl   String? // retele sociale
+  twitterUrl     String?
+  facebookUrl    String?
   refereeBadge   String? // for referees (FIFA, National, Regional)
   experienceYears Int?   // for referees
 
