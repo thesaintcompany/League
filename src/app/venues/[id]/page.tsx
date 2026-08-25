@@ -20,16 +20,37 @@ export default async function PublicVenueDetailPage({
 
   if (!venue) notFound();
 
-  // Find matches scheduled at this venue
-  const matches = await prisma.match.findMany({
+  // Find all matches for this venue
+  const allMatches = await prisma.match.findMany({
     where: { venue: venue.name },
-    include: { homeTeam: true, awayTeam: true, championship: true },
+    include: {
+      homeTeam: true,
+      awayTeam: true,
+      championship: true,
+    },
     orderBy: { scheduledAt: "asc" },
-    take: 6,
+  });
+
+  const finishedMatches = allMatches.filter((m) => m.status === "finished");
+  const upcomingMatches = allMatches.filter((m) => m.status === "scheduled" || m.status === "live");
+
+  // Calculate arena telemetry
+  const totalGoals = finishedMatches.reduce(
+    (acc, m) => acc + (m.homeScore ?? 0) + (m.awayScore ?? 0),
+    0
+  );
+  const avgGoals = finishedMatches.length > 0 ? (totalGoals / finishedMatches.length).toFixed(1) : "—";
+
+  // Group finished matches by championship and round
+  const groupedResults: Record<string, typeof finishedMatches> = {};
+  finishedMatches.forEach((m) => {
+    const key = `${m.championship.name} • Etapa ${m.round}`;
+    if (!groupedResults[key]) groupedResults[key] = [];
+    groupedResults[key].push(m);
   });
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col">
+    <div className="min-h-screen bg-surface flex flex-col font-body">
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -47,44 +68,59 @@ export default async function PublicVenueDetailPage({
               href="/venues"
               className="text-xs font-label font-bold text-slate-500 hover:text-blue-950 dark:hover:text-white"
             >
-              ← Înapoi la Arene
+              ← Înapoi la Toate Arenele
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Section with Stadium Glow */}
       <section className="bg-primary text-white py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-lime-400/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label shadow-sm">
-              Arenă Omologată Ligue
-            </span>
-            <span className="px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold font-label uppercase">
-              Suprafață: {venue.surface}
-            </span>
+        <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div>
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label shadow-sm">
+                Arenă Oficială Ligue Pro
+              </span>
+              <span className="px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold font-label uppercase">
+                Gazon: {venue.surface}
+              </span>
+            </div>
+
+            <h1 className="text-4xl sm:text-6xl font-black italic tracking-tight font-headline uppercase leading-none text-white">
+              {venue.name}
+            </h1>
+
+            <p className="mt-3 text-slate-300 text-sm sm:text-base flex items-center gap-2 font-label">
+              <span className="material-symbols-outlined text-lime-400">location_on</span>
+              {venue.location}
+            </p>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-black italic tracking-tight font-headline uppercase leading-none text-white">
-            {venue.name}
-          </h1>
-
-          <p className="mt-3 text-slate-300 text-sm sm:text-base flex items-center gap-2 font-label">
-            <span className="material-symbols-outlined text-lime-400">location_on</span>
-            {venue.location}
-          </p>
+          <div className="flex items-center gap-3">
+            <a
+              href={`https://maps.google.com/?q=${encodeURIComponent(venue.name + " " + venue.location)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="btn bg-lime-400 hover:bg-lime-500 text-slate-950 font-black text-xs uppercase tracking-wider py-3 px-5 rounded-xl shadow-lg transition flex items-center gap-2"
+            >
+              <span className="material-symbols-outlined text-lg">map</span>
+              Vezi Indicații Rutier
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* Bento Stats & Facilities Grid */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {/* Capacity Card */}
+      {/* Main Container */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-12">
+        {/* Bento Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm">
             <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-              Capacitate Totală
+              Capacitate Spectatori
             </span>
             <p className="text-3xl font-black text-blue-950 dark:text-white data-font mt-2">
               {venue.capacity.toLocaleString()}
@@ -92,118 +128,192 @@ export default async function PublicVenueDetailPage({
             <p className="text-xs text-slate-500 font-label mt-1">Locuri pe scaune în tribune</p>
           </div>
 
-          {/* Surface Card */}
           <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm">
             <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-              Tip Suprafață
+              Meciuri Disputate
             </span>
-            <p className="text-2xl font-black text-lime-600 dark:text-lime-400 font-headline mt-2">
-              {venue.surface}
+            <p className="text-3xl font-black text-blue-950 dark:text-white data-font mt-2">
+              {finishedMatches.length}
             </p>
-            <p className="text-xs text-slate-500 font-label mt-1">Drenaj și amortizare pro</p>
+            <p className="text-xs text-slate-500 font-label mt-1">Partide oficiale jucate</p>
           </div>
 
-          {/* Nocturna */}
           <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm">
             <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-              Iluminat Nocturnă
+              Goluri Marcate
+            </span>
+            <p className="text-3xl font-black text-lime-600 dark:text-lime-400 data-font mt-2">
+              {totalGoals}
+            </p>
+            <p className="text-xs text-slate-500 font-label mt-1">Medie: {avgGoals} goluri/meci</p>
+          </div>
+
+          <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm">
+            <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
+              Iluminat &amp; Nocturnă
             </span>
             <p className="text-2xl font-black text-blue-950 dark:text-white font-headline mt-2">
               {venue.floodlights ? "LED 1200 Lux" : "Fără Nocturnă"}
             </p>
             <p className="text-xs text-slate-500 font-label mt-1">Compatibil transmisiuni TV</p>
           </div>
+        </div>
 
-          {/* Pricing */}
-          <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm">
-            <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-              Tarif Meci
+        {/* Section 1: Upcoming Matches Scheduled at this Venue */}
+        <section className="space-y-6">
+          <div className="flex justify-between items-center pb-3 border-b border-slate-200/60 dark:border-slate-800">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-6 bg-lime-500 rounded-full"></span>
+              <h2 className="text-xl font-bold font-headline text-blue-950 dark:text-white">
+                Meciuri Următoare Programate pe Această Arenă
+              </h2>
+            </div>
+            <span className="text-xs font-label font-bold text-slate-400 uppercase">
+              {upcomingMatches.length} Meciuri Viitoare
             </span>
-            <p className="text-2xl font-black text-blue-950 dark:text-white data-font mt-2">
-              {venue.pricePerHour ? `${venue.pricePerHour} RON` : "Inclus în Ligă"}
-            </p>
-            <p className="text-xs text-slate-500 font-label mt-1">Per oră / meci oficial</p>
           </div>
-        </div>
 
-        {/* Facilities List */}
-        <div className="card p-8 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
-          <h3 className="text-lg font-bold font-headline text-blue-950 dark:text-white flex items-center gap-2">
-            <span className="material-symbols-outlined text-lime-600">verified</span>
-            Dotări &amp; Facilități Omologate
-          </h3>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="p-4 rounded-2xl bg-surface-container-low dark:bg-slate-800/40 flex items-center gap-3">
-              <span className="material-symbols-outlined text-lime-600 text-2xl">check_circle</span>
-              <span className="text-xs font-bold font-label text-slate-700 dark:text-slate-300">
-                Vestiare cu Dușuri
-              </span>
-            </div>
-            <div className="p-4 rounded-2xl bg-surface-container-low dark:bg-slate-800/40 flex items-center gap-3">
-              <span className="material-symbols-outlined text-lime-600 text-2xl">check_circle</span>
-              <span className="text-xs font-bold font-label text-slate-700 dark:text-slate-300">
-                Tabelă Electronică
-              </span>
-            </div>
-            <div className="p-4 rounded-2xl bg-surface-container-low dark:bg-slate-800/40 flex items-center gap-3">
-              <span className="material-symbols-outlined text-lime-600 text-2xl">check_circle</span>
-              <span className="text-xs font-bold font-label text-slate-700 dark:text-slate-300">
-                Parcare Autocare
-              </span>
-            </div>
-            <div className="p-4 rounded-2xl bg-surface-container-low dark:bg-slate-800/40 flex items-center gap-3">
-              <span className="material-symbols-outlined text-lime-600 text-2xl">check_circle</span>
-              <span className="text-xs font-bold font-label text-slate-700 dark:text-slate-300">
-                Cabinet Medical &amp; Prim Ajutor
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Scheduled Matches at this Venue */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold font-headline text-blue-950 dark:text-white flex items-center gap-2">
-            <span className="material-symbols-outlined text-lime-600">event</span>
-            Meciuri Programate pe Această Arenă
-          </h3>
-
-          {matches.length === 0 ? (
+          {upcomingMatches.length === 0 ? (
             <div className="p-8 rounded-3xl bg-surface-container-low text-center text-xs text-slate-500 font-label">
-              Momentan nu sunt meciuri programate pe această arenă.
+              Nu sunt meciuri viitoare programate momentan pe acest stadion.
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {matches.map((m) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {upcomingMatches.map((m) => (
                 <div
                   key={m.id}
-                  className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-2xl shadow-sm space-y-3"
+                  className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4 hover:shadow-md transition"
                 >
                   <div className="flex justify-between items-center text-[10px] font-label font-bold text-slate-400 uppercase">
-                    <span>{m.championship.name}</span>
-                    <span>Etapa {m.round}</span>
-                  </div>
-
-                  <div className="flex justify-between items-center font-bold text-sm text-blue-950 dark:text-white font-headline">
-                    <span>{m.homeTeam.name}</span>
-                    <span className="text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 data-font">
-                      {m.homeScore != null ? `${m.homeScore} - ${m.awayScore}` : "VS"}
+                    <span className="truncate max-w-[150px]">{m.championship.name}</span>
+                    <span className="px-2 py-0.5 rounded bg-lime-100 dark:bg-lime-950/40 text-lime-800 dark:text-lime-400 font-bold">
+                      Etapa {m.round}
                     </span>
-                    <span>{m.awayTeam.name}</span>
                   </div>
 
-                  <div className="text-[10px] text-slate-400 font-label">
-                    📅 {new Date(m.scheduledAt).toLocaleDateString("ro-RO", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                  <div className="flex justify-between items-center font-bold text-base text-blue-950 dark:text-white font-headline">
+                    <span className="truncate">{m.homeTeam.name}</span>
+                    <span className="text-xs px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 data-font text-slate-600 dark:text-slate-400 mx-2">
+                      VS
+                    </span>
+                    <span className="truncate">{m.awayTeam.name}</span>
+                  </div>
+
+                  <div className="space-y-1.5 text-xs text-slate-500 font-label pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <p className="flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[15px] text-lime-600">schedule</span>
+                      {new Date(m.scheduledAt).toLocaleDateString("ro-RO", {
+                        weekday: "short",
+                        day: "numeric",
+                        month: "short",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                    {m.referee && (
+                      <p className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+                        <span className="material-symbols-outlined text-[15px]">sports</span>
+                        {m.referee}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="pt-2 flex gap-2">
+                    <Link
+                      href={`/matches/${m.id}/promo`}
+                      className="w-full py-2.5 bg-primary hover:bg-slate-800 text-white rounded-xl text-xs font-label font-bold uppercase tracking-wider text-center block transition shadow-sm"
+                    >
+                      Bilete &amp; Promo 🎟️
+                    </Link>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </div>
+        </section>
+
+        {/* Section 2: Historical Match Results Grouped by League & Round */}
+        <section className="space-y-6">
+          <div className="flex justify-between items-center pb-3 border-b border-slate-200/60 dark:border-slate-800">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-6 bg-primary rounded-full"></span>
+              <h2 className="text-xl font-bold font-headline text-blue-950 dark:text-white">
+                Istoric Meciuri &amp; Rezultate pe Arenă
+              </h2>
+            </div>
+            <span className="text-xs font-label font-bold text-slate-400 uppercase">
+              {finishedMatches.length} Partide Jucate
+            </span>
+          </div>
+
+          {finishedMatches.length === 0 ? (
+            <div className="p-8 rounded-3xl bg-surface-container-low text-center text-xs text-slate-500 font-label">
+              Nu există încă meciuri finalizate pe această arenă.
+            </div>
+          ) : (
+            <div className="space-y-8">
+              {Object.entries(groupedResults).map(([groupTitle, groupMatches]) => (
+                <div key={groupTitle} className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="px-3 py-1 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold font-label uppercase">
+                      {groupTitle}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {groupMatches.map((m) => (
+                      <div
+                        key={m.id}
+                        className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4 hover:shadow-md transition"
+                      >
+                        <div className="flex justify-between items-center text-[10px] font-label font-bold text-slate-400 uppercase">
+                          <span>
+                            {new Date(m.scheduledAt).toLocaleDateString("ro-RO", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </span>
+                          <span className="text-lime-600 font-bold">✓ Finalizat</span>
+                        </div>
+
+                        {/* Score Banner */}
+                        <div className="flex justify-between items-center font-bold text-base text-blue-950 dark:text-white font-headline py-1">
+                          <span className="truncate w-5/12">{m.homeTeam.name}</span>
+                          <span className="w-2/12 text-center text-lg font-black data-font px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">
+                            {m.homeScore} - {m.awayScore}
+                          </span>
+                          <span className="truncate w-5/12 text-right">{m.awayTeam.name}</span>
+                        </div>
+
+                        {m.referee && (
+                          <p className="text-[11px] text-slate-400 font-label flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[14px]">sports</span>
+                            Arbitru: {m.referee}
+                          </p>
+                        )}
+
+                        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex gap-2">
+                          <Link
+                            href={`/matches/${m.id}/report`}
+                            target="_blank"
+                            className="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200 rounded-xl text-[11px] font-bold font-label uppercase tracking-wider text-center block transition"
+                          >
+                            📄 Raport Meci PDF
+                          </Link>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200/60 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-400">
+      <footer className="border-t border-slate-200/60 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-400 mt-auto">
         © {new Date().getFullYear()} Ligue Pro. Toate drepturile rezervate.
       </footer>
     </div>
