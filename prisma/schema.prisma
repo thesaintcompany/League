@@ -152,6 +152,23 @@ model Match {
   homeScore       Int?
   awayScore       Int?
   notes           String?
+
+  // Match telemetry and referee official report
+  events          String?  // JSON stringified array of match events (goals, cards, offsides, subs)
+  homeOffsides    Int      @default(0)
+  awayOffsides    Int      @default(0)
+  homeFouls       Int      @default(0)
+  awayFouls       Int      @default(0)
+  homeCorners     Int      @default(0)
+  awayCorners     Int      @default(0)
+  homePenalties   String?  // JSON stringified array of shootout results
+  awayPenalties   String?  // JSON stringified array of shootout results
+  pitchCondition  String?  @default("Excelent")
+  crowdConduct    String?  @default("Sportivă / Fără incidente")
+  refereeNotes    String?  // Raportul oficial de meci și incidente
+  signedBy        String?  // Semnătura digitală a arbitrului
+  signedAt        DateTime?
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
