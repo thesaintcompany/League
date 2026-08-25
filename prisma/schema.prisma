@@ -79,22 +79,27 @@ model VerificationToken {
 }
 
 model Venue {
-  id          String   @id @default(cuid())
-  name        String
-  location    String
-  address     String?
-  specs       String?
-  sport       String   @default("fotbal") // fotbal, baschet, volei, multifunctional
-  surface     String   @default("Sintetic") // Sintetic, Gazon Natural, Parchet, Mixt, Nisip
-  capacity    Int      @default(100)
-  floodlights Boolean  @default(true)
-  isActive    Boolean  @default(true)
-  pricePerHour Int?
-  imageUrl    String?
-  ownerId     String?
-  createdAt   DateTime @default(now())
+  id            String   @id @default(cuid())
+  name          String
+  location      String
+  address       String?
+  specs         String?
+  sport         String   @default("fotbal") // fotbal, baschet, volei, multifunctional
+  surface       String   @default("Sintetic") // Sintetic, Gazon Natural, Parchet, Mixt, Nisip
+  capacity      Int      @default(100)
+  floodlights   Boolean  @default(true)
+  isActive      Boolean  @default(true)
+  pricePerHour  Int?
+  imageUrl      String?
+  ownerId       String?
+  ads           String?  // JSON string: array of { id, title, imageUrl, linkUrl, isActive }
+  announcements String?  // JSON string: array of { id, title, content, date, isActive }
+  tickerText    String?  // Scrolling ticker announcement
+  tickerActive  Boolean  @default(false)
+  tickerSpeed   Int      @default(20)
+  createdAt     DateTime @default(now())
 
-  owner       User?    @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  owner         User?    @relation(fields: [ownerId], references: [id], onDelete: SetNull)
 }
 
 model Championship {

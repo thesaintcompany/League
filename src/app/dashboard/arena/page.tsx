@@ -1,0 +1,47 @@
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { Sidebar } from "@/components/Sidebar";
+import { TopHeader } from "@/components/TopHeader";
+import { ArenaOwnerPanel } from "@/components/ArenaOwnerPanel";
+
+export const dynamic = "force-dynamic";
+
+export default async function ArenaOwnerDashboardPage() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    redirect("/signin?callbackUrl=/dashboard/arena");
+  }
+
+  const userId = (session.user as any).id;
+
+  // Find arena for this user
+  let venue = await prisma.venue.findFirst({
+    where: { ownerId: userId },
+  });
+
+  // If no arena assigned yet, fallback to default or first arena
+  if (!venue) {
+    venue = await prisma.venue.findFirst({
+      where: { name: { contains: "Vasport" } },
+    });
+  }
+
+  return (
+    <div className="min-h-screen bg-surface flex font-body">
+      <Sidebar />
+
+      <div className="flex-1 ml-64 flex flex-col min-w-0">
+        <TopHeader
+          title="Consolă Proprietar Arenă"
+          subtitle="Configurează baza ta sportivă, spațiul de reclame, anunțurile și ticker-ul defilant"
+        />
+
+        <main className="p-6 lg:p-10 max-w-7xl">
+          <ArenaOwnerPanel initialVenue={venue} />
+        </main>
+      </div>
+    </div>
+  );
+}
