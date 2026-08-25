@@ -1,6 +1,4 @@
-// Prisma schema for Sport League Organizer
-// SQLite for zero-config local + cheap server deploys.
-// Switch to PostgreSQL/MySQL on Hestia/Coolify if you need concurrent writes.
+// Prisma schema for Sport League Organizer (Ligue Pro)
 
 generator client {
   provider = "prisma-client-js"
@@ -18,12 +16,24 @@ model User {
   emailVerified DateTime?
   passwordHash  String?
   image         String?
+  role          String   @default("organizer") // "organizer" | "referee" | "player" | "arena_owner" | "team_leader" | "observer"
+  
+  // Profile fields for various roles
+  phone          String?
+  bio            String?
+  position       String? // for players (ex: Atacant, Mijlocas, Portar)
+  jerseyNumber   Int?    // for players
+  preferredFoot  String? // for players (Drept, Stang, Ambele)
+  refereeBadge   String? // for referees (FIFA, National, Regional)
+  experienceYears Int?   // for referees
+
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   accounts        Account[]
   sessions        Session[]
   championships   Championship[]
+  venues          Venue[]
 }
 
 model Account {
@@ -60,6 +70,20 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Venue {
+  id          String   @id @default(cuid())
+  name        String
+  location    String
+  surface     String   @default("Sintetic") // Sintetic, Gazon Natural, Parchet, Mixt
+  capacity    Int      @default(100)
+  floodlights Boolean  @default(true)
+  pricePerHour Int?
+  ownerId     String?
+  createdAt   DateTime @default(now())
+
+  owner       User?    @relation(fields: [ownerId], references: [id], onDelete: SetNull)
 }
 
 model Championship {
@@ -119,6 +143,9 @@ model Match {
   awayTeamId      String
   scheduledAt     DateTime
   venue           String?
+  referee         String?  // Nume sau ID arbitru desemnat
+  stage           String?  // "group" | "quarter_final" | "semi_final" | "final"
+  bracketIndex    Int?     // Index în arborele de joc (0, 1, 2, 3...)
   round           Int      @default(1)
   status          String   @default("scheduled") // scheduled | live | finished
   homeScore       Int?

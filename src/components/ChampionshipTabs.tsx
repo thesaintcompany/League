@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation";
 import { TeamsTab } from "./TeamsTab";
 import { MatchesTab } from "./MatchesTab";
 import { StandingsTable, StandingRow } from "./StandingsTable";
+import { BracketVisualizer } from "./BracketVisualizer";
+import { AdminDiceConsole } from "./AdminDiceConsole";
+import { RefereeControlModal } from "./RefereeControlModal";
+import { MatchData } from "./MatchCard";
 
 type Team = {
   id: string;
@@ -18,7 +22,9 @@ type Match = {
   id: string;
   scheduledAt: string;
   venue: string | null;
+  referee?: string | null;
   round: number;
+  stage?: string | null;
   status: string;
   homeScore: number | null;
   awayScore: number | null;
@@ -29,7 +35,8 @@ type Match = {
 const TABS = [
   { key: "standings", label: "Clasament General", icon: "leaderboard" },
   { key: "matches", label: "Program & Arbitraj", icon: "sports_soccer" },
-  { key: "teams", label: "Echipe & Jucători", icon: "groups" },
+  { key: "brackets", label: "Arbore Brackets & Zaruri 🎲", icon: "casino" },
+  { key: "teams", label: "Echipe & Lot", icon: "groups" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -46,6 +53,7 @@ export function ChampionshipTabs({
   const router = useRouter();
   const [tab, setTab] = useState<TabKey>("standings");
   const [standings, setStandings] = useState<StandingRow[]>([]);
+  const [editingMatch, setEditingMatch] = useState<MatchData | null>(null);
 
   useEffect(() => {
     if (tab !== "standings") return;
@@ -71,6 +79,29 @@ export function ChampionshipTabs({
       })
       .catch(() => setStandings([]));
   }, [tab, championshipId]);
+
+  const matchDataList: MatchData[] = initialMatches.map((m) => ({
+    id: m.id,
+    round: m.round,
+    scheduledAt: m.scheduledAt,
+    status: m.status as any,
+    homeScore: m.homeScore,
+    awayScore: m.awayScore,
+    venue: m.venue || undefined,
+    referee: m.referee || undefined,
+    homeTeam: {
+      id: m.homeTeam.id,
+      name: m.homeTeam.name,
+      shortName: m.homeTeam.shortName || undefined,
+      color: m.homeTeam.color || undefined,
+    },
+    awayTeam: {
+      id: m.awayTeam.id,
+      name: m.awayTeam.name,
+      shortName: m.awayTeam.shortName || undefined,
+      color: m.awayTeam.color || undefined,
+    },
+  }));
 
   return (
     <div className="space-y-8">
@@ -98,6 +129,7 @@ export function ChampionshipTabs({
       {/* Tab Content */}
       <div>
         {tab === "standings" && <StandingsTable standings={standings} />}
+
         {tab === "matches" && (
           <MatchesTab
             championshipId={championshipId}
@@ -106,6 +138,25 @@ export function ChampionshipTabs({
             onChanged={() => router.refresh()}
           />
         )}
+
+        {tab === "brackets" && (
+          <div className="space-y-8">
+            {/* Interactive Dice Console for Random Seed */}
+            <AdminDiceConsole
+              championshipId={championshipId}
+              teams={initialTeams}
+              onDrawCompleted={() => router.refresh()}
+            />
+
+            {/* Live Knockout Bracket Visualizer */}
+            <BracketVisualizer
+              matches={matchDataList}
+              isAdmin={true}
+              onEditMatch={(m) => setEditingMatch(m)}
+            />
+          </div>
+        )}
+
         {tab === "teams" && (
           <TeamsTab
             championshipId={championshipId}
@@ -114,6 +165,17 @@ export function ChampionshipTabs({
           />
         )}
       </div>
+
+      {/* Referee modal for Bracket match editing */}
+      {editingMatch && (
+        <RefereeControlModal
+          match={editingMatch}
+          championshipId={championshipId}
+          isOpen={true}
+          onClose={() => setEditingMatch(null)}
+          onUpdated={() => router.refresh()}
+        />
+      )}
     </div>
   );
 }

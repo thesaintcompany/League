@@ -92,55 +92,126 @@ const prisma = new PrismaClient();
 const SEEDS = [
   {
     email: (process.env.ADMIN_EMAIL || "admin@leaguehub.local").toLowerCase(),
-    name: process.env.ADMIN_NAME || "Admin",
+    name: process.env.ADMIN_NAME || "M. Oliver - Organizator",
     password: process.env.ADMIN_PASSWORD || "Admin12345",
+    role: "organizer",
   },
   {
-    email: "demo@leaguehub.local",
-    name: "Demo User",
+    email: "arbitru@leaguehub.local",
+    name: "Cristian Balaj - Arbitru FIFA",
     password: "demo12345",
+    role: "referee",
+    refereeBadge: "FIFA Pro",
+    experienceYears: 12,
+  },
+  {
+    email: "jucator@leaguehub.local",
+    name: "Radu Drăgușin - Fotbalist",
+    password: "demo12345",
+    role: "player",
+    position: "Fundaș Central",
+    jerseyNumber: 3,
+    preferredFoot: "Drept",
+  },
+  {
+    email: "arena@leaguehub.local",
+    name: "Baza Sportivă Sud - Arenă",
+    password: "demo12345",
+    role: "arena_owner",
+  },
+  {
+    email: "lider@leaguehub.local",
+    name: "Dan Petrescu - Lider Echipă",
+    password: "demo12345",
+    role: "team_leader",
   },
 ];
 
-async function ensureUser(email, name, password) {
-  if (!email) return null;
-  const existing = await prisma.user.findUnique({ where: { email } });
+async function ensureUser(userData) {
+  if (!userData.email) return null;
+  const existing = await prisma.user.findUnique({ where: { email: userData.email } });
   if (existing) {
-    console.log(`[seed] user ${email} already exists, skipping`);
     return existing;
   }
-  const passwordHash = await hashPassword(password);
+  const passwordHash = await hashPassword(userData.password);
   const user = await prisma.user.create({
-    data: { email, name, passwordHash },
+    data: {
+      email: userData.email,
+      name: userData.name,
+      passwordHash,
+      role: userData.role || "organizer",
+      position: userData.position,
+      jerseyNumber: userData.jerseyNumber,
+      preferredFoot: userData.preferredFoot,
+      refereeBadge: userData.refereeBadge,
+      experienceYears: userData.experienceYears,
+    },
   });
-  console.log(`[seed] created user ${email}`);
+  console.log(`[seed] created user ${userData.email} (${userData.role})`);
   return user;
+}
+
+async function ensureVenues(arenaOwnerId) {
+  const count = await prisma.venue.count();
+  if (count > 0) return;
+
+  await prisma.venue.createMany({
+    data: [
+      {
+        name: "Arena Națională",
+        location: "Bulevardul Basarabia 37-39, București",
+        surface: "Gazon Natural",
+        capacity: 55634,
+        floodlights: true,
+        pricePerHour: 1500,
+        ownerId: arenaOwnerId,
+      },
+      {
+        name: "Baza Sportivă Sud",
+        location: "Strada Turnu Măgurele 5, București",
+        surface: "Sintetic Pro",
+        capacity: 800,
+        floodlights: true,
+        pricePerHour: 250,
+        ownerId: arenaOwnerId,
+      },
+      {
+        name: "Complexul Arcul de Triumf",
+        location: "Bulevardul Mărăști 18, București",
+        surface: "Mixt Hybrid",
+        capacity: 8207,
+        floodlights: true,
+        pricePerHour: 800,
+        ownerId: arenaOwnerId,
+      },
+    ],
+  });
+  console.log("[seed] created demo venues");
 }
 
 async function ensureDemoChampionship(ownerId) {
   const existing = await prisma.championship.findFirst({
-    where: { ownerId, name: "Liga Demo 2026" },
+    where: { ownerId, name: "Liga Națională Ligue 2026" },
   });
   if (existing) {
-    console.log("[seed] demo championship already exists, skipping");
     return existing;
   }
   const champ = await prisma.championship.create({
     data: {
       ownerId,
-      name: "Liga Demo 2026",
+      name: "Liga Națională Ligue 2026",
       sport: "Fotbal",
       format: "round_robin",
       season: "2025-2026",
       startDate: new Date(),
-      description: "Campionat demonstrativ cu echipe și meciuri pre-populate.",
+      description: "Campionat oficial cu clasament în timp real, arbitraj live și sistem de zaruri pentru tragerea la sorți.",
     },
   });
   const teams = await Promise.all([
     prisma.team.create({ data: { championshipId: champ.id, name: "FC Steaua", shortName: "STE", color: "#dc2626" } }),
     prisma.team.create({ data: { championshipId: champ.id, name: "Dinamo", shortName: "DIN", color: "#1e3a8a" } }),
     prisma.team.create({ data: { championshipId: champ.id, name: "Rapid", shortName: "RAP", color: "#fbbf24" } }),
-    prisma.team.create({ data: { championshipId: champ.id, name: "CFR", shortName: "CFR", color: "#7c2d12" } }),
+    prisma.team.create({ data: { championshipId: champ.id, name: "CFR Cluj", shortName: "CFR", color: "#7c2d12" } }),
   ]);
   const pairings = [[0, 1], [2, 3], [0, 2], [1, 3], [0, 3], [1, 2]];
   const now = Date.now();
@@ -157,6 +228,9 @@ async function ensureDemoChampionship(ownerId) {
         status: finished ? "finished" : "scheduled",
         homeScore: finished ? (i === 0 ? 2 : 1) : null,
         awayScore: finished ? (i === 0 ? 1 : 1) : null,
+        venue: i % 2 === 0 ? "Arena Națională" : "Baza Sportivă Sud",
+        referee: "Cristian Balaj - Arbitru FIFA",
+        stage: "group",
       },
     });
   }
@@ -165,16 +239,21 @@ async function ensureDemoChampionship(ownerId) {
 }
 
 async function main() {
+  let arenaOwner = null;
   for (const s of SEEDS) {
-    await ensureUser(s.email, s.name, s.password);
+    const u = await ensureUser(s);
+    if (s.role === "arena_owner") arenaOwner = u;
+  }
+  if (arenaOwner) {
+    await ensureVenues(arenaOwner.id);
   }
   const adminEmail = SEEDS[0].email;
   const admin = await prisma.user.findUnique({ where: { email: adminEmail } });
   if (admin) await ensureDemoChampionship(admin.id);
 
-  console.log("[seed] login credentials available:");
+  console.log("[seed] multi-role login accounts available:");
   for (const s of SEEDS) {
-    console.log(`  ${s.email}  /  ${s.password}`);
+    console.log(`  ${s.email.padEnd(25)} / ${s.password.padEnd(12)} [${s.role}]`);
   }
 }
 
