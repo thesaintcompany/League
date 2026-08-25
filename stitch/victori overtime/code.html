@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Match Details &amp; Referee Rating | KINETIC PRECISION</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Lexend:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#a8f928",
+              "on-tertiary-fixed": "#121c2c",
+              "secondary-container": "#a5f624",
+              "on-tertiary-container": "#7d889b",
+              "on-secondary": "#ffffff",
+              "on-secondary-fixed": "#112000",
+              "surface-tint": "#585e6c",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#8fdb00",
+              "inverse-surface": "#2d3133",
+              "outline": "#76777c",
+              "on-primary-fixed-variant": "#414754",
+              "primary-fixed": "#dde2f3",
+              "on-secondary-container": "#456e00",
+              "on-primary-fixed": "#161c27",
+              "outline-variant": "#c6c6cc",
+              "on-surface": "#181c1e",
+              "error-container": "#ffdad6",
+              "surface": "#f7fafc",
+              "tertiary-fixed": "#d9e3f9",
+              "on-tertiary": "#ffffff",
+              "surface-container-low": "#f1f4f6",
+              "on-error-container": "#93000a",
+              "inverse-primary": "#c1c6d7",
+              "tertiary-container": "#162030",
+              "surface-container-lowest": "#ffffff",
+              "background": "#f7fafc",
+              "surface-container-highest": "#e0e3e5",
+              "primary": "#030813",
+              "on-primary-container": "#828796",
+              "on-background": "#181c1e",
+              "primary-fixed-dim": "#c1c6d7",
+              "on-surface-variant": "#45474c",
+              "on-primary": "#ffffff",
+              "tertiary": "#010817",
+              "surface-variant": "#e0e3e5",
+              "surface-dim": "#d7dadc",
+              "tertiary-fixed-dim": "#bdc7dc",
+              "surface-bright": "#f7fafc",
+              "secondary": "#426900",
+              "surface-container-high": "#e5e9eb",
+              "inverse-on-surface": "#eef1f3",
+              "surface-container": "#ebeef0",
+              "on-secondary-fixed-variant": "#314f00",
+              "on-tertiary-fixed-variant": "#3d4759",
+              "primary-container": "#1a202c",
+              "error": "#ba1a1a"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Lexend"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+      }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- Top Navigation Anchor -->
+<header class="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-6 py-3">
+<div class="flex items-center gap-4">
+<span class="text-xl font-black italic tracking-tighter text-slate-900 dark:text-white">KINETIC PRECISION</span>
+<div class="hidden md:flex items-center gap-6 ml-8">
+<a class="text-slate-500 dark:text-slate-400 font-plus-jakarta-sans font-bold tracking-tight hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200 px-3 py-1 rounded" href="#">Dashboard</a>
+<a class="text-lime-500 dark:text-lime-400 font-bold font-plus-jakarta-sans tracking-tight px-3 py-1 rounded" href="#">Matches</a>
+<a class="text-slate-500 dark:text-slate-400 font-plus-jakarta-sans font-bold tracking-tight hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200 px-3 py-1 rounded" href="#">Roster</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-500 p-2 active:scale-95 transition-transform">notifications</button>
+<button class="material-symbols-outlined text-slate-500 p-2 active:scale-95 transition-transform">settings</button>
+<button class="bg-primary text-lime-400 font-headline font-bold px-6 py-2 rounded-xl active:scale-95 transition-transform">Go Live</button>
+</div>
+</div>
+<div class="bg-slate-200/50 dark:bg-slate-800/50 h-[1px] w-full"></div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-10 md:py-16">
+<!-- Header Section: Asymmetric Layout -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end mb-16">
+<div class="lg:col-span-8">
+<nav class="flex items-center gap-2 mb-4 text-on-surface-variant font-label text-sm uppercase tracking-widest">
+<span>League Play</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-primary font-bold">Match Summary</span>
+</nav>
+<h1 class="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter text-primary leading-none">
+                    VICTORY IN <span class="text-secondary">OVERTIME</span>
+</h1>
+</div>
+<div class="lg:col-span-4 flex justify-end">
+<div class="bg-surface-container-highest p-6 rounded-xl flex items-center gap-4 w-full lg:w-auto">
+<span class="material-symbols-outlined text-secondary text-4xl" data-icon="calendar_today">calendar_today</span>
+<div>
+<p class="font-label text-xs text-on-surface-variant uppercase">Match Date</p>
+<p class="font-headline font-bold text-lg">OCT 24, 2023</p>
+</div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Match Result & Content -->
+<div class="lg:col-span-7 space-y-8">
+<!-- Match Score Card -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_20px_40px_rgba(24,28,30,0.06)] overflow-hidden relative">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/10 rounded-bl-full -mr-8 -mt-8"></div>
+<div class="flex items-center justify-between relative z-10">
+<!-- Team A -->
+<div class="flex flex-col items-center text-center space-y-4">
+<div class="w-20 h-20 bg-primary-container rounded-full flex items-center justify-center p-4">
+<img alt="Team A Logo" class="w-full h-full object-contain" data-alt="minimalist soccer team logo with a geometric eagle symbol in monochrome white on a dark navy background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS5_GM9vOo9uExDTWP2AXtgchqT9DNV_nSbkSETNzW3sL2CGstWxljgauysNo-CoTsS8Lm1Uj5CmB31DhM3PRpQvRtFb_AwQymySG1AdZX2CGey28ZYxMe6mTpl_sX5GuWSC8feZKs5EHvD0nxtjAncl9gi2GlkCzINmB6JeAEvE1oO29JeamebVw4XFZImIno-Dj5EEb2AdeHWZTQwT9ZANO_BI6WpfHN7BUZsmW6KbJh9rhjjEU_z2Rr4TvxVTNhsUrfZXHJU_A"/>
+</div>
+<div>
+<h3 class="font-headline font-extrabold text-xl">TITANS FC</h3>
+<p class="font-label text-xs text-on-surface-variant">HOME</p>
+</div>
+</div>
+<!-- Score -->
+<div class="flex items-center gap-6">
+<span class="font-headline text-6xl font-black text-primary">2</span>
+<div class="h-1 w-8 bg-outline-variant"></div>
+<span class="font-headline text-6xl font-black text-primary">1</span>
+</div>
+<!-- Team B -->
+<div class="flex flex-col items-center text-center space-y-4">
+<div class="w-20 h-20 bg-surface-container-high rounded-full flex items-center justify-center p-4">
+<img alt="Team B Logo" class="w-full h-full object-contain" data-alt="minimalist soccer club crest shield with a lightning bolt symbol in monochrome dark gray on a light background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5cQrr1iPRRp3kl-qmlCIyLo3jsReht9W2EMtQB3Se9hpKsXdHN_4G8oEwSCclOr92qaF3RID9Met7OYITQGKv3JEZZFVKloL-aUu326jul48aMbkjO6paDTrUteLqaq1NbWUQTHEimtrrLp1BgvKTTKlEnussk3vN66FaODbuFZ5huQfpkNVnN2dizrp_Bon8LsPtwAp9nQsQmR-L6-3oWA_iKrlqhOtbZBkr54jGQGtsgyrARzFPlafiEHUns021kn9cZmNXPow"/>
+</div>
+<div>
+<h3 class="font-headline font-extrabold text-xl">STORM SC</h3>
+<p class="font-label text-xs text-on-surface-variant">AWAY</p>
+</div>
+</div>
+</div>
+<!-- Match Highlights Bento Snippet -->
+<div class="mt-12 grid grid-cols-2 gap-4">
+<div class="bg-surface-container p-4 rounded-lg">
+<p class="font-label text-[10px] uppercase text-on-surface-variant mb-1">Possession</p>
+<div class="flex items-end gap-2">
+<span class="font-headline font-bold text-2xl">54%</span>
+<div class="flex-1 h-1.5 bg-secondary-container/30 rounded-full mb-2 overflow-hidden">
+<div class="h-full bg-secondary w-[54%]"></div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container p-4 rounded-lg">
+<p class="font-label text-[10px] uppercase text-on-surface-variant mb-1">Shots on Goal</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline font-bold text-2xl">12</span>
+<span class="text-on-surface-variant text-sm">/ 8 Target</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Referee Profile Section -->
+<div class="bg-primary text-on-primary rounded-xl p-8 relative overflow-hidden">
+<!-- Carbon Fiber Texture Mockup -->
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000), linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000); background-size: 4px 4px;"></div>
+<div class="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-8">
+<div class="relative">
+<div class="w-32 h-32 rounded-full border-4 border-secondary p-1">
+<img alt="Referee Avatar" class="w-full h-full object-cover rounded-full" data-alt="professional headshot of a referee, middle-aged man with a serious look, wearing a sporting official uniform, neutral studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgKMyAMP8pA7qZozyoi-BFeOMmwYMzPeokWsd3aE1QlpoJryR7YMI3WJeVZeLBDzay4J3hTvFlhsG096VwTULtE9qNOPfbTCJN1NLqbL4tC7eMdpUwPzqPQmrq3S8ZtfdVrzxbgRuVfQnNfaZmY715M1ecFlCjMLgR1ouTAKWgUr_slc-nQfIoyU3ZRX2odq0gT_LAu02AE3fQ8QP-RY78cb2uNh-GzuYwE7DtiFLgc8yx6JCB4LomekelPHzxJKG-L9LdKylB77M"/>
+</div>
+<div class="absolute -bottom-2 right-0 bg-secondary-fixed text-on-secondary-fixed px-3 py-1 rounded-full text-[10px] font-bold font-headline shadow-lg">
+                                FIFA ELITE
+                            </div>
+</div>
+<div class="flex-1 text-center md:text-left">
+<div class="flex flex-col md:flex-row md:items-center gap-3 mb-2">
+<h2 class="font-headline text-3xl font-extrabold tracking-tight">MARCUS VANCE</h2>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-label">
+<span class="material-symbols-outlined text-sm text-secondary" style="font-variation-settings: 'FILL' 1;">verified</span>
+                                    CERTIFIED OFFICIAL
+                                </span>
+</div>
+<p class="text-on-primary-container font-body text-sm max-w-md mb-6">
+                                Head Official with over 150 Pro-Am match appearances. Known for technical clarity and consistent advantage play.
+                            </p>
+<div class="flex flex-wrap justify-center md:justify-start gap-4">
+<div class="bg-white/5 rounded-lg px-4 py-2 border border-white/5">
+<p class="text-[10px] text-on-primary-container uppercase font-label">Matches</p>
+<p class="font-headline font-bold">428</p>
+</div>
+<div class="bg-white/5 rounded-lg px-4 py-2 border border-white/5">
+<p class="text-[10px] text-on-primary-container uppercase font-label">Avg Rating</p>
+<p class="font-headline font-bold text-secondary">4.8</p>
+</div>
+<div class="bg-white/5 rounded-lg px-4 py-2 border border-white/5">
+<p class="text-[10px] text-on-primary-container uppercase font-label">Fouls / Gm</p>
+<p class="font-headline font-bold text-error">12.4</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Rating Interaction -->
+<div class="lg:col-span-5">
+<div class="sticky top-24 bg-surface-container-low rounded-xl p-8 border border-outline-variant/10">
+<h3 class="font-headline text-2xl font-bold mb-2">Rate Performance</h3>
+<p class="text-on-surface-variant text-sm font-body mb-8">Your feedback helps maintain league standards and referee development.</p>
+<!-- Rating Stars -->
+<div class="flex flex-col items-center gap-4 mb-10">
+<div class="flex gap-2">
+<button class="material-symbols-outlined text-4xl text-secondary" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</button>
+<button class="material-symbols-outlined text-4xl text-secondary" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</button>
+<button class="material-symbols-outlined text-4xl text-secondary" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</button>
+<button class="material-symbols-outlined text-4xl text-secondary" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</button>
+<button class="material-symbols-outlined text-4xl text-outline-variant" data-icon="star">star</button>
+</div>
+<span class="font-label text-sm text-secondary font-bold">Great officiating</span>
+</div>
+<!-- Feedback Tags -->
+<div class="space-y-4 mb-10">
+<p class="font-label text-xs uppercase text-on-surface-variant font-bold tracking-widest">Select Feedback Tags</p>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full border border-secondary text-secondary text-sm font-medium bg-secondary/5 transition-colors">Fairness</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant text-sm font-medium hover:bg-surface-container-highest transition-colors">Professionalism</button>
+<button class="px-4 py-2 rounded-full border border-secondary text-secondary text-sm font-medium bg-secondary/5 transition-colors">Clarity</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant text-sm font-medium hover:bg-surface-container-highest transition-colors">Accuracy</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant text-sm font-medium hover:bg-surface-container-highest transition-colors">Pace Control</button>
+</div>
+</div>
+<!-- Additional Comments -->
+<div class="mb-8">
+<textarea class="w-full bg-surface-container-highest border-none rounded-xl p-4 text-sm font-body focus:ring-2 focus:ring-secondary/20 placeholder:text-on-tertiary-container" placeholder="Optional: Any specific moments you'd like to mention?" rows="3"></textarea>
+</div>
+<!-- Submission Action -->
+<button class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold rounded-xl shadow-xl hover:shadow-secondary/10 transition-all active:scale-[0.98]">
+                        Submit Anonymous Rating
+                    </button>
+<div class="mt-6 flex gap-3 p-4 bg-surface-container rounded-lg items-start">
+<span class="material-symbols-outlined text-on-tertiary-container text-xl" data-icon="shield_with_heart">shield_with_heart</span>
+<p class="text-[11px] leading-relaxed text-on-tertiary-container font-label">
+<strong class="text-on-surface block mb-1 uppercase tracking-tighter">Privacy Protection</strong>
+                            Your rating is encrypted and aggregated with other players' feedback. The official will only see an average score once 5+ ratings are received for this match.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Map/Location Context -->
+<section class="mt-16 w-full h-[300px] relative overflow-hidden grayscale contrast-125">
+<div class="absolute inset-0 bg-primary/20 z-10"></div>
+<img alt="Stadium Location Map" class="w-full h-full object-cover" data-alt="abstract satellite view of a modern urban sports complex with a dark industrial aesthetic and glowing lime green architectural highlights" data-location="Metropolitan Sports Park" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCroO3PFPrn7vzpf60xFtPnyYW2IOLQ5_0CO_1B7c3dwL2WNTJAzPHa4LG4VX3berTT8aXVDo_p2IUXCmpOpBPPL_6lAFMfT_Iw9lvPQAZU2gteMDKu6A7U7eqEId6L7sjRkfYpXxOaHbUeqxRleuJIzJf-0O_YlNcJGwcpNFgXUk2xwSjOA6a1_C5l6VBzP6CtQznC7GGkPH1cyYrGSQH0pcP16tceEnmy4UkgkD9GB3AQ1kttgEuTBIyB7_L_AKAoOZCw6UkqkN8"/>
+<div class="absolute inset-0 flex items-center justify-center z-20">
+<div class="bg-primary px-8 py-4 rounded-full border border-secondary/50 flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary" data-icon="location_on">location_on</span>
+<span class="font-headline font-bold text-white tracking-widest text-sm uppercase">METROPOLITAN SPORTS PARK • PITCH 4</span>
+</div>
+</div>
+</section>
+<!-- Footer / Bottom Navigation Shell (Mobile Only) -->
+<footer class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl border-t-0 z-50">
+<div class="flex justify-around items-center py-3 px-4">
+<button class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-label">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-lime-500 font-bold">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+<span class="text-[10px] font-label">Matches</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[10px] font-label">Roster</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-[10px] font-label">Stats</span>
+</button>
+</div>
+</footer>
+</body></html>
