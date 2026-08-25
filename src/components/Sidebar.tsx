@@ -30,6 +30,18 @@ export function Sidebar() {
       { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
       { name: "Pagina Publică", href: "/campionat", icon: "public" },
     ];
+  } else if (role === "team_leader") {
+    // Dedicated Team Manager Menu
+    navItems = [
+      { name: "Panou Manager Echipă", href: "/dashboard/team", icon: "badge" },
+      { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
+      { name: "Harta României (Județe)", href: "/harta-romaniei", icon: "map" },
+      { name: "Harta Zaruri", href: "/brackets", icon: "account_tree" },
+      { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
+      { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Corp Arbitri", href: "/referees", icon: "sports" },
+      { name: "Pagina Publică", href: "/campionat", icon: "public" },
+    ];
   } else if (role === "arena_owner") {
     // Dedicated Arena Owner Menu
     navItems = [
@@ -70,7 +82,7 @@ export function Sidebar() {
     <aside className="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-900 border-r border-slate-800 flex flex-col py-6">
       {/* Brand Header */}
       <div className="px-6 mb-6">
-        <Link href={role === "referee" ? "/dashboard/referee" : role === "arena_owner" ? "/dashboard/arena" : "/dashboard"} className="block group">
+        <Link href={role === "referee" ? "/dashboard/referee" : role === "arena_owner" ? "/dashboard/arena" : role === "team_leader" ? "/dashboard/team" : "/dashboard"} className="block group">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-lime-400 flex items-center justify-center text-slate-950 font-black text-lg shadow-sm">
               ⚡
@@ -80,7 +92,7 @@ export function Sidebar() {
                 Ligue
               </span>
               <span className="text-[10px] font-label text-lime-400 uppercase tracking-widest block mt-0.5 font-bold">
-                {role === "referee" ? "Oficial Arbitraj" : role === "arena_owner" ? "Panou Arenă" : role === "player" ? "Fișă Jucător" : "Pro Organizer"}
+                {role === "referee" ? "Oficial Arbitraj" : role === "arena_owner" ? "Panou Arenă" : role === "team_leader" ? "Manager Echipă" : role === "player" ? "Fișă Jucător" : "Pro Organizer"}
               </span>
             </div>
           </div>
@@ -117,6 +129,16 @@ export function Sidebar() {
           >
             <span className="material-symbols-outlined text-sm">add_circle</span>
             Turneu Nou
+          </Link>
+        )}
+
+        {role === "team_leader" && (
+          <Link
+            href="/dashboard/team"
+            className="w-full bg-lime-400 hover:bg-lime-300 text-slate-950 py-2.5 px-3 rounded-xl font-black flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 text-xs font-label uppercase tracking-wider"
+          >
+            <span className="material-symbols-outlined text-sm">forward_to_inbox</span>
+            Invită Jucător
           </Link>
         )}
 

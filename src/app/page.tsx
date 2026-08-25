@@ -49,9 +49,18 @@ function WelcomePortalForm() {
       role: "Proprietar Arenă",
       email: "arena@leaguehub.local",
       pass: "demo12345",
-      badge: "33 Arene Timiș",
+      badge: "59 Arene RO",
       icon: "stadium",
       color: "border-purple-400 bg-purple-500/10 text-purple-400",
+    },
+    {
+      id: "team_leader",
+      role: "Manager Echipă",
+      email: "lider@leaguehub.local",
+      pass: "demo12345",
+      badge: "Staff & Invitații",
+      icon: "badge",
+      color: "border-emerald-400 bg-emerald-500/10 text-emerald-400",
     },
   ];
 

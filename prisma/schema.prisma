@@ -40,6 +40,7 @@ model User {
   sessions        Session[]
   championships   Championship[]
   venues          Venue[]
+  managedTeams    Team[]        @relation("ManagedTeams")
 }
 
 model Account {
@@ -68,6 +69,8 @@ model Session {
   expires      DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -136,6 +139,14 @@ model Team {
   color           String? // hex
   logoUrl         String?
   championshipId  String
+  managerId       String?
+  manager         User?   @relation("ManagedTeams", fields: [managerId], references: [id], onDelete: SetNull)
+  headCoach       String?
+  assistantCoach  String?
+  medic           String?
+  fitnessCoach    String?
+  formation       String? @default("4-3-3") // "4-3-3", "4-4-2", "3-5-2"
+  homeArena       String?
   createdAt       DateTime @default(now())
 
   championship Championship @relation(fields: [championshipId], references: [id], onDelete: Cascade)
@@ -144,20 +155,25 @@ model Team {
   awayMatches    Match[] @relation("AwayTeam")
 
   @@index([championshipId])
+  @@index([managerId])
 }
 
 model Player {
-  id           String   @id @default(cuid())
-  name         String
-  number       Int?
-  position     String?
-  goals        Int      @default(0)
-  matchesCount Int      @default(0)
-  assists      Int      @default(0)
-  rating       Float    @default(8.5)
-  image        String?
-  teamId       String
-  createdAt    DateTime @default(now())
+  id              String   @id @default(cuid())
+  name            String
+  email           String?
+  number          Int?
+  position        String?
+  status          String   @default("active") // "active", "invited", "reserve"
+  isStarter       Boolean  @default(true)
+  invitationToken String?
+  goals           Int      @default(0)
+  matchesCount    Int      @default(0)
+  assists         Int      @default(0)
+  rating          Float    @default(8.5)
+  image           String?
+  teamId          String
+  createdAt       DateTime @default(now())
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
