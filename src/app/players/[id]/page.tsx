@@ -36,10 +36,11 @@ export default async function PublicPlayerDetailPage({
   const defaultCover =
     "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80";
   const defaultAvatar =
+    player.image ||
     "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80";
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col font-body">
+    <div className="min-h-screen bg-surface flex flex-col font-body text-on-surface">
       {/* Top Navbar */}
       <PublicHeader currentTab="players" />
 
@@ -58,13 +59,17 @@ export default async function PublicPlayerDetailPage({
                 </span>
               </div>
 
-              {/* 9:16 Full-Body Shot */}
-              <div className="aspect-[9/14] w-full rounded-2xl overflow-hidden relative mb-4 bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-md">
+              {/* 9:16 Full-Body Shot with Link to Profile Editor */}
+              <Link
+                href="/profile"
+                title="Dublu-click în panou pentru a schimba poza în picioare (9:16)"
+                className="aspect-[9/14] w-full rounded-2xl overflow-hidden relative mb-4 bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-md block group/img"
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={defaultCover}
                   alt={player.name}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover object-center group-hover/img:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-5">
                   <span className="text-[10px] font-label font-bold text-lime-400 uppercase tracking-widest">
@@ -77,18 +82,21 @@ export default async function PublicPlayerDetailPage({
                     #{player.number || 10} • {player.position || "Atacant"}
                   </p>
                 </div>
-              </div>
+              </Link>
 
               {/* Face Avatar Overlay */}
               <div className="flex items-center gap-4 pt-2">
-                <div className="w-16 h-16 rounded-2xl border-4 border-white dark:border-slate-900 overflow-hidden shadow-lg -mt-10 z-20 relative bg-slate-100">
+                <Link
+                  href="/profile"
+                  className="w-16 h-16 rounded-2xl border-4 border-white dark:border-slate-900 overflow-hidden shadow-lg -mt-10 z-20 relative bg-slate-100 block"
+                >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={defaultAvatar}
                     alt={player.name}
                     className="w-full h-full object-cover"
                   />
-                </div>
+                </Link>
                 <div>
                   <h3 className="font-headline font-bold text-sm text-blue-950 dark:text-white leading-tight">
                     {player.name}
@@ -98,6 +106,16 @@ export default async function PublicPlayerDetailPage({
                   </p>
                 </div>
               </div>
+
+              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <Link
+                  href="/profile"
+                  className="w-full py-2.5 rounded-xl bg-surface-container-low hover:bg-lime-400 hover:text-slate-950 text-slate-700 dark:text-slate-300 font-label text-xs font-bold uppercase tracking-wider transition flex items-center justify-center gap-1.5"
+                >
+                  <span className="material-symbols-outlined text-[16px]">edit</span>
+                  Editează Pozele Profilului Tău
+                </Link>
+              </div>
             </div>
 
             {/* Fan Connectivity */}
@@ -106,20 +124,22 @@ export default async function PublicPlayerDetailPage({
                 Fan Connectivity &amp; Social
               </h4>
               <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => alert("Profil Instagram oficial")}
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noreferrer"
                   className="flex-1 py-2.5 bg-pink-50 dark:bg-pink-950/40 text-pink-600 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition hover:bg-pink-100"
                 >
                   <span>📷</span> Instagram
-                </button>
-                <button
-                  type="button"
-                  onClick={() => alert("Profil Twitter/X oficial")}
+                </a>
+                <a
+                  href="https://x.com"
+                  target="_blank"
+                  rel="noreferrer"
                   className="flex-1 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition hover:bg-slate-200"
                 >
                   <span>𝕏</span> Twitter
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -148,10 +168,10 @@ export default async function PublicPlayerDetailPage({
 
               <div className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-2xl shadow-sm text-center">
                 <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
-                  Picior Preferat
+                  Goluri Înscrise
                 </span>
-                <span className="text-base font-bold font-headline text-lime-600 dark:text-lime-400 mt-2 block">
-                  Drept (Right)
+                <span className="text-3xl font-black data-font text-lime-600 dark:text-lime-400 mt-1 block">
+                  {player.goals || 0} ⚽
                 </span>
               </div>
 
@@ -160,7 +180,7 @@ export default async function PublicPlayerDetailPage({
                   Rating Performanță
                 </span>
                 <span className="text-3xl font-black data-font text-lime-600 dark:text-lime-400 mt-1 block">
-                  8.8
+                  {player.rating || 8.8} ⭐
                 </span>
               </div>
             </div>
@@ -249,7 +269,7 @@ export default async function PublicPlayerDetailPage({
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200/60 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-400 mt-auto">
+      <footer className="border-t border-slate-200/60 dark:border-slate-800/60 py-8 text-center text-xs font-label text-slate-400">
         © {new Date().getFullYear()} Ligue Pro. Toate drepturile rezervate.
       </footer>
     </div>
