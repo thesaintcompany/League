@@ -11,14 +11,12 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { name: "Dashboard", href: "/dashboard", icon: "dashboard" },
-  { name: "Campionate", href: "/dashboard", icon: "trophy" },
-  { name: "Meciuri & Arbitraj", href: "/dashboard", icon: "sports_soccer" },
-  { name: "Clasamente", href: "/dashboard", icon: "leaderboard" },
-  { name: "Brackets Live", href: "/dashboard", icon: "account_tree" },
-  { name: "Echipe & Jucători", href: "/dashboard", icon: "groups" },
-  { name: "Promotion Hub", href: "/dashboard", icon: "campaign" },
-  { name: "Setări", href: "/profile", icon: "settings" },
+  { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
+  { name: "Arene & Stadioane", href: "/venues", icon: "stadium" },
+  { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
+  { name: "Corp Arbitri", href: "/referees", icon: "sports" },
+  { name: "Pagina Publică", href: "/", icon: "public" },
+  { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
 ];
 
 export function Sidebar() {

@@ -144,6 +144,21 @@ export default async function HomePage() {
             <span className="w-2 h-2 rounded-full bg-lime-500 animate-pulse"></span>
             PRO LEAGUE LIVE
           </div>
+
+          <nav className="hidden lg:flex items-center gap-6 text-xs font-label font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 ml-4">
+            <Link href="/" className="text-primary dark:text-lime-400 font-black">
+              Campionat
+            </Link>
+            <Link href="/venues" className="hover:text-primary dark:hover:text-lime-400 transition">
+              Arene &amp; Stadioane
+            </Link>
+            <Link href="/players" className="hover:text-primary dark:hover:text-lime-400 transition">
+              Jucători
+            </Link>
+            <Link href="/referees" className="hover:text-primary dark:hover:text-lime-400 transition">
+              Arbitri
+            </Link>
+          </nav>
         </div>
 
         <div className="flex items-center gap-4">
