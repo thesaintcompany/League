@@ -199,7 +199,7 @@ export default async function PublicPlayerDetailPage({
                     {player.team?.name}
                   </h3>
                   <p className="text-xs text-slate-500 font-label">
-                    Competiție: {player.team?.championship?.name || "Liga Națională Pro"}
+                    Competiție: {player.team?.championship?.name || "Liga Pro România"}
                   </p>
                 </div>
               </div>

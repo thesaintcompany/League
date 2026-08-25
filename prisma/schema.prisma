@@ -136,12 +136,17 @@ model Team {
 }
 
 model Player {
-  id        String   @id @default(cuid())
-  name      String
-  number    Int?
-  position  String?
-  teamId    String
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  name         String
+  number       Int?
+  position     String?
+  goals        Int      @default(0)
+  matchesCount Int      @default(0)
+  assists      Int      @default(0)
+  rating       Float    @default(8.5)
+  image        String?
+  teamId       String
+  createdAt    DateTime @default(now())
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 

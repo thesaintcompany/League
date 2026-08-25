@@ -81,7 +81,7 @@ export default function NewChampionshipPage() {
                   className="input"
                   value={form.name}
                   onChange={(e) => update("name", e.target.value)}
-                  placeholder="ex: Liga Națională Pro 2026"
+                  placeholder="ex: Liga Pro România 2026"
                 />
               </div>
 

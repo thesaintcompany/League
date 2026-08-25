@@ -199,7 +199,7 @@ export default async function HomePage() {
                 </span>
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-headline">
-                {championship?.name || "Liga Națională Pro"}
+                {championship?.name || "Liga Pro România 2026"}
               </h1>
               {championship?.description && (
                 <p className="text-slate-300 mt-2 max-w-2xl text-sm sm:text-base font-body">
