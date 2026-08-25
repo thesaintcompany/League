@@ -139,21 +139,45 @@ export function MatchCard({ match, onEdit, isAdmin = false }: MatchCardProps) {
       </div>
 
       {/* Footer / Actions */}
-      <div className="mt-4 pt-3 border-t border-slate-200/50 dark:border-slate-800/50 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+      <div className="mt-4 pt-3 border-t border-slate-200/50 dark:border-slate-800/50 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
         <div className="flex items-center gap-1.5 truncate">
           <span className="material-symbols-outlined text-[15px]">stadium</span>
           <span className="truncate">{match.venue || "Stadion Central"}</span>
         </div>
 
-        {isAdmin && onEdit && (
-          <button
-            onClick={() => onEdit(match)}
-            className="flex items-center gap-1 font-label font-bold text-xs text-blue-950 dark:text-lime-400 hover:underline shrink-0 pl-2"
+        <div className="flex items-center gap-2">
+          <a
+            href={`/matches/${match.id}/promo`}
+            className="text-[11px] font-label font-bold text-slate-600 dark:text-slate-300 hover:text-lime-600 flex items-center gap-0.5"
+            title="Promo meci și bilete"
           >
-            <span className="material-symbols-outlined text-[15px]">edit_note</span>
-            Arbitraj / Scor
-          </button>
-        )}
+            <span className="material-symbols-outlined text-[13px]">campaign</span>
+            Promo
+          </a>
+
+          {(isFinished || isLive) && (
+            <a
+              href={`/matches/${match.id}/report`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[11px] font-label font-bold text-slate-600 dark:text-slate-300 hover:text-blue-950 dark:hover:text-white flex items-center gap-0.5"
+              title="Raport oficial PDF"
+            >
+              <span className="material-symbols-outlined text-[13px]">description</span>
+              PDF
+            </a>
+          )}
+
+          {isAdmin && onEdit && (
+            <button
+              onClick={() => onEdit(match)}
+              className="flex items-center gap-1 font-label font-bold text-xs text-blue-950 dark:text-lime-400 hover:underline shrink-0 pl-1"
+            >
+              <span className="material-symbols-outlined text-[15px]">edit_note</span>
+              Arbitraj
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
