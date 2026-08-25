@@ -33,12 +33,14 @@ type Match = {
 };
 
 import { PromotionHub } from "./PromotionHub";
+import { OrganizerTicketingTab } from "./OrganizerTicketingTab";
 
 const TABS = [
   { key: "standings", label: "Clasament General", icon: "leaderboard" },
   { key: "matches", label: "Program & Arbitraj", icon: "sports_soccer" },
   { key: "brackets", label: "Arbore Brackets & Zaruri 🎲", icon: "casino" },
   { key: "teams", label: "Echipe Înscrise 🛡️", icon: "shield" },
+  { key: "tickets", label: "Bilete & Scanner Porți 🎟️", icon: "confirmation_number" },
   { key: "promo", label: "Promotion Hub 📢", icon: "campaign" },
 ] as const;
 
@@ -167,6 +169,13 @@ export function ChampionshipTabs({
             championshipId={championshipId}
             teams={initialTeams}
             onChanged={() => router.refresh()}
+          />
+        )}
+
+        {tab === "tickets" && (
+          <OrganizerTicketingTab
+            championshipId={championshipId}
+            matches={initialMatches}
           />
         )}
 

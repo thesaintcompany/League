@@ -218,13 +218,79 @@ model Match {
   sponsorLogoUrl  String?
   sponsorTagline  String?  @default("Partener Oficial de Performanță")
 
+  // Organizer Payout & Gatekeeper Access Secret
+  organizerIban          String?
+  organizerBank          String?
+  organizerAccountHolder String?
+  gateAccessSecret       String?  @default(cuid())
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
   championship Championship @relation(fields: [championshipId], references: [id], onDelete: Cascade)
   homeTeam     Team         @relation("HomeTeam", fields: [homeTeamId], references: [id])
   awayTeam     Team         @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  ticketTiers  TicketTier[]
+  tickets      Ticket[]
 
   @@index([championshipId])
   @@index([scheduledAt])
 }
+
+model SystemSetting {
+  id                    String   @id @default("default")
+  platformFeePercent    Float    @default(10.0) // Comision platformă Super Admin %
+  stripePublishableKey  String?
+  stripeSecretKey       String?
+  paypalClientId        String?
+  applePayEnabled       Boolean  @default(true)
+  googlePayEnabled      Boolean  @default(true)
+  payoutMinThreshold    Int      @default(100)
+  updatedAt             DateTime @updatedAt
+}
+
+model TicketTier {
+  id          String   @id @default(cuid())
+  matchId     String
+  name        String   // e.g. "Tribuna 1 Central", "Peluza Nord", "Loja VIP"
+  price       Float    @default(25.0)
+  totalSeats  Int      @default(100)
+  soldSeats   Int      @default(0)
+  gateNumber  String?  @default("Poarta A (Nord)")
+  createdAt   DateTime @default(now())
+
+  match       Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  tickets     Ticket[]
+
+  @@index([matchId])
+}
+
+model Ticket {
+  id              String    @id @default(cuid())
+  ticketCode      String    @unique // e.g. "TCK-2026-98FA"
+  matchId         String
+  tierId          String?
+  buyerName       String
+  buyerEmail      String
+  buyerPhone      String?
+  seatSector      String    @default("Tribuna 1")
+  seatRow         String?   @default("Rând 5")
+  seatNumber      String?   @default("Loc 12")
+  price           Float     @default(25.0)
+  platformFee     Float     @default(2.5) // Cota platformei
+  organizerPayout Float     @default(22.5) // Cota organizatorului
+  paymentMethod   String    @default("card") // card | paypal | apple_pay | google_pay
+  paymentStatus   String    @default("paid") // paid | pending | refunded
+  status          String    @default("valid") // valid | used | cancelled
+  qrPayload       String    // Signature / Verification token
+  checkedInAt     DateTime?
+  checkedInBy     String?   // Nume steward sau poartă
+  createdAt       DateTime  @default(now())
+
+  match           Match       @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  tier            TicketTier? @relation(fields: [tierId], references: [id], onDelete: SetNull)
+
+  @@index([matchId])
+  @@index([ticketCode])
+}
+

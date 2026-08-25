@@ -30,13 +30,27 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
   const [showTicketModal, setShowTicketModal] = useState(false);
   const [ticketCount, setTicketCount] = useState(1);
   const [ticketSector, setTicketSector] = useState("Tribuna 1 Central");
-  const [ticketConfirmed, setTicketConfirmed] = useState(false);
+  const [buyerName, setBuyerName] = useState("");
+  const [buyerEmail, setBuyerEmail] = useState("");
+  const [buyerPhone, setBuyerPhone] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "apple_pay" | "google_pay" | "paypal">("card");
+  const [processing, setProcessing] = useState(false);
+  const [purchasedTicket, setPurchasedTicket] = useState<{ id: string; ticketCode: string } | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
 
   const scheduledDate = React.useMemo(() => {
     return match.scheduledAt ? new Date(match.scheduledAt) : new Date(Date.now() + 86400000 * 3);
   }, [match.scheduledAt]);
-  const price = match.ticketPrice || 25;
+
+  const priceMap: Record<string, number> = {
+    "Tribuna 1 Central": match.ticketPrice || 30,
+    "Tribuna 2": (match.ticketPrice || 30) - 5,
+    "Peluza Gazde": Math.max(15, (match.ticketPrice || 30) - 10),
+    "Loja VIP Executive": (match.ticketPrice || 30) * 3,
+  };
+
+  const unitPrice = priceMap[ticketSector] || (match.ticketPrice || 25);
+  const totalPrice = unitPrice * ticketCount;
 
   useEffect(() => {
     function updateCountdown() {
@@ -65,13 +79,41 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
     setTimeout(() => setCopiedLink(false), 2500);
   }
 
-  function handleBuyTicket(e: React.FormEvent) {
+  async function handleBuyTicket(e: React.FormEvent) {
     e.preventDefault();
-    setTicketConfirmed(true);
-    setTimeout(() => {
-      setTicketConfirmed(false);
-      setShowTicketModal(false);
-    }, 2500);
+    if (!buyerName || !buyerEmail) return;
+    setProcessing(true);
+
+    try {
+      const res = await fetch("/api/tickets/buy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          matchId: match.id,
+          quantity: ticketCount,
+          buyerName,
+          buyerEmail,
+          buyerPhone,
+          paymentMethod,
+          seatSector: ticketSector,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.tickets && data.tickets.length > 0) {
+        setPurchasedTicket({
+          id: data.tickets[0].id,
+          ticketCode: data.tickets[0].ticketCode,
+        });
+      } else {
+        alert(data.error || "Eroare la emiterea biletului.");
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert("Eroare de conexiune la serverul de plăți.");
+    } finally {
+      setProcessing(false);
+    }
   }
 
   const champName = match.championship?.name || "Ligue Pro România";
@@ -193,10 +235,13 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
           <div className="flex flex-wrap justify-center gap-4 pt-4 max-w-md mx-auto">
             <button
               type="button"
-              onClick={() => setShowTicketModal(true)}
+              onClick={() => {
+                setPurchasedTicket(null);
+                setShowTicketModal(true);
+              }}
               className="flex-1 min-w-[200px] py-4 bg-lime-400 hover:bg-lime-300 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-xl transition active:scale-95 flex items-center justify-center gap-2"
             >
-              <span>🎟️</span> Rezervă Bilet ({price} RON)
+              <span>🎟️</span> Cumpără Bilet Online ({unitPrice} RON)
             </button>
 
             <a
@@ -268,12 +313,12 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
             <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
               <span className="w-3 h-7 bg-blue-400 rounded-full"></span>
               <h3 className="text-lg font-bold font-headline uppercase text-white">
-                📄 Documente Oficiale
+                📄 Documente &amp; Scanare Porți
               </h3>
             </div>
 
             <p className="text-xs text-slate-300 font-body leading-relaxed">
-              Descărcați raportul oficial de arbitraj, foaia de joc cu primul 11 și istoricul confruntărilor directe dintre cele două echipe.
+              Descărcați raportul oficial de arbitraj, foaia de joc cu primul 11 sau activați scannerul mobil de la porți.
             </p>
 
             <div className="space-y-3 pt-2">
@@ -286,24 +331,24 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
               </Link>
 
               <Link
-                href={`/campionat?id=${match.championship?.id || ""}`}
-                className="w-full py-3.5 bg-lime-400 hover:bg-lime-300 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 transition shadow-lg"
+                href={`/tickets/scanner?matchId=${match.id}`}
+                className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black font-headline text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 transition shadow-lg"
               >
-                <span>🏆</span> Vezi Clasamentul Campionatului
+                <span>📲</span> Deschide Scanner Mobil Porți
               </Link>
             </div>
           </div>
         </div>
       </main>
 
-      {/* Ticket Modal */}
+      {/* Multi-Gateway Ticket Purchase Modal */}
       {showTicketModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-slate-900 border-2 border-lime-400/60 rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-6 shadow-2xl text-white animate-in fade-in zoom-in-95">
+          <div className="bg-slate-900 border-2 border-lime-400/60 rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-6 shadow-2xl text-white animate-in fade-in zoom-in-95 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start pb-3 border-b border-slate-800">
               <div>
                 <span className="text-[10px] font-black uppercase font-label text-lime-400">
-                  REZERVARE BILETE ACCES
+                  ACHIZIȚIE BILETE ONLINE • EMITERE INSTANTANEE
                 </span>
                 <h3 className="text-lg font-black font-headline uppercase text-white mt-0.5">
                   {match.homeTeam.name} vs {match.awayTeam.name}
@@ -318,69 +363,200 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
               </button>
             </div>
 
-            {ticketConfirmed ? (
-              <div className="p-6 rounded-2xl bg-lime-400/10 border border-lime-400 text-center space-y-3">
-                <span className="text-4xl block">✅</span>
-                <h4 className="font-headline font-bold text-base text-lime-400 uppercase">
-                  Rezervare Confirmată cu Succes!
-                </h4>
-                <p className="text-xs text-slate-200">
-                  {ticketCount} bilet(e) rezervat(e) în <strong>{ticketSector}</strong>. Biletul a fost generat digital.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleBuyTicket} className="space-y-4">
+            {purchasedTicket ? (
+              <div className="p-6 rounded-3xl bg-lime-400/10 border-2 border-lime-400 text-center space-y-4">
+                <span className="text-5xl block animate-bounce">🎟️</span>
                 <div>
-                  <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
-                    Selectează Sector / Zonă
-                  </label>
-                  <select
-                    value={ticketSector}
-                    onChange={(e) => setTicketSector(e.target.value)}
-                    className="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-xs font-bold text-white focus:outline-none focus:border-lime-400"
-                  >
-                    <option value="Tribuna 1 Central">Tribuna 1 Central ({price} RON)</option>
-                    <option value="Tribuna 2">Tribuna 2 ({price} RON)</option>
-                    <option value="Peluza Gazde">Peluza Gazde ({price - 5} RON)</option>
-                    <option value="Loja VIP Executive">Loja VIP Executive ({price * 3} RON)</option>
-                  </select>
+                  <span className="text-[10px] uppercase font-mono font-bold text-lime-400">
+                    PLATĂ CONFIRMATĂ CU SUCCES
+                  </span>
+                  <h4 className="font-headline font-black text-xl text-white uppercase mt-1">
+                    Biletul tău este Gata!
+                  </h4>
+                  <p className="text-xs font-mono font-bold text-lime-300 mt-1">
+                    Cod Bilet: #{purchasedTicket.ticketCode}
+                  </p>
                 </div>
 
-                <div>
-                  <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
-                    Număr de Bilete
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setTicketCount(Math.max(1, ticketCount - 1))}
-                      className="w-10 h-10 rounded-xl bg-slate-800 text-white font-bold text-lg"
+                <div className="pt-2 space-y-2.5">
+                  <Link
+                    href={`/tickets/${purchasedTicket.id}/print`}
+                    target="_blank"
+                    className="w-full py-4 bg-lime-400 hover:bg-lime-300 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-xl flex items-center justify-center gap-2 transition"
+                  >
+                    <span>📄</span> Descarcă / Imprimă Bilet A4 PDF ↗
+                  </Link>
+
+                  <a
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`🎟️ Iată biletul meu la meciul ${match.homeTeam.name} vs ${match.awayTeam.name}: https://sp.buu.ro/tickets/${purchasedTicket.id}/print`)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold font-label text-xs uppercase rounded-2xl flex items-center justify-center gap-2 transition"
+                  >
+                    <span>💬</span> Trimite Bilet pe WhatsApp
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleBuyTicket} className="space-y-5">
+                {/* Sector & Quantity */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[10px] font-bold font-label text-slate-300 uppercase block mb-1">
+                      Sector / Categorie Bilet
+                    </label>
+                    <select
+                      value={ticketSector}
+                      onChange={(e) => setTicketSector(e.target.value)}
+                      className="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-xs font-bold text-white focus:outline-none focus:border-lime-400"
                     >
-                      -
-                    </button>
-                    <span className="text-xl font-black font-mono px-4">{ticketCount}</span>
-                    <button
-                      type="button"
-                      onClick={() => setTicketCount(Math.min(10, ticketCount + 1))}
-                      className="w-10 h-10 rounded-xl bg-slate-800 text-white font-bold text-lg"
-                    >
-                      +
-                    </button>
-                    <div className="ml-auto text-right">
-                      <span className="text-[10px] text-slate-400 uppercase font-label block">Total</span>
-                      <span className="text-xl font-black font-mono text-lime-400">
-                        {price * ticketCount} RON
-                      </span>
+                      <option value="Tribuna 1 Central">Tribuna 1 Central ({priceMap["Tribuna 1 Central"]} RON)</option>
+                      <option value="Tribuna 2">Tribuna 2 ({priceMap["Tribuna 2"]} RON)</option>
+                      <option value="Peluza Gazde">Peluza Gazde ({priceMap["Peluza Gazde"]} RON)</option>
+                      <option value="Loja VIP Executive">Loja VIP Executive ({priceMap["Loja VIP Executive"]} RON)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-bold font-label text-slate-300 uppercase block mb-1">
+                      Număr de Bilete
+                    </label>
+                    <div className="flex items-center gap-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-700">
+                      <button
+                        type="button"
+                        onClick={() => setTicketCount(Math.max(1, ticketCount - 1))}
+                        className="w-8 h-8 rounded-xl bg-slate-800 text-white font-bold text-base"
+                      >
+                        -
+                      </button>
+                      <span className="flex-1 text-center font-black font-mono text-sm">{ticketCount}</span>
+                      <button
+                        type="button"
+                        onClick={() => setTicketCount(Math.min(10, ticketCount + 1))}
+                        className="w-8 h-8 rounded-xl bg-slate-800 text-white font-bold text-base"
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full py-4 bg-lime-400 hover:bg-lime-300 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-xl transition"
-                >
-                  Confirmă Rezervarea Biletului 🎟️
-                </button>
+                {/* Buyer Details */}
+                <div className="space-y-3 pt-2 border-t border-slate-800">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label block">
+                    Date Spectator (Titular Bilet)
+                  </span>
+
+                  <div>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Nume și Prenume Spectator *"
+                      value={buyerName}
+                      onChange={(e) => setBuyerName(e.target.value)}
+                      className="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-xs font-bold text-white focus:outline-none focus:border-lime-400"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input
+                      type="email"
+                      required
+                      placeholder="Adresă Email *"
+                      value={buyerEmail}
+                      onChange={(e) => setBuyerEmail(e.target.value)}
+                      className="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-xs font-bold text-white focus:outline-none focus:border-lime-400"
+                    />
+                    <input
+                      type="tel"
+                      placeholder="Telefon (Opțional)"
+                      value={buyerPhone}
+                      onChange={(e) => setBuyerPhone(e.target.value)}
+                      className="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-xs font-bold text-white focus:outline-none focus:border-lime-400"
+                    />
+                  </div>
+                </div>
+
+                {/* Payment Gateway Selector */}
+                <div className="space-y-2 pt-2 border-t border-slate-800">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label block">
+                    Alege Metoda de Plată
+                  </span>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod("card")}
+                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 ${
+                        paymentMethod === "card"
+                          ? "border-lime-400 bg-lime-400/10 text-lime-400 font-bold"
+                          : "border-slate-800 bg-slate-950 text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      <span className="text-lg">💳</span>
+                      <span className="text-[10px] font-label">Card Stripe</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod("apple_pay")}
+                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 ${
+                        paymentMethod === "apple_pay"
+                          ? "border-lime-400 bg-lime-400/10 text-lime-400 font-bold"
+                          : "border-slate-800 bg-slate-950 text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      <span className="text-lg">🍎</span>
+                      <span className="text-[10px] font-label">Apple Pay</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod("google_pay")}
+                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 ${
+                        paymentMethod === "google_pay"
+                          ? "border-lime-400 bg-lime-400/10 text-lime-400 font-bold"
+                          : "border-slate-800 bg-slate-950 text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      <span className="text-lg">🟢</span>
+                      <span className="text-[10px] font-label">Google Pay</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod("paypal")}
+                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 ${
+                        paymentMethod === "paypal"
+                          ? "border-lime-400 bg-lime-400/10 text-lime-400 font-bold"
+                          : "border-slate-800 bg-slate-950 text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      <span className="text-lg">🅿️</span>
+                      <span className="text-[10px] font-label">PayPal</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Total & Checkout Button */}
+                <div className="pt-3 border-t border-slate-800 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-bold font-label text-slate-400 uppercase">
+                      Total de Plată ({ticketCount} bilet{ticketCount > 1 ? "e" : ""}):
+                    </span>
+                    <span className="text-2xl font-black font-mono text-lime-400">
+                      {totalPrice} RON
+                    </span>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={processing}
+                    className="w-full py-4 bg-lime-400 hover:bg-lime-300 disabled:opacity-50 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-xl transition active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    <span>🔒</span> {processing ? "Procesare Plată..." : `Plătește ${totalPrice} RON & Emite Bilet`}
+                  </button>
+                </div>
               </form>
             )}
           </div>

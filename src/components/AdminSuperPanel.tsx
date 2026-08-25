@@ -34,12 +34,31 @@ interface UserItem {
 }
 
 export function AdminSuperPanel() {
-  const [activeTab, setActiveTab] = useState<"venues" | "users">("venues");
+  const [activeTab, setActiveTab] = useState<"venues" | "users" | "tickets">("venues");
   const [venues, setVenues] = useState<VenueItem[]>([]);
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [sportFilter, setSportFilter] = useState("all");
+
+  // Ticketing & Platform Fee Settings State
+  const [ticketSettings, setTicketSettings] = useState({
+    platformFeePercent: 10.0,
+    stripePublishableKey: "",
+    stripeSecretKey: "",
+    paypalClientId: "",
+    applePayEnabled: true,
+    googlePayEnabled: true,
+    payoutMinThreshold: 100,
+  });
+  const [ticketStats, setTicketStats] = useState({
+    totalTicketsSold: 0,
+    totalGrossRevenue: 0,
+    totalPlatformFees: 0,
+    totalOrganizerPayouts: 0,
+  });
+  const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
+  const [savingSettings, setSavingSettings] = useState(false);
 
   // Edit / Create Modal State
   const [modalOpen, setModalOpen] = useState(false);
@@ -67,18 +86,45 @@ export function AdminSuperPanel() {
   async function loadData() {
     setLoading(true);
     try {
-      const [vRes, uRes] = await Promise.all([
+      const [vRes, uRes, sRes] = await Promise.all([
         fetch("/api/admin/venues"),
         fetch("/api/admin/users"),
+        fetch("/api/admin/settings"),
       ]);
       const vData = await vRes.json();
       const uData = await uRes.json();
+      const sData = await sRes.json();
       if (vData.venues) setVenues(vData.venues);
       if (uData.users) setUsers(uData.users);
+      if (sData.settings) {
+        setTicketSettings(sData.settings);
+        if (sData.stats) setTicketStats(sData.stats);
+        if (sData.recentTransactions) setRecentTransactions(sData.recentTransactions);
+      }
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleSaveTicketSettings(e: React.FormEvent) {
+    e.preventDefault();
+    setSavingSettings(true);
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(ticketSettings),
+      });
+      if (res.ok) {
+        showToast("Setările de comision și plăți au fost salvate cu succes! ✓");
+        loadData();
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSavingSettings(false);
     }
   }
 
@@ -310,6 +356,17 @@ export function AdminSuperPanel() {
             }`}
           >
             👥 Toți Utilizatorii ({users.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("tickets")}
+            className={`px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition ${
+              activeTab === "tickets"
+                ? "bg-primary text-white shadow-sm font-black"
+                : "text-slate-600 dark:text-slate-400 hover:text-blue-950"
+            }`}
+          >
+            🎟️ Vânzări Bilete &amp; Comisioane
           </button>
         </div>
 
@@ -578,6 +635,270 @@ export function AdminSuperPanel() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* 3. TICKETING & COMMISSIONS TAB */}
+      {activeTab === "tickets" && (
+        <div className="space-y-8 animate-in fade-in">
+          {/* Financial Summary Bento */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-1">
+              <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
+                Total Bilete Emise
+              </span>
+              <p className="text-3xl font-black data-font text-blue-950 dark:text-white">
+                {ticketStats.totalTicketsSold}
+              </p>
+              <p className="text-xs text-slate-500 font-label">Bilete vândute online pe platformă</p>
+            </div>
+
+            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-1">
+              <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
+                Volum Brut Încasat
+              </span>
+              <p className="text-3xl font-black data-font text-blue-950 dark:text-white">
+                {ticketStats.totalGrossRevenue.toFixed(2)} RON
+              </p>
+              <p className="text-xs text-slate-500 font-label">Valoare totală tranzacții spectatori</p>
+            </div>
+
+            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-1 border-l-4 border-l-lime-400">
+              <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
+                Venit Net Platformă ({ticketSettings.platformFeePercent}%)
+              </span>
+              <p className="text-3xl font-black data-font text-lime-600 dark:text-lime-400">
+                {ticketStats.totalPlatformFees.toFixed(2)} RON
+              </p>
+              <p className="text-xs text-lime-600 dark:text-lime-400 font-label font-bold">
+                Comision reținut automat de SuperAdmin
+              </p>
+            </div>
+
+            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-1 border-l-4 border-l-blue-500">
+              <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
+                Viramente Organizatori
+              </span>
+              <p className="text-3xl font-black data-font text-blue-600 dark:text-blue-400">
+                {ticketStats.totalOrganizerPayouts.toFixed(2)} RON
+              </p>
+              <p className="text-xs text-slate-500 font-label">Bani virați în conturile organizatorilor</p>
+            </div>
+          </div>
+
+          {/* Platform Settings & Payment Gateways Config */}
+          <div className="card p-6 sm:p-8 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
+            <div className="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-lime-600 font-label">
+                  CONTROL FINANCIAR &amp; GATEWAY-URI PLĂȚI
+                </span>
+                <h3 className="text-xl font-bold font-headline uppercase text-blue-950 dark:text-white mt-0.5">
+                  Setări Comision Platformă &amp; Integrări Plăți (Stripe, PayPal, Apple &amp; Google Pay)
+                </h3>
+              </div>
+              <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase font-label">
+                SuperAdmin Only
+              </span>
+            </div>
+
+            <form onSubmit={handleSaveTicketSettings} className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                {/* Platform Commission Fee % */}
+                <div>
+                  <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1.5">
+                    Procent Comision Platformă (%) *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      max="50"
+                      required
+                      value={ticketSettings.platformFeePercent}
+                      onChange={(e) =>
+                        setTicketSettings({ ...ticketSettings, platformFeePercent: parseFloat(e.target.value) || 0 })
+                      }
+                      className="input text-sm font-bold data-font pr-8"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">%</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 font-label mt-1">
+                    Ex: 10% comision din valoarea fiecărui bilet vândut.
+                  </p>
+                </div>
+
+                {/* Stripe Publishable Key */}
+                <div>
+                  <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1.5">
+                    Stripe Publishable Key
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="pk_live_..."
+                    value={ticketSettings.stripePublishableKey || ""}
+                    onChange={(e) => setTicketSettings({ ...ticketSettings, stripePublishableKey: e.target.value })}
+                    className="input text-xs font-mono"
+                  />
+                  <p className="text-[11px] text-slate-500 font-label mt-1">Carduri Visa/Mastercard &amp; Apple Pay</p>
+                </div>
+
+                {/* PayPal Client ID */}
+                <div>
+                  <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1.5">
+                    PayPal Client ID
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="AbCdEfG..."
+                    value={ticketSettings.paypalClientId || ""}
+                    onChange={(e) => setTicketSettings({ ...ticketSettings, paypalClientId: e.target.value })}
+                    className="input text-xs font-mono"
+                  />
+                  <p className="text-[11px] text-slate-500 font-label mt-1">Plăți rapide PayPal &amp; PayLater</p>
+                </div>
+              </div>
+
+              {/* Digital Wallets Toggles */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-surface-container-low border border-slate-200/60 dark:border-slate-800">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={ticketSettings.applePayEnabled}
+                    onChange={(e) => setTicketSettings({ ...ticketSettings, applePayEnabled: e.target.checked })}
+                    className="rounded text-lime-500 focus:ring-lime-400 w-4 h-4"
+                  />
+                  <div>
+                    <span className="text-xs font-bold font-label text-blue-950 dark:text-white block">
+                      🍎 Activează Apple Pay la Checkout
+                    </span>
+                    <span className="text-[10px] text-slate-500">Plată cu 1-click pe iPhone, iPad și Mac</span>
+                  </div>
+                </label>
+
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={ticketSettings.googlePayEnabled}
+                    onChange={(e) => setTicketSettings({ ...ticketSettings, googlePayEnabled: e.target.checked })}
+                    className="rounded text-lime-500 focus:ring-lime-400 w-4 h-4"
+                  />
+                  <div>
+                    <span className="text-xs font-bold font-label text-blue-950 dark:text-white block">
+                      🟢 Activează Google Pay &amp; Wallet
+                    </span>
+                    <span className="text-[10px] text-slate-500">Plată rapidă pe telefoane Android și Chrome</span>
+                  </div>
+                </label>
+              </div>
+
+              <div className="flex justify-end pt-2">
+                <button
+                  type="submit"
+                  disabled={savingSettings}
+                  className="px-6 py-3 rounded-2xl bg-lime-400 hover:bg-lime-500 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg transition active:scale-95 flex items-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-base">save</span>
+                  {savingSettings ? "Se salvează..." : "Salvează Setările Financiare ✓"}
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Recent Ticket Transactions Table */}
+          <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+            <div className="flex justify-between items-center pb-2 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 className="text-lg font-bold font-headline uppercase text-blue-950 dark:text-white">
+                  📋 Jurnal Tranzacții Bilete &amp; Scanări Porți
+                </h3>
+                <p className="text-xs text-slate-500 font-label">
+                  Toate biletele emise, cota platformei, viramentele și validările la porți
+                </p>
+              </div>
+              <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-mono font-bold">
+                {recentTransactions.length} Înregistrări
+              </span>
+            </div>
+
+            {recentTransactions.length === 0 ? (
+              <div className="p-8 text-center text-xs text-slate-500 italic">
+                Nu există încă tranzacții de bilete înregistrate. Puteți cumpăra un bilet de test din pagina Promo a oricărui meci!
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-200/60 dark:border-slate-800 text-[10px] uppercase font-label font-bold text-slate-400">
+                      <th className="py-3 px-3">Cod Bilet</th>
+                      <th className="py-3 px-3">Meci &amp; Arenă</th>
+                      <th className="py-3 px-3">Cumpărător</th>
+                      <th className="py-3 px-3">Sector</th>
+                      <th className="py-3 px-3 text-right">Preț Total</th>
+                      <th className="py-3 px-3 text-right">Comision Platformă</th>
+                      <th className="py-3 px-3 text-right">Virament Org.</th>
+                      <th className="py-3 px-3 text-center">Status Poartă</th>
+                      <th className="py-3 px-3 text-right">Acțiuni</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs">
+                    {recentTransactions.map((t) => (
+                      <tr key={t.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition">
+                        <td className="py-3.5 px-3 font-mono font-bold text-lime-600 dark:text-lime-400">
+                          #{t.ticketCode}
+                        </td>
+                        <td className="py-3.5 px-3">
+                          <p className="font-bold text-blue-950 dark:text-white truncate max-w-[180px]">
+                            {t.match?.homeTeam?.name} vs {t.match?.awayTeam?.name}
+                          </p>
+                          <span className="text-[10px] text-slate-400">{t.match?.venue || "Arenă"}</span>
+                        </td>
+                        <td className="py-3.5 px-3">
+                          <p className="font-bold text-slate-800 dark:text-slate-200 truncate max-w-[140px]">
+                            {t.buyerName}
+                          </p>
+                          <span className="text-[10px] text-slate-400">{t.buyerEmail}</span>
+                        </td>
+                        <td className="py-3.5 px-3 font-label font-bold text-slate-700 dark:text-slate-300">
+                          {t.seatSector}
+                        </td>
+                        <td className="py-3.5 px-3 text-right font-mono font-black text-slate-900 dark:text-white">
+                          {t.price} RON
+                        </td>
+                        <td className="py-3.5 px-3 text-right font-mono font-bold text-lime-600 dark:text-lime-400">
+                          +{t.platformFee} RON
+                        </td>
+                        <td className="py-3.5 px-3 text-right font-mono font-bold text-blue-600 dark:text-blue-400">
+                          {t.organizerPayout} RON
+                        </td>
+                        <td className="py-3.5 px-3 text-center">
+                          {t.status === "used" ? (
+                            <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-[10px] font-black uppercase font-mono border border-emerald-300 dark:border-emerald-800">
+                              ✓ SCANAT INTRARE
+                            </span>
+                          ) : (
+                            <span className="px-2.5 py-1 rounded-full bg-lime-100 dark:bg-lime-950 text-lime-800 dark:text-lime-300 text-[10px] font-black uppercase font-mono border border-lime-300 dark:border-lime-800">
+                              VALID (NESCANAT)
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3.5 px-3 text-right">
+                          <Link
+                            href={`/tickets/${t.id}/print`}
+                            target="_blank"
+                            className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-lime-400 hover:text-slate-950 transition text-[11px] font-bold font-label uppercase"
+                          >
+                            Bilet A4 PDF ↗
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
       )}
