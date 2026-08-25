@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PublicHeader } from "@/components/PublicHeader";
+import { RefereeBadgePill } from "@/components/PublicRefereesCatalog";
 
 export const dynamic = "force-dynamic";
 
@@ -28,12 +29,18 @@ export default async function PublicRefereeDetailPage({
     take: 6,
   });
 
-  const coverImg =
-    referee.coverPhotoUrl ||
-    "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80";
-  const avatarImg =
-    referee.image ||
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80";
+  const isStadium =
+    referee.coverPhotoUrl?.includes("photo-1508098682722") ||
+    referee.coverPhotoUrl?.includes("photo-1574629810360") ||
+    referee.coverPhotoUrl?.includes("photo-1522778119026") ||
+    referee.image?.includes("photo-1508098682722");
+
+  const humanPhoto =
+    (!isStadium && (referee.coverPhotoUrl || referee.image)) ||
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=80";
+
+  const coverImg = humanPhoto;
+  const avatarImg = referee.image && !isStadium ? referee.image : humanPhoto;
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col font-body text-white relative">
@@ -54,11 +61,9 @@ export default async function PublicRefereeDetailPage({
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-                ⚖️ OFICIAL ATTESTAT FIFA / LIGUE PRO
+                ⚖️ OFICIAL ATESTAT FIFA / LIGUE PRO
               </span>
-              <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-xs font-label">
-                {referee.refereeBadge || "FIFA Pro Elite"}
-              </span>
+              <RefereeBadgePill badge={referee.refereeBadge} />
               <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-xs font-label border border-lime-400/30">
                 Experiență: {referee.experienceYears || 12} Ani
               </span>

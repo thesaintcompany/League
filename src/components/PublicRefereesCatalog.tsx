@@ -15,6 +15,48 @@ interface RefereeItem {
   coverPhotoUrl?: string | null;
 }
 
+// Fallback array of 30 genuine human referee & athletic portraits
+const REFEREE_HUMAN_FALLBACKS = [
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1519764622345-23439dd774f7?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1528892952291-009c663ce843?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1548142813-c348350df52b?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800&auto=format&fit=crop&q=80",
+];
+
+function getSafeRefereePhoto(ref: RefereeItem, idx: number): string {
+  // If the photo is a stadium image or empty, fallback to curated human portraits
+  const isStadium =
+    ref.coverPhotoUrl?.includes("photo-1508098682722") ||
+    ref.coverPhotoUrl?.includes("photo-1574629810360") ||
+    ref.coverPhotoUrl?.includes("photo-1522778119026") ||
+    ref.image?.includes("photo-1508098682722");
+
+  if (ref.coverPhotoUrl && !isStadium) return ref.coverPhotoUrl;
+  if (ref.image && !isStadium) return ref.image;
+  return REFEREE_HUMAN_FALLBACKS[idx % REFEREE_HUMAN_FALLBACKS.length];
+}
+
 // Generate realistic referee officiating telemetry
 function getRefereeTelemetry(ref: RefereeItem, idx: number) {
   const years = ref.experienceYears || 10;
@@ -32,6 +74,50 @@ function getRefereeTelemetry(ref: RefereeItem, idx: number) {
     penalties,
     rating: Math.min(9.8, parseFloat(rating)),
   };
+}
+
+/**
+ * Smart Badge Component:
+ * - If badge has <= 2 words: Renders compact stylish badge
+ * - If badge has > 2 words: Renders a glowing dot + 2 words, and full text on hover tooltip!
+ */
+export function RefereeBadgePill({ badge }: { badge?: string | null }) {
+  if (!badge) {
+    return (
+      <span className="px-2.5 py-0.5 rounded-full bg-slate-900/80 text-slate-300 text-[10px] font-bold font-label uppercase border border-slate-700">
+        Oficial FRF
+      </span>
+    );
+  }
+
+  const words = badge.trim().split(/\s+/);
+  const isLong = words.length > 2;
+
+  if (!isLong) {
+    return (
+      <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label shadow-sm">
+        {badge}
+      </span>
+    );
+  }
+
+  // Long badge (> 2 words): Show a sleek glowing dot + 2-word preview, and full text tooltip on mouseover!
+  const shortText = `${words[0]} ${words[1]}`;
+
+  return (
+    <div className="group/badge relative inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/90 backdrop-blur-md text-lime-400 text-[10px] font-black uppercase font-label border border-lime-400/40 cursor-help shadow-lg">
+      <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse shrink-0"></span>
+      <span className="truncate max-w-[90px]">{shortText}</span>
+
+      {/* Hover Floating Tooltip */}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 hidden group-hover/badge:flex flex-col items-center z-50 pointer-events-none min-w-[180px] animate-in fade-in zoom-in-95">
+        <span className="bg-slate-900 text-white text-[10px] font-bold py-1.5 px-3 rounded-xl border border-lime-400/50 shadow-2xl text-center leading-tight whitespace-nowrap">
+          {badge}
+        </span>
+        <span className="w-2 h-2 bg-slate-900 rotate-45 -mt-1 border-r border-b border-lime-400/50"></span>
+      </div>
+    </div>
+  );
 }
 
 export function PublicRefereesCatalog({ initialReferees }: { initialReferees: RefereeItem[] }) {
@@ -74,7 +160,6 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
     <div className="space-y-12 font-body">
       {/* Hero Header with B&W Shadow Background */}
       <section className="relative rounded-3xl overflow-hidden bg-slate-950 text-white p-8 sm:p-12 border border-lime-400/30 shadow-2xl">
-        {/* Black and White Silhouette Shadow Background */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-25 mix-blend-luminosity filter contrast-125"
           style={{ backgroundImage: "url('/images/legend-player-shadow-bw.jpg')" }}
@@ -92,7 +177,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
               30 Arbitri Licențiați
             </span>
             <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-[10px] uppercase font-label border border-lime-400/30">
-              🇷🇴 FIFA &amp; Liga Pro România
+              🇷🇴 FIFA &amp; Ligue Pro România
             </span>
           </div>
 
@@ -101,7 +186,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
           </h1>
 
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl font-body">
-            Comisia Centrală a Arbitrilor din cadrul Ligue Pro. Descoperă cei 30 de arbitri omologați cu poze în picioare (9:16), insigne FIFA Elite, statistici de disciplină și delegări transparente la partidele de campionat.
+            Comisia Centrală a Arbitrilor din cadrul Ligue Pro. Descoperă cei 30 de arbitri omologați cu portrete umane reale (9:16), ecusoane oficiale inteligente, telemetrie avansată și delegări transparente.
           </p>
 
           {/* Search & Category Filter Pills */}
@@ -164,9 +249,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {spotlightReferees.map((ref, idx) => {
               const tel = getRefereeTelemetry(ref, idx);
-              const coverImg =
-                ref.coverPhotoUrl ||
-                "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80";
+              const humanImg = getSafeRefereePhoto(ref, idx);
 
               return (
                 <Link
@@ -174,58 +257,61 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                   href={`/referees/${ref.id}`}
                   className="card bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 shadow-md hover:shadow-2xl hover:border-lime-400/60 rounded-3xl overflow-hidden group transition-all duration-300 flex flex-col justify-between"
                 >
-                  {/* 9:16 Standing Photo Container */}
+                  {/* 9:16 Real Human Portrait View */}
                   <div className="aspect-[9/13] w-full rounded-t-2xl overflow-hidden relative bg-slate-950 border-b border-slate-800">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={coverImg}
+                      src={humanImg}
                       alt={ref.name}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent flex flex-col justify-between p-4 text-white">
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-between p-4 text-white">
                       <div className="flex justify-between items-start">
-                        <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label shadow-sm">
-                          {ref.refereeBadge || "FIFA Pro"}
-                        </span>
+                        {/* Smart Badge Pill (Bulina with Hover Tooltip if > 2 words) */}
+                        <RefereeBadgePill badge={ref.refereeBadge} />
+
                         <span className="w-6 h-6 rounded-full bg-black/60 backdrop-blur-md text-amber-400 text-[11px] font-black flex items-center justify-center font-label">
                           #{idx + 1}
                         </span>
                       </div>
 
                       <div>
-                        <span className="text-[10px] font-label font-bold text-lime-400 uppercase tracking-widest block">
-                          Poză în picioare (9:16)
-                        </span>
                         <h3 className="font-headline font-bold text-white text-base leading-tight">
                           {ref.name}
                         </h3>
                         <p className="text-[11px] text-slate-300 font-label">
-                          {ref.experienceYears || 10} ani • {tel.matchesCount} Meciuri
+                          {ref.experienceYears || 10} ani experiență
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Card Bottom: Telemetry */}
+                  {/* Clean Streamlined Stats Ribbon (No cards in cards) */}
                   <div className="p-4 space-y-3 bg-surface-container-lowest">
-                    <div className="grid grid-cols-3 gap-1 text-center font-headline pt-1">
-                      <div className="p-1.5 rounded-xl bg-surface-container-low">
-                        <span className="text-xs font-black text-blue-950 dark:text-white block">
+                    <div className="py-2 px-2.5 rounded-2xl bg-surface-container-low border border-slate-200/50 dark:border-slate-800/80 flex items-center justify-between text-center divide-x divide-slate-200/60 dark:divide-slate-800">
+                      <div className="flex-1 px-1">
+                        <span className="text-xs font-black font-mono text-blue-950 dark:text-white block">
                           {tel.matchesCount}
                         </span>
-                        <span className="text-[9px] text-slate-400 font-label block">MECIURI</span>
+                        <span className="text-[9px] font-label font-bold text-slate-400 block uppercase">
+                          Meciuri
+                        </span>
                       </div>
-                      <div className="p-1.5 rounded-xl bg-surface-container-low">
-                        <span className="text-xs font-black text-amber-500 block">
+                      <div className="flex-1 px-1">
+                        <span className="text-xs font-black font-mono text-amber-500 block">
                           {tel.yellowPerMatch}
                         </span>
-                        <span className="text-[9px] text-slate-400 font-label block">🟨/MECI</span>
+                        <span className="text-[9px] font-label font-bold text-slate-400 block uppercase">
+                          🟨/Meci
+                        </span>
                       </div>
-                      <div className="p-1.5 rounded-xl bg-surface-container-low">
-                        <span className="text-xs font-black text-lime-600 dark:text-lime-400 block">
+                      <div className="flex-1 px-1">
+                        <span className="text-xs font-black font-mono text-lime-600 dark:text-lime-400 block">
                           {tel.rating}⭐
                         </span>
-                        <span className="text-[9px] text-slate-400 font-label block">RATING</span>
+                        <span className="text-[9px] font-label font-bold text-slate-400 block uppercase">
+                          Rating
+                        </span>
                       </div>
                     </div>
 
@@ -273,9 +359,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filtered.map((ref, idx) => {
               const tel = getRefereeTelemetry(ref, idx);
-              const coverImg =
-                ref.coverPhotoUrl ||
-                "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80";
+              const humanImg = getSafeRefereePhoto(ref, idx);
 
               return (
                 <Link
@@ -283,28 +367,25 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                   href={`/referees/${ref.id}`}
                   className="card bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-lime-400/50 rounded-3xl overflow-hidden group transition-all duration-300 flex flex-col justify-between"
                 >
-                  {/* 9:16 Standing Photo View */}
+                  {/* 9:16 Real Human Portrait View */}
                   <div className="aspect-[9/12] w-full rounded-t-2xl overflow-hidden relative bg-slate-950 border-b border-slate-800">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={coverImg}
+                      src={humanImg}
                       alt={ref.name}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-between p-4 text-white">
                       <div className="flex justify-between items-start">
-                        <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label shadow-sm">
-                          {ref.refereeBadge || "FIFA Pro"}
-                        </span>
+                        {/* Smart Badge Pill (Bulina with Hover Tooltip if > 2 words) */}
+                        <RefereeBadgePill badge={ref.refereeBadge} />
+
                         <span className="px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-lime-400 text-[10px] font-bold font-label">
                           {ref.experienceYears || 10} Ani Exp.
                         </span>
                       </div>
 
                       <div>
-                        <span className="text-[9px] font-label font-bold text-lime-400 uppercase tracking-widest block">
-                          Poză în picioare (9:16)
-                        </span>
                         <h3 className="font-headline font-bold text-white text-base leading-tight">
                           {ref.name}
                         </h3>
@@ -315,13 +396,40 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                     </div>
                   </div>
 
-                  {/* Referee Bottom Telemetry */}
+                  {/* Clean Streamlined Stats Ribbon (No cards in cards) */}
                   <div className="p-4 space-y-3 bg-surface-container-lowest">
                     {ref.bio && (
                       <p className="text-xs text-slate-600 dark:text-slate-400 font-body line-clamp-2 leading-relaxed">
                         {ref.bio}
                       </p>
                     )}
+
+                    <div className="py-2 px-2.5 rounded-2xl bg-surface-container-low border border-slate-200/50 dark:border-slate-800/80 flex items-center justify-between text-center divide-x divide-slate-200/60 dark:divide-slate-800">
+                      <div className="flex-1 px-1">
+                        <span className="text-xs font-black font-mono text-blue-950 dark:text-white block">
+                          {tel.matchesCount}
+                        </span>
+                        <span className="text-[9px] font-label font-bold text-slate-400 block uppercase">
+                          Meciuri
+                        </span>
+                      </div>
+                      <div className="flex-1 px-1">
+                        <span className="text-xs font-black font-mono text-amber-500 block">
+                          {tel.yellowPerMatch}
+                        </span>
+                        <span className="text-[9px] font-label font-bold text-slate-400 block uppercase">
+                          🟨/Meci
+                        </span>
+                      </div>
+                      <div className="flex-1 px-1">
+                        <span className="text-xs font-black font-mono text-lime-600 dark:text-lime-400 block">
+                          {tel.rating}⭐
+                        </span>
+                        <span className="text-[9px] font-label font-bold text-slate-400 block uppercase">
+                          Rating
+                        </span>
+                      </div>
+                    </div>
 
                     <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-label font-bold text-slate-400 group-hover:text-blue-950 dark:group-hover:text-white">
                       <span>Vezi Partide Arbitrate</span>
