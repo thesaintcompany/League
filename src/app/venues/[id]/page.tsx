@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { PublicHeader } from "@/components/PublicHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -52,27 +53,7 @@ export default async function PublicVenueDetailPage({
   return (
     <div className="min-h-screen bg-surface flex flex-col font-body">
       {/* Top Navbar */}
-      <header className="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-primary dark:bg-lime-400 flex items-center justify-center text-white dark:text-primary font-black text-lg shadow-sm">
-              ⚡
-            </div>
-            <span className="text-xl font-black italic tracking-tight text-blue-950 dark:text-white uppercase font-headline">
-              Ligue
-            </span>
-          </Link>
-
-          <div className="flex items-center gap-4">
-            <Link
-              href="/venues"
-              className="text-xs font-label font-bold text-slate-500 hover:text-blue-950 dark:hover:text-white"
-            >
-              ← Înapoi la Toate Arenele
-            </Link>
-          </div>
-        </div>
-      </header>
+      <PublicHeader currentTab="venues" />
 
       {/* Hero Section with Stadium Glow */}
       <section className="bg-primary text-white py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">

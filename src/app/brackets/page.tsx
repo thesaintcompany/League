@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { BracketVisualizer } from "@/components/BracketVisualizer";
+import { PublicHeader } from "@/components/PublicHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -53,56 +54,7 @@ export default async function PublicBracketsPage() {
   return (
     <div className="min-h-screen bg-surface flex flex-col font-body text-on-surface">
       {/* Top Bar Header */}
-      <header className="sticky top-0 z-50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60 h-20 px-6 lg:px-12 flex justify-between items-center">
-        <div className="flex items-center gap-6">
-          <Link href="/campionat" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-primary dark:bg-lime-400 flex items-center justify-center text-white dark:text-primary font-black text-lg shadow-sm">
-              ⚡
-            </div>
-            <span className="text-xl font-black italic tracking-tight text-blue-950 dark:text-white uppercase font-headline">
-              Ligue
-            </span>
-          </Link>
-
-          <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lime-100 dark:bg-lime-950/50 text-lime-800 dark:text-lime-400 border border-lime-300/60 text-xs font-bold font-label">
-            <span className="w-2 h-2 rounded-full bg-lime-500 animate-pulse"></span>
-            HARTĂ OFICIALĂ PUBLICĂ
-          </div>
-
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-label font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 ml-4">
-            <Link href="/campionat" className="hover:text-primary dark:hover:text-lime-400 transition">
-              Campionat
-            </Link>
-            <Link href="/brackets" className="text-primary dark:text-lime-400 font-black border-b-2 border-primary dark:border-lime-400 pb-1">
-              Harta Campionatului
-            </Link>
-            <Link href="/venues" className="hover:text-primary dark:hover:text-lime-400 transition">
-              Arene &amp; Stadioane
-            </Link>
-            <Link href="/players" className="hover:text-primary dark:hover:text-lime-400 transition">
-              Jucători
-            </Link>
-            <Link href="/referees" className="hover:text-primary dark:hover:text-lime-400 transition">
-              Arbitri
-            </Link>
-          </nav>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Link
-            href="/dashboard"
-            className="btn btn-secondary text-xs uppercase tracking-wider font-bold py-2.5 px-4 rounded-xl"
-          >
-            Panou Organizator ↗
-          </Link>
-          <Link
-            href="/signin"
-            className="btn btn-primary text-xs uppercase tracking-wider font-bold py-2.5 px-5 rounded-xl bg-primary text-white hover:bg-slate-800 shadow-sm"
-          >
-            Autentificare
-          </Link>
-        </div>
-      </header>
+      <PublicHeader currentTab="brackets" />
 
       {/* Hero Banner */}
       <section className="bg-primary text-white py-12 px-6 lg:px-12 relative overflow-hidden">
