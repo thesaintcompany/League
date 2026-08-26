@@ -6,7 +6,6 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -105,10 +104,25 @@ model Venue {
   tickerText    String?  // Scrolling ticker announcement
   tickerActive  Boolean  @default(false)
   tickerSpeed   Int      @default(20)
+  calendarSyncUrl String? // URL for external .ics sync (e.g. Google Calendar)
   createdAt     DateTime @default(now())
 
   owner         User?    @relation(fields: [ownerId], references: [id], onDelete: SetNull)
   claims        VenueClaim[]
+  blockedSlots  VenueBlockedSlot[]
+}
+
+model VenueBlockedSlot {
+  id        String   @id @default(cuid())
+  venueId   String
+  title     String   @default("Ocupat Extern")
+  startTime DateTime
+  endTime   DateTime
+  createdAt DateTime @default(now())
+
+  venue     Venue    @relation(fields: [venueId], references: [id], onDelete: Cascade)
+
+  @@index([venueId])
 }
 
 model Championship {
@@ -360,4 +374,3 @@ model VenueClaim {
   @@index([status])
   @@index([applicantEmail])
 }
-

@@ -24,15 +24,53 @@ export default async function ArenaOwnerDashboardPage() {
   const userId = user.id;
 
   // Find arena for this user
-  let venue = await prisma.venue.findFirst({
+  const venue = await prisma.venue.findFirst({
     where: { ownerId: userId },
   });
 
-  // If no arena assigned yet, fallback to default or first arena
-  if (!venue) {
-    venue = await prisma.venue.findFirst({
-      where: { name: { contains: "Vasport" } },
+  // Fetch real matches scheduled at this arena
+  let matchesData: any[] = [];
+  if (venue) {
+    const scheduledMatches = await prisma.match.findMany({
+      where: { venue: venue.name },
+      include: {
+        homeTeam: true,
+        awayTeam: true,
+        championship: true,
+      },
+      orderBy: { scheduledAt: "asc" },
     });
+
+    const blockedSlots = await prisma.venueBlockedSlot.findMany({
+      where: { venueId: venue.id },
+      orderBy: { startTime: "asc" },
+    });
+
+    // Format them for the VenueCalendar component
+    matchesData = [
+      ...scheduledMatches.map((m) => ({
+        id: m.id,
+        type: "match",
+        homeTeam: m.homeTeam.name,
+        awayTeam: m.awayTeam.name,
+        championshipName: m.championship.name,
+        scheduledAt: m.scheduledAt.toISOString(),
+        venue: m.venue,
+        referee: m.referee,
+        status: m.status,
+      })),
+      ...blockedSlots.map((b) => ({
+        id: b.id,
+        type: "blocked",
+        homeTeam: b.title,
+        awayTeam: "",
+        championshipName: "Sincronizare Externă",
+        scheduledAt: b.startTime.toISOString(),
+        endTime: b.endTime.toISOString(),
+        venue: venue?.name || "",
+        status: "blocked",
+      })),
+    ];
   }
 
   return (
@@ -46,7 +84,7 @@ export default async function ArenaOwnerDashboardPage() {
         />
 
         <main className="p-4 sm:p-6 lg:p-10 max-w-7xl">
-          <ArenaOwnerPanel initialVenue={venue} />
+          <ArenaOwnerPanel initialVenue={venue} initialMatches={matchesData} />
         </main>
       </div>
     </div>

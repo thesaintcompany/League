@@ -84,8 +84,8 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    if (events.length === 0) {
-      // Fallback sample event if none found
+    if (events.length === 0 && !matchId && !venueId && !refereeName) {
+      // Fallback sample event only for the generic calendar endpoint.
       const now = new Date();
       const end = new Date(now.getTime() + 60 * 60 * 1000);
       events.push({

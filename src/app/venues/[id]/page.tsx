@@ -13,7 +13,7 @@ export default async function PublicVenueDetailPage({
 }) {
   const rawId = decodeURIComponent(params.id);
 
-  // 1. Try finding venue by id, then by name
+  // Resolve the exact arena requested by id, with a strict name fallback for legacy links.
   let venue = await prisma.venue.findUnique({
     where: { id: rawId },
     include: {
@@ -28,7 +28,6 @@ export default async function PublicVenueDetailPage({
       where: {
         OR: [
           { name: rawId },
-          { name: { contains: rawId } },
         ],
       },
       include: {
@@ -39,22 +38,10 @@ export default async function PublicVenueDetailPage({
     });
   }
 
-  // If still not found, fallback to first active venue or 404
-  if (!venue) {
-    venue = await prisma.venue.findFirst({
-      where: { isActive: true },
-      include: {
-        owner: {
-          select: { name: true, email: true, phone: true },
-        },
-      },
-    });
-  }
-
   if (!venue) notFound();
 
-  // Find all matches for this venue
-  let allMatches = await prisma.match.findMany({
+  // Show only matches directly linked to this arena through the saved venue name.
+  const allMatches = await prisma.match.findMany({
     where: { venue: venue.name },
     include: {
       homeTeam: true,
@@ -64,37 +51,10 @@ export default async function PublicVenueDetailPage({
     orderBy: { scheduledAt: "asc" },
   });
 
-  // If this venue has no specific matches yet, load upcoming matches from active championships
-  let upcomingMatches = allMatches.filter((m) => m.status === "scheduled" || m.status === "live");
-  let finishedMatches = allMatches.filter((m) => m.status === "finished");
-
-  if (upcomingMatches.length === 0) {
-    const generalUpcoming = await prisma.match.findMany({
-      where: { status: { in: ["scheduled", "live"] } },
-      take: 4,
-      include: {
-        homeTeam: true,
-        awayTeam: true,
-        championship: true,
-      },
-      orderBy: { scheduledAt: "asc" },
-    });
-    upcomingMatches = generalUpcoming;
-  }
-
-  if (finishedMatches.length === 0) {
-    const generalFinished = await prisma.match.findMany({
-      where: { status: "finished" },
-      take: 6,
-      include: {
-        homeTeam: true,
-        awayTeam: true,
-        championship: true,
-      },
-      orderBy: { scheduledAt: "desc" },
-    });
-    finishedMatches = generalFinished;
-  }
+  const upcomingMatches = allMatches.filter(
+    (m) => m.status === "scheduled" || m.status === "live"
+  );
+  const finishedMatches = allMatches.filter((m) => m.status === "finished");
 
   const formattedUpcoming = upcomingMatches.map((m) => ({
     id: m.id,

@@ -37,24 +37,26 @@ interface VenueData {
   tickerText?: string | null;
   tickerActive?: boolean;
   tickerSpeed?: number;
+  calendarSyncUrl?: string | null;
 }
 
-export function ArenaOwnerPanel({ initialVenue }: { initialVenue: VenueData | null }) {
+export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initialVenue: VenueData | null, initialMatches?: any[] }) {
   const [activeTab, setActiveTab] = useState<"config" | "ads" | "announcements" | "ticker" | "calendar">("config");
 
+  const [matches, setMatches] = useState(initialMatches);
+
   // Arena Config State
-  const [name, setName] = useState(initialVenue?.name || "Baza Sportivă Vasport");
-  const [location, setLocation] = useState(initialVenue?.location || "Timișoara");
-  const [address, setAddress] = useState(initialVenue?.address || "Calea Șagului nr. 175, Timișoara");
-  const [specs, setSpecs] = useState(initialVenue?.specs || "Minifotbal, iarbă sintetică profesională 55 mm, nocturnă");
+  const [name, setName] = useState(initialVenue?.name || "");
+  const [location, setLocation] = useState(initialVenue?.location || "");
+  const [address, setAddress] = useState(initialVenue?.address || "");
+  const [specs, setSpecs] = useState(initialVenue?.specs || "");
   const [sport, setSport] = useState(initialVenue?.sport || "fotbal");
   const [surface, setSurface] = useState(initialVenue?.surface || "Sintetic");
-  const [capacity, setCapacity] = useState(initialVenue?.capacity || 200);
+  const [capacity, setCapacity] = useState(initialVenue?.capacity || 0);
   const [floodlights, setFloodlights] = useState(initialVenue?.floodlights ?? true);
-  const [pricePerHour, setPricePerHour] = useState(initialVenue?.pricePerHour || 180);
+  const [pricePerHour, setPricePerHour] = useState(initialVenue?.pricePerHour || 0);
   const [imageUrl, setImageUrl] = useState(
-    initialVenue?.imageUrl ||
-      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80"
+    initialVenue?.imageUrl || "/images/stadium-hero.jpg"
   );
 
   // Advertising / Sponsor Banners State
@@ -63,24 +65,6 @@ export function ArenaOwnerPanel({ initialVenue }: { initialVenue: VenueData | nu
     if (initialVenue?.ads) parsedAds = JSON.parse(initialVenue.ads);
   } catch {
     parsedAds = [];
-  }
-  if (parsedAds.length === 0) {
-    parsedAds = [
-      {
-        id: "ad-1",
-        title: "Echipamente Sportive Pro",
-        imageUrl: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80",
-        linkUrl: "https://example.com/echipament",
-        isActive: true,
-      },
-      {
-        id: "ad-2",
-        title: "Băuturi Izotonice & Nutriție",
-        imageUrl: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=600&auto=format&fit=crop&q=80",
-        linkUrl: "https://example.com/nutritie",
-        isActive: true,
-      },
-    ];
   }
   const [ads, setAds] = useState<AdItem[]>(parsedAds);
 
@@ -97,24 +81,6 @@ export function ArenaOwnerPanel({ initialVenue }: { initialVenue: VenueData | nu
   } catch {
     parsedAnnouncements = [];
   }
-  if (parsedAnnouncements.length === 0) {
-    parsedAnnouncements = [
-      {
-        id: "ann-1",
-        title: "Orar Rezervări Weekend & Nocturnă",
-        content: "Terenurile sintetice sunt disponibile pentru închiriere în fiecare sâmbătă și duminică între orele 08:00 - 23:00. Beneficiați de nocturnă inclusă în tarif după ora 19:00.",
-        date: "2026-08-25",
-        isActive: true,
-      },
-      {
-        id: "ann-2",
-        title: "Înscrieri Deschise la Cupa de Minifotbal a Arenei",
-        content: "Organizăm cupa locală de minifotbal cu premii și arbitraj asigurat. Echipele interesate se pot înscrie la numărul de telefon al recepției.",
-        date: "2026-08-20",
-        isActive: true,
-      },
-    ];
-  }
   const [announcements, setAnnouncements] = useState<AnnouncementItem[]>(parsedAnnouncements);
 
   // New Announcement Form State
@@ -124,11 +90,13 @@ export function ArenaOwnerPanel({ initialVenue }: { initialVenue: VenueData | nu
 
   // Ticker Marquee State
   const [tickerText, setTickerText] = useState(
-    initialVenue?.tickerText ||
-      "🔥 REZERVĂRI DIRECTE: Teren sintetic cu nocturnă disponibil pentru închiriere! Contactează recepția arenei la 0722 123 456."
+    initialVenue?.tickerText || ""
   );
-  const [tickerActive, setTickerActive] = useState(initialVenue?.tickerActive ?? true);
+  const [tickerActive, setTickerActive] = useState(initialVenue?.tickerActive ?? false);
   const [tickerSpeed, setTickerSpeed] = useState(initialVenue?.tickerSpeed || 18);
+
+  // Calendar Sync State
+  const [calendarSyncUrl, setCalendarSyncUrl] = useState(initialVenue?.calendarSyncUrl || "");
 
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
@@ -234,6 +202,7 @@ export function ArenaOwnerPanel({ initialVenue }: { initialVenue: VenueData | nu
           tickerText,
           tickerActive,
           tickerSpeed,
+          calendarSyncUrl,
         }),
       });
 
@@ -250,6 +219,20 @@ export function ArenaOwnerPanel({ initialVenue }: { initialVenue: VenueData | nu
       setMessage({ text: err.message, type: "error" });
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleDeleteMatch(id: string) {
+    try {
+      const res = await fetch(`/api/arena/matches/${id}`, {
+        method: "PATCH",
+      });
+      if (!res.ok) throw new Error("Eroare la ștergerea evenimentului");
+      
+      setMatches((prev) => prev.filter((m) => m.id !== id));
+      setMessage({ text: "Evenimentul a fost eliminat din calendarul arenei! ✓", type: "success" });
+    } catch (err: any) {
+      setMessage({ text: err.message || "A apărut o eroare", type: "error" });
     }
   }
 
@@ -414,7 +397,48 @@ export function ArenaOwnerPanel({ initialVenue }: { initialVenue: VenueData | nu
 
       {/* TAB 5: CALENDAR ARENĂ GOOGLE SYNC */}
       {activeTab === "calendar" && (
-        <VenueCalendar venueName={name} county={location} surface={surface} />
+        <div className="space-y-6">
+          <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4 max-w-3xl">
+            <div>
+              <h3 className="text-xl font-bold font-headline text-blue-950 dark:text-white">
+                Sincronizare Calendar Extern (.ics)
+              </h3>
+              <p className="text-xs text-slate-500 font-label mt-1">
+                Adaugă un link `.ics` (ex: din Google Calendar) pentru a bloca automat sloturile ocupate din alte surse. Sincronizarea se face automat o dată la o oră.
+              </p>
+            </div>
+            
+            <div className="flex items-end gap-3">
+              <div className="flex-1">
+                <label className="label">URL Calendar Extern (.ics)</label>
+                <input
+                  type="url"
+                  className="input text-xs"
+                  value={calendarSyncUrl}
+                  onChange={(e) => setCalendarSyncUrl(e.target.value)}
+                  placeholder="https://calendar.google.com/calendar/ical/.../basic.ics"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleSaveAll}
+                disabled={saving}
+                className="px-4 py-3.5 rounded-xl bg-slate-900 dark:bg-lime-400 text-white dark:text-slate-950 font-headline font-bold text-xs uppercase transition active:scale-95 whitespace-nowrap h-[46px]"
+              >
+                Salvează Link-ul
+              </button>
+            </div>
+          </div>
+
+          <VenueCalendar 
+            venueId={initialVenue?.id}
+            venueName={name} 
+            county={location} 
+            surface={surface} 
+            matches={matches} 
+            onDeleteMatch={handleDeleteMatch}
+          />
+        </div>
       )}
 
       {/* TAB 1: CONFIGURARE ARENĂ */}

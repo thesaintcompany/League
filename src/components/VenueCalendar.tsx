@@ -4,51 +4,43 @@ import React, { useState } from "react";
 
 interface MatchEvent {
   id: string;
+  type?: string;
   homeTeam: string;
   awayTeam: string;
   championshipName: string;
   scheduledAt: string;
+  endTime?: string;
   venue: string;
   referee?: string;
   status: string;
 }
 
 interface VenueCalendarProps {
+  venueId?: string;
   venueName: string;
   county?: string;
   surface?: string;
   matches?: MatchEvent[];
+  onDeleteMatch?: (id: string) => Promise<void>;
 }
 
-export function VenueCalendar({ venueName, county, surface, matches = [] }: VenueCalendarProps) {
+export function VenueCalendar({
+  venueId,
+  venueName,
+  county,
+  surface,
+  matches = [],
+  onDeleteMatch,
+}: VenueCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
   const [copiedLink, setCopiedLink] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Filter matches by selected date or list upcoming
-  const upcomingMatches = matches.length > 0 ? matches : [
-    {
-      id: "demo-m1",
-      homeTeam: "FC Timișoara Pro",
-      awayTeam: "Real Banat",
-      championshipName: "Campionatul Județean Timiș",
-      scheduledAt: new Date(Date.now() + 86400000 * 2).toISOString(),
-      venue: venueName,
-      referee: "Alexandru Popa",
-      status: "scheduled",
-    },
-    {
-      id: "demo-m2",
-      homeTeam: "Spartans Bega",
-      awayTeam: "Vulturii Lugoj",
-      championshipName: "Liga 4 Vest",
-      scheduledAt: new Date(Date.now() + 86400000 * 5).toISOString(),
-      venue: venueName,
-      referee: "Mihai Ionescu",
-      status: "scheduled",
-    },
-  ];
+  const upcomingMatches = matches;
+
 
   function getGoogleCalendarUrl(m: MatchEvent) {
     const start = new Date(m.scheduledAt);
@@ -64,10 +56,23 @@ export function VenueCalendar({ venueName, county, surface, matches = [] }: Venu
   }
 
   function handleCopyIcsLink() {
-    const link = `${window.location.origin}/api/calendar/ics?venueId=all`;
+    if (!venueId) return;
+    const link = `${window.location.origin}/api/calendar/ics?venueId=${encodeURIComponent(venueId)}`;
     navigator.clipboard.writeText(link);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 3000);
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm("Sigur doriți să anulați/ștergeți acest eveniment din calendarul arenei?")) return;
+    setDeletingId(id);
+    try {
+      if (onDeleteMatch) {
+        await onDeleteMatch(id);
+      }
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   return (
@@ -89,9 +94,13 @@ export function VenueCalendar({ venueName, county, surface, matches = [] }: Venu
         {/* Sync Buttons */}
         <div className="flex flex-wrap items-center gap-2">
           <a
-            href={`/api/calendar/ics?venueId=${encodeURIComponent(venueName)}`}
+            href={venueId ? `/api/calendar/ics?venueId=${encodeURIComponent(venueId)}` : "#"}
             download
-            className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-headline font-bold text-xs flex items-center gap-1.5 transition active:scale-95 border border-slate-300 dark:border-slate-700"
+            className={`px-3.5 py-2 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 transition active:scale-95 border ${
+              venueId
+                ? "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border-slate-300 dark:border-slate-700"
+                : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-800 pointer-events-none"
+            }`}
           >
             <span className="material-symbols-outlined text-base text-cyan-500">download</span>
             <span>Export .ICS</span>
@@ -100,6 +109,7 @@ export function VenueCalendar({ venueName, county, surface, matches = [] }: Venu
           <button
             type="button"
             onClick={handleCopyIcsLink}
+            disabled={!venueId}
             className="px-3.5 py-2 rounded-xl bg-lime-400 hover:bg-lime-500 text-slate-950 font-headline font-black text-xs flex items-center gap-1.5 transition active:scale-95 shadow-md"
           >
             <span className="material-symbols-outlined text-base">sync</span>
@@ -175,12 +185,17 @@ export function VenueCalendar({ venueName, county, surface, matches = [] }: Venu
                     )}
                   </div>
                   <h5 className="font-headline font-bold text-sm sm:text-base text-slate-900 dark:text-white mt-1">
-                    {m.homeTeam} <span className="text-lime-500 font-black">VS</span> {m.awayTeam}
+                    {m.type === "blocked" ? (
+                      <span className="text-amber-500">{m.homeTeam}</span>
+                    ) : (
+                      <>
+                        {m.homeTeam} <span className="text-lime-500 font-black">VS</span> {m.awayTeam}
+                      </>
+                    )}
                   </h5>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 self-end md:self-center">
                 <a
                   href={getGoogleCalendarUrl(m)}
                   target="_blank"
@@ -188,8 +203,19 @@ export function VenueCalendar({ venueName, county, surface, matches = [] }: Venu
                   className="px-3 py-1.5 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 text-xs font-bold font-label flex items-center gap-1.5 transition active:scale-95"
                 >
                   <span className="text-sm">📅</span>
-                  <span>Adaugă în Google Calendar</span>
+                  <span className="hidden sm:inline">Google</span>
                 </a>
+                
+                {onDeleteMatch && (
+                  <button
+                    onClick={() => handleDelete(m.id)}
+                    disabled={deletingId === m.id}
+                    className="px-3 py-1.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 text-xs font-bold font-label flex items-center gap-1.5 transition active:scale-95"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">delete</span>
+                    <span>{deletingId === m.id ? "..." : "Șterge"}</span>
+                  </button>
+                )}
               </div>
             </div>
           );

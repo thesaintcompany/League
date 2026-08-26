@@ -88,6 +88,7 @@ export async function PATCH(req: Request) {
         tickerText: body.tickerText || null,
         tickerActive: Boolean(body.tickerActive),
         tickerSpeed: body.tickerSpeed ? parseInt(body.tickerSpeed) : 20,
+        calendarSyncUrl: body.calendarSyncUrl || null,
       },
     });
   } else {
@@ -109,6 +110,7 @@ export async function PATCH(req: Request) {
         tickerText: body.tickerText !== undefined ? body.tickerText : venue.tickerText,
         tickerActive: body.tickerActive !== undefined ? Boolean(body.tickerActive) : venue.tickerActive,
         tickerSpeed: body.tickerSpeed !== undefined ? parseInt(body.tickerSpeed) : venue.tickerSpeed,
+        calendarSyncUrl: body.calendarSyncUrl !== undefined ? body.calendarSyncUrl : venue.calendarSyncUrl,
       },
     });
   }
