@@ -410,13 +410,13 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                 {/* Sector & Quantity */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[10px] font-bold font-label text-slate-300 uppercase block mb-1">
+                    <label className="text-[10px] font-bold font-label text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-1.5">
                       Sector / Categorie Bilet
                     </label>
                     <select
                       value={ticketSector}
                       onChange={(e) => setTicketSector(e.target.value)}
-                      className="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-xs font-bold text-white focus:outline-none focus:border-lime-400"
+                      className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-2xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-slate-900 dark:focus:border-lime-400 shadow-sm transition"
                     >
                       <option value="Tribuna 1 Central">Tribuna 1 Central ({priceMap["Tribuna 1 Central"]} RON)</option>
                       <option value="Tribuna 2">Tribuna 2 ({priceMap["Tribuna 2"]} RON)</option>
@@ -426,22 +426,22 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-bold font-label text-slate-300 uppercase block mb-1">
+                    <label className="text-[10px] font-bold font-label text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-1.5">
                       Număr de Bilete
                     </label>
-                    <div className="flex items-center gap-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-700">
+                    <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-950 p-1 rounded-2xl border border-slate-300 dark:border-slate-700 shadow-sm">
                       <button
                         type="button"
                         onClick={() => setTicketCount(Math.max(1, ticketCount - 1))}
-                        className="w-8 h-8 rounded-xl bg-slate-800 text-white font-bold text-base"
+                        className="w-8 h-8 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-base hover:bg-slate-300 dark:hover:bg-slate-700 transition"
                       >
                         -
                       </button>
-                      <span className="flex-1 text-center font-black font-mono text-sm">{ticketCount}</span>
+                      <span className="flex-1 text-center font-black font-mono text-sm text-slate-900 dark:text-white">{ticketCount}</span>
                       <button
                         type="button"
                         onClick={() => setTicketCount(Math.min(10, ticketCount + 1))}
-                        className="w-8 h-8 rounded-xl bg-slate-800 text-white font-bold text-base"
+                        className="w-8 h-8 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white font-bold text-base hover:bg-slate-300 dark:hover:bg-slate-700 transition"
                       >
                         +
                       </button>
@@ -450,8 +450,8 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                 </div>
 
                 {/* Buyer Details */}
-                <div className="space-y-3 pt-2 border-t border-slate-800">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label block">
+                <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400 font-label block">
                     Date Spectator (Titular Bilet)
                   </span>
 
@@ -462,7 +462,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                       placeholder="Nume și Prenume Spectator *"
                       value={buyerName}
                       onChange={(e) => setBuyerName(e.target.value)}
-                      className="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-xs font-bold text-white focus:outline-none focus:border-lime-400"
+                      className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-2xl text-xs font-bold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-lime-400 shadow-sm transition"
                     />
                   </div>
 
@@ -473,21 +473,21 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                       placeholder="Adresă Email *"
                       value={buyerEmail}
                       onChange={(e) => setBuyerEmail(e.target.value)}
-                      className="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-xs font-bold text-white focus:outline-none focus:border-lime-400"
+                      className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-2xl text-xs font-bold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-lime-400 shadow-sm transition"
                     />
                     <input
                       type="tel"
                       placeholder="Telefon (Opțional)"
                       value={buyerPhone}
                       onChange={(e) => setBuyerPhone(e.target.value)}
-                      className="w-full p-3 bg-slate-950 border border-slate-700 rounded-2xl text-xs font-bold text-white focus:outline-none focus:border-lime-400"
+                      className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-2xl text-xs font-bold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-lime-400 shadow-sm transition"
                     />
                   </div>
                 </div>
 
                 {/* Payment Gateway Selector */}
-                <div className="space-y-2 pt-2 border-t border-slate-800">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-label block">
+                <div className="space-y-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400 font-label block">
                     Alege Metoda de Plată
                   </span>
 
@@ -495,64 +495,64 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                     <button
                       type="button"
                       onClick={() => setPaymentMethod("card")}
-                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 ${
+                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${
                         paymentMethod === "card"
-                          ? "border-lime-400 bg-lime-400/10 text-lime-400 font-bold"
-                          : "border-slate-800 bg-slate-950 text-slate-400 hover:text-white"
+                          ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
+                          : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
                       }`}
                     >
-                      <span className="text-lg">💳</span>
-                      <span className="text-[10px] font-label">Card Stripe</span>
+                      <span className="text-xl">💳</span>
+                      <span className="text-[10px] font-label font-bold">Card Stripe</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setPaymentMethod("apple_pay")}
-                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 ${
+                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${
                         paymentMethod === "apple_pay"
-                          ? "border-lime-400 bg-lime-400/10 text-lime-400 font-bold"
-                          : "border-slate-800 bg-slate-950 text-slate-400 hover:text-white"
+                          ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
+                          : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
                       }`}
                     >
-                      <span className="text-lg">🍎</span>
-                      <span className="text-[10px] font-label">Apple Pay</span>
+                      <span className="text-xl">🍎</span>
+                      <span className="text-[10px] font-label font-bold">Apple Pay</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setPaymentMethod("google_pay")}
-                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 ${
+                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${
                         paymentMethod === "google_pay"
-                          ? "border-lime-400 bg-lime-400/10 text-lime-400 font-bold"
-                          : "border-slate-800 bg-slate-950 text-slate-400 hover:text-white"
+                          ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
+                          : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
                       }`}
                     >
-                      <span className="text-lg">🟢</span>
-                      <span className="text-[10px] font-label">Google Pay</span>
+                      <span className="text-xl">🟢</span>
+                      <span className="text-[10px] font-label font-bold">Google Pay</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setPaymentMethod("paypal")}
-                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 ${
+                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${
                         paymentMethod === "paypal"
-                          ? "border-lime-400 bg-lime-400/10 text-lime-400 font-bold"
-                          : "border-slate-800 bg-slate-950 text-slate-400 hover:text-white"
+                          ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
+                          : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
                       }`}
                     >
-                      <span className="text-lg">🅿️</span>
-                      <span className="text-[10px] font-label">PayPal</span>
+                      <span className="text-xl">🅿️</span>
+                      <span className="text-[10px] font-label font-bold">PayPal</span>
                     </button>
                   </div>
                 </div>
 
                 {/* Total & Checkout Button */}
-                <div className="pt-3 border-t border-slate-800 space-y-3">
+                <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold font-label text-slate-400 uppercase">
+                    <span className="text-xs font-bold font-label text-slate-600 dark:text-slate-400 uppercase">
                       Total de Plată ({ticketCount} bilet{ticketCount > 1 ? "e" : ""}):
                     </span>
-                    <span className="text-2xl font-black font-mono text-lime-400">
+                    <span className="text-2xl font-black font-mono text-emerald-600 dark:text-lime-400">
                       {totalPrice} RON
                     </span>
                   </div>

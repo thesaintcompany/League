@@ -44,7 +44,7 @@ export function Sidebar({ variant }: SidebarProps) {
       { name: "Meciuri & Panou Arbitraj", href: "/dashboard/referee", icon: "sports" },
       { name: "Vezi Campionate", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
-      { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Arene", href: "/venues", icon: "domain" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Corp Arbitri", href: "/referees", icon: "sports" },
       { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
@@ -57,7 +57,7 @@ export function Sidebar({ variant }: SidebarProps) {
       { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Corp Arbitri", href: "/referees", icon: "badge" },
-      { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Arene", href: "/venues", icon: "domain" },
     ];
   } else if (role === "team_leader") {
     navItems = [
@@ -66,14 +66,14 @@ export function Sidebar({ variant }: SidebarProps) {
       { name: "Vezi Campionate", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
-      { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Arene", href: "/venues", icon: "domain" },
       { name: "Corp Arbitri", href: "/referees", icon: "sports" },
     ];
   } else if (role === "arena_owner") {
     navItems = [
       { name: "Panou Arenă & Reclame", href: "/dashboard/arena", icon: "stadium" },
       { name: "Profil Bază Sportivă", href: "/profile", icon: "account_circle" },
-      { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Arene", href: "/venues", icon: "domain" },
       { name: "Vezi Campionate", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
     ];
@@ -83,7 +83,7 @@ export function Sidebar({ variant }: SidebarProps) {
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Vezi Campionate", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
-      { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Arene", href: "/venues", icon: "domain" },
     ];
   } else {
     // Organizer Menu
@@ -91,7 +91,7 @@ export function Sidebar({ variant }: SidebarProps) {
       { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
       { name: "Vezi Campionate", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
-      { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Arene", href: "/venues", icon: "domain" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Corp Arbitri", href: "/referees", icon: "sports" },
       { name: "Profil & Setări", href: "/profile", icon: "account_circle" },

@@ -1162,7 +1162,7 @@ export function AdminSuperPanel() {
                   <span className="text-2xl">🏟️</span>
                   <div>
                     <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
-                      59 Arene &amp; Stadioane
+                      59 Arene
                     </h4>
                     <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase">
                       Infrastructură Permanentă
@@ -1407,13 +1407,13 @@ export function AdminSuperPanel() {
             {[
               {
                 id: "logo-1",
-                title: "Varianta 1 • Tricolor Speed Vortex",
-                subtitle: "Ediția Tricolor & Speed Vortex",
+                title: "Varianta 1 • Neon Electric Green & Lightning Pulse (Principal)",
+                subtitle: "Logo-ul Oficial PRO LIGUE ROMANIA",
                 url: "/images/logos/logo-1.png",
-                badge: "🇷🇴 Tricolor Oficial",
-                badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                badge: "⚡ Oficial • Neon & Fulger",
+                badgeColor: "bg-lime-400/20 text-lime-400 border-lime-400/30",
                 description:
-                  "Minge de fotbal dinamică cu vortex de viteză și panglică tricoloră (Roșu, Galben, Albastru) + lettering metalic cromat cu reflexii 3D.",
+                  "Logo-ul oficial PRO LIGUE ROMANIA cu minge dinamică în vortex verde neon, banner aerodinamic și fulger electric verde aprins.",
               },
               {
                 id: "logo-2",

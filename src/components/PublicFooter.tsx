@@ -43,7 +43,7 @@ export function PublicFooter() {
             Naționale
           </Link>
           <Link href="/venues" className="hover:text-slate-950 dark:hover:text-white transition">
-            Arene &amp; Stadioane
+            Arene
           </Link>
           <Link href="/players" className="hover:text-slate-950 dark:hover:text-white transition">
             Golgheteri

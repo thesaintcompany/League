@@ -35,7 +35,7 @@ export default async function PublicVenuesPage() {
               <span>🏟️</span> ARENE &amp; SĂLI POLIVALENTE DIN ROMÂNIA
             </span>
             <span className="px-3 py-1 rounded-full bg-slate-900/90 backdrop-blur-md text-white font-bold text-xs font-label border border-slate-700">
-              59 de Baze &amp; Stadioane de Top
+              59 de Arene &amp; Baze Sportive
             </span>
             <span className="px-3 py-1 rounded-full bg-lime-400/20 backdrop-blur-md text-lime-300 font-bold text-xs font-label border border-lime-400/30">
               Fotbal, Baschet, Handbal &amp; Volei
@@ -43,7 +43,7 @@ export default async function PublicVenuesPage() {
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-black italic tracking-tight font-headline uppercase leading-none text-white drop-shadow-2xl">
-            Stadioane de Top &amp; Săli Polivalente
+            Arene de Top &amp; Săli Polivalente
           </h1>
 
           <p className="text-slate-200 text-sm sm:text-base max-w-3xl font-body leading-relaxed drop-shadow-md">

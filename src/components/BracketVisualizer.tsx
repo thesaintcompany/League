@@ -717,19 +717,17 @@ function BracketMatchNode({
       </div>
 
       {/* Match Promo & Stage Link Footer */}
-      <div className="pt-2 mt-2 border-t border-slate-200 dark:border-slate-800/80 flex justify-between items-center text-[10px]">
-        {!isPlaceholder ? (
-          <Link
-            href={`/matches/${match.id}/promo`}
-            className="font-label font-bold text-lime-600 dark:text-lime-400 hover:underline flex items-center gap-1"
-          >
-            <span>🎟️ Promo &amp; Bilete</span>
-            <span className="material-symbols-outlined text-[12px]">arrow_forward</span>
-          </Link>
-        ) : (
-          <span className="text-slate-400 font-label italic">Urmează stabilirea</span>
-        )}
-        <span className="text-slate-400 font-label uppercase tracking-wider text-[9px]">
+      <div className="pt-2.5 mt-2 border-t border-slate-200 dark:border-slate-800/80 flex justify-between items-center text-[10px]">
+        <Link
+          href={`/matches/${match.id}/promo`}
+          className="font-label font-bold text-lime-600 dark:text-lime-400 hover:text-lime-500 flex items-center gap-1 group-hover:underline transition px-2.5 py-1 rounded-xl bg-lime-500/10 hover:bg-lime-500/20 shadow-sm"
+          title="Deschide Pagina Promo Publică a Meciului"
+        >
+          <span>🎟️ Promo &amp; Meci</span>
+          <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
+        </Link>
+
+        <span className="text-slate-500 dark:text-slate-400 font-label uppercase tracking-wider text-[9px] font-bold">
           {stageLabel || match.stage || "Etapă Oficială"}
         </span>
       </div>

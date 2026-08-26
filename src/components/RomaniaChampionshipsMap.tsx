@@ -439,13 +439,13 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                       Nu există baze sportive înregistrate în {selectedCounty}
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400 font-label max-w-sm mx-auto">
-                      Explorează catalogul național complet de 59 de stadioane și săli polivalente din România!
+                      Explorează catalogul național complet de 59 de arene și săli polivalente din România!
                     </p>
                     <Link
                       href="/venues"
                       className="px-5 py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider inline-flex items-center gap-1.5 shadow-md"
                     >
-                      Vezi Toate Stadioanele ↗
+                      Vezi Toate Arenele ↗
                     </Link>
                   </div>
                 ) : (

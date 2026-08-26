@@ -109,7 +109,7 @@ const SEEDS = [
     name: "István Kovács",
     password: "demo12345",
     role: "referee",
-    refereeBadge: "FIFA Elite",
+    refereeBadge: "RIFA Elite",
     experienceYears: 12,
   },
   {

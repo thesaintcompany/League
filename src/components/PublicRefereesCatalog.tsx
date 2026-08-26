@@ -136,8 +136,8 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
         (ref.bio && ref.bio.toLowerCase().includes(q));
 
       let matchesCat = true;
-      if (selectedCategory === " ") {
-        matchesCat = Boolean(ref.refereeBadge?.includes(" "));
+      if (selectedCategory === "rifa") {
+        matchesCat = Boolean(ref.refereeBadge?.includes("RIFA") || ref.refereeBadge?.includes("Elite"));
       } else if (selectedCategory === "liga1") {
         matchesCat = Boolean(ref.refereeBadge?.includes("Liga 1"));
       } else if (selectedCategory === "var") {
@@ -178,7 +178,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
               30 Arbitri Licențiați
             </span>
             <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-[10px] uppercase font-label border border-lime-400/30">
-              🇷🇴   &amp; Ligue Pro România
+              🇷🇴 RIFA &amp; Ligue Pro România
             </span>
           </div>
 
@@ -218,7 +218,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
             <div className="flex flex-wrap gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 shrink-0">
               {[
                 { id: "all", label: "Toți (30)" },
-                { id: "fifa", label: "⭐ FIFA Elite" },
+                { id: "rifa", label: "⭐ RIFA Elite" },
                 { id: "liga1", label: "🏆 Liga 1 Pro" },
                 { id: "var", label: "📺 VAR" },
                 { id: "asistent", label: "🚩 Asistenți" },

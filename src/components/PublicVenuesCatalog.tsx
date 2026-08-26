@@ -121,7 +121,7 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
             <span className="text-xl">🏟️</span>
           </div>
           <p className="text-3xl font-black font-headline text-slate-950 dark:text-white">{initialVenues.length}</p>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-label">Baze sportive &amp; stadioane omologate</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 font-label">Baze sportive &amp; arene omologate</p>
         </div>
 
         <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl text-slate-900 dark:text-white space-y-1 shadow-sm transition-colors">
@@ -147,7 +147,7 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
           <p className="text-3xl font-black font-headline text-amber-600 dark:text-amber-400">
             {stadiumsOver10k} Arene
           </p>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-label">Stadioane de top UEFA &amp; Săli 10.000+</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 font-label">Arene de top UEFA &amp; Săli 10.000+</p>
         </div>
 
         <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl text-slate-900 dark:text-white space-y-1 shadow-sm transition-colors">
@@ -176,7 +176,7 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                 Filtrare pe Județe &amp; Regiuni
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                Apasă pe un județ pentru a vedea arenele, stadioanele și sălile polivalente disponibile
+                Apasă pe un județ pentru a vedea arenele și sălile polivalente disponibile
               </p>
             </div>
           </div>
@@ -409,7 +409,7 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-6 bg-slate-950 dark:bg-lime-400 rounded-full"></span>
             <h2 className="text-xl font-bold font-headline text-slate-900 dark:text-white uppercase tracking-tight">
-              {filtered.length} Arene &amp; Stadioane Disponibile
+              {filtered.length} Arene Disponibile
             </h2>
           </div>
           <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase">
@@ -444,11 +444,15 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                   className="card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-lime-400/80 shadow-sm hover:shadow-xl rounded-3xl overflow-hidden group transition-all duration-300 flex flex-col"
                 >
                   {/* Cover Image — top half with rounded top corners */}
-                  <div className="relative h-48 overflow-hidden">
+                  <div className="relative h-48 overflow-hidden bg-slate-800">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={img}
                       alt={venue.name}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src =
+                          "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80";
+                      }}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     {/* Subtle bottom gradient for badge readability */}

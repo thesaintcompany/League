@@ -30,7 +30,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
     { href: "/campionat", label: "Clasament", active: isCampionat, icon: "emoji_events" },
     { href: "/brackets", label: "Harta Meciuri", active: isBrackets, icon: "account_tree" },
     { href: "/teams", label: "Echipe", active: isTeams, icon: "groups" },
-    { href: "/venues", label: "Arene & Stadioane", active: isVenues, icon: "stadium" },
+    { href: "/venues", label: "Arene", active: isVenues, icon: "stadium" },
     { href: "/players", label: "Golgheteri", active: isPlayers, icon: "directions_run" },
   ];
 
