@@ -40,12 +40,14 @@ export function ChampionshipTabs({
   championshipId,
   sport = "Fotbal",
   championshipName = "Campionat Pro",
+  county,
   teams: initialTeams,
   matches: initialMatches,
 }: {
   championshipId: string;
   sport?: string;
   championshipName?: string;
+  county?: string | null;
   teams: Team[];
   matches: Match[];
 }) {
@@ -173,6 +175,7 @@ export function ChampionshipTabs({
           <MatchesTab
             championshipId={championshipId}
             sport={sport}
+            county={county}
             teams={initialTeams}
             matches={initialMatches}
             onChanged={() => router.refresh()}
@@ -230,6 +233,7 @@ export function ChampionshipTabs({
           match={editingMatch}
           championshipId={championshipId}
           sport={sport}
+          county={county}
           isOpen={true}
           onClose={() => setEditingMatch(null)}
           onUpdated={() => router.refresh()}
@@ -241,6 +245,7 @@ export function ChampionshipTabs({
         championshipId={championshipId}
         championshipName={championshipName}
         sport={sport}
+        county={county}
         isOpen={showInviteModal}
         onClose={() => setShowInviteModal(false)}
       />

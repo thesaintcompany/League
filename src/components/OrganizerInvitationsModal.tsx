@@ -1,12 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
-import { isIndividualSport } from "@/lib/constants";
+import React, { useState, useEffect } from "react";
+import { isIndividualSport, getAjfUrlForCounty } from "@/lib/constants";
+
+interface RefereeOption {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  refereeBadge?: string | null;
+  experienceYears?: number | null;
+}
 
 interface OrganizerInvitationsModalProps {
   championshipId: string;
   championshipName: string;
   sport?: string;
+  county?: string | null;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -15,13 +25,43 @@ export function OrganizerInvitationsModal({
   championshipId,
   championshipName,
   sport = "Fotbal",
+  county,
   isOpen,
   onClose,
 }: OrganizerInvitationsModalProps) {
   const [copiedLink, setCopiedLink] = useState(false);
-  const [activeTab, setActiveTab] = useState<"invite" | "dice_announcement">("invite");
+  const [activeTab, setActiveTab] = useState<"invite" | "referees" | "dice_announcement">("invite");
+
+  // Referee sub-tab: "db" | "email" | "ajf"
+  const [refereeMode, setRefereeMode] = useState<"db" | "email" | "ajf">("db");
+  const [availableReferees, setAvailableReferees] = useState<RefereeOption[]>([]);
+  const [selectedRefereeId, setSelectedRefereeId] = useState<string>("");
+  const [refereeCustomName, setRefereeCustomName] = useState("");
+  const [refereeCustomEmail, setRefereeCustomEmail] = useState("");
+  const [refereeInviteSent, setRefereeInviteSent] = useState(false);
 
   const isIndividual = isIndividualSport(sport);
+  const ajfInfo = getAjfUrlForCounty(county);
+
+  // Load referees from database
+  useEffect(() => {
+    if (!isOpen) return;
+    async function fetchReferees() {
+      try {
+        const res = await fetch("/api/referees");
+        if (res.ok) {
+          const data = await res.json();
+          setAvailableReferees(data.referees || []);
+          if (data.referees?.length > 0) {
+            setSelectedRefereeId(data.referees[0].id);
+          }
+        }
+      } catch (err) {
+        console.error("Eroare la încărcarea arbitrilor:", err);
+      }
+    }
+    fetchReferees();
+  }, [isOpen]);
 
   // Dice Draw Announcement State
   const [drawDate, setDrawDate] = useState("2026-09-01");
@@ -40,11 +80,22 @@ export function OrganizerInvitationsModal({
   const inviteUrl = isIndividual
     ? `${origin}/signup?role=player&championshipId=${championshipId}`
     : `${origin}/signup?role=team_leader&championshipId=${championshipId}`;
+  
+  const refereeSignupUrl = `${origin}/signup?role=referee&championshipId=${championshipId}`;
   const bracketsUrl = `${origin}/brackets`;
 
   const inviteMessage = isIndividual
     ? `🎾 Salut! Te invit să te înscrii ca jucător în turneul de tenis "${championshipName}". Înregistrează-te și confirmă prezența pe tablou aici: ${inviteUrl}`
     : `🏆 Salut! Te invit să înscrii echipa pe platforma Ligue Pro pentru campionatul "${championshipName}". Înregistrează-te și creează-ți echipa aici: ${inviteUrl}`;
+
+  const selectedRef = availableReferees.find((r) => r.id === selectedRefereeId);
+  const refereeTargetEmail = refereeMode === "db" ? selectedRef?.email : refereeCustomEmail;
+  const refereeTargetName = refereeMode === "db" ? selectedRef?.name : refereeCustomName;
+
+  const refereePersonalInviteMsg = `⚖️ Salut ${refereeTargetName || "Oficial"}! Te invităm să arbitrezi partidele din cadrul competiției "${championshipName}" (${sport}${county ? ` • Județul ${county}` : ""}). Creează-ți sau accesează panoul oficial de arbitru aici: ${refereeSignupUrl}`;
+  
+  const refereeEmailHref = `mailto:${refereeTargetEmail || ""}?subject=${encodeURIComponent(`Invitație Oficială Arbitraj - ${championshipName}`)}&body=${encodeURIComponent(refereePersonalInviteMsg)}`;
+  const refereeWhatsappHref = `https://api.whatsapp.com/send?text=${encodeURIComponent(refereePersonalInviteMsg)}`;
 
   const diceAnnouncementMessage = isIndividual
     ? `🎲🎾 ANUNȚ OFICIAL TABLOU: Tragerea la sorți a tabloului de meciuri pentru turneul "${championshipName}" va avea loc pe ${drawDate} la ora ${drawTime}. ${customNotes} Urmărește tabloul live aici: ${bracketsUrl}`
@@ -62,6 +113,12 @@ export function OrganizerInvitationsModal({
 
   function handleCopyInviteLink() {
     navigator.clipboard.writeText(inviteUrl);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 3000);
+  }
+
+  function handleCopyRefereeLink() {
+    navigator.clipboard.writeText(refereeSignupUrl);
     setCopiedLink(true);
     setTimeout(() => setCopiedLink(false), 3000);
   }
@@ -96,31 +153,44 @@ export function OrganizerInvitationsModal({
         </div>
 
         {/* Tab Selector */}
-        <div className="flex border-b border-slate-200 dark:border-slate-800 gap-2">
+        <div className="flex border-b border-slate-200 dark:border-slate-800 gap-1.5 overflow-x-auto no-scrollbar">
           <button
             type="button"
             onClick={() => setActiveTab("invite")}
-            className={`px-4 py-2.5 rounded-t-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition ${
+            className={`px-3.5 py-2.5 rounded-t-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition shrink-0 ${
               activeTab === "invite"
                 ? "bg-lime-400 text-slate-950 shadow-sm"
                 : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             <span className="material-symbols-outlined text-base">person_add</span>
-            {isIndividual ? "1. Invită Jucători Tenis (WhatsApp/Email)" : "1. Invită Lideri de Echipă (WhatsApp/Email)"}
+            {isIndividual ? "1. Invită Jucători" : "1. Invită Lideri Echipă"}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("referees")}
+            className={`px-3.5 py-2.5 rounded-t-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition shrink-0 ${
+              activeTab === "referees"
+                ? "bg-lime-400 text-slate-950 shadow-sm"
+                : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            <span className="material-symbols-outlined text-base">sports</span>
+            <span>2. Invită Arbitri</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab("dice_announcement")}
-            className={`px-4 py-2.5 rounded-t-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition ${
+            className={`px-3.5 py-2.5 rounded-t-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition shrink-0 ${
               activeTab === "dice_announcement"
                 ? "bg-lime-400 text-slate-950 shadow-sm"
                 : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             <span className="material-symbols-outlined text-base">casino</span>
-            {isIndividual ? "2. Anunț Tragere Tablou & Meciuri" : "2. Anunț Aruncare Zaruri & Brackets"}
+            {isIndividual ? "3. Anunț Tragere Tablou" : "3. Anunț Aruncare Zaruri"}
           </button>
         </div>
 
@@ -188,7 +258,246 @@ export function OrganizerInvitationsModal({
           </div>
         )}
 
-        {/* TAB 2: DRAW ANNOUNCEMENT */}
+        {/* TAB 2: INVITE REFEREES */}
+        {activeTab === "referees" && (
+          <div className="space-y-5">
+            {/* Referee Mode Selector */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-headline font-bold">
+              <button
+                type="button"
+                onClick={() => setRefereeMode("db")}
+                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
+                  refereeMode === "db"
+                    ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm font-black"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">badge</span>
+                <span>Din Baza de Date ({availableReferees.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setRefereeMode("email")}
+                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
+                  refereeMode === "email"
+                    ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm font-black"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">mail</span>
+                <span>Invitație Email / Nume</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setRefereeMode("ajf")}
+                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
+                  refereeMode === "ajf"
+                    ? "bg-lime-400 text-slate-950 shadow-sm font-black"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">open_in_new</span>
+                <span>Site Oficial AJF</span>
+              </button>
+            </div>
+
+            {/* OPTION 1: Din Baza de Date */}
+            {refereeMode === "db" && (
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 space-y-3">
+                  <label className="text-xs font-headline font-bold uppercase text-slate-700 dark:text-slate-300 block">
+                    Selectează un arbitru înregistrat pe platformă:
+                  </label>
+
+                  {availableReferees.length === 0 ? (
+                    <p className="text-xs text-slate-500 italic">
+                      Nu există arbitri înregistrați momentan în baza de date. Poți trimite o invitație personală pe email sau consulta AJF-ul local.
+                    </p>
+                  ) : (
+                    <select
+                      value={selectedRefereeId}
+                      onChange={(e) => setSelectedRefereeId(e.target.value)}
+                      className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-900 dark:text-white"
+                    >
+                      {availableReferees.map((ref) => (
+                        <option key={ref.id} value={ref.id}>
+                          {ref.name} {ref.refereeBadge ? `• ${ref.refereeBadge}` : ""} ({ref.email})
+                        </option>
+                      ))}
+                    </select>
+                  )}
+
+                  {selectedRef && (
+                    <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs flex items-center justify-between gap-2">
+                      <div>
+                        <p className="font-bold text-slate-900 dark:text-white">{selectedRef.name}</p>
+                        <p className="text-[11px] text-slate-500 font-mono">{selectedRef.email} {selectedRef.phone ? `• ${selectedRef.phone}` : ""}</p>
+                      </div>
+                      <span className="px-2.5 py-0.5 rounded-full bg-lime-400/20 text-lime-700 dark:text-lime-400 font-bold text-[10px] uppercase">
+                        {selectedRef.refereeBadge || "Oficial"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <a
+                    href={refereeWhatsappHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
+                  >
+                    <span className="text-lg">💬</span>
+                    <span>Invită pe WhatsApp</span>
+                  </a>
+
+                  <a
+                    href={refereeEmailHref}
+                    className="p-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
+                  >
+                    <span className="material-symbols-outlined text-base">mail</span>
+                    <span>Trimite Invitație Email</span>
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* OPTION 2: Invitație pe bază de Email & Nume */}
+            {refereeMode === "email" && (
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 space-y-3">
+                  <span className="text-xs font-headline font-bold uppercase text-slate-700 dark:text-slate-300 block">
+                    Completează datele arbitrului pe care dorești să îl inviți:
+                  </span>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1">
+                        Nume &amp; Prenume Arbitru *
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="ex: Andrei Popescu"
+                        value={refereeCustomName}
+                        onChange={(e) => setRefereeCustomName(e.target.value)}
+                        className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1">
+                        Adresă Email Arbitru *
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="arbitru@exemplu.ro"
+                        value={refereeCustomEmail}
+                        onChange={(e) => setRefereeCustomEmail(e.target.value)}
+                        className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1">
+                      Link Direct de Înregistrare Arbitru în Competiție:
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={refereeSignupUrl}
+                        className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 dark:text-white"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleCopyRefereeLink}
+                        className="px-4 py-2 rounded-xl bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 font-black text-xs uppercase tracking-wider shrink-0 transition active:scale-95"
+                      >
+                        {copiedLink ? "Copiat ✓" : "Copiază"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <a
+                    href={refereeWhatsappHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
+                  >
+                    <span className="text-lg">💬</span>
+                    <span>Invită pe WhatsApp</span>
+                  </a>
+
+                  <a
+                    href={refereeEmailHref}
+                    className="p-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
+                  >
+                    <span className="material-symbols-outlined text-base">mail</span>
+                    <span>Trimite Invitație Email</span>
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* OPTION 3: Găsește arbitri în județul tău (Redirecționare site oficial AJF) */}
+            {refereeMode === "ajf" && (
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-lime-500/10 via-slate-50 dark:via-slate-900 to-emerald-500/10 border border-lime-400/40 dark:border-lime-500/30 space-y-4 text-center sm:text-left">
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-2xl shrink-0 shadow-md">
+                    🏛️
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-label font-bold uppercase tracking-widest text-lime-600 dark:text-lime-400">
+                      Găsește Oficiali &amp; Arbitri Certificați
+                    </span>
+                    <h4 className="text-base font-headline font-black text-slate-900 dark:text-white uppercase tracking-tight">
+                      {county ? `Comisia Județeană de Arbitri (CJA) • ${county}` : "Comisia Centrală a Arbitrilor (CCA / FRF)"}
+                    </h4>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                      Contactează direct Asociația Județeană de Fotbal sau Comisia Centrală a Arbitrilor pentru delegări oficiale, baremuri și arbitri autorizați.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-white/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-lg text-emerald-500 shrink-0">verified_user</span>
+                  <span className="text-[11px] leading-relaxed">
+                    <strong>Protecția Datelor &amp; Siguranță:</strong> Nu este necesară introducerea de date cu caracter sensibil. Te îndrumăm direct către portalul oficial acreditat al asociației județene.
+                  </span>
+                </div>
+
+                <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                  <a
+                    href={ajfInfo.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex-1 px-5 py-3.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
+                  >
+                    <span>Găsește arbitri în județul tău ({ajfInfo.label})</span>
+                    <span className="material-symbols-outlined text-base">open_in_new</span>
+                  </a>
+
+                  <a
+                    href="https://www.frf.ro/comunicari/comisii-frf/comisia-centrala-a-arbitrilor/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-4 py-3.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition"
+                  >
+                    <span>Portal Național CCA</span>
+                    <span className="material-symbols-outlined text-sm">open_in_new</span>
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* TAB 3: DRAW ANNOUNCEMENT */}
         {activeTab === "dice_announcement" && (
           <div className="space-y-5">
             {/* Toggle Disable Announcements for Instant Draw */}

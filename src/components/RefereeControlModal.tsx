@@ -3,12 +3,13 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { MatchData } from "./MatchCard";
-import { isIndividualSport } from "@/lib/constants";
+import { isIndividualSport, getAjfUrlForCounty } from "@/lib/constants";
 
 interface RefereeControlModalProps {
   match: MatchData;
   championshipId: string;
   sport?: string;
+  county?: string | null;
   isOpen: boolean;
   onClose: () => void;
   onUpdated: () => void;
@@ -26,11 +27,13 @@ export function RefereeControlModal({
   match,
   championshipId,
   sport = "Fotbal",
+  county,
   isOpen,
   onClose,
   onUpdated,
 }: RefereeControlModalProps) {
   const isIndividual = isIndividualSport(sport);
+  const ajfInfo = getAjfUrlForCounty(county);
   const [activeTab, setActiveTab] = useState<"organizer" | "live_score" | "report">("organizer");
 
   // Match core details
@@ -366,6 +369,31 @@ export function RefereeControlModal({
                     className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
                   />
                 </div>
+              </div>
+
+              {/* AJF County Official Portal Quick Discovery Button */}
+              <div className="p-3.5 rounded-xl bg-lime-400/10 border border-lime-400/30 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-xl">🏛️</span>
+                  <div>
+                    <p className="text-xs font-headline font-bold text-slate-900 dark:text-white">
+                      Ai nevoie de arbitri delegați oficial?
+                    </p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                      Te îndrumăm direct pe portalul oficial al asociației fără a stoca date sensibile.
+                    </p>
+                  </div>
+                </div>
+
+                <a
+                  href={ajfInfo.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-3.5 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition active:scale-95 shrink-0"
+                >
+                  <span>Găsește arbitri în județul tău ({ajfInfo.label})</span>
+                  <span className="material-symbols-outlined text-sm">open_in_new</span>
+                </a>
               </div>
 
               {/* Referee Instructions & Notes */}

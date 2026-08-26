@@ -108,3 +108,73 @@ export const ROMANIAN_COUNTIES = [
   "Vâlcea",
   "Vrancea",
 ] as const;
+
+// Harta linkurilor oficiale AJF (Asociația Județeană de Fotbal) / Comisia Județeană de Arbitri (CJA)
+export const AJF_COUNTY_URLS: Record<string, string> = {
+  "Alba": "https://www.frf-ajf.ro/alba",
+  "Arad": "https://www.frf-ajf.ro/arad",
+  "Argeș": "https://www.frf-ajf.ro/arges",
+  "Bacău": "https://www.frf-ajf.ro/bacau",
+  "Bihor": "https://www.frf-ajf.ro/bihor",
+  "Bistrița-Năsăud": "https://www.frf-ajf.ro/bistrita-nasaud",
+  "Botoșani": "https://www.frf-ajf.ro/botosani",
+  "Brașov": "https://www.frf-ajf.ro/brasov",
+  "Brăila": "https://www.frf-ajf.ro/braila",
+  "București": "https://www.amfb.ro",
+  "Buzău": "https://www.frf-ajf.ro/buzau",
+  "Caraș-Severin": "https://www.frf-ajf.ro/caras-severin",
+  "Călărași": "https://www.frf-ajf.ro/calarasi",
+  "Cluj": "https://www.frf-ajf.ro/cluj",
+  "Constanța": "https://www.frf-ajf.ro/constanta",
+  "Covasna": "https://www.frf-ajf.ro/covasna",
+  "Dâmbovița": "https://www.frf-ajf.ro/dambovita",
+  "Dolj": "https://www.frf-ajf.ro/dolj",
+  "Galați": "https://www.frf-ajf.ro/galati",
+  "Giurgiu": "https://www.frf-ajf.ro/giurgiu",
+  "Gorj": "https://www.frf-ajf.ro/gorj",
+  "Harghita": "https://www.frf-ajf.ro/harghita",
+  "Hunedoara": "https://www.frf-ajf.ro/hunedoara",
+  "Ialomița": "https://www.frf-ajf.ro/ialomita",
+  "Iași": "https://www.frf-ajf.ro/iasi",
+  "Ilfov": "https://www.frf-ajf.ro/ilfov",
+  "Maramureș": "https://www.frf-ajf.ro/maramures",
+  "Mehedinți": "https://www.frf-ajf.ro/mehedinti",
+  "Mureș": "https://www.frf-ajf.ro/mures",
+  "Neamț": "https://www.frf-ajf.ro/neamt",
+  "Olt": "https://www.frf-ajf.ro/olt",
+  "Prahova": "https://www.frf-ajf.ro/prahova",
+  "Satu Mare": "https://www.frf-ajf.ro/satu-mare",
+  "Sălaj": "https://www.frf-ajf.ro/salaj",
+  "Sibiu": "https://www.frf-ajf.ro/sibiu",
+  "Suceava": "https://www.frf-ajf.ro/suceava",
+  "Teleorman": "https://www.frf-ajf.ro/teleorman",
+  "Timiș": "https://www.frf-ajf.ro/timis",
+  "Tulcea": "https://www.frf-ajf.ro/tulcea",
+  "Vaslui": "https://www.frf-ajf.ro/vaslui",
+  "Vâlcea": "https://www.frf-ajf.ro/valcea",
+  "Vrancea": "https://www.frf-ajf.ro/vrancea",
+};
+
+export function getAjfUrlForCounty(county?: string | null): { url: string; label: string } {
+  if (!county || county.trim() === "" || county.toLowerCase() === "toate") {
+    return {
+      url: "https://www.frf.ro/comunicari/comisii-frf/comisia-centrala-a-arbitrilor/",
+      label: "Comisia Centrală a Arbitrilor (FRF)",
+    };
+  }
+  const cleanCounty = county.trim();
+  // Normalize match
+  const foundKey = Object.keys(AJF_COUNTY_URLS).find(
+    (k) => k.toLowerCase() === cleanCounty.toLowerCase()
+  );
+  if (foundKey && AJF_COUNTY_URLS[foundKey]) {
+    return {
+      url: AJF_COUNTY_URLS[foundKey],
+      label: foundKey === "București" ? "AMFB (București)" : `AJF ${foundKey}`,
+    };
+  }
+  return {
+    url: "https://www.frf.ro/comunicari/comisii-frf/comisia-centrala-a-arbitrilor/",
+    label: "Comisia Centrală a Arbitrilor (FRF)",
+  };
+}

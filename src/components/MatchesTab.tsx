@@ -23,12 +23,14 @@ type Match = {
 export function MatchesTab({
   championshipId,
   sport = "Fotbal",
+  county,
   teams,
   matches,
   onChanged,
 }: {
   championshipId: string;
   sport?: string;
+  county?: string | null;
   teams: Team[];
   matches: Match[];
   onChanged: () => void;
@@ -296,6 +298,7 @@ export function MatchesTab({
           match={editingMatch}
           championshipId={championshipId}
           sport={sport}
+          county={county}
           isOpen={true}
           onClose={() => setEditingMatch(null)}
           onUpdated={onChanged}
