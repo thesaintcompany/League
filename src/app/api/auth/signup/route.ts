@@ -7,6 +7,7 @@ const schema = z.object({
   name: z.string().min(2).max(60),
   email: z.string().email().max(120),
   password: z.string().min(8).max(120),
+  role: z.enum(["organizer", "referee", "player", "arena_owner", "team_leader"]).default("organizer"),
 });
 
 export async function POST(req: Request) {
@@ -37,6 +38,7 @@ export async function POST(req: Request) {
         name: parsed.data.name,
         email,
         passwordHash,
+        role: parsed.data.role,
         signupIp: clientIp,
       },
       select: { id: true, email: true, name: true, signupIp: true },

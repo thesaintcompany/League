@@ -94,7 +94,9 @@ const SEEDS = [
     email: (process.env.ADMIN_EMAIL || "admin@leaguehub.local").toLowerCase(),
     name: process.env.ADMIN_NAME || "M. Oliver - Organizator",
     password: process.env.ADMIN_PASSWORD || "Admin12345",
-    role: "organizer",
+    // This account is the installation administrator.  It must have the same
+    // role that the admin dashboard checks after a successful sign-in.
+    role: "super_admin",
   },
   {
     email: "arbitru@leaguehub.local",

@@ -9,11 +9,11 @@
 5. **Persistent Storage** → Adaugă volum:
    - Destination Path: `/app/data`
    - Size: `1GB` (sau după preferințe)
-6. (Opțional) Variabile de Mediu (Environment Variables):
+6. Variabile de mediu necesare pentru autentificare:
    - `DATABASE_URL` = `file:/app/data/league.db` (setat automat implicit)
    - `ADMIN_EMAIL` = adresa ta de email (pentru contul de admin inițial)
    - `ADMIN_PASSWORD` = parola ta de admin (minim 8 caractere)
-   - `NEXTAUTH_URL` = URL-ul public al aplicației (ex: `https://league.example.com`)
+   - `NEXTAUTH_URL` = `https://sp.buu.ro` (presetat implicit; fără `localhost`)
    - `NEXTAUTH_SECRET` = un string secret aleatoriu de minim 32 caractere (ex: generat cu `openssl rand -base64 32`)
 7. Click pe **Deploy**.
 

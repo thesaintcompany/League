@@ -4,6 +4,12 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
+// Production default for self-hosted deployments. It can still be overridden
+// by NEXTAUTH_URL in the hosting environment.
+if (process.env.NODE_ENV === "production" && !process.env.NEXTAUTH_URL) {
+  process.env.NEXTAUTH_URL = "https://sp.buu.ro";
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as any,
   session: { strategy: "jwt" },
@@ -128,18 +134,15 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs without prepending hardcoded localhost:3000
-      if (url.startsWith("/")) return url;
-      // If URL is on same domain, allow it
+      // NextAuth expects an absolute URL from this callback. Keep the redirect
+      // on the current deployment, including when it sits behind a proxy.
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
       try {
-        const urlObj = new URL(url);
-        if (typeof window !== "undefined" && urlObj.origin === window.location.origin) {
-          return url;
-        }
-        return urlObj.pathname + urlObj.search + urlObj.hash;
+        if (new URL(url).origin === baseUrl) return url;
       } catch {
-        return "/";
+        // Reject malformed callback URLs below.
       }
+      return baseUrl;
     },
     async session({ session, token }) {
       if (token && session.user) {
