@@ -101,13 +101,13 @@ export function Sidebar({ variant }: SidebarProps) {
     ];
   } else if (role === "arena_owner") {
     navItems = [
-      { name: "Configurare Arenă", href: "/dashboard/arena", icon: "settings" },
-      { name: "Campionate pe Arenă", href: "/dashboard/arena/championships", icon: "emoji_events" },
-      { name: "Meciuri & Istoric", href: "/dashboard/arena/matches", icon: "history" },
-      { name: "Reclame & Sponsori", href: "/dashboard/arena/ads", icon: "ad_units" },
-      { name: "Mesaje Arenă", href: "/dashboard/arena/announcements", icon: "campaign" },
-      { name: "Ticker Arenă", href: "/dashboard/arena/ticker", icon: "rss_feed" },
-      { name: "Vezi Arena Publică", href: arenaId ? `/venues/${arenaId}` : "/venues", icon: "public" },
+      { name: "Configurare", href: "/dashboard/arena", icon: "settings" },
+      { name: "Campionate", href: "/dashboard/arena/championships", icon: "emoji_events" },
+      { name: "Meciuri", href: "/dashboard/arena/matches", icon: "history" },
+      { name: "Reclame", href: "/dashboard/arena/ads", icon: "ad_units" },
+      { name: "Anunțuri", href: "/dashboard/arena/announcements", icon: "campaign" },
+      { name: "Ticker", href: "/dashboard/arena/ticker", icon: "rss_feed" },
+      { name: "Arena Publică", href: arenaId ? `/venues/${arenaId}` : "/venues", icon: "public" },
     ];
   } else if (role === "player") {
     navItems = [

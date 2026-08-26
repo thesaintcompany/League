@@ -70,10 +70,15 @@ export async function POST(req: Request) {
     );
   }
 
+  let dbUser = user.id ? await prisma.user.findUnique({ where: { id: user.id } }) : null;
+  if (!dbUser && session.user.email) {
+    dbUser = await prisma.user.findUnique({ where: { email: session.user.email.trim().toLowerCase() } });
+  }
+
   const venue = await prisma.venue.create({
     data: {
       ...parsed.data,
-      ownerId: user.id,
+      ownerId: dbUser?.id || null,
     },
   });
 

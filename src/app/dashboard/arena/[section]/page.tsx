@@ -33,9 +33,22 @@ export default async function ArenaOwnerSectionPage({
   const user = session.user as any;
   if (!isArenaAdmin(user)) redirect("/dashboard");
 
-  const venue = await prisma.venue.findFirst({
-    where: { ownerId: user.id },
-  });
+  let venue = user.id
+    ? await prisma.venue.findFirst({
+        where: { ownerId: user.id },
+      })
+    : null;
+
+  if (!venue && session.user.email) {
+    const dbUser = await prisma.user.findUnique({
+      where: { email: session.user.email.trim().toLowerCase() },
+    });
+    if (dbUser) {
+      venue = await prisma.venue.findFirst({
+        where: { ownerId: dbUser.id },
+      });
+    }
+  }
 
   let matchesData: any[] = [];
   if (venue) {

@@ -24,9 +24,22 @@ export default async function ArenaOwnerDashboardPage() {
   const userId = user.id;
 
   // Find arena for this user
-  const venue = await prisma.venue.findFirst({
-    where: { ownerId: userId },
-  });
+  let venue = userId
+    ? await prisma.venue.findFirst({
+        where: { ownerId: userId },
+      })
+    : null;
+
+  if (!venue && session.user.email) {
+    const dbUser = await prisma.user.findUnique({
+      where: { email: session.user.email.trim().toLowerCase() },
+    });
+    if (dbUser) {
+      venue = await prisma.venue.findFirst({
+        where: { ownerId: dbUser.id },
+      });
+    }
+  }
 
   // Fetch real matches scheduled at this arena
   let matchesData: any[] = [];

@@ -59,6 +59,7 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [], initialTab 
     : "config";
   const [activeTab, setActiveTab] = useState<"config" | "championships" | "ads" | "announcements" | "ticker" | "calendar">(initialTab || queryTab);
 
+  const [venueId, setVenueId] = useState<string>(initialVenue?.id || "");
   const [matches, setMatches] = useState(initialMatches);
 
   // Arena Config State
@@ -269,9 +270,13 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [], initialTab 
         }),
       });
 
+      const d = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const d = await res.json().catch(() => ({}));
         throw new Error(d.error || "Eroare la salvare");
+      }
+
+      if (d.venue?.id) {
+        setVenueId(d.venue.id);
       }
 
       setMessage({
@@ -398,84 +403,84 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [], initialTab 
         </div>
       )}
 
-      {/* Tab Navigation Navigation */}
-      <div className="flex border-b border-slate-200/60 dark:border-slate-800 gap-2">
+      {/* Tab Navigation */}
+      <div className="flex border-b border-slate-200/60 dark:border-slate-800 gap-2 overflow-x-auto">
         <button
           type="button"
           onClick={() => setActiveTab("config")}
-          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 ${
+          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === "config"
               ? "bg-surface-container-lowest text-blue-950 dark:text-lime-400 border-t-2 border-lime-400 shadow-sm"
               : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
           <span className="material-symbols-outlined text-lg">settings</span>
-          1. Configurare Bază Sportivă
+          Configurare
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("championships")}
-          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 ${
+          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === "championships"
               ? "bg-surface-container-lowest text-blue-950 dark:text-lime-400 border-t-2 border-lime-400 shadow-sm"
               : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
           <span className="material-symbols-outlined text-lg">emoji_events</span>
-          Campionate pe Arenă ({arenaChampionships.length})
+          Campionate ({arenaChampionships.length})
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("ads")}
-          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 ${
+          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === "ads"
               ? "bg-surface-container-lowest text-blue-950 dark:text-lime-400 border-t-2 border-lime-400 shadow-sm"
               : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
           <span className="material-symbols-outlined text-lg">ad_units</span>
-          2. Loc de Reclame &amp; Bannere ({ads.length})
+          Reclame ({ads.length})
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("announcements")}
-          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 ${
+          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === "announcements"
               ? "bg-surface-container-lowest text-blue-950 dark:text-lime-400 border-t-2 border-lime-400 shadow-sm"
               : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
           <span className="material-symbols-outlined text-lg">campaign</span>
-          3. Anunțuri Scrise ({announcements.length})
+          Anunțuri ({announcements.length})
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("ticker")}
-          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 ${
+          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === "ticker"
               ? "bg-surface-container-lowest text-blue-950 dark:text-lime-400 border-t-2 border-lime-400 shadow-sm"
               : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
           <span className="material-symbols-outlined text-lg">rss_feed</span>
-          4. Ticker Marquee Defilant
+          Ticker
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("calendar")}
-          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 ${
+          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 whitespace-nowrap ${
             activeTab === "calendar"
               ? "bg-surface-container-lowest text-blue-950 dark:text-lime-400 border-t-2 border-lime-400 shadow-sm"
               : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
           <span className="material-symbols-outlined text-lg">calendar_month</span>
-          5. Calendar Google Sync 📅
+          Calendar
         </button>
       </div>
 
