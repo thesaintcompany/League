@@ -101,13 +101,12 @@ export function Sidebar({ variant }: SidebarProps) {
     ];
   } else if (role === "arena_owner") {
     navItems = [
-      { name: "Configurare", href: "/dashboard/arena", icon: "settings" },
+      { name: "Configurare", href: "/dashboard/arena", icon: "tune" },
       { name: "Campionate", href: "/dashboard/arena/championships", icon: "emoji_events" },
-      { name: "Meciuri", href: "/dashboard/arena/matches", icon: "history" },
+      { name: "Meciuri & Calendar", href: "/dashboard/arena/matches", icon: "calendar_month" },
       { name: "Reclame", href: "/dashboard/arena/ads", icon: "ad_units" },
       { name: "Anunțuri", href: "/dashboard/arena/announcements", icon: "campaign" },
       { name: "Ticker", href: "/dashboard/arena/ticker", icon: "rss_feed" },
-      { name: "Arena Publică", href: arenaId ? `/venues/${arenaId}` : "/venues", icon: "public" },
     ];
   } else if (role === "player") {
     navItems = [

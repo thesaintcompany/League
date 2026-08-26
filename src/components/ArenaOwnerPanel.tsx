@@ -306,6 +306,7 @@ export function ArenaOwnerPanel({
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          venueId: venueId || initialVenue?.id,
           name,
           location,
           address,
@@ -407,16 +408,17 @@ export function ArenaOwnerPanel({
         </div>
 
         <div className="flex items-center gap-2.5 shrink-0 w-full md:w-auto">
-          {initialVenue?.id && (
+          {(venueId || initialVenue?.id) ? (
             <Link
-              href={`/venues/${initialVenue.id}`}
+              href={`/venues/${venueId || initialVenue?.id}`}
               target="_blank"
-              className="flex-1 md:flex-initial px-3.5 py-2 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-700 transition flex items-center justify-center gap-1.5"
+              className="flex-1 md:flex-initial px-3.5 py-2 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-700 transition flex items-center justify-center gap-1.5 shadow-sm"
+              title="Deschide pagina publică a arenei într-un tab nou"
             >
               <span className="material-symbols-outlined text-[15px]">open_in_new</span>
-              <span>Pagină Publică</span>
+              <span>Vezi Pagina Publică</span>
             </Link>
-          )}
+          ) : null}
           <button
             type="button"
             onClick={handleSaveAll}

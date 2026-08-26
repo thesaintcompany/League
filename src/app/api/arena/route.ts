@@ -74,11 +74,20 @@ export async function PATCH(req: Request) {
       dbUser = await prisma.user.findUnique({ where: { email: userEmail } });
     }
 
-    const validOwnerId = dbUser?.id || null;
+    const validOwnerId = dbUser?.id || userId || null;
+    const targetVenueId = body.venueId || body.id || null;
 
-    let venue = validOwnerId ? await prisma.venue.findFirst({
-      where: { ownerId: validOwnerId },
-    }) : null;
+    let venue = targetVenueId
+      ? await prisma.venue.findUnique({
+          where: { id: targetVenueId },
+        })
+      : null;
+
+    if (!venue && validOwnerId) {
+      venue = await prisma.venue.findFirst({
+        where: { ownerId: validOwnerId },
+      });
+    }
 
     if (!venue && userId) {
       venue = await prisma.venue.findFirst({
@@ -87,7 +96,7 @@ export async function PATCH(req: Request) {
     }
 
     const oldName = venue?.name;
-    const newName = body.name && body.name.trim() ? body.name.trim() : "Arena Mea";
+    const newName = body.name && body.name.trim() ? body.name.trim() : (venue?.name || "Arena Mea");
 
     if (!venue) {
       // If not found, create new venue for this owner
