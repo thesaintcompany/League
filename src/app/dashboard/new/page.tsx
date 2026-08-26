@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { TopHeader } from "@/components/TopHeader";
@@ -89,8 +89,68 @@ export default function NewChampionshipPage() {
     return allLists[Math.floor(Math.random() * allLists.length)];
   }
 
+  const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+
+  function handleLogoFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Imaginea selectată depășește limita de 5MB. Te rugăm să alegi o imagine mai mică.");
+      return;
+    }
+
+    setIsUploadingLogo(true);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const result = event.target?.result as string;
+      if (result) {
+        update("logoUrl", result);
+      }
+      setIsUploadingLogo(false);
+    };
+    reader.onerror = () => {
+      alert("A apărut o eroare la citirea imaginii.");
+      setIsUploadingLogo(false);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  const [venueOwnerEmail, setVenueOwnerEmail] = useState("");
+  const [venueOwnerPhone, setVenueOwnerPhone] = useState("");
+  const [venueInviteSent, setVenueInviteSent] = useState(false);
+
+  function handleSendVenueInviteEmail() {
+    if (!venueOwnerEmail || !venueOwnerEmail.includes("@")) {
+      alert("Te rugăm să introduci o adresă de email validă a proprietarului arenei.");
+      return;
+    }
+    const subject = encodeURIComponent(`Invitație de colaborare pentru găzduire campionat: ${form.name || "Campionat Oficial"}`);
+    const body = encodeURIComponent(
+      `Bună ziua,\n\nVă contactăm în legătură cu campionatul "${form.name || "Campionat Oficial"}" (${form.sport || "Sport"}).\nDorim să disputăm meciurile oficiale la baza dumneavoastră sportivă ("${form.defaultVenue}").\n\nPentru a vă valida și lista gratuit arena pe platformă cu tarife, poze și facilități, vă invităm să accesați:\nhttps://sp.buu.ro/venues\n\nCu stimă,\nOrganizator ${form.name || "Campionat"}`
+    );
+    window.open(`mailto:${venueOwnerEmail}?subject=${subject}&body=${body}`, "_blank");
+    setVenueInviteSent(true);
+  }
+
+  function handleSendVenueInviteWhatsApp() {
+    const text = encodeURIComponent(
+      `🏆 Salut! Organizăm campionatul "${form.name || "Campionat Oficial"}" (${form.sport || "Sport"}) și dorim să programăm meciurile la baza sportivă "${form.defaultVenue}".\n\nTe invităm să îți listezi și să îți revendici gratuit arena pe platforma oficială la: https://sp.buu.ro/venues`
+    );
+    const cleanPhone = venueOwnerPhone.replace(/\D/g, "");
+    if (cleanPhone) {
+      window.open(`https://wa.me/${cleanPhone.startsWith("0") ? "4" + cleanPhone : cleanPhone}?text=${text}`, "_blank");
+    } else {
+      window.open(`https://wa.me/?text=${text}`, "_blank");
+    }
+    setVenueInviteSent(true);
+  }
+
   // Quick preset templates with shorter, random names
   function applyPreset(type: "national" | "judetean" | "knockout" | "friendly" | "tennis_singles" | "tennis_doubles" | "padel_tour" | "pingpong_singles") {
+    setSelectedPreset(type);
     const name = getRandomShortName(type);
     if (type === "tennis_singles") {
       setForm((f) => ({
@@ -279,79 +339,97 @@ export default function NewChampionshipPage() {
 
           {/* Quick Presets Tray */}
           <div className="w-full p-4 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-sm space-y-3">
-            <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
-              ⚡ Șabloane Rapide (1-Click Fill)
-            </span>
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 sm:gap-3 w-full">
-              <button
-                type="button"
-                onClick={() => applyPreset("tennis_singles")}
-                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
-              >
-                <div className="text-base">🎾</div>
-                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Tenis Simplu</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Jucători direcți & Seeds</div>
-              </button>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
+                ⚡ Șabloane Rapide (1-Click Fill)
+              </span>
+              {selectedPreset && (
+                <span className="px-2.5 py-0.5 rounded-full bg-lime-400/20 text-lime-600 dark:text-lime-400 text-[10px] font-black font-label uppercase border border-lime-400/30 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-lime-500 animate-pulse"></span>
+                  Șablon Activ
+                </span>
+              )}
+            </div>
 
-              <button
-                type="button"
-                onClick={() => applyPreset("padel_tour")}
-                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-teal-500 dark:hover:border-teal-400 text-left transition w-full"
-              >
-                <div className="text-base">🎾</div>
-                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Padel Oficial</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Terenuri & Perechi</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => applyPreset("pingpong_singles")}
-                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-rose-500 dark:hover:border-rose-400 text-left transition w-full"
-              >
-                <div className="text-base">🏓</div>
-                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Ping-Pong</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Tenis de Masă Amatur</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => applyPreset("national")}
-                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
-              >
-                <div className="text-base">🏆</div>
-                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Ligă Națională</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Vizibilă pe toată harta</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => applyPreset("judetean")}
-                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
-              >
-                <div className="text-base">📍</div>
-                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Ligă Județeană</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Arondată unui județ</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => applyPreset("knockout")}
-                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
-              >
-                <div className="text-base">🎲</div>
-                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Turneu Zaruri</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Arbore eliminatoriu</div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => applyPreset("friendly")}
-                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
-              >
-                <div className="text-base">🤝</div>
-                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Meciuri Amicale</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Partide demonstrative</div>
-              </button>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2.5 sm:gap-3 w-full">
+              {[
+                {
+                  id: "tennis_singles" as const,
+                  icon: "🎾",
+                  title: "Tenis Simplu",
+                  desc: "Jucători direcți & Seeds",
+                },
+                {
+                  id: "padel_tour" as const,
+                  icon: "🎾",
+                  title: "Padel Oficial",
+                  desc: "Terenuri & Perechi",
+                },
+                {
+                  id: "pingpong_singles" as const,
+                  icon: "🏓",
+                  title: "Ping-Pong",
+                  desc: "Tenis de Masă Amatur",
+                },
+                {
+                  id: "national" as const,
+                  icon: "🏆",
+                  title: "Ligă Națională",
+                  desc: "Vizibilă pe toată harta",
+                },
+                {
+                  id: "judetean" as const,
+                  icon: "📍",
+                  title: "Ligă Județeană",
+                  desc: "Arondată unui județ",
+                },
+                {
+                  id: "knockout" as const,
+                  icon: "🎲",
+                  title: "Turneu Zaruri",
+                  desc: "Arbore eliminatoriu",
+                },
+                {
+                  id: "friendly" as const,
+                  icon: "🤝",
+                  title: "Meciuri Amicale",
+                  desc: "Partide demonstrative",
+                },
+              ].map((preset) => {
+                const isSelected = selectedPreset === preset.id;
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => applyPreset(preset.id)}
+                    className={`p-3.5 rounded-2xl border text-left transition-all duration-150 flex flex-col justify-between gap-2 relative w-full active:scale-[0.98] ${isSelected
+                        ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md ring-2 ring-lime-400/30 scale-[1.01]"
+                        : "bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800 hover:border-lime-500/60 dark:hover:border-lime-400/60"
+                      }`}
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-xl sm:text-lg">{preset.icon}</span>
+                      {/* Checkmark indicator */}
+                      <div
+                        className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-black transition-all ${isSelected
+                            ? "bg-slate-950 text-lime-400 shadow-sm"
+                            : "border-2 border-slate-300 dark:border-slate-700 text-transparent"
+                          }`}
+                      >
+                        {isSelected ? "✓" : ""}
+                      </div>
+                    </div>
+                    <div>
+                      <div className={`text-xs font-headline font-bold uppercase tracking-tight ${isSelected ? "text-slate-950 font-black" : "text-slate-900 dark:text-white"}`}>
+                        {preset.title}
+                      </div>
+                      <div className={`text-[10px] font-label line-clamp-1 ${isSelected ? "text-slate-900/90 font-medium" : "text-slate-500 dark:text-slate-400"}`}>
+                        {preset.desc}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -406,7 +484,7 @@ export default function NewChampionshipPage() {
                 </div>
               </div>
 
-              {/* Siglă Rotundă Campionat & Live Preview */}
+              {/* Siglă Oficială Campionat (Rotundă) & Upload Foto */}
               <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block">
@@ -415,67 +493,83 @@ export default function NewChampionshipPage() {
                   <span className="text-[10px] text-slate-400 font-label uppercase">Opțional</span>
                 </div>
 
+                {/* Hidden File Input */}
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleLogoFileUpload}
+                  accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                  className="hidden"
+                />
+
                 <div className="flex flex-col sm:flex-row items-center gap-5">
-                  {/* Live Badge Preview */}
-                  <div className="flex flex-col items-center gap-1.5 shrink-0">
-                    <ChampionshipLogoBadge
-                      name={form.name || "Campionat Pro"}
-                      logoUrl={form.logoUrl}
-                      size="xl"
-                    />
-                    <span className="text-[10px] font-label font-bold text-slate-400 uppercase">
+                  {/* Live Round Badge Preview (Clickable to trigger upload) */}
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group"
+                    title="Click pentru a încărca o fotografie/siglă din telefon sau calculator"
+                  >
+                    <div className="relative">
+                      <ChampionshipLogoBadge
+                        name={form.name || "Campionat Pro"}
+                        logoUrl={form.logoUrl}
+                        size="xl"
+                      />
+                      <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity">
+                        <span className="material-symbols-outlined text-lg text-lime-400">photo_camera</span>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-label font-bold text-slate-400 uppercase group-hover:text-lime-600 dark:group-hover:text-lime-400 transition">
                       {form.logoUrl?.trim() ? "Siglă Imagine" : "Inițiale pe Fond Colorat"}
                     </span>
                   </div>
 
-                  {/* Logo URL Input & Presets */}
+                  {/* Upload Controls & Actions */}
                   <div className="flex-1 space-y-3 w-full">
-                    <div className="flex gap-2">
-                      <input
-                        type="url"
-                        className="w-full p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-500"
-                        value={form.logoUrl}
-                        onChange={(e) => update("logoUrl", e.target.value)}
-                        placeholder="https://domeniu.ro/sigla-campionat.png (sau lasă gol pentru inițiale)"
-                      />
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploadingLogo}
+                        className="px-4 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition active:scale-95 border border-lime-300 disabled:opacity-50"
+                      >
+                        <span className="material-symbols-outlined text-base">
+                          {isUploadingLogo ? "progress_activity" : "upload"}
+                        </span>
+                        <span>
+                          {isUploadingLogo
+                            ? "Se procesează..."
+                            : form.logoUrl
+                              ? "Schimbă Fotografia / Sigla"
+                              : "Încarcă Foto din Dispozitiv"}
+                        </span>
+                      </button>
+
                       {form.logoUrl && (
                         <button
                           type="button"
                           onClick={() => update("logoUrl", "")}
-                          className="px-3 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-red-500"
-                          title="Șterge sigla"
+                          className="px-3.5 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/30 dark:hover:bg-rose-900/40 text-rose-600 dark:text-rose-400 font-label font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 border border-rose-200 dark:border-rose-800 transition active:scale-95"
                         >
-                          ✕
+                          <span className="material-symbols-outlined text-base">delete</span>
+                          <span>Șterge Sigla</span>
                         </button>
                       )}
                     </div>
 
-                    {/* Presets */}
-                    <div className="flex flex-wrap gap-2 text-[11px] font-label font-semibold text-slate-500 dark:text-slate-400">
-                      <span>💡 Opțiuni:</span>
-                      <button
-                        type="button"
-                        onClick={() => update("logoUrl", "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=200&auto=format&fit=crop&q=80")}
-                        className="text-lime-600 dark:text-lime-400 hover:underline"
-                      >
-                        Model 1
-                      </button>
-                      <span>•</span>
-                      <button
-                        type="button"
-                        onClick={() => update("logoUrl", "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200&auto=format&fit=crop&q=80")}
-                        className="text-lime-600 dark:text-lime-400 hover:underline"
-                      >
-                        Model 2
-                      </button>
-                      <span>•</span>
-                      <button
-                        type="button"
-                        onClick={() => update("logoUrl", "")}
-                        className="text-slate-600 dark:text-slate-300 hover:underline font-bold"
-                      >
-                        Utilizează Fond Colorat cu Inițiale
-                      </button>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label">
+                      Formate acceptate: PNG, JPG, WebP sau SVG (max. 5 MB). Va fi decupată automat în formă rotundă.
+                    </p>
+
+                    {/* Optional URL input toggle */}
+                    <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
+                      <input
+                        type="url"
+                        className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-500"
+                        value={form.logoUrl?.startsWith("data:") ? "" : form.logoUrl}
+                        onChange={(e) => update("logoUrl", e.target.value)}
+                        placeholder="Sau introdu direct un link web (URL) către imagine..."
+                      />
                     </div>
                   </div>
                 </div>
@@ -493,15 +587,15 @@ export default function NewChampionshipPage() {
                       key={sc.value}
                       type="button"
                       onClick={() => update("scope", sc.value as any)}
-                      className={`p-3 rounded-xl border text-xs font-headline font-bold text-left transition flex flex-col justify-between gap-1.5 ${form.scope === sc.value
-                        ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md scale-[1.02]"
+                      className={`p-3.5 rounded-2xl border text-left transition flex flex-col justify-between gap-1.5 ${form.scope === sc.value
+                        ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md scale-[1.01]"
                         : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400"
                         }`}
                     >
-                      <span className="text-xs">{sc.label}</span>
-                      <span className="text-[10px] font-label font-normal opacity-80">
+                      <span className="text-sm font-headline font-bold uppercase">{sc.label}</span>
+                      <span className="text-[11px] font-label font-normal opacity-80">
                         {sc.value === "national"
-                          ? "Vizibil pe toată Nationale (în toate județele)"
+                          ? "Vizibil la nivel național (toate județele)"
                           : sc.value === "judetean"
                             ? "Asociat unui județ specific"
                             : "Asociat unui municipiu / oraș"}
@@ -604,8 +698,8 @@ export default function NewChampionshipPage() {
                         type="button"
                         onClick={() => update("category", cat.value)}
                         className={`p-2.5 rounded-xl border text-xs font-headline font-bold text-center transition flex items-center justify-center gap-1.5 ${form.category === cat.value
-                            ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-950 dark:border-lime-400 shadow-sm"
-                            : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400"
+                          ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-950 dark:border-lime-400 shadow-sm"
+                          : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400"
                           }`}
                       >
                         <span>{cat.label.split(" (")[0]}</span>
@@ -623,12 +717,17 @@ export default function NewChampionshipPage() {
                 const sportTitle = isPadel ? "Padel Oficial" : isPingPong ? "Ping-Pong (Tenis de Masă)" : "Tenis de Câmp";
                 const sportIcon = isPadel ? "🎾" : isPingPong ? "🏓" : "🎾";
 
+                // Default to amateur / entry level if none chosen or category does not match active sport
+                const defaultCategoryForSport = isPadel ? "padel_amatori" : isPingPong ? "pingpong_amatori" : "simplu_masculin";
+                const isCurrentCatInList = activeCatList.some((c) => c.value === form.category);
+                const currentCat = isCurrentCatInList ? form.category : defaultCategoryForSport;
+
                 return (
-                  <div className={`p-4 rounded-2xl ${isPadel ? "bg-teal-500/10 border-teal-500/30" : isPingPong ? "bg-rose-500/10 border-rose-500/30" : "bg-emerald-500/10 border-emerald-500/30"} border space-y-4`}>
-                    <div className="flex items-center gap-2">
-                      <span className="text-base">{sportIcon}</span>
+                  <div className={`p-4 sm:p-5 rounded-2xl ${isPadel ? "bg-teal-500/10 border-teal-500/30" : isPingPong ? "bg-rose-500/10 border-rose-500/30" : "bg-emerald-500/10 border-emerald-500/30"} border space-y-4`}>
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-xl sm:text-2xl">{sportIcon}</span>
                       <div>
-                        <label className={`text-xs font-bold font-headline ${isPadel ? "text-teal-900 dark:text-teal-300" : isPingPong ? "text-rose-900 dark:text-rose-300" : "text-emerald-900 dark:text-emerald-300"} uppercase block`}>
+                        <label className={`text-xs sm:text-sm font-bold font-headline ${isPadel ? "text-teal-950 dark:text-teal-300" : isPingPong ? "text-rose-950 dark:text-rose-300" : "text-emerald-950 dark:text-emerald-300"} uppercase block`}>
                           Configurare Specifică {sportTitle} (Competitori Individuali &amp; Perechi)
                         </label>
                         <p className={`text-[11px] ${isPadel ? "text-teal-700 dark:text-teal-400" : isPingPong ? "text-rose-700 dark:text-rose-400" : "text-emerald-700 dark:text-emerald-400"} font-label`}>
@@ -638,60 +737,85 @@ export default function NewChampionshipPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 block">
-                        Tablou &amp; Categorie de Concurs
-                      </label>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {activeCatList.map((cat) => (
-                          <button
-                            key={cat.value}
-                            type="button"
-                            onClick={() => update("category", cat.value)}
-                            className={`p-2.5 rounded-xl border text-xs font-headline font-bold text-center transition ${form.category === cat.value
-                                ? isPadel ? "bg-teal-600 text-white border-teal-600 shadow-sm font-black" : isPingPong ? "bg-rose-600 text-white border-rose-600 shadow-sm font-black" : "bg-emerald-600 text-white border-emerald-600 shadow-sm font-black"
-                                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400"
+                      <div className="flex items-center justify-between">
+                        <label className="text-[11px] font-bold font-label uppercase text-slate-700 dark:text-slate-300 block">
+                          Tablou &amp; Categorie de Concurs *
+                        </label>
+                        <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
+                          Preselectat: Nivel Amatori / Start
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                        {activeCatList.map((cat) => {
+                          const isSelected = currentCat === cat.value;
+                          return (
+                            <button
+                              key={cat.value}
+                              type="button"
+                              onClick={() => update("category", cat.value)}
+                              className={`p-3 rounded-2xl border text-xs font-headline font-bold text-left transition-all duration-150 flex items-center justify-between gap-2 shadow-sm active:scale-[0.98] ${
+                                isSelected
+                                  ? isPadel
+                                    ? "bg-teal-600 text-white border-teal-600 shadow-md ring-2 ring-teal-400/40 font-black scale-[1.01]"
+                                    : isPingPong
+                                    ? "bg-rose-600 text-white border-rose-600 shadow-md ring-2 ring-rose-400/40 font-black scale-[1.01]"
+                                    : "bg-emerald-600 text-white border-emerald-600 shadow-md ring-2 ring-emerald-400/40 font-black scale-[1.01]"
+                                  : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400"
                               }`}
-                          >
-                            <span>{cat.label}</span>
-                          </button>
-                        ))}
+                            >
+                              <span className="leading-snug">{cat.label}</span>
+                              <div
+                                className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-black shrink-0 transition-all ${
+                                  isSelected
+                                    ? "bg-white text-slate-950 shadow-sm"
+                                    : "border-2 border-slate-300 dark:border-slate-700 text-transparent"
+                                }`}
+                              >
+                                {isSelected ? "✓" : ""}
+                              </div>
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-emerald-500/20">
-                    <div>
-                      <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 block mb-1">
-                        Suprafață de Joc Teren
-                      </label>
-                      <select
-                        className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-bold text-slate-900 dark:text-white"
-                        onChange={(e) => update("description", `${form.description ? form.description + " • " : ""}Suprafață: ${e.target.value}`)}
-                      >
-                        {TENNIS_SURFACES.map((s) => (
-                          <option key={s.value} value={s.value}>
-                            {s.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-200 dark:border-slate-800">
+                      <div>
+                        <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 block mb-1">
+                          Suprafață de Joc Teren
+                        </label>
+                        <select
+                          className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-bold text-slate-900 dark:text-white"
+                          defaultValue={isPadel ? "Sticlă Panoramică & Gazon Padel" : isPingPong ? "Suprafață ITTF Lemn / Sintetic" : "Zgură (Clay)"}
+                          onChange={(e) => update("description", `${form.description ? form.description + " • " : ""}Suprafață: ${e.target.value}`)}
+                        >
+                          {TENNIS_SURFACES.map((s) => (
+                            <option key={s.value} value={s.value}>
+                              {s.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
 
-                    <div>
-                      <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 block mb-1">
-                        Format Seturi &amp; Regulament
-                      </label>
-                      <select
-                        className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-bold text-slate-900 dark:text-white"
-                        onChange={(e) => update("description", `${form.description ? form.description + " • " : ""}Regulament: ${e.target.value}`)}
-                      >
-                        {TENNIS_SETS_RULES.map((r) => (
-                          <option key={r.value} value={r.value}>
-                            {r.label}
-                          </option>
-                        ))}
-                      </select>
+                      <div>
+                        <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 block mb-1">
+                          Format Seturi &amp; Regulament
+                        </label>
+                        <select
+                          className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-bold text-slate-900 dark:text-white"
+                          defaultValue={isPingPong ? "best_of_5_pingpong" : "best_of_3"}
+                          onChange={(e) => update("description", `${form.description ? form.description + " • " : ""}Regulament: ${e.target.value}`)}
+                        >
+                          {TENNIS_SETS_RULES.map((r) => (
+                            <option key={r.value} value={r.value}>
+                              {r.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   </div>
-                </div>
                 );
               })()}
 
@@ -729,16 +853,14 @@ export default function NewChampionshipPage() {
                     <button
                       type="button"
                       onClick={() => update("silentDice", !form.silentDice)}
-                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                        form.silentDice ? "bg-amber-500" : "bg-slate-300 dark:bg-slate-700"
-                      }`}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${form.silentDice ? "bg-amber-500" : "bg-slate-300 dark:bg-slate-700"
+                        }`}
                       role="switch"
                       aria-checked={form.silentDice}
                     >
                       <span
-                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                          form.silentDice ? "translate-x-5" : "translate-x-0"
-                        }`}
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${form.silentDice ? "translate-x-5" : "translate-x-0"
+                          }`}
                       />
                     </button>
                   </div>
@@ -762,16 +884,14 @@ export default function NewChampionshipPage() {
                     <button
                       type="button"
                       onClick={() => update("refereeEnabled", !form.refereeEnabled)}
-                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                        form.refereeEnabled ? "bg-lime-500" : "bg-slate-300 dark:bg-slate-700"
-                      }`}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${form.refereeEnabled ? "bg-lime-500" : "bg-slate-300 dark:bg-slate-700"
+                        }`}
                       role="switch"
                       aria-checked={form.refereeEnabled}
                     >
                       <span
-                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                          form.refereeEnabled ? "translate-x-5" : "translate-x-0"
-                        }`}
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${form.refereeEnabled ? "translate-x-5" : "translate-x-0"
+                          }`}
                       />
                     </button>
                   </div>
@@ -796,32 +916,96 @@ export default function NewChampionshipPage() {
                       <button
                         type="button"
                         onClick={() => update("singleVenueEnabled", !form.singleVenueEnabled)}
-                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                          form.singleVenueEnabled ? "bg-teal-500" : "bg-slate-300 dark:bg-slate-700"
-                        }`}
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${form.singleVenueEnabled ? "bg-teal-500" : "bg-slate-300 dark:bg-slate-700"
+                          }`}
                         role="switch"
                         aria-checked={form.singleVenueEnabled}
                       >
                         <span
-                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                            form.singleVenueEnabled ? "translate-x-5" : "translate-x-0"
-                          }`}
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${form.singleVenueEnabled ? "translate-x-5" : "translate-x-0"
+                            }`}
                         />
                       </button>
                     </div>
 
                     {form.singleVenueEnabled && (
-                      <div className="pt-2.5 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 animate-in fade-in">
-                        <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 shrink-0">
-                          Locație Centralizată:
-                        </label>
-                        <input
-                          type="text"
-                          value={form.defaultVenue}
-                          onChange={(e) => update("defaultVenue", e.target.value)}
-                          placeholder="ex: Baza Sportivă Sport Arena / Sala Polivalentă Timișoara"
-                          className="flex-1 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-teal-400"
-                        />
+                      <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-3 animate-in fade-in">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                          <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 shrink-0">
+                            Locație Centralizată:
+                          </label>
+                          <input
+                            type="text"
+                            value={form.defaultVenue}
+                            onChange={(e) => update("defaultVenue", e.target.value)}
+                            placeholder="ex: Baza Sportivă Sport Arena / Sala Polivalentă Timișoara"
+                            className="flex-1 px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-teal-400 font-bold"
+                          />
+                        </div>
+
+                        {/* Invitation Module for Arena Owner */}
+                        {form.defaultVenue.trim().length > 0 && (
+                          <div className="p-3.5 rounded-2xl bg-teal-500/10 border border-teal-500/30 space-y-2.5">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm">🏟️</span>
+                                <span className="text-xs font-bold font-headline uppercase text-teal-950 dark:text-teal-300">
+                                  Invită Proprietarul Arenei să se Listeze pe Platformă
+                                </span>
+                              </div>
+                              <span className="text-[10px] font-mono font-bold text-teal-700 dark:text-teal-400 uppercase">
+                                Opțional
+                              </span>
+                            </div>
+
+                            <p className="text-[11px] text-teal-800 dark:text-teal-300 font-label">
+                              Dacă ai adresa de email sau contactul administratorului bazei sportive <strong>{form.defaultVenue}</strong>, îi poți trimite o invitație pentru a-și revendica sau lista arena oficial în catalog.
+                            </p>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              <input
+                                type="email"
+                                value={venueOwnerEmail}
+                                onChange={(e) => setVenueOwnerEmail(e.target.value)}
+                                placeholder="Email proprietar (ex: contact@arena.ro)"
+                                className="px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-teal-300 dark:border-teal-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-teal-500"
+                              />
+                              <input
+                                type="text"
+                                value={venueOwnerPhone}
+                                onChange={(e) => setVenueOwnerPhone(e.target.value)}
+                                placeholder="Telefon / WhatsApp (ex: 0722123456)"
+                                className="px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-teal-300 dark:border-teal-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-teal-500"
+                              />
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-2 pt-1">
+                              <button
+                                type="button"
+                                onClick={handleSendVenueInviteEmail}
+                                className="px-3.5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition active:scale-95"
+                              >
+                                <span className="material-symbols-outlined text-base">mail</span>
+                                <span>Trimite Invitație pe Email</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={handleSendVenueInviteWhatsApp}
+                                className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition active:scale-95"
+                              >
+                                <span className="material-symbols-outlined text-base">chat</span>
+                                <span>Invită pe WhatsApp</span>
+                              </button>
+
+                              {venueInviteSent && (
+                                <span className="text-[11px] font-bold text-teal-700 dark:text-teal-300 font-label flex items-center gap-1">
+                                  ✓ Invitație pregătită cu succes!
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -952,8 +1136,8 @@ export default function NewChampionshipPage() {
                   type="button"
                   onClick={() => setPaymentMethod("card")}
                   className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${paymentMethod === "card"
-                      ? "bg-lime-400/10 border-lime-500 text-slate-900 dark:text-white font-bold ring-1 ring-lime-400"
-                      : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
+                    ? "bg-lime-400/10 border-lime-500 text-slate-900 dark:text-white font-bold ring-1 ring-lime-400"
+                    : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
                     }`}
                 >
                   <span className="material-symbols-outlined text-lg text-lime-500">credit_card</span>
@@ -964,8 +1148,8 @@ export default function NewChampionshipPage() {
                   type="button"
                   onClick={() => setPaymentMethod("apple_pay")}
                   className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${paymentMethod === "apple_pay"
-                      ? "bg-lime-400/10 border-lime-500 text-slate-900 dark:text-white font-bold ring-1 ring-lime-400"
-                      : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
+                    ? "bg-lime-400/10 border-lime-500 text-slate-900 dark:text-white font-bold ring-1 ring-lime-400"
+                    : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
                     }`}
                 >
                   <span className="material-symbols-outlined text-lg text-lime-500">phone_iphone</span>
@@ -976,8 +1160,8 @@ export default function NewChampionshipPage() {
                   type="button"
                   onClick={() => setPaymentMethod("google_pay")}
                   className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${paymentMethod === "google_pay"
-                      ? "bg-lime-400/10 border-lime-500 text-slate-900 dark:text-white font-bold ring-1 ring-lime-400"
-                      : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
+                    ? "bg-lime-400/10 border-lime-500 text-slate-900 dark:text-white font-bold ring-1 ring-lime-400"
+                    : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
                     }`}
                 >
                   <span className="material-symbols-outlined text-lg text-lime-500">contactless</span>
@@ -988,8 +1172,8 @@ export default function NewChampionshipPage() {
                   type="button"
                   onClick={() => setPaymentMethod("invoice")}
                   className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${paymentMethod === "invoice"
-                      ? "bg-lime-400/10 border-lime-500 text-slate-900 dark:text-white font-bold ring-1 ring-lime-400"
-                      : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
+                    ? "bg-lime-400/10 border-lime-500 text-slate-900 dark:text-white font-bold ring-1 ring-lime-400"
+                    : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
                     }`}
                 >
                   <span className="material-symbols-outlined text-lg text-lime-500">receipt_long</span>

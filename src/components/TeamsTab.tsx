@@ -50,6 +50,28 @@ const PRESET_ROMANIAN_CLUBS = [
   { name: "CSM Târgoviște (Volei)", shortName: "TRG", color: "#059669", category: "multisport" },
 ];
 
+const PRESET_PADEL_PAIRS = [
+  { name: "Perechea Galán / Chingotto (Cap Serie #1)", shortName: "G-C", color: "#0d9488", category: "pro" },
+  { name: "Perechea Coello / Tapia (Cap Serie #2)", shortName: "C-T", color: "#0284c7", category: "pro" },
+  { name: "Perechea Paquito / Lebrón", shortName: "P-L", color: "#e11d48", category: "pro" },
+  { name: "Perechea Stupaczuk / Yanguas", shortName: "S-Y", color: "#7c3aed", category: "pro" },
+  { name: "Club Padel Timișoara Pro", shortName: "CPT", color: "#16a34a", category: "amatori" },
+  { name: "București Padel Arena", shortName: "BPA", color: "#ea580c", category: "amatori" },
+  { name: "Cluj Padel Open Team", shortName: "CPO", color: "#2563eb", category: "amatori" },
+  { name: "Brașov Padel Club", shortName: "BPC", color: "#ca8a04", category: "amatori" },
+];
+
+const PRESET_PINGPONG_PLAYERS = [
+  { name: "Bernadette Szőcs (Cap Serie #1)", shortName: "SZO", color: "#e11d48", category: "pro" },
+  { name: "Ovidiu Ionescu (Cap Serie #2)", shortName: "ION", color: "#2563eb", category: "pro" },
+  { name: "Elizabeta Samara (Multiplă Campioană)", shortName: "SAM", color: "#7c3aed", category: "pro" },
+  { name: "Eduard Ionescu", shortName: "E-I", color: "#0d9488", category: "pro" },
+  { name: "Adina Diaconu", shortName: "DIA", color: "#ea580c", category: "amatori" },
+  { name: "CSM Craiova Tenis de Masă", shortName: "CC-M", color: "#16a34a", category: "amatori" },
+  { name: "CS Politehnica Cluj", shortName: "POL-C", color: "#0f172a", category: "amatori" },
+  { name: "CS Steaua București TM", shortName: "STE-M", color: "#dc2626", category: "amatori" },
+];
+
 const PRESET_TENNIS_PLAYERS = [
   { name: "Simona Halep (Cap Serie #1)", shortName: "HAL", color: "#16a34a", category: "wta" },
   { name: "Sorana Cîrstea (Cap Serie #2)", shortName: "CIR", color: "#2563eb", category: "wta" },
@@ -77,16 +99,25 @@ export function TeamsTab({
   onChanged: () => void;
 }) {
   const isIndividual = isIndividualSport(sport);
+  const isPadel = sport.toLowerCase().includes("padel");
+  const isPingPong = sport.toLowerCase().includes("ping") || sport.toLowerCase().includes("pong") || sport.toLowerCase().includes("masă") || sport.toLowerCase().includes("masa");
+
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchFilter, setSearchFilter] = useState<string>("");
   const [customName, setCustomName] = useState("");
   const [customShortName, setCustomShortName] = useState("");
-  const [customColor, setCustomColor] = useState(isIndividual ? "#16a34a" : "#84cc16");
+  const [customColor, setCustomColor] = useState(isPadel ? "#0d9488" : isPingPong ? "#e11d48" : isIndividual ? "#16a34a" : "#84cc16");
   const [showCustomForm, setShowCustomForm] = useState(false);
   const [busy, setBusy] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  const presetList = isIndividual ? PRESET_TENNIS_PLAYERS : PRESET_ROMANIAN_CLUBS;
+  const presetList = isPadel
+    ? PRESET_PADEL_PAIRS
+    : isPingPong
+    ? PRESET_PINGPONG_PLAYERS
+    : isIndividual
+    ? PRESET_TENNIS_PLAYERS
+    : PRESET_ROMANIAN_CLUBS;
 
   // Check if a participant is already added
   const isEnrolled = (name: string) => {

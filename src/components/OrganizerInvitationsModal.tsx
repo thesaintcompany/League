@@ -12,6 +12,16 @@ interface RefereeOption {
   experienceYears?: number | null;
 }
 
+interface CompetitorOption {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  position?: string | null;
+  image?: string | null;
+  role?: string;
+}
+
 interface OrganizerInvitationsModalProps {
   championshipId: string;
   championshipName: string;
@@ -32,6 +42,18 @@ export function OrganizerInvitationsModal({
   const [copiedLink, setCopiedLink] = useState(false);
   const [activeTab, setActiveTab] = useState<"invite" | "referees" | "dice_announcement">("invite");
 
+  // Competitor sub-tab: "db" | "email" | "link"
+  const [competitorMode, setCompetitorMode] = useState<"db" | "email" | "link">("db");
+  const [availableCompetitors, setAvailableCompetitors] = useState<CompetitorOption[]>([]);
+  const [selectedCompetitorId, setSelectedCompetitorId] = useState<string>("");
+  const [competitorSearch, setCompetitorSearch] = useState("");
+  const [competitorCustomName, setCompetitorCustomName] = useState("");
+  const [competitorCustomEmail, setCompetitorCustomEmail] = useState("");
+  const [competitorCustomPhone, setCompetitorCustomPhone] = useState("");
+  const [competitorInviteSent, setCompetitorInviteSent] = useState(false);
+  const [competitorEnrolling, setCompetitorEnrolling] = useState(false);
+  const [competitorEnrolledSuccess, setCompetitorEnrolledSuccess] = useState<string | null>(null);
+
   // Referee sub-tab: "db" | "email" | "ajf"
   const [refereeMode, setRefereeMode] = useState<"db" | "email" | "ajf">("db");
   const [availableReferees, setAvailableReferees] = useState<RefereeOption[]>([]);
@@ -43,24 +65,34 @@ export function OrganizerInvitationsModal({
   const isIndividual = isIndividualSport(sport);
   const ajfInfo = getAjfUrlForCounty(county);
 
-  // Load referees from database
+  // Load referees and competitors from database
   useEffect(() => {
     if (!isOpen) return;
-    async function fetchReferees() {
+    async function loadData() {
       try {
-        const res = await fetch("/api/referees");
-        if (res.ok) {
-          const data = await res.json();
+        const [refRes, compRes] = await Promise.all([
+          fetch("/api/referees"),
+          fetch("/api/players"),
+        ]);
+        if (refRes.ok) {
+          const data = await refRes.json();
           setAvailableReferees(data.referees || []);
           if (data.referees?.length > 0) {
             setSelectedRefereeId(data.referees[0].id);
           }
         }
+        if (compRes.ok) {
+          const compData = await compRes.json();
+          setAvailableCompetitors(compData.competitors || []);
+          if (compData.competitors?.length > 0) {
+            setSelectedCompetitorId(compData.competitors[0].id);
+          }
+        }
       } catch (err) {
-        console.error("Eroare la încărcarea arbitrilor:", err);
+        console.error("Eroare la încărcarea datelor din DB:", err);
       }
     }
-    fetchReferees();
+    loadData();
   }, [isOpen]);
 
   // Dice Draw Announcement State
@@ -194,67 +226,317 @@ export function OrganizerInvitationsModal({
           </button>
         </div>
 
-        {/* TAB 1: INVITE PLAYERS / TEAM LEADERS */}
+        {/* TAB 1: INVITE PLAYERS / COMPETITORS / TEAM LEADERS */}
         {activeTab === "invite" && (
           <div className="space-y-5">
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 space-y-2">
-              <span className="text-xs font-headline font-bold uppercase text-slate-700 dark:text-slate-300 block">
-                {isIndividual ? "Link Direct de Înscriere Jucător Tenis pe Tablou:" : "Link Direct de Înregistrare & Aderare Lider Echipă:"}
-              </span>
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  readOnly
-                  value={inviteUrl}
-                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 dark:text-white"
-                />
-                <button
-                  type="button"
-                  onClick={handleCopyInviteLink}
-                  className="px-4 py-2 rounded-xl bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 font-black text-xs uppercase tracking-wider shrink-0 transition active:scale-95"
-                >
-                  {copiedLink ? "Copiat ✓" : "Copiază"}
-                </button>
+            {/* Competitor Mode Selector */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-headline font-bold">
+              <button
+                type="button"
+                onClick={() => setCompetitorMode("db")}
+                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
+                  competitorMode === "db"
+                    ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm font-black"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">badge</span>
+                <span>Din Baza de Date ({availableCompetitors.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setCompetitorMode("email")}
+                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
+                  competitorMode === "email"
+                    ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm font-black"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">mail</span>
+                <span>Invitație Email / Nume</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setCompetitorMode("link")}
+                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
+                  competitorMode === "link"
+                    ? "bg-lime-400 text-slate-950 shadow-sm font-black"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">link</span>
+                <span>Link Public &amp; Social</span>
+              </button>
+            </div>
+
+            {/* Sub-Mode 1: Competitors from Database */}
+            {competitorMode === "db" && (
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span className="text-xs font-headline font-bold uppercase text-slate-700 dark:text-slate-300">
+                      {isIndividual ? "Selectează Jucător Înscris în Aplicație:" : "Selectează Lider / Echipă din Baza de Date:"}
+                    </span>
+                    <input
+                      type="text"
+                      value={competitorSearch}
+                      onChange={(e) => setCompetitorSearch(e.target.value)}
+                      placeholder="Caută după nume sau email..."
+                      className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-500"
+                    />
+                  </div>
+
+                  {availableCompetitors.length > 0 ? (
+                    <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                      {availableCompetitors
+                        .filter((c) => {
+                          const q = competitorSearch.toLowerCase();
+                          return !q || c.name.toLowerCase().includes(q) || c.email.toLowerCase().includes(q);
+                        })
+                        .map((comp) => {
+                          const isSelected = selectedCompetitorId === comp.id;
+                          return (
+                            <div
+                              key={comp.id}
+                              onClick={() => setSelectedCompetitorId(comp.id)}
+                              className={`p-3 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                                isSelected
+                                  ? "bg-lime-400/15 border-lime-500 dark:border-lime-400 ring-2 ring-lime-400/30"
+                                  : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-400"
+                              }`}
+                            >
+                              <div className="flex items-center gap-3 min-w-0">
+                                <div className="w-9 h-9 rounded-full bg-slate-900 text-lime-400 flex items-center justify-center font-bold text-xs shrink-0">
+                                  {comp.name.substring(0, 2).toUpperCase()}
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="text-xs font-headline font-bold text-slate-900 dark:text-white truncate">
+                                    {comp.name}
+                                  </div>
+                                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-label truncate">
+                                    {comp.email} {comp.phone ? `• ${comp.phone}` : ""} {comp.position ? `• ${comp.position}` : ""}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-2 shrink-0">
+                                <button
+                                  type="button"
+                                  disabled={competitorEnrolling}
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    setCompetitorEnrolling(true);
+                                    setCompetitorEnrolledSuccess(null);
+                                    try {
+                                      const res = await fetch(`/api/championships/${championshipId}/teams`, {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({
+                                          name: comp.name,
+                                          shortName: comp.name.substring(0, 3).toUpperCase(),
+                                          color: isIndividual ? "#0d9488" : "#10b981",
+                                        }),
+                                      });
+                                      if (res.ok) {
+                                        setCompetitorEnrolledSuccess(`✓ ${comp.name} a fost adăugat pe tablou!`);
+                                        setTimeout(() => setCompetitorEnrolledSuccess(null), 4000);
+                                      } else {
+                                        const err = await res.json().catch(() => ({}));
+                                        alert(err.error || "Eroare la adăugarea competitorului.");
+                                      }
+                                    } catch {
+                                      alert("Eroare de rețea.");
+                                    } finally {
+                                      setCompetitorEnrolling(false);
+                                    }
+                                  }}
+                                  className="px-3 py-1.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-[11px] uppercase tracking-wider transition active:scale-95 shadow-sm"
+                                >
+                                  + Adaugă pe Tablou
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-500 italic text-center py-4">
+                      Nu există încă alți utilizatori înscriși în baza de date. Poți trimite invitații prin Email sau WhatsApp.
+                    </p>
+                  )}
+
+                  {competitorEnrolledSuccess && (
+                    <div className="p-3 rounded-xl bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-bold text-xs font-label border border-emerald-500/30">
+                      {competitorEnrolledSuccess}
+                    </div>
+                  )}
+                </div>
+
+                {/* Direct Action for selected competitor */}
+                {selectedCompetitorId && (() => {
+                  const selectedComp = availableCompetitors.find((c) => c.id === selectedCompetitorId);
+                  if (!selectedComp) return null;
+                  const personalMsg = isIndividual
+                    ? `🎾 Salut ${selectedComp.name}! Te invităm oficial în turneul de ${sport} "${championshipName}". Înscrie-te și validează-ți prezența pe tablou aici: ${inviteUrl}`
+                    : `🏆 Salut ${selectedComp.name}! Te invităm să-ți înscrii echipa în campionatul de ${sport} "${championshipName}". Confirmă participarea aici: ${inviteUrl}`;
+                  const waHref = `https://api.whatsapp.com/send?${selectedComp.phone ? `phone=${selectedComp.phone.replace(/\D/g, "")}&` : ""}text=${encodeURIComponent(personalMsg)}`;
+                  const mailHref = `mailto:${selectedComp.email || ""}?subject=${encodeURIComponent(`Invitație Oficială - ${championshipName}`)}&body=${encodeURIComponent(personalMsg)}`;
+
+                  return (
+                    <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                      <span className="text-xs font-headline font-bold text-slate-900 dark:text-white uppercase block">
+                        Trimite Notificare Personalizată către: {selectedComp.name}
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <a
+                          href={waHref}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="p-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-xs uppercase flex items-center justify-center gap-2 shadow-sm transition active:scale-95"
+                        >
+                          <span className="text-base">💬</span>
+                          <span>Trimite pe WhatsApp</span>
+                        </a>
+
+                        <a
+                          href={mailHref}
+                          className="p-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-headline font-bold text-xs uppercase flex items-center justify-center gap-2 shadow-sm transition active:scale-95"
+                        >
+                          <span className="material-symbols-outlined text-base">mail</span>
+                          <span>Trimite pe Email</span>
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
-            </div>
+            )}
 
-            <div className="space-y-3">
-              <span className="text-xs font-label font-bold text-slate-400 uppercase tracking-widest block">
-                Trimite Invitația pe Canalele Sociale:
-              </span>
+            {/* Sub-Mode 2: Invite by Name & Email / Phone */}
+            {competitorMode === "email" && (
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 space-y-3">
+                  <span className="text-xs font-headline font-bold uppercase text-slate-700 dark:text-slate-300 block">
+                    {isIndividual ? "Date Jucător de Invitat:" : "Date Lider de Echipă:"}
+                  </span>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <a
-                  href={whatsappInviteUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
-                >
-                  <span className="text-lg">💬</span>
-                  <span>Trimite pe WhatsApp</span>
-                </a>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[10px] font-bold font-label uppercase text-slate-500 block mb-1">
+                        Nume &amp; Prenume *
+                      </label>
+                      <input
+                        type="text"
+                        value={competitorCustomName}
+                        onChange={(e) => setCompetitorCustomName(e.target.value)}
+                        placeholder="ex: Andrei Popescu"
+                        className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-500"
+                      />
+                    </div>
 
-                <a
-                  href={emailInviteUrl}
-                  className="p-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
-                >
-                  <span className="material-symbols-outlined text-base">mail</span>
-                  <span>Trimite via Email</span>
-                </a>
+                    <div>
+                      <label className="text-[10px] font-bold font-label uppercase text-slate-500 block mb-1">
+                        Adresă Email *
+                      </label>
+                      <input
+                        type="email"
+                        value={competitorCustomEmail}
+                        onChange={(e) => setCompetitorCustomEmail(e.target.value)}
+                        placeholder="ex: andrei@exemplu.ro"
+                        className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-bold font-label uppercase text-slate-500 block mb-1">
+                      Telefon / WhatsApp (Opțional)
+                    </label>
+                    <input
+                      type="text"
+                      value={competitorCustomPhone}
+                      onChange={(e) => setCompetitorCustomPhone(e.target.value)}
+                      placeholder="ex: 0722123456"
+                      className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-500"
+                    />
+                  </div>
+
+                  <div className="pt-2 flex flex-wrap gap-2.5">
+                    <a
+                      href={`mailto:${competitorCustomEmail}?subject=${encodeURIComponent(
+                        isIndividual ? `Invitație Oficială Jucător - ${championshipName}` : `Invitație Oficială Echipă - ${championshipName}`
+                      )}&body=${encodeURIComponent(
+                        `Salut ${competitorCustomName || "Sportiv"}!\n\nTe invităm să participi la "${championshipName}" (${sport}).\nÎnscrie-te și confirmă prezența aici: ${inviteUrl}\n\nCu stimă,\nOrganizatorul competiției`
+                      )}`}
+                      className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-headline font-bold text-xs uppercase flex items-center gap-1.5 shadow-sm transition active:scale-95"
+                    >
+                      <span className="material-symbols-outlined text-base">mail</span>
+                      <span>Trimite Email Direct</span>
+                    </a>
+
+                    <a
+                      href={`https://api.whatsapp.com/send?${competitorCustomPhone ? `phone=${competitorCustomPhone.replace(/\D/g, "")}&` : ""}text=${encodeURIComponent(
+                        `🏆 Salut ${competitorCustomName || "Sportiv"}! Te invităm să participi la "${championshipName}" (${sport}). Confirmă prezența pe tablou aici: ${inviteUrl}`
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-xs uppercase flex items-center gap-1.5 shadow-sm transition active:scale-95"
+                    >
+                      <span className="text-base">💬</span>
+                      <span>Trimite pe WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 text-xs font-body leading-relaxed">
-              {isIndividual ? (
-                <span>
-                  <strong>Cum funcționează?</strong> Când jucătorul accesează linkul, își creează profilul individual de jucător (club, mână de joc, punctaj) și va apărea instant pe tabloul tău de concurs pentru tragerea la sorți.
-                </span>
-              ) : (
-                <span>
-                  <strong>Cum funcționează?</strong> Când liderul de echipă accesează linkul, își creează cont pe platformă, își configurează lotul de jucători și va apărea automat în panoul tău de echipe pentru a fi asociat la campionat.
-                </span>
-              )}
-            </div>
+            {/* Sub-Mode 3: Public Link & Social Media */}
+            {competitorMode === "link" && (
+              <div className="space-y-4">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 space-y-2">
+                  <span className="text-xs font-headline font-bold uppercase text-slate-700 dark:text-slate-300 block">
+                    {isIndividual ? "Link Direct de Înscriere Jucător pe Tablou:" : "Link Direct de Înregistrare & Aderare Lider Echipă:"}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      readOnly
+                      value={inviteUrl}
+                      className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-slate-900 dark:text-white"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleCopyInviteLink}
+                      className="px-4 py-2 rounded-xl bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 font-black text-xs uppercase tracking-wider shrink-0 transition active:scale-95"
+                    >
+                      {copiedLink ? "Copiat ✓" : "Copiază"}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <a
+                    href={whatsappInviteUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
+                  >
+                    <span className="text-lg">💬</span>
+                    <span>Distribuie pe WhatsApp</span>
+                  </a>
+
+                  <a
+                    href={emailInviteUrl}
+                    className="p-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
+                  >
+                    <span className="material-symbols-outlined text-base">mail</span>
+                    <span>Trimite via Email</span>
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

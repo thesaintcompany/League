@@ -85,9 +85,9 @@ export const TENNIS_SETS_RULES = [
 ] as const;
 
 export const CHAMPIONSHIP_SCOPES = [
-  { value: "national", label: "🇷🇴 Național (Toată România - Toate Județele)" },
-  { value: "judetean", label: "🏛️ Județean (Județ Specific)" },
-  { value: "oras", label: "🏙️ Local / Municipal (Oraș Specific)" },
+  { value: "national", label: "Național" },
+  { value: "judetean", label: "Județean" },
+  { value: "oras", label: "Local" },
 ] as const;
 
 export const ROMANIAN_COUNTIES = [
