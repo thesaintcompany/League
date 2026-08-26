@@ -93,7 +93,6 @@ export function Sidebar({ variant }: SidebarProps) {
       { name: "Program & Arbitraj", href: `${activeBase}?tab=matches`, icon: "sports_soccer" },
       { name: "Arbore Eliminatoriu 🏆", href: isChampDetail ? `${activeBase}?tab=brackets` : "/brackets", icon: "account_tree" },
       { name: "Echipe Înscrise 🛡️", href: "/dashboard/organizer/teams", icon: "shield" },
-      { name: "Bilete & Scanner Porți 🎟️", href: isChampDetail ? `${activeBase}?tab=tickets` : "/tickets/scanner", icon: "confirmation_number" },
       { name: "Promotion Hub 📢", href: `${activeBase}?tab=promo`, icon: "campaign" },
       { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
       { name: "Campionate & Harta", href: "/harta-romaniei", icon: "emoji_events" },

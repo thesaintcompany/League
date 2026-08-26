@@ -1,12 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 interface ChampionshipLogoBadgeProps {
   name: string;
   logoUrl?: string | null;
   size?: "sm" | "md" | "lg" | "xl" | "2xl";
   className?: string;
+  editable?: boolean;
+  championshipId?: string;
+  onLogoChange?: (newLogoUrl: string) => void;
 }
 
 /**
@@ -55,11 +58,23 @@ export function getChampionshipGradient(name: string): string {
 
 export function ChampionshipLogoBadge({
   name,
-  logoUrl,
+  logoUrl: initialLogoUrl,
   size = "md",
   className = "",
+  editable = false,
+  championshipId,
+  onLogoChange,
 }: ChampionshipLogoBadgeProps) {
+  const [currentLogoUrl, setCurrentLogoUrl] = useState<string | null | undefined>(initialLogoUrl);
   const [imageError, setImageError] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Sync state if prop changes
+  React.useEffect(() => {
+    setCurrentLogoUrl(initialLogoUrl);
+    setImageError(false);
+  }, [initialLogoUrl]);
 
   // Size mapping
   const sizeClasses = {
@@ -73,31 +88,121 @@ export function ChampionshipLogoBadge({
   const initials = getChampionshipInitials(name);
   const gradientClass = getChampionshipGradient(name);
 
-  const hasValidLogo = Boolean(logoUrl && logoUrl.trim() && !imageError);
+  const hasValidLogo = Boolean(currentLogoUrl && currentLogoUrl.trim() && !imageError);
 
-  if (hasValidLogo) {
-    return (
-      <div
-        className={`relative rounded-full overflow-hidden shrink-0 shadow-lg border-2 border-lime-400/60 bg-slate-900 ${sizeClasses} ${className}`}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={logoUrl!}
-          alt={`Siglă ${name}`}
-          onError={() => setImageError(true)}
-          className="w-full h-full object-cover object-center rounded-full"
-        />
-      </div>
-    );
+  function handleDoubleClick(e: React.MouseEvent) {
+    if (!editable) return;
+    e.preventDefault();
+    e.stopPropagation();
+    fileInputRef.current?.click();
   }
 
-  // Fallback: Round Badge with Initials on Vibrant Gradient Background
+  async function handleFileSelected(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate size (< 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Imaginea este prea mare. Dimensiunea maximă admisă este de 5 MB.");
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const dataUrl = event.target?.result as string;
+        if (!dataUrl) {
+          setUploading(false);
+          return;
+        }
+
+        // If championshipId is provided, save via PATCH
+        if (championshipId) {
+          const res = await fetch(`/api/championships/${championshipId}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ logoUrl: dataUrl }),
+          });
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            alert(errData.error || "Eroare la salvarea siglei campionatului.");
+            setUploading(false);
+            return;
+          }
+        }
+
+        setCurrentLogoUrl(dataUrl);
+        setImageError(false);
+        setUploading(false);
+        if (onLogoChange) onLogoChange(dataUrl);
+      };
+
+      reader.readAsDataURL(file);
+    } catch (err: any) {
+      console.error("Error uploading championship logo:", err);
+      alert("Eroare la încărcarea imaginii.");
+      setUploading(false);
+    }
+  }
+
   return (
     <div
-      className={`rounded-full shrink-0 flex items-center justify-center font-headline uppercase tracking-tight shadow-md select-none ring-2 ring-white/10 ${gradientClass} ${sizeClasses} ${className}`}
-      title={`Campionat: ${name}`}
+      onDoubleClick={handleDoubleClick}
+      className={`group relative select-none shrink-0 ${editable ? "cursor-pointer" : ""} ${className}`}
+      title={editable ? `Dublu-click pe siglă pentru a încărca imaginea oficială a campionatului (${name})` : `Campionat: ${name}`}
     >
-      <span className="leading-none drop-shadow-sm">{initials}</span>
+      {editable && (
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileSelected}
+          accept="image/png,image/jpeg,image/webp,image/svg+xml"
+          className="hidden"
+        />
+      )}
+
+      {hasValidLogo ? (
+        <div
+          className={`relative rounded-full overflow-hidden shadow-lg border-2 border-lime-400/60 bg-slate-900 transition-transform ${editable ? "group-hover:scale-105" : ""} ${sizeClasses}`}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={currentLogoUrl!}
+            alt={`Siglă ${name}`}
+            onError={() => setImageError(true)}
+            className="w-full h-full object-cover object-center rounded-full"
+          />
+        </div>
+      ) : (
+        <div
+          className={`rounded-full flex items-center justify-center font-headline uppercase tracking-tight shadow-md ring-2 ring-white/10 transition-transform ${editable ? "group-hover:scale-105" : ""} ${gradientClass} ${sizeClasses}`}
+        >
+          <span className="leading-none drop-shadow-sm">{initials}</span>
+        </div>
+      )}
+
+      {/* Editable Overlay Icon on Hover */}
+      {editable && (
+        <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white transition-opacity duration-200 pointer-events-none">
+          {uploading ? (
+            <span className="material-symbols-outlined text-lg sm:text-xl animate-spin text-lime-400">
+              progress_activity
+            </span>
+          ) : (
+            <>
+              <span className="material-symbols-outlined text-sm sm:text-lg text-lime-400">
+                photo_camera
+              </span>
+              <span className="text-[7px] sm:text-[8px] font-black uppercase font-label tracking-tighter text-lime-300">
+                2x Click
+              </span>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }

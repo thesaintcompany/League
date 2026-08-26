@@ -164,46 +164,46 @@ export default function NewChampionshipPage() {
           subtitle="Configurează o competiție nouă, un turneu eliminatoriu sau o cupă de jocuri amicale"
         />
 
-        <main className="p-4 sm:p-6 lg:p-10 max-w-4xl space-y-6 sm:space-y-8">
+        <main className="w-full max-w-4xl space-y-5 sm:space-y-8 p-3 sm:p-6 lg:p-10 mx-auto">
           {/* Quota & Pricing Status Banner */}
           {existingCount === 0 ? (
-            <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs font-label flex items-center justify-between gap-3 shadow-sm">
+            <div className="w-full p-3.5 sm:p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs font-label flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-emerald-500 text-xl">card_giftcard</span>
+                <span className="material-symbols-outlined text-emerald-500 text-xl shrink-0">card_giftcard</span>
                 <div>
                   <p className="font-headline font-black uppercase text-xs">Plan Gratuit Activ • 1 Campionat Inclus</p>
-                  <p className="opacity-90 text-[11px]">Primul tău campionat pe platformă este 100% GRATUIT fara niciun cost ascuns.</p>
+                  <p className="opacity-90 text-[11px]">Primul tău campionat pe platformă este 100% GRATUIT fără niciun cost ascuns.</p>
                 </div>
               </div>
-              <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-bold text-[10px] uppercase font-mono border border-emerald-500/30 shrink-0">
+              <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-bold text-[10px] uppercase font-mono border border-emerald-500/30 shrink-0 self-start sm:self-auto">
                 0 € (GRATUIT)
               </span>
             </div>
           ) : (
-            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-label flex items-center justify-between gap-3 shadow-sm">
+            <div className="w-full p-3.5 sm:p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-label flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-amber-500 text-xl">workspace_premium</span>
+                <span className="material-symbols-outlined text-amber-500 text-xl shrink-0">workspace_premium</span>
                 <div>
                   <p className="font-headline font-black uppercase text-xs">Cota Gratuită Atinsă ({existingCount}/1 Campionat)</p>
                   <p className="opacity-90 text-[11px]">Ai un campionat activ. Campionatul suplimentar se achită cu <strong>280 € / competiție</strong> (~1.395 RON).</p>
                 </div>
               </div>
-              <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-300 font-bold text-[10px] uppercase font-mono border border-amber-500/30 shrink-0">
+              <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-300 font-bold text-[10px] uppercase font-mono border border-amber-500/30 shrink-0 self-start sm:self-auto">
                 280 € / Campionat
               </span>
             </div>
           )}
 
           {/* Quick Presets Tray */}
-          <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-3">
+          <div className="w-full p-4 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-sm space-y-3">
             <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
               ⚡ Șabloane Rapide (1-Click Fill)
             </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 w-full">
               <button
                 type="button"
                 onClick={() => applyPreset("national")}
-                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition"
+                className="p-3.5 sm:p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
               >
                 <div className="text-base">🏆</div>
                 <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Ligă Națională</div>
@@ -213,7 +213,7 @@ export default function NewChampionshipPage() {
               <button
                 type="button"
                 onClick={() => applyPreset("judetean")}
-                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition"
+                className="p-3.5 sm:p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
               >
                 <div className="text-base">📍</div>
                 <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Ligă Județeană</div>
@@ -223,7 +223,7 @@ export default function NewChampionshipPage() {
               <button
                 type="button"
                 onClick={() => applyPreset("knockout")}
-                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition"
+                className="p-3.5 sm:p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
               >
                 <div className="text-base">🎲</div>
                 <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Turneu cu Zaruri</div>
@@ -233,7 +233,7 @@ export default function NewChampionshipPage() {
               <button
                 type="button"
                 onClick={() => applyPreset("friendly")}
-                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition"
+                className="p-3.5 sm:p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
               >
                 <div className="text-base">🤝</div>
                 <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Meciuri Amicale</div>
@@ -243,7 +243,7 @@ export default function NewChampionshipPage() {
           </div>
 
           {/* Main Form */}
-          <div className="card p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
+          <div className="w-full p-4 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-sm space-y-6">
             <div className="flex items-center gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
               <div className="w-10 h-10 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-bold">
                 <span className="material-symbols-outlined text-2xl">add_circle</span>

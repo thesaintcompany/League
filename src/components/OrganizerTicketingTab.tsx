@@ -8,6 +8,7 @@ interface MatchItem {
   id: string;
   round: number;
   stage?: string | null;
+  status?: string | null;
   scheduledAt: string;
   venue?: string | null;
   ticketPrice?: number | null;
@@ -410,35 +411,49 @@ export function OrganizerTicketingTab({
             </div>
 
             {/* QR Code */}
-            <div className="p-4 bg-white rounded-3xl inline-block shadow-2xl border-4 border-lime-400/50">
-              {scannerQrUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={scannerQrUrl} alt="QR Activare Scanner" className="w-52 h-52 object-contain" />
-              ) : (
-                <div className="w-52 h-52 bg-slate-100 flex items-center justify-center text-slate-900 font-mono text-xs">
-                  Generare QR...
+            {activeMatch?.status === "finished" || activeMatch?.status === "cancelled" ? (
+              <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl text-center space-y-3">
+                <span className="material-symbols-outlined text-4xl text-amber-400">event_busy</span>
+                <p className="font-headline font-bold text-xs uppercase text-amber-300">
+                  Meci Finalizat • Scanner Închis
+                </p>
+                <p className="text-[11px] text-slate-400 font-body">
+                  Linkul de scanare a fost anulat automat odată cu terminarea partidei.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="p-4 bg-white rounded-3xl inline-block shadow-2xl border-4 border-lime-400/50">
+                  {scannerQrUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={scannerQrUrl} alt="QR Activare Scanner" className="w-52 h-52 object-contain" />
+                  ) : (
+                    <div className="w-52 h-52 bg-slate-100 flex items-center justify-center text-slate-900 font-mono text-xs">
+                      Generare QR...
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            <div className="space-y-2 pt-2">
-              <Link
-                href={`/tickets/scanner?matchId=${activeMatch?.id}&token=${activeMatch?.gateAccessSecret || "SECRET"}`}
-                target="_blank"
-                className="w-full py-3.5 bg-lime-400 hover:bg-lime-300 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-lg flex items-center justify-center gap-2 transition"
-              >
-                <span>📱</span> Deschide Scanner pe Ecran ↗
-              </Link>
+                <div className="space-y-2 pt-2">
+                  <Link
+                    href={`/tickets/scanner?matchId=${activeMatch?.id}&token=${activeMatch?.gateAccessSecret || "SECRET"}`}
+                    target="_blank"
+                    className="w-full py-3.5 bg-lime-400 hover:bg-lime-300 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-lg flex items-center justify-center gap-2 transition"
+                  >
+                    <span>📱</span> Deschide Scanner pe Ecran ↗
+                  </Link>
 
-              <a
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`📲 Link Scanner Porți Meci ${activeMatch?.homeTeam.name} vs ${activeMatch?.awayTeam.name}: https://sp.tscquantum.ro/tickets/scanner?matchId=${activeMatch?.id}&token=${activeMatch?.gateAccessSecret || "SECRET"}`)}`}
-                target="_blank"
-                rel="noreferrer"
-                className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold font-label text-xs uppercase rounded-2xl flex items-center justify-center gap-2 transition"
-              >
-                <span>💬</span> Trimite pe WhatsApp la Stewarzi
-              </a>
-            </div>
+                  <a
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`📲 Link Scanner Porți Meci ${activeMatch?.homeTeam.name} vs ${activeMatch?.awayTeam.name}: https://sp.tscquantum.ro/tickets/scanner?matchId=${activeMatch?.id}&token=${activeMatch?.gateAccessSecret || "SECRET"}`)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold font-label text-xs uppercase rounded-2xl flex items-center justify-center gap-2 transition"
+                  >
+                    <span>💬</span> Trimite pe WhatsApp la Stewarzi
+                  </a>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

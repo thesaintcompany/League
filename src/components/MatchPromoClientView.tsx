@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { MatchSponsorsSection } from "./MatchSponsorsSection";
 import { MatchRegulationsSection } from "./MatchRegulationsSection";
+import { isTicketSalesClosed } from "@/lib/tickets";
 
 interface TeamData {
   id: string;
@@ -36,7 +37,7 @@ function TeamLogoCrest({ team, fallbackShort }: { team: TeamData; fallbackShort:
 
   return (
     <div
-      className="w-24 h-24 sm:w-36 sm:h-36 rounded-3xl flex items-center justify-center font-black text-3xl sm:text-4xl text-white shadow-2xl border-4 border-white/20 transform group-hover:scale-105 transition-all overflow-hidden bg-slate-900/90 relative backdrop-blur-md"
+      className="w-16 h-16 xs:w-20 xs:h-20 sm:w-36 sm:h-36 rounded-2xl sm:rounded-3xl flex items-center justify-center font-black text-xl xs:text-2xl sm:text-4xl text-white shadow-2xl border-2 sm:border-4 border-white/20 transform group-hover:scale-105 transition-all overflow-hidden bg-slate-900/90 relative backdrop-blur-md shrink-0"
       style={{ backgroundColor: team.color || "#1e293b" }}
     >
       {team.logoUrl && !imgError ? (
@@ -45,7 +46,7 @@ function TeamLogoCrest({ team, fallbackShort }: { team: TeamData; fallbackShort:
           src={team.logoUrl}
           alt={team.name}
           onError={() => setImgError(true)}
-          className="w-full h-full object-contain p-2.5 transition-transform duration-300 group-hover:scale-110 drop-shadow-md"
+          className="w-full h-full object-contain p-1.5 sm:p-2.5 transition-transform duration-300 group-hover:scale-110 drop-shadow-md"
         />
       ) : (
         <span className="font-headline font-black uppercase tracking-tight drop-shadow-md text-white">
@@ -147,13 +148,14 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
     }
   }
 
-  const champName = match.championship?.name || "Ligue Pro România";
+  const champName = match.championship?.name || "Campionat Oficial";
   const homeShort = match.homeTeam.shortName || match.homeTeam.name.substring(0, 3).toUpperCase();
   const awayShort = match.awayTeam.shortName || match.awayTeam.name.substring(0, 3).toUpperCase();
 
   const isLive = match.status === "live" || match.status === "in_progress";
   const isFinished = match.status === "finished";
   const hasScore = (match.homeScore !== null && match.homeScore !== undefined) && (match.awayScore !== null && match.awayScore !== undefined);
+  const isSalesClosed = isTicketSalesClosed(match);
 
   return (
     <div className="flex-1 w-full font-body text-white">
@@ -192,48 +194,48 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
             )}
           </div>
 
-          {/* Versus Header with Team Logos & Score Overlay */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16 py-4">
+          {/* Versus Header with Team Logos & Score Overlay — Row Layout Side-By-Side On Mobile & Desktop */}
+          <div className="flex flex-row items-center justify-between sm:justify-center gap-2 xs:gap-4 sm:gap-16 py-4 w-full max-w-4xl mx-auto">
             {/* Home Team */}
-            <div className="flex flex-col items-center space-y-3 group max-w-[200px] text-center">
+            <div className="flex flex-col items-center space-y-2 group min-w-0 flex-1 sm:flex-none sm:max-w-[200px] text-center">
               <TeamLogoCrest team={match.homeTeam} fallbackShort={homeShort} />
-              <h2 className="text-2xl sm:text-3xl font-black font-headline uppercase tracking-tight text-white drop-shadow leading-tight">
+              <h2 className="text-xs xs:text-sm sm:text-3xl font-black font-headline uppercase tracking-tight text-white drop-shadow leading-tight line-clamp-2">
                 {match.homeTeam.name}
               </h2>
-              <span className="text-xs font-label uppercase font-bold text-lime-400">
+              <span className="text-[10px] sm:text-xs font-label uppercase font-bold text-lime-400">
                 Gazde (Home)
               </span>
             </div>
 
             {/* Score or VS Divider */}
-            <div className="flex flex-col items-center my-2 sm:my-0">
+            <div className="flex flex-col items-center shrink-0 my-0">
               {isLive || isFinished || hasScore ? (
-                <div className="flex items-center gap-3 sm:gap-6 bg-slate-900/90 border-2 border-white/20 px-6 sm:px-8 py-3.5 rounded-3xl shadow-2xl backdrop-blur-md">
-                  <span className={`text-4xl sm:text-6xl font-black font-mono tracking-tight ${isLive ? "text-red-400" : "text-white"}`}>
+                <div className="flex items-center gap-1.5 sm:gap-6 bg-slate-900/90 border-2 border-white/20 px-2.5 sm:px-8 py-2 sm:py-3.5 rounded-2xl sm:rounded-3xl shadow-2xl backdrop-blur-md">
+                  <span className={`text-2xl xs:text-3xl sm:text-6xl font-black font-mono tracking-tight ${isLive ? "text-red-400" : "text-white"}`}>
                     {match.homeScore ?? 0}
                   </span>
-                  <span className="text-2xl sm:text-4xl font-black font-headline text-slate-500">-</span>
-                  <span className={`text-4xl sm:text-6xl font-black font-mono tracking-tight ${isLive ? "text-red-400" : "text-white"}`}>
+                  <span className="text-base sm:text-4xl font-black font-headline text-slate-500">-</span>
+                  <span className={`text-2xl xs:text-3xl sm:text-6xl font-black font-mono tracking-tight ${isLive ? "text-red-400" : "text-white"}`}>
                     {match.awayScore ?? 0}
                   </span>
                 </div>
               ) : (
-                <span className="text-4xl sm:text-6xl font-black italic font-headline text-lime-400 animate-pulse">
+                <span className="text-2xl xs:text-3xl sm:text-6xl font-black italic font-headline text-lime-400 animate-pulse">
                   VS
                 </span>
               )}
-              <span className="text-[10px] font-label uppercase tracking-widest text-slate-400 font-bold mt-2">
+              <span className="text-[9px] sm:text-[10px] font-label uppercase tracking-widest text-slate-400 font-bold mt-1 sm:mt-2">
                 {match.stage ? match.stage.toUpperCase() : `Etapa ${match.round}`}
               </span>
             </div>
 
             {/* Away Team */}
-            <div className="flex flex-col items-center space-y-3 group max-w-[200px] text-center">
+            <div className="flex flex-col items-center space-y-2 group min-w-0 flex-1 sm:flex-none sm:max-w-[200px] text-center">
               <TeamLogoCrest team={match.awayTeam} fallbackShort={awayShort} />
-              <h2 className="text-2xl sm:text-3xl font-black font-headline uppercase tracking-tight text-white drop-shadow leading-tight">
+              <h2 className="text-xs xs:text-sm sm:text-3xl font-black font-headline uppercase tracking-tight text-white drop-shadow leading-tight line-clamp-2">
                 {match.awayTeam.name}
               </h2>
-              <span className="text-xs font-label uppercase font-bold text-lime-400">
+              <span className="text-[10px] sm:text-xs font-label uppercase font-bold text-lime-400">
                 Oaspeți (Away)
               </span>
             </div>
@@ -292,16 +294,25 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap justify-center gap-4 pt-4 max-w-md mx-auto">
-            <button
-              type="button"
-              onClick={() => {
-                setPurchasedTicket(null);
-                setShowTicketModal(true);
-              }}
-              className="flex-1 min-w-[200px] py-4 bg-lime-400 hover:bg-lime-300 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-xl transition active:scale-95 flex items-center justify-center gap-2"
-            >
-              <span>🎟️</span> Cumpără Bilet Online ({unitPrice} RON)
-            </button>
+            {isSalesClosed ? (
+              <div
+                className="flex-1 min-w-[200px] py-4 bg-slate-900/90 border border-slate-700/80 text-slate-400 font-bold font-headline text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 shadow-inner cursor-not-allowed select-none"
+                title="Vânzarea online a biletelor este închisă (ziua meciului sau meci încheiat)"
+              >
+                <span className="text-amber-400">🔒</span> Vânzare Închisă
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setPurchasedTicket(null);
+                  setShowTicketModal(true);
+                }}
+                className="flex-1 min-w-[200px] py-4 bg-lime-400 hover:bg-lime-300 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-xl transition active:scale-95 flex items-center justify-center gap-2"
+              >
+                <span>🎟️</span> Cumpără Bilet Online ({unitPrice} RON)
+              </button>
+            )}
 
             <a
               href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`🔥 Hai la meci! ${match.homeTeam.name} vs ${match.awayTeam.name} pe ${match.venue || "stadion"}! Bilete și detalii: ${shareUrl}`)}`}
@@ -372,12 +383,12 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
             <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
               <span className="w-3 h-7 bg-blue-500 rounded-full"></span>
               <h3 className="text-lg font-bold font-headline uppercase text-slate-900 dark:text-white">
-                📄 Documente &amp; Scanare Porți
+                📄 Documente &amp; Rapoarte Meci
               </h3>
             </div>
 
             <p className="text-xs text-slate-600 dark:text-slate-300 font-body leading-relaxed">
-              Descărcați raportul oficial de arbitraj, foaia de joc cu primul 11 sau activați scannerul mobil de la porți.
+              Descărcați raportul oficial de meci și foaia tehnică de arbitraj omologată.
             </p>
 
             <div className="space-y-3 pt-2">
@@ -387,13 +398,6 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
               >
                 <span className="material-symbols-outlined text-sm">description</span>
                 Descarcă Fișă Joc Oficială PDF
-              </Link>
-
-              <Link
-                href={`/tickets/scanner?matchId=${match.id}`}
-                className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black font-headline text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 transition shadow-lg"
-              >
-                <span>📲</span> Deschide Scanner Mobil Porți
               </Link>
             </div>
           </div>

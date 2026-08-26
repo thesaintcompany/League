@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
@@ -17,6 +17,12 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
   const pathname = usePathname();
   const isDark = variant === "dark";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const headerRef = useRef<HTMLElement | null>(null);
+  const leftRef = useRef<HTMLDivElement | null>(null);
+  const navRef = useRef<HTMLElement | null>(null);
+  const rightRef = useRef<HTMLDivElement | null>(null);
 
   const isCampionat = currentTab === "campionat" || pathname === "/campionat" || pathname === "/liga";
   const isRomaniaMap = currentTab === "romania-map" || pathname === "/harta-romaniei";
@@ -45,22 +51,48 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
     { href: "/signin", label: "Cont", active: isSignIn, icon: "account_circle" },
   ];
 
+  // Dynamic overlap collision detection: collapses to hamburger when elements would touch
+  useEffect(() => {
+    function checkOverlap() {
+      if (!headerRef.current) return;
+      const headerWidth = headerRef.current.offsetWidth;
+      const leftWidth = leftRef.current?.offsetWidth || 240;
+      const rightWidth = rightRef.current?.offsetWidth || 180;
+      const navWidth = navRef.current?.scrollWidth || 620;
+
+      // Safe buffer zone to prevent any overlap, text wrap or element squishing
+      const totalNeeded = leftWidth + navWidth + rightWidth + 60;
+      if (headerWidth < totalNeeded || window.innerWidth < 1200) {
+        setIsCollapsed(true);
+      } else {
+        setIsCollapsed(false);
+      }
+    }
+
+    checkOverlap();
+    window.addEventListener("resize", checkOverlap);
+    return () => window.removeEventListener("resize", checkOverlap);
+  }, []);
+
   return (
     <>
       <header
-        className={`sticky top-0 z-50 backdrop-blur-xl border-b h-16 sm:h-20 px-3 sm:px-6 lg:px-12 flex justify-between items-center font-body transition-colors duration-200 shadow-sm ${
+        ref={headerRef}
+        className={`sticky top-0 z-50 backdrop-blur-xl border-b h-16 sm:h-20 px-3 sm:px-6 lg:px-10 flex justify-between items-center font-body transition-colors duration-200 shadow-sm ${
           isDark
             ? "bg-slate-950/95 text-white border-slate-800/90"
             : "bg-white/95 dark:bg-slate-950/95 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800/80"
         }`}
       >
-        {/* Left: Brand & Mobile Hamburger Toggle */}
-        <div className="flex items-center gap-2 sm:gap-6 min-w-0">
-          {/* Mobile Hamburger Button */}
+        {/* Left: Brand & Hamburger Toggle */}
+        <div ref={leftRef} className="flex items-center gap-2 sm:gap-6 min-w-0 shrink-0">
+          {/* Automatic Hamburger Button when collapsed or on mobile */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
-            className="lg:hidden p-1.5 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0"
+            className={`p-1.5 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0 ${
+              isCollapsed ? "flex" : "hidden"
+            }`}
             aria-label="Deschide Meniu Navigare"
           >
             <span className="material-symbols-outlined text-2xl">menu</span>
@@ -82,13 +114,18 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
           </div>
         </div>
 
-        {/* Center: Desktop Navigation Bar */}
-        <nav className="hidden lg:flex items-center gap-1.5 bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-1.5 rounded-2xl shadow-inner">
+        {/* Center: Desktop Navigation Bar (Auto hides if overlap detected) */}
+        <nav
+          ref={navRef}
+          className={`items-center gap-1.5 bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-1.5 rounded-2xl shadow-inner shrink-0 ${
+            isCollapsed ? "hidden" : "hidden lg:flex"
+          }`}
+        >
           {navLinks.map((tab) => (
             <Link
               key={tab.href}
               href={tab.href}
-              className={`px-4 py-2 rounded-xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-1.5 whitespace-nowrap ${
+              className={`px-3.5 xl:px-4 py-2 rounded-xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-1.5 whitespace-nowrap ${
                 tab.active
                   ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm scale-100"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
@@ -101,7 +138,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
         </nav>
 
         {/* Right: Theme Toggle & Login Link */}
-        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        <div ref={rightRef} className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           <ThemeToggle />
 
           <Link
@@ -117,9 +154,9 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
       {/* Sub Header for Sport Selection & Context Filter */}
       <SportSubHeader variant={variant} />
 
-      {/* Mobile Slide-Out Navigation Drawer */}
+      {/* Slide-Out Navigation Drawer (Shown whenever mobileMenuOpen is true) */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden flex">
+        <div className="fixed inset-0 z-50 flex">
           {/* Backdrop Blur */}
           <div
             onClick={() => setMobileMenuOpen(false)}

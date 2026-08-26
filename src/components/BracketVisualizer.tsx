@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { MatchData } from "./MatchCard";
+import { RefereeControlModal } from "./RefereeControlModal";
 
 interface BracketVisualizerProps {
   matches: MatchData[];
@@ -25,6 +27,10 @@ export function BracketVisualizer({
   isAdmin = false,
   onVisibilityChanged,
 }: BracketVisualizerProps) {
+  const router = useRouter();
+  const [internalEditingMatch, setInternalEditingMatch] = useState<MatchData | null>(null);
+  const handleEdit = onEditMatch || setInternalEditingMatch;
+
   const [published, setPublished] = useState(isPublished);
   const [currentShareCode, setCurrentShareCode] = useState(shareCode);
   const [loadingPublish, setLoadingPublish] = useState(false);
@@ -284,13 +290,13 @@ export function BracketVisualizer({
             <div className="space-y-4 flex-1 flex flex-col justify-around py-2">
               <BracketMatchNode
                 match={qfPair1[0] || createPlaceholderMatch(1, "Sfert de Finală 1")}
-                onEdit={onEditMatch}
+                onEdit={handleEdit}
                 isAdmin={isAdmin}
                 stageLabel="Sfert 1"
               />
               <BracketMatchNode
                 match={qfPair1[1] || createPlaceholderMatch(2, "Sfert de Finală 2")}
-                onEdit={onEditMatch}
+                onEdit={handleEdit}
                 isAdmin={isAdmin}
                 stageLabel="Sfert 2"
               />
@@ -300,13 +306,13 @@ export function BracketVisualizer({
             <div className="space-y-4 flex-1 flex flex-col justify-around py-2">
               <BracketMatchNode
                 match={qfPair2[0] || createPlaceholderMatch(3, "Sfert de Finală 3")}
-                onEdit={onEditMatch}
+                onEdit={handleEdit}
                 isAdmin={isAdmin}
                 stageLabel="Sfert 3"
               />
               <BracketMatchNode
                 match={qfPair2[1] || createPlaceholderMatch(4, "Sfert de Finală 4")}
-                onEdit={onEditMatch}
+                onEdit={handleEdit}
                 isAdmin={isAdmin}
                 stageLabel="Sfert 4"
               />
@@ -385,7 +391,7 @@ export function BracketVisualizer({
             <div className="flex-1 flex flex-col justify-center py-4">
               <BracketMatchNode
                 match={semi1 || createPlaceholderMatch(5, "Semifinala 1", "Câștigătoare Sfert 1 vs Sfert 2")}
-                onEdit={onEditMatch}
+                onEdit={handleEdit}
                 isAdmin={isAdmin}
                 stageLabel="Semifinala 1"
                 isSemi={true}
@@ -396,7 +402,7 @@ export function BracketVisualizer({
             <div className="flex-1 flex flex-col justify-center py-4">
               <BracketMatchNode
                 match={semi2 || createPlaceholderMatch(6, "Semifinala 2", "Câștigătoare Sfert 3 vs Sfert 4")}
-                onEdit={onEditMatch}
+                onEdit={handleEdit}
                 isAdmin={isAdmin}
                 stageLabel="Semifinala 2"
                 isSemi={true}
@@ -458,7 +464,7 @@ export function BracketVisualizer({
                 <div className="relative">
                   <BracketMatchNode
                     match={grandFinal || createPlaceholderMatch(7, "Marea Finală 🏆", "Câștigătoare Semifinala 1 vs Semifinala 2")}
-                    onEdit={onEditMatch}
+                    onEdit={handleEdit}
                     isAdmin={isAdmin}
                     stageLabel="Trofeul Oficial 🏆"
                     isFinal={true}
@@ -556,6 +562,20 @@ export function BracketVisualizer({
           </div>
         </div>
       )}
+
+      {/* Internal Referee & Match Organization Modal if triggered from Bracket */}
+      {internalEditingMatch && championshipId && (
+        <RefereeControlModal
+          match={internalEditingMatch}
+          championshipId={championshipId}
+          isOpen={true}
+          onClose={() => setInternalEditingMatch(null)}
+          onUpdated={() => {
+            router.refresh();
+            if (onVisibilityChanged) onVisibilityChanged();
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -583,11 +603,11 @@ function BracketMatchNode({
   const awayWin = isFinished && (match.awayScore ?? 0) > (match.homeScore ?? 0);
   const isPlaceholder = match.id.startsWith("placeholder-");
 
-  return (
+  const cardContent = (
     <div
-      className={`rounded-2xl p-3.5 sm:p-4 transition-all duration-200 border relative group shadow-md ${
+      className={`rounded-2xl p-3.5 sm:p-4 transition-all duration-200 border relative group shadow-md hover:shadow-lg ${
         isFinal
-          ? "bg-amber-50/95 dark:bg-amber-950/40 border-amber-300 dark:border-amber-400/50 shadow-amber-500/10"
+          ? "bg-amber-50/95 dark:bg-amber-950/40 border-amber-300 dark:border-amber-400/50 shadow-amber-500/10 hover:border-amber-400"
           : isSemi
           ? "bg-slate-50 dark:bg-slate-900/95 border-slate-200 dark:border-purple-500/30 hover:border-purple-400"
           : "bg-slate-50 dark:bg-slate-900/90 border-slate-200 dark:border-slate-800/90 hover:border-lime-500/80"
@@ -625,9 +645,13 @@ function BracketMatchNode({
           {isAdmin && onEdit && !isPlaceholder && (
             <button
               type="button"
-              onClick={() => onEdit(match)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onEdit(match);
+              }}
               title="Editează Scorul"
-              className="p-1 rounded-lg text-slate-400 hover:text-lime-600 dark:hover:text-lime-400 hover:bg-slate-200 dark:hover:bg-slate-800"
+              className="p-1 rounded-lg text-slate-400 hover:text-lime-600 dark:hover:text-lime-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition"
             >
               <span className="material-symbols-outlined text-sm">edit</span>
             </button>
@@ -642,7 +666,7 @@ function BracketMatchNode({
           className={`flex items-center justify-between p-1.5 sm:p-2 rounded-xl transition ${
             homeWin
               ? "bg-lime-500/15 text-slate-950 dark:text-white font-bold"
-              : "text-slate-700 dark:text-slate-300"
+              : "text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white"
           }`}
         >
           <div className="flex items-center gap-2 min-w-0 flex-1 pr-2">
@@ -672,7 +696,7 @@ function BracketMatchNode({
           className={`flex items-center justify-between p-1.5 sm:p-2 rounded-xl transition ${
             awayWin
               ? "bg-lime-500/15 text-slate-950 dark:text-white font-bold"
-              : "text-slate-700 dark:text-slate-300"
+              : "text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white"
           }`}
         >
           <div className="flex items-center gap-2 min-w-0 flex-1 pr-2">
@@ -698,22 +722,48 @@ function BracketMatchNode({
         </div>
       </div>
 
-      {/* Match Promo & Stage Link Footer */}
-      <div className="pt-2.5 mt-2 border-t border-slate-200 dark:border-slate-800/80 flex justify-between items-center text-[10px]">
-        <Link
-          href={`/matches/${match.id}/promo`}
-          className="font-label font-bold text-lime-600 dark:text-lime-400 hover:text-lime-500 flex items-center gap-1 group-hover:underline transition px-2.5 py-1 rounded-xl bg-lime-500/10 hover:bg-lime-500/20 shadow-sm"
-          title="Deschide Pagina Promo Publică a Meciului"
-        >
-          <span>🎟️ Promo &amp; Meci</span>
-          <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
-        </Link>
-
-        <span className="text-slate-500 dark:text-slate-400 font-label uppercase tracking-wider text-[9px] font-bold">
+      {/* Clean Match Stage & Quick Link Footer */}
+      <div className="pt-2 mt-2 border-t border-slate-200 dark:border-slate-800/80 flex justify-between items-center text-[10px] gap-2">
+        <span className="text-slate-500 dark:text-slate-400 font-label uppercase tracking-wider text-[9px] font-bold truncate">
           {stageLabel || match.stage || "Etapă Oficială"}
         </span>
+
+        <div className="flex items-center gap-1.5 shrink-0">
+          {isAdmin && !isPlaceholder && onEdit && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onEdit(match);
+              }}
+              className="px-2 py-0.5 rounded-lg bg-lime-400 text-slate-950 hover:bg-lime-300 font-label font-black text-[9px] uppercase tracking-wider flex items-center gap-1 transition shadow-sm active:scale-95"
+              title="Panou Organizare Meci (Arbitraj, Notițe, Bilete)"
+            >
+              <span>⚙️</span>
+              <span>Organizare</span>
+            </button>
+          )}
+
+          {!isPlaceholder && (
+            <span className="font-label font-bold text-lime-600 dark:text-lime-400 opacity-80 group-hover:opacity-100 flex items-center gap-0.5 text-[10px] transition transform group-hover:translate-x-0.5">
+              <span>Detalii</span>
+              <span className="material-symbols-outlined text-[12px]">chevron_right</span>
+            </span>
+          )}
+        </div>
       </div>
     </div>
+  );
+
+  if (isPlaceholder) {
+    return cardContent;
+  }
+
+  return (
+    <Link href={`/matches/${match.id}/promo`} className="block group">
+      {cardContent}
+    </Link>
   );
 }
 

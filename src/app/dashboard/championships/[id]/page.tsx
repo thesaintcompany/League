@@ -63,7 +63,13 @@ export default async function ChampionshipDetailPage({
 
             <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
               <div className="flex items-center gap-5">
-                <ChampionshipLogoBadge name={champ.name} logoUrl={champ.logoUrl} size="2xl" />
+                <ChampionshipLogoBadge
+                  name={champ.name}
+                  logoUrl={champ.logoUrl}
+                  size="2xl"
+                  editable={true}
+                  championshipId={champ.id}
+                />
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="px-2.5 py-0.5 bg-lime-400 text-slate-950 text-[10px] font-black rounded uppercase tracking-wider font-label">

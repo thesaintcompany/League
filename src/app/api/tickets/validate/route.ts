@@ -51,6 +51,15 @@ export async function POST(req: Request) {
       }, { status: 404 });
     }
 
+    // Check if match is finished or cancelled
+    if (ticket.match.status === "finished" || ticket.match.status === "cancelled") {
+      return NextResponse.json({
+        valid: false,
+        status: "cancelled",
+        error: "🚫 Acest meci este deja finalizat. Scannerul porților și validarea biletelor au fost dezactivate.",
+      }, { status: 400 });
+    }
+
     // If ticket was already used
     if (ticket.status === "used") {
       const checkInTime = ticket.checkedInAt

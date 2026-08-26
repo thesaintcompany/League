@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { isTicketSalesClosed } from "@/lib/tickets";
 import crypto from "crypto";
 
 export const dynamic = "force-dynamic";
@@ -34,6 +35,13 @@ export async function POST(req: Request) {
 
     if (!match) {
       return NextResponse.json({ error: "Meciul nu a fost găsit" }, { status: 404 });
+    }
+
+    if (isTicketSalesClosed(match)) {
+      return NextResponse.json(
+        { error: "Vânzarea online a biletelor pentru această competiție este închisă (ziua meciului sau eveniment finalizat)." },
+        { status: 400 }
+      );
     }
 
     // Determine price from tier or match default

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { VenueClaimModal } from "./VenueClaimModal";
+import { isTicketSalesClosed } from "@/lib/tickets";
 
 export interface VenueData {
   id: string;
@@ -492,12 +493,22 @@ export function VenueDetailClientView({
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <Link
-                          href={`/matches/${m.id}/promo`}
-                          className="flex-1 sm:flex-initial px-5 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 active:scale-95"
-                        >
-                          <span>🎟️</span> Cumpără Bilet ({m.ticketPrice || 30} RON)
-                        </Link>
+                        {!isTicketSalesClosed(m) ? (
+                          <Link
+                            href={`/matches/${m.id}/promo`}
+                            className="flex-1 sm:flex-initial px-5 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 active:scale-95"
+                          >
+                            <span>🎟️</span> Cumpără Bilet ({m.ticketPrice || 30} RON)
+                          </Link>
+                        ) : (
+                          <Link
+                            href={`/matches/${m.id}/promo`}
+                            className="flex-1 sm:flex-initial px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-headline font-bold text-xs uppercase tracking-wider transition border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 hover:bg-slate-200 dark:hover:bg-slate-700"
+                            title="Vânzarea online a biletelor este închisă (ziua meciului sau meci finalizat)"
+                          >
+                            <span>🔒</span> Vânzare Închisă • Detalii Meci
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </div>
