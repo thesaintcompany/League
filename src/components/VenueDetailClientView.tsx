@@ -78,13 +78,6 @@ export function VenueDetailClientView({
     activeAnnouncements = [];
   }
 
-  // Telemetry Calculations
-  const totalGoals = finishedMatches.reduce(
-    (acc, m) => acc + (m.homeScore ?? 0) + (m.awayScore ?? 0),
-    0
-  );
-  const avgGoals = finishedMatches.length > 0 ? (totalGoals / finishedMatches.length).toFixed(1) : "—";
-
   // Group finished matches by league
   const groupedResults: Record<string, VenueMatchItem[]> = {};
   finishedMatches.forEach((m) => {
@@ -170,15 +163,17 @@ export function VenueDetailClientView({
 
       {/* Hero Section with Kinetic Stadium Backdrop */}
       <section className="relative overflow-hidden bg-slate-950 text-white py-20 px-4 sm:px-6 lg:px-8 border-b border-lime-400/30 shadow-2xl min-h-[420px] flex items-center">
-        {/* Full-bleed background image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none scale-105 transition-transform duration-1000"
-          style={{ backgroundImage: `url('${venue.imageUrl || "/images/stadium-hero.jpg"}')` }}
-        ></div>
+        {/* Arena cover photo remains visible beneath the legibility overlays. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={venue.imageUrl || "/images/stadium-hero.jpg"}
+          alt={`Vedere de ansamblu ${venue.name}`}
+          className="absolute inset-0 h-full w-full object-cover object-center opacity-90 scale-105 transition-transform duration-1000"
+        />
 
         {/* Cinematic Gradient Overlays for High Contrast */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-slate-950/40 pointer-events-none"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/60 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/55 to-slate-950/20 md:bg-gradient-to-r md:from-slate-950/90 md:via-slate-950/60 md:to-slate-950/15 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-slate-950/20 pointer-events-none"></div>
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-lime-400/15 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 w-full">
@@ -232,56 +227,25 @@ export function VenueDetailClientView({
                 <span>🎟️</span> Bilete Meciuri ({upcomingMatches.length})
               </a>
             )}
-
-            <button
-              type="button"
-              onClick={() => setShowClaimModal(true)}
-              className="bg-slate-900/80 hover:bg-slate-900 text-slate-200 hover:text-white border border-slate-700 font-label font-bold text-xs uppercase tracking-wider py-4 px-5 rounded-2xl transition flex items-center gap-2 shadow-lg backdrop-blur-md active:scale-95"
-              title="Revendică administrarea oficială a acestei arene"
-            >
-              <span>🏛️</span>
-              <span>Ești Administratorul Arenei?</span>
-            </button>
           </div>
         </div>
       </section>
 
       {/* Main Content Sections */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        {/* Subtle Administrator Claim Card */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-sm">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-lime-400/20 text-lime-600 dark:text-lime-400 border border-lime-400/30 flex items-center justify-center text-2xl shrink-0">
-              🏛️
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-black uppercase font-label text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                  Oficial Bază Sportivă
-                </span>
-                <span className="text-xs text-slate-500 font-label">Verificare SuperAdmin</span>
-              </div>
-              <h3 className="font-headline font-bold text-base sm:text-lg text-slate-900 dark:text-white uppercase tracking-tight">
-                Administrezi sau Deții Această Arenă?
-              </h3>
-              <p className="text-xs text-slate-600 dark:text-slate-400 max-w-2xl font-body leading-relaxed">
-                Dacă reprezinți societatea, clubul sau primăria ce administrează <strong>{venue.name}</strong>, revendică accesul oficial pentru a gestiona panourile publicitare, anunțurile cu ticker și rezervările meciurilor.
-              </p>
-            </div>
-          </div>
-
+        {/* Deliberately quiet ownership route, inspired by Google Business profiles. */}
+        <div className="flex justify-end pt-3">
           <button
             type="button"
             onClick={() => setShowClaimModal(true)}
-            className="px-6 py-3.5 rounded-2xl bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 hover:opacity-90 transition font-headline font-black text-xs uppercase tracking-wider shadow-md shrink-0 flex items-center gap-2 active:scale-95"
+            className="text-right text-[10px] font-label text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
           >
-            <span>Revendică Administrarea Arenei</span>
-            <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            Administrezi această arenă? <span className="underline underline-offset-2">Solicită acces oficial</span>
           </button>
         </div>
 
-        {/* Bento Stats Telemetry Grid */}
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-6 relative z-20">
+        {/* Venue facts only: no match or goal telemetry on an arena profile. */}
+        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 relative z-20">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-xl space-y-1">
             <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
               Capacitate Spectatori
@@ -294,32 +258,22 @@ export function VenueDetailClientView({
 
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-xl space-y-1">
             <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
-              Meciuri Disputate
+              Suprafață de Joc
             </span>
-            <p className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-mono">
-              {finishedMatches.length}
+            <p className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-headline uppercase">
+              {venue.surface || "—"}
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-label">Partide oficiale jucate</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-label">{venue.sport || "Sport"} • bază omologată</p>
           </div>
 
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-xl space-y-1">
             <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
-              Total Goluri Marcate
+              Iluminat &amp; Acces
             </span>
-            <p className="text-3xl sm:text-4xl font-black text-lime-600 dark:text-lime-400 font-mono">
-              {totalGoals} ⚽
+            <p className="text-2xl sm:text-3xl font-black text-lime-600 dark:text-lime-400 font-headline uppercase">
+              {venue.floodlights ? "Nocturnă" : "Program de zi"}
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-label">Spectacol garantat pe arenă</p>
-          </div>
-
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-xl space-y-1">
-            <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
-              Medie Goluri / Meci
-            </span>
-            <p className="text-3xl sm:text-4xl font-black text-lime-600 dark:text-lime-400 font-mono">
-              {avgGoals}
-            </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-label">Reușite per meci disputat</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-label">Acces public și facilități de arenă</p>
           </div>
         </section>
 

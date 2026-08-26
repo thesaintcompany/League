@@ -49,10 +49,10 @@ export function PublicFooter() {
           </div>
         </div>
 
-        {/* Main 4-Column Structured Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+        {/* The brand spans the first row on phones; navigation stays in two clear columns. */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-9 sm:gap-x-10 lg:gap-12">
           {/* Column 1: Brand & Operator Identity */}
-          <div className="space-y-4">
+          <div className="col-span-2 lg:col-span-1 space-y-4">
             <BrandLogo size="md" href="/campionat" />
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-body">
               Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat.
