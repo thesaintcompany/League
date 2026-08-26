@@ -113,33 +113,6 @@ function WelcomePortalForm() {
       <div className="absolute bottom-0 left-0 -ml-40 -mb-40 w-[600px] h-[600px] bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/5 blur-[150px] rounded-full pointer-events-none"></div>
 
-      {/* Mobile Segmented Card Controller */}
-      <div className="w-full max-w-6xl mb-3 lg:hidden flex bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md z-20">
-        <button
-          type="button"
-          onClick={() => setMobileView("championships")}
-          className={`flex-1 py-2.5 px-3 rounded-xl font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
-            mobileView === "championships"
-              ? "bg-lime-400 text-slate-950 shadow-md"
-              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-          }`}
-        >
-          <span className="material-symbols-outlined text-lg">emoji_events</span>
-          <span>1. Campionate</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setMobileView("auth")}
-          className={`flex-1 py-2.5 px-3 rounded-xl font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
-            mobileView === "auth"
-              ? "bg-lime-400 text-slate-950 shadow-md"
-              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-          }`}
-        >
-          <span className="material-symbols-outlined text-lg">lock</span>
-          <span>2. Autentificare</span>
-        </button>
-      </div>
 
       <section className="w-full max-w-6xl bg-white dark:bg-slate-900/90 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_25px_70px_rgba(0,0,0,0.15)] dark:shadow-[0_25px_70px_rgba(0,0,0,0.6)] flex flex-col lg:flex-row overflow-hidden z-10 border border-slate-200 dark:border-slate-800/80">
         {/* Left Side: Teaser with Dynamic Goal Shot (Card 1 on Mobile) */}
