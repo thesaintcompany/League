@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 import { isOrganizer } from "@/lib/permissions";
+import { isIndividualSport } from "@/lib/constants";
 
 export async function GET(
   req: Request,
@@ -101,10 +102,15 @@ export async function POST(
 
   const body = await req.json();
   const teamIds: string[] = body.teamIds || championship.teams.map((t) => t.id);
+  const isIndividual = isIndividualSport(championship.sport);
 
   if (teamIds.length < 2) {
     return NextResponse.json(
-      { error: "Ai nevoie de cel puțin 2 echipe pentru tragerea la sorți cu zaruri." },
+      {
+        error: isIndividual
+          ? "Ai nevoie de cel puțin 2 competitori pentru tragerea la sorți."
+          : "Ai nevoie de cel puțin 2 echipe pentru tragerea la sorți cu zaruri.",
+      },
       { status: 400 }
     );
   }

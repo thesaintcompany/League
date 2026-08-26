@@ -50,6 +50,20 @@ export function AdminDiceConsole({
   const [resultMessage, setResultMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Competitorii pot fi încărcați sau adăugați după montarea consolei.
+  // Îi selectăm automat pentru ca tragerea să îi folosească și în sporturile individuale.
+  useEffect(() => {
+    const availableIds = new Set(teams.map((team) => team.id));
+    setSelectedTeamIds((currentIds) => {
+      const stillAvailableIds = currentIds.filter((id) => availableIds.has(id));
+      const newIds = teams
+        .map((team) => team.id)
+        .filter((id) => !stillAvailableIds.includes(id));
+
+      return [...stillAvailableIds, ...newIds];
+    });
+  }, [teams]);
+
   // Fetch live dice telemetry on mount
   useEffect(() => {
     fetch(`/api/championships/${championshipId}/dice-draw`)
