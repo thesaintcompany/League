@@ -296,14 +296,12 @@ export function BracketVisualizer({
                 onEdit={onEditMatch}
                 isAdmin={isAdmin}
                 stageLabel="Sfert 1"
-                hasOutputLine={true}
               />
               <BracketMatchNode
                 match={qfPair1[1] || createPlaceholderMatch(2, "Sfert de Finală 2")}
                 onEdit={onEditMatch}
                 isAdmin={isAdmin}
                 stageLabel="Sfert 2"
-                hasOutputLine={true}
               />
             </div>
 
@@ -314,14 +312,12 @@ export function BracketVisualizer({
                 onEdit={onEditMatch}
                 isAdmin={isAdmin}
                 stageLabel="Sfert 3"
-                hasOutputLine={true}
               />
               <BracketMatchNode
                 match={qfPair2[1] || createPlaceholderMatch(4, "Sfert de Finală 4")}
                 onEdit={onEditMatch}
                 isAdmin={isAdmin}
                 stageLabel="Sfert 4"
-                hasOutputLine={true}
               />
             </div>
           </div>
@@ -335,44 +331,40 @@ export function BracketVisualizer({
             {/* Top Branch Connector (QF 1 & 2 -> Semi 1) */}
             <div className="flex-1 flex items-center justify-center relative">
               <svg
-                className="w-full h-full stroke-slate-300 dark:stroke-slate-700 stroke-[1.5] fill-none overflow-visible"
+                className="w-full h-full stroke-slate-300 dark:stroke-slate-700 stroke-[1.25] fill-none overflow-visible"
                 viewBox="0 0 40 100"
                 preserveAspectRatio="none"
               >
                 {/* Upper QF to center curve */}
                 <path
-                  d="M 0,25 C 20,25 20,50 40,50"
-                  className="transition-all duration-300 hover:stroke-lime-400"
+                  d="M 0,25 C 22,25 18,50 40,50"
+                  className="transition-all duration-300"
                 />
                 {/* Lower QF to center curve */}
                 <path
-                  d="M 0,75 C 20,75 20,50 40,50"
-                  className="transition-all duration-300 hover:stroke-lime-400"
+                  d="M 0,75 C 22,75 18,50 40,50"
+                  className="transition-all duration-300"
                 />
-                {/* Mindmap Fork Center Joint Dot */}
-                <circle cx="20" cy="50" r="2.5" className="fill-lime-400" />
               </svg>
             </div>
 
             {/* Bottom Branch Connector (QF 3 & 4 -> Semi 2) */}
             <div className="flex-1 flex items-center justify-center relative">
               <svg
-                className="w-full h-full stroke-slate-300 dark:stroke-slate-700 stroke-[1.5] fill-none overflow-visible"
+                className="w-full h-full stroke-slate-300 dark:stroke-slate-700 stroke-[1.25] fill-none overflow-visible"
                 viewBox="0 0 40 100"
                 preserveAspectRatio="none"
               >
                 {/* Upper QF to center curve */}
                 <path
-                  d="M 0,25 C 20,25 20,50 40,50"
-                  className="transition-all duration-300 hover:stroke-lime-400"
+                  d="M 0,25 C 22,25 18,50 40,50"
+                  className="transition-all duration-300"
                 />
                 {/* Lower QF to center curve */}
                 <path
-                  d="M 0,75 C 20,75 20,50 40,50"
-                  className="transition-all duration-300 hover:stroke-lime-400"
+                  d="M 0,75 C 22,75 18,50 40,50"
+                  className="transition-all duration-300"
                 />
-                {/* Mindmap Fork Center Joint Dot */}
-                <circle cx="20" cy="50" r="2.5" className="fill-lime-400" />
               </svg>
             </div>
           </div>
@@ -405,8 +397,6 @@ export function BracketVisualizer({
                 onEdit={onEditMatch}
                 isAdmin={isAdmin}
                 stageLabel="Semifinala 1"
-                hasInputLine={true}
-                hasOutputLine={true}
                 isSemi={true}
               />
             </div>
@@ -418,8 +408,6 @@ export function BracketVisualizer({
                 onEdit={onEditMatch}
                 isAdmin={isAdmin}
                 stageLabel="Semifinala 2"
-                hasInputLine={true}
-                hasOutputLine={true}
                 isSemi={true}
               />
             </div>
@@ -433,25 +421,19 @@ export function BracketVisualizer({
           >
             <div className="h-[70%] w-full flex items-center justify-center relative">
               <svg
-                className="w-full h-full stroke-slate-300 dark:stroke-slate-700 stroke-[1.5] fill-none overflow-visible"
+                className="w-full h-full stroke-slate-300 dark:stroke-slate-700 stroke-[1.25] fill-none overflow-visible"
                 viewBox="0 0 40 100"
                 preserveAspectRatio="none"
               >
                 {/* Semi 1 to center curve */}
                 <path
-                  d="M 0,25 C 20,25 20,50 40,50"
-                  className="transition-all duration-300 hover:stroke-amber-400"
+                  d="M 0,25 C 22,25 18,50 40,50"
+                  className="transition-all duration-300"
                 />
                 {/* Semi 2 to center curve */}
                 <path
-                  d="M 0,75 C 20,75 20,50 40,50"
-                  className="transition-all duration-300 hover:stroke-amber-400"
-                />
-                {/* Gold trophy Mindmap Joint Dot */}
-                <circle cx="20" cy="50" r="3" className="fill-amber-400" />
-                <path
-                  d="M 20,50 L 40,50"
-                  className="stroke-amber-400 stroke-[2]"
+                  d="M 0,75 C 22,75 18,50 40,50"
+                  className="transition-all duration-300"
                 />
               </svg>
             </div>
@@ -488,7 +470,6 @@ export function BracketVisualizer({
                     onEdit={onEditMatch}
                     isAdmin={isAdmin}
                     stageLabel="Trofeul Oficial 🏆"
-                    hasInputLine={true}
                     isFinal={true}
                   />
                 </div>
@@ -603,8 +584,6 @@ function BracketMatchNode({
   onEdit,
   isAdmin,
   stageLabel,
-  hasInputLine = false,
-  hasOutputLine = false,
   isSemi = false,
   isFinal = false,
 }: {
@@ -612,8 +591,6 @@ function BracketMatchNode({
   onEdit?: (m: MatchData) => void;
   isAdmin?: boolean;
   stageLabel?: string;
-  hasInputLine?: boolean;
-  hasOutputLine?: boolean;
   isSemi?: boolean;
   isFinal?: boolean;
 }) {
@@ -634,22 +611,6 @@ function BracketMatchNode({
           : "bg-slate-50 dark:bg-slate-900/90 border-slate-200 dark:border-slate-800/90 hover:border-lime-500/80"
       }`}
     >
-      {/* Mindmap Input Connector Port (Left Anchor Dot) */}
-      {hasInputLine && (
-        <span
-          className="hidden md:block absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-slate-300 dark:bg-slate-700 border-2 border-white dark:border-slate-950 z-20"
-          title="Nod de Intrare Mindmap"
-        />
-      )}
-
-      {/* Mindmap Output Connector Port (Right Anchor Dot) */}
-      {hasOutputLine && (
-        <span
-          className="hidden md:block absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-lime-400 border-2 border-white dark:border-slate-950 z-20 shadow-sm"
-          title="Nod de Ieșire Mindmap"
-        />
-      )}
-
       {/* Top Meta Info */}
       <div className="flex justify-between items-center text-[10px] font-label text-slate-500 dark:text-slate-400 pb-2 mb-2 border-b border-slate-200 dark:border-slate-800/80 gap-2">
         <span className="truncate flex-1 min-w-0 flex items-center gap-1 font-medium">
