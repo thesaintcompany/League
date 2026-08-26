@@ -56,7 +56,7 @@ export default async function ChampionshipDetailPage({
 
         <main className="p-6 lg:p-10 space-y-8 max-w-7xl">
           {/* Championship Hero Card */}
-          <div className="card p-8 bg-primary text-white border-none rounded-3xl relative overflow-hidden shadow-xl">
+          <div className="card p-8 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200/80 dark:border-slate-800 rounded-3xl relative overflow-hidden shadow-sm">
             <div className="absolute top-0 right-0 w-80 h-80 bg-lime-400/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
 
             <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">

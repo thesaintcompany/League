@@ -125,10 +125,10 @@ export default async function PublicBracketsPage({
       <PublicHeader currentTab="brackets" />
 
       {/* Hero Banner with Stadium Glow & Unique Share Code */}
-      <section className="relative overflow-hidden bg-slate-900 border-b border-lime-400/30 py-14 px-6 lg:px-12 shadow-2xl">
+      <section className="relative overflow-hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-lime-400/30 py-14 px-6 lg:px-12 shadow-sm transition-colors duration-200">
         <div className="absolute top-0 right-0 w-96 h-96 bg-lime-400/10 rounded-full blur-3xl pointer-events-none"></div>
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-15 mix-blend-luminosity pointer-events-none"
+          className="absolute inset-0 bg-cover bg-center opacity-5 dark:opacity-15 mix-blend-luminosity pointer-events-none"
           style={{ backgroundImage: "url('/images/stadium-hero.jpg')" }}
         ></div>
 
@@ -138,19 +138,19 @@ export default async function PublicBracketsPage({
               <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label tracking-widest shadow-md flex items-center gap-1.5">
                 <span>🎲</span> HARTA UNICĂ DE CAMPIONAT
               </span>
-              <span className="px-3 py-1 rounded-full bg-slate-800 text-lime-400 font-black text-xs font-label border border-lime-400/30">
+              <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-lime-400 font-black text-xs font-label border border-slate-200 dark:border-lime-400/30">
                 COD PUBLIC: #{shareCode}
               </span>
-              <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-xs font-label">
+              <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white font-bold text-xs font-label">
                 {championship?.sport || "Fotbal"} • {championship?.season || "Sezon 2026"}
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-none text-white drop-shadow-lg">
+            <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-none text-slate-950 dark:text-white">
               {championship?.name || "Harta Turneului Oficial"}
             </h1>
 
-            <p className="text-slate-300 text-sm max-w-2xl font-body leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-sm max-w-2xl font-body leading-relaxed">
               Arborele meciurilor eliminatorii generat prin tragere la sorți cu zaruri. Fiecare campionat are o hartă unică cu link public distribuit în timp real.
             </p>
           </div>
@@ -158,13 +158,13 @@ export default async function PublicBracketsPage({
           <div className="flex flex-wrap gap-3">
             <Link
               href="/campionat"
-              className="px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-headline font-bold text-xs uppercase tracking-wider transition border border-white/20"
+              className="px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 text-slate-900 dark:text-white font-headline font-bold text-xs uppercase tracking-wider transition border border-slate-200 dark:border-white/20"
             >
               ← Clasament
             </Link>
             <Link
               href="/harta-romaniei"
-              className="px-4 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg"
+              className="px-4 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md"
             >
               🗺️ Nationale
             </Link>
@@ -176,10 +176,10 @@ export default async function PublicBracketsPage({
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-10">
         {/* Switcher for other available public championship maps */}
         {allPublishedChampionships.length > 1 && (
-          <div className="card p-4 sm:p-5 bg-slate-900/90 border border-slate-800 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="card p-4 sm:p-5 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">
             <div className="flex items-center gap-2">
-              <span className="text-lime-400 text-lg">🏆</span>
-              <span className="text-xs font-label font-bold text-slate-300 uppercase">
+              <span className="text-lime-600 dark:text-lime-400 text-lg">🏆</span>
+              <span className="text-xs font-label font-bold text-slate-700 dark:text-slate-300 uppercase">
                 Explorează Harta Altui Campionat:
               </span>
             </div>
@@ -191,7 +191,7 @@ export default async function PublicBracketsPage({
                   href={`/harta-campionat?id=${c.id}`}
                   className={`px-3 py-1.5 rounded-xl text-xs font-label font-bold transition border ${championship?.id === c.id
                       ? "bg-lime-400 text-slate-950 border-lime-400 font-black shadow-md"
-                      : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white"
+                      : "bg-slate-100 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-white"
                     }`}
                 >
                   {c.name} {c.county ? `(${c.county})` : ""}
@@ -202,14 +202,14 @@ export default async function PublicBracketsPage({
         )}
 
         {isPrivate ? (
-          <div className="card p-12 text-center text-slate-400 bg-slate-900 border border-amber-400/40 rounded-3xl space-y-4">
-            <span className="material-symbols-outlined text-5xl text-amber-400 block">
+          <div className="card p-12 text-center text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 border border-amber-400/40 rounded-3xl space-y-4 shadow-sm">
+            <span className="material-symbols-outlined text-5xl text-amber-500 block">
               lock
             </span>
-            <h2 className="text-xl font-bold font-headline text-white">
+            <h2 className="text-xl font-bold font-headline text-slate-900 dark:text-white">
               Harta acestui campionat este momentan Privată
             </h2>
-            <p className="text-xs text-slate-300 max-w-md mx-auto">
+            <p className="text-xs text-slate-600 dark:text-slate-300 max-w-md mx-auto">
               Organizatorul nu a făcut încă publică harta meciurilor pentru acest campionat. Te rugăm să revii mai târziu sau să selectezi un alt campionat din lista de mai sus.
             </p>
             <Link

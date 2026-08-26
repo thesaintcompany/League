@@ -3,11 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTheme } from "./ThemeProvider";
 
 export function MobileBottomBar() {
   const pathname = usePathname();
-  const { theme, toggleTheme } = useTheme();
 
   // Hide on dashboard or scanner paths where specialized controls exist
   if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/tickets/scanner")) {
@@ -16,15 +14,14 @@ export function MobileBottomBar() {
 
   const navItems = [
     { href: "/campionat", label: "Campionat", icon: "emoji_events", match: "/campionat" },
-    { href: "/brackets", label: "Zaruri", icon: "casino", match: "/brackets" },
     { href: "/harta-romaniei", label: "Harta RO", icon: "map", match: "/harta-romaniei" },
+    { href: "/teams", label: "Echipe", icon: "groups", match: "/teams" },
     { href: "/venues", label: "Arene", icon: "stadium", match: "/venues" },
     { href: "/referees", label: "Arbitri", icon: "sports", match: "/referees" },
-    { href: "/players", label: "Jucători", icon: "person", match: "/players" },
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 md:hidden bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] transition-colors duration-200 pb-safe">
+    <nav className="fixed bottom-0 inset-x-0 z-50 md:hidden bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 shadow-[0_-8px_30px_rgba(0,0,0,0.15)] transition-colors duration-200 pb-safe">
       <div className="flex items-center justify-around px-2 py-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.match && pathname?.startsWith(item.match));
@@ -54,23 +51,6 @@ export function MobileBottomBar() {
             </Link>
           );
         })}
-
-        {/* Quick Theme Switcher Button */}
-        <button
-          type="button"
-          onClick={toggleTheme}
-          aria-label="Schimbă modul Zi / Noapte"
-          className="flex flex-col items-center justify-center py-1 px-2 rounded-2xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all"
-        >
-          <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-amber-500 dark:text-lime-400 shadow-sm">
-            <span className="material-symbols-outlined text-[18px]">
-              {theme === "dark" ? "light_mode" : "dark_mode"}
-            </span>
-          </div>
-          <span className="text-[10px] font-label font-bold tracking-tight mt-0.5">
-            {theme === "dark" ? "Zi" : "Noapte"}
-          </span>
-        </button>
       </div>
     </nav>
   );

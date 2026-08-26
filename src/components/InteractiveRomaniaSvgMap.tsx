@@ -28,10 +28,10 @@ export function InteractiveRomaniaSvgMap({
   }
 
   return (
-    <div className={`relative w-full aspect-[1000/680] max-w-full overflow-hidden rounded-3xl bg-slate-950 p-4 sm:p-6 border-2 border-slate-800 shadow-2xl ${className}`}>
+    <div className={`relative w-full aspect-[613/433] max-w-full overflow-hidden rounded-3xl bg-slate-950 p-2 sm:p-4 border-2 border-slate-800 shadow-2xl ${className}`}>
       {/* Background Ambient Radar & Contour Lines */}
       <div className="absolute inset-0 bg-[radial-gradient(#a3e635_1px,transparent_1px)] [background-size:24px_24px] opacity-10 pointer-events-none"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-lime-400/10 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-lime-400/10 rounded-full blur-[100px] pointer-events-none"></div>
 
       {/* Top Map Header Controls */}
       <div className="absolute top-4 left-6 z-10 flex items-center gap-3 pointer-events-none">
@@ -46,7 +46,7 @@ export function InteractiveRomaniaSvgMap({
 
       {/* SVG Canvas with All 42 Romanian Counties */}
       <svg
-        viewBox="0 0 1000 680"
+        viewBox="0 0 613 433"
         className="w-full h-full select-none cursor-pointer filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.4)]"
         onMouseMove={handleMouseMove}
         onMouseLeave={() => setHoveredCounty(null)}

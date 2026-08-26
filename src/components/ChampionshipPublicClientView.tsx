@@ -121,12 +121,12 @@ export function ChampionshipPublicClientView({
     topScorers.length > 0
       ? topScorers
       : [
-          { id: "1", name: "Alexandru Mitriță", goals: 12, teamName: "Universitatea Craiova" },
-          { id: "2", name: "Florinel Coman", goals: 11, teamName: "FCSB București" },
-          { id: "3", name: "Daniel Bîrligea", goals: 9, teamName: "CFR Cluj" },
-          { id: "4", name: "Claudiu Petrila", goals: 8, teamName: "Rapid București" },
-          { id: "5", name: "Louis Munteanu", goals: 7, teamName: "Farul Constanța" },
-        ];
+        { id: "1", name: "Alexandru Mitriță", goals: 12, teamName: "Universitatea Craiova" },
+        { id: "2", name: "Florinel Coman", goals: 11, teamName: "FCSB București" },
+        { id: "3", name: "Daniel Bîrligea", goals: 9, teamName: "CFR Cluj" },
+        { id: "4", name: "Claudiu Petrila", goals: 8, teamName: "Rapid București" },
+        { id: "5", name: "Louis Munteanu", goals: 7, teamName: "Farul Constanța" },
+      ];
 
   return (
     <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 font-body text-slate-900 dark:text-white transition-colors duration-200">
@@ -193,22 +193,20 @@ export function ChampionshipPublicClientView({
           <button
             type="button"
             onClick={() => setActiveView("bracket")}
-            className={`px-5 sm:px-6 py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${
-              activeView === "bracket"
+            className={`px-5 sm:px-6 py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${activeView === "bracket"
                 ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
-            }`}
+              }`}
           >
             <span>🌳</span> Harta Turneului (Arbore Eliminatoriu)
           </button>
           <button
             type="button"
             onClick={() => setActiveView("standings")}
-            className={`px-5 sm:px-6 py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${
-              activeView === "standings"
+            className={`px-5 sm:px-6 py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${activeView === "standings"
                 ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
-            }`}
+              }`}
           >
             <span>📊</span> Clasament &amp; Telemetrie Meciuri
           </button>
@@ -219,7 +217,7 @@ export function ChampionshipPublicClientView({
           target="_blank"
           className="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-lime-400 text-xs font-bold font-label uppercase flex items-center gap-1.5 transition border border-slate-300 dark:border-slate-700 shadow-sm"
         >
-          <span>Pagină Separată Hartă</span>
+          <span>Deschide</span>
           <span className="material-symbols-outlined text-sm">open_in_new</span>
         </Link>
       </div>
@@ -289,9 +287,8 @@ export function ChampionshipPublicClientView({
                         return (
                           <tr
                             key={team.teamId}
-                            className={`hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors ${
-                              isRelegation ? "border-l-4 border-red-500" : ""
-                            }`}
+                            className={`hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors ${isRelegation ? "border-l-4 border-red-500" : ""
+                              }`}
                           >
                             {/* Rank badge */}
                             <td className="px-6 sm:px-8 py-4 font-mono font-bold">
@@ -451,11 +448,11 @@ export function ChampionshipPublicClientView({
                         <span className="text-blue-600 dark:text-blue-400">
                           {m.scheduledAt
                             ? new Date(m.scheduledAt).toLocaleDateString("ro-RO", {
-                                day: "numeric",
-                                month: "short",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })
+                              day: "numeric",
+                              month: "short",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })
                             : "În curând"}
                         </span>
                       </div>

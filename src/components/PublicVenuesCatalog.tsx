@@ -444,46 +444,52 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                 <Link
                   key={venue.id}
                   href={`/venues/${venue.id}`}
-                  className="card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-lime-400/80 shadow-sm hover:shadow-xl rounded-3xl overflow-hidden group transition-all duration-300 flex flex-col justify-between"
+                  className="card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-lime-400/80 shadow-sm hover:shadow-xl rounded-3xl overflow-hidden group transition-all duration-300 flex flex-col"
                 >
-                  <div>
-                    {/* Visual Header */}
-                    <div className="aspect-[16/9] w-full relative overflow-hidden bg-slate-950 border-b border-slate-200 dark:border-slate-800">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={img}
-                        alt={venue.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent flex flex-col justify-between p-4">
-                        <div className="flex justify-between items-start">
-                          <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label shadow-sm">
-                            {venue.sport.toUpperCase()}
-                          </span>
-                          <span className="px-2.5 py-0.5 rounded-full bg-black/75 backdrop-blur-md text-amber-300 font-headline font-black text-xs">
-                            👥 {venue.capacity.toLocaleString("ro-RO")} locuri
-                          </span>
-                        </div>
+                  {/* Cover Image — top half with rounded top corners */}
+                  <div className="relative h-48 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={img}
+                      alt={venue.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {/* Subtle bottom gradient for badge readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
 
-                        <div>
-                          {venue.status && venue.status !== "activ" && (
-                            <span className="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[9px] font-black uppercase font-label mb-1 inline-block">
-                              {venue.status === "constructie" ? "🏗️ În Construcție" : "📐 În Proiect"}
-                            </span>
-                          )}
-                          <h3 className="font-headline font-bold text-white text-lg leading-tight group-hover:text-lime-300 transition">
-                            {venue.name}
-                          </h3>
-                          <p className="text-xs text-slate-200 font-label flex items-center gap-1 mt-0.5">
-                            <span>📍 {venue.location}</span>
-                            {venue.county && <span>• Jud. {venue.county}</span>}
-                          </p>
-                        </div>
-                      </div>
+                    {/* Floating Badges */}
+                    <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
+                      <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label shadow-sm">
+                        {venue.sport.toUpperCase()}
+                      </span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-amber-300 font-headline font-black text-xs">
+                        👥 {venue.capacity.toLocaleString("ro-RO")} locuri
+                      </span>
                     </div>
 
-                    {/* Body Specs */}
+                    {/* Status badge if not active */}
+                    {venue.status && venue.status !== "activ" && (
+                      <div className="absolute bottom-3 left-3">
+                        <span className="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[9px] font-black uppercase font-label">
+                          {venue.status === "constructie" ? "🏗️ În Construcție" : "📐 În Proiect"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Card Body — bottom half with venue info */}
+                  <div className="flex-1 flex flex-col justify-between">
                     <div className="p-5 space-y-3">
+                      <div>
+                        <h3 className="font-headline font-bold text-slate-900 dark:text-white text-lg leading-tight group-hover:text-lime-600 dark:group-hover:text-lime-400 transition-colors">
+                          {venue.name}
+                        </h3>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-label flex items-center gap-1 mt-1">
+                          <span>📍 {venue.location}</span>
+                          {venue.county && <span>• Jud. {venue.county}</span>}
+                        </p>
+                      </div>
+
                       {venue.specs && (
                         <p className="text-xs text-slate-600 dark:text-slate-400 font-body line-clamp-2 leading-relaxed">
                           {venue.specs}
@@ -501,17 +507,17 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Card Footer */}
-                  <div className="p-4 bg-slate-50 dark:bg-slate-950/80 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-label">
-                    <span className="font-black text-slate-900 dark:text-lime-400 font-mono">
-                      {venue.pricePerHour ? `${venue.pricePerHour} RON / oră` : "Tarif la cerere"}
-                    </span>
-                    <span className="font-bold text-slate-700 dark:text-slate-300 group-hover:text-slate-950 dark:group-hover:text-white flex items-center gap-1 transition">
-                      Detalii Arenă
-                      <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                    </span>
+                    {/* Card Footer */}
+                    <div className="p-4 bg-slate-50 dark:bg-slate-950/80 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-label">
+                      <span className="font-black text-slate-900 dark:text-lime-400 font-mono">
+                        {venue.pricePerHour ? `${venue.pricePerHour} RON / oră` : "Tarif la cerere"}
+                      </span>
+                      <span className="font-bold text-slate-700 dark:text-slate-300 group-hover:text-slate-950 dark:group-hover:text-white flex items-center gap-1 transition">
+                        Detalii Arenă
+                        <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                      </span>
+                    </div>
                   </div>
                 </Link>
               );

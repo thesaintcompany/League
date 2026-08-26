@@ -100,7 +100,7 @@ export function BracketVisualizer({
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl sm:text-2xl font-black italic font-headline text-slate-900 dark:text-white tracking-tight uppercase">
-                Harta Oficială a Turneului (Arbore Eliminatoriu)
+                Turneul
               </h2>
               {published ? (
                 <span className="px-2.5 py-0.5 rounded-full bg-lime-400/20 text-lime-600 dark:text-lime-400 text-[10px] font-black font-label uppercase border border-lime-400/30 flex items-center gap-1">
@@ -117,7 +117,7 @@ export function BracketVisualizer({
               </span>
             </div>
             <p className="text-xs font-label text-slate-500 dark:text-slate-400 mt-0.5">
-              Fiecare campionat are o pagină web unică fără iframe-uri • Vizualizare completă în timp real
+              Fiecare campionat are o pagină web unică   • Vizualizare completă în timp real
             </p>
           </div>
         </div>
@@ -148,11 +148,10 @@ export function BracketVisualizer({
               onClick={togglePublish}
               disabled={loadingPublish}
               title={published ? "Treci campionatul pe privat (permite re-aruncarea dacă nu au fost consumate cele 3 aruncări)" : "Publică harta meciurilor (va bloca definitiv aruncarea zarurilor)"}
-              className={`px-4 py-2.5 rounded-2xl text-xs font-label font-bold uppercase tracking-wider transition-all flex items-center gap-2 shadow-md border ${
-                published
-                  ? "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700"
-                  : "bg-amber-400 hover:bg-amber-300 text-slate-950 font-black border-amber-400"
-              }`}
+              className={`px-4 py-2.5 rounded-2xl text-xs font-label font-bold uppercase tracking-wider transition-all flex items-center gap-2 shadow-md border ${published
+                ? "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700"
+                : "bg-amber-400 hover:bg-amber-300 text-slate-950 font-black border-amber-400"
+                }`}
             >
               <span className="material-symbols-outlined text-base">
                 {published ? "visibility_off" : "public"}
@@ -160,8 +159,8 @@ export function BracketVisualizer({
               {loadingPublish
                 ? "Se actualizează..."
                 : published
-                ? "Treci pe Privat"
-                : "Fă Harta Publică 🚀 (Blochează Zarurile)"}
+                  ? "Treci pe Privat"
+                  : "Fă Harta Publică 🚀 (Blochează Zarurile)"}
             </button>
           )}
         </div>
@@ -172,33 +171,30 @@ export function BracketVisualizer({
         <button
           type="button"
           onClick={() => setActiveMobileStage("quarters")}
-          className={`flex-1 py-2 rounded-xl text-[10px] font-headline font-black uppercase transition ${
-            activeMobileStage === "quarters"
-              ? "bg-lime-400 text-slate-950 shadow"
-              : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-          }`}
+          className={`flex-1 py-2 rounded-xl text-[10px] font-headline font-black uppercase transition ${activeMobileStage === "quarters"
+            ? "bg-lime-400 text-slate-950 shadow"
+            : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+            }`}
         >
           Sferturi ({displayQuarters.length})
         </button>
         <button
           type="button"
           onClick={() => setActiveMobileStage("semis")}
-          className={`flex-1 py-2 rounded-xl text-[10px] font-headline font-black uppercase transition ${
-            activeMobileStage === "semis"
-              ? "bg-lime-400 text-slate-950 shadow"
-              : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-          }`}
+          className={`flex-1 py-2 rounded-xl text-[10px] font-headline font-black uppercase transition ${activeMobileStage === "semis"
+            ? "bg-lime-400 text-slate-950 shadow"
+            : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+            }`}
         >
           Semifinale ({displaySemis.length})
         </button>
         <button
           type="button"
           onClick={() => setActiveMobileStage("final")}
-          className={`flex-1 py-2 rounded-xl text-[10px] font-headline font-black uppercase transition ${
-            activeMobileStage === "final"
-              ? "bg-lime-400 text-slate-950 shadow"
-              : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-          }`}
+          className={`flex-1 py-2 rounded-xl text-[10px] font-headline font-black uppercase transition ${activeMobileStage === "final"
+            ? "bg-lime-400 text-slate-950 shadow"
+            : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+            }`}
         >
           Finala 🏆
         </button>
@@ -426,11 +422,10 @@ function BracketMatchNode({
 
   return (
     <div
-      className={`rounded-2xl p-4 transition-all duration-200 border relative group ${
-        isFinal
-          ? "bg-amber-50/90 dark:bg-amber-950/40 border-amber-300 dark:border-amber-400/40 shadow-xl"
-          : "bg-slate-50 dark:bg-slate-900/90 border-slate-200 dark:border-slate-800/80 hover:border-lime-500 dark:hover:border-lime-400/80 shadow-md"
-      }`}
+      className={`rounded-2xl p-4 transition-all duration-200 border relative group ${isFinal
+        ? "bg-amber-50/90 dark:bg-amber-950/40 border-amber-300 dark:border-amber-400/40 shadow-xl"
+        : "bg-slate-50 dark:bg-slate-900/90 border-slate-200 dark:border-slate-800/80 hover:border-lime-500 dark:hover:border-lime-400/80 shadow-md"
+        }`}
     >
       {/* Top Meta Info */}
       <div className="flex justify-between items-center text-[10px] font-label text-slate-500 dark:text-slate-400 pb-2.5 mb-2.5 border-b border-slate-200 dark:border-slate-800/80">
@@ -450,11 +445,11 @@ function BracketMatchNode({
             <span className="text-slate-400">
               {match.scheduledAt
                 ? new Date(match.scheduledAt).toLocaleDateString("ro-RO", {
-                    day: "numeric",
-                    month: "short",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
+                  day: "numeric",
+                  month: "short",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
                 : "Programat"}
             </span>
           )}
@@ -476,11 +471,10 @@ function BracketMatchNode({
       <div className="space-y-2 font-headline">
         {/* Home Team */}
         <div
-          className={`flex items-center justify-between p-2 rounded-xl transition ${
-            homeWin
-              ? "bg-lime-500/10 text-slate-900 dark:text-white font-bold"
-              : "text-slate-700 dark:text-slate-300"
-          }`}
+          className={`flex items-center justify-between p-2 rounded-xl transition ${homeWin
+            ? "bg-lime-500/10 text-slate-900 dark:text-white font-bold"
+            : "text-slate-700 dark:text-slate-300"
+            }`}
         >
           <div className="flex items-center gap-2.5 min-w-0">
             <span
@@ -490,9 +484,8 @@ function BracketMatchNode({
             <span className="text-xs truncate">{match.homeTeam.name}</span>
           </div>
           <span
-            className={`text-sm font-mono font-black ml-2 ${
-              homeWin ? "text-lime-600 dark:text-lime-400 text-base" : "text-slate-500 dark:text-slate-400"
-            }`}
+            className={`text-sm font-mono font-black ml-2 ${homeWin ? "text-lime-600 dark:text-lime-400 text-base" : "text-slate-500 dark:text-slate-400"
+              }`}
           >
             {match.homeScore !== null && match.homeScore !== undefined
               ? match.homeScore
@@ -502,11 +495,10 @@ function BracketMatchNode({
 
         {/* Away Team */}
         <div
-          className={`flex items-center justify-between p-2 rounded-xl transition ${
-            awayWin
-              ? "bg-lime-500/10 text-slate-900 dark:text-white font-bold"
-              : "text-slate-700 dark:text-slate-300"
-          }`}
+          className={`flex items-center justify-between p-2 rounded-xl transition ${awayWin
+            ? "bg-lime-500/10 text-slate-900 dark:text-white font-bold"
+            : "text-slate-700 dark:text-slate-300"
+            }`}
         >
           <div className="flex items-center gap-2.5 min-w-0">
             <span
@@ -516,9 +508,8 @@ function BracketMatchNode({
             <span className="text-xs truncate">{match.awayTeam.name}</span>
           </div>
           <span
-            className={`text-sm font-mono font-black ml-2 ${
-              awayWin ? "text-lime-600 dark:text-lime-400 text-base" : "text-slate-500 dark:text-slate-400"
-            }`}
+            className={`text-sm font-mono font-black ml-2 ${awayWin ? "text-lime-600 dark:text-lime-400 text-base" : "text-slate-500 dark:text-slate-400"
+              }`}
           >
             {match.awayScore !== null && match.awayScore !== undefined
               ? match.awayScore

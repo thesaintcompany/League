@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { MatchSponsorsSection } from "./MatchSponsorsSection";
+import { MatchRegulationsSection } from "./MatchRegulationsSection";
 
 interface TeamData {
   id: string;
@@ -339,6 +341,12 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
             </div>
           </div>
         </div>
+
+        {/* Subtle Official Regulations Section */}
+        <MatchRegulationsSection championshipName={champName} />
+
+        {/* Exclusive Organizer Sponsor Section */}
+        <MatchSponsorsSection matchId={match.id} />
       </main>
 
       {/* Multi-Gateway Ticket Purchase Modal */}

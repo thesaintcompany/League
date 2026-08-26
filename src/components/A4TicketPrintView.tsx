@@ -239,7 +239,7 @@ function SingleTicketCard({
               </div>
             </div>
 
-            <span className="font-black italic font-headline text-lg text-slate-400 px-2">VS</span>
+            <span className="font-black italic font-headline text-lg text-slate-400 px-2 shrink-0 whitespace-nowrap">VS</span>
 
             {/* Away */}
             <div className="flex items-center gap-3 flex-1 min-w-0">

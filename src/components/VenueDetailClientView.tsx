@@ -673,12 +673,12 @@ export function VenueDetailClientView({
                         </div>
 
                         {/* Score Banner */}
-                        <div className="flex justify-between items-center font-bold text-base text-slate-900 dark:text-white font-headline py-1">
-                          <span className="truncate w-5/12">{m.homeTeam?.name || "Gazde"}</span>
-                          <span className="w-2/12 text-center text-lg font-black font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-950 text-lime-600 dark:text-lime-400 border border-slate-200 dark:border-slate-800">
+                        <div className="flex items-center justify-between gap-2 py-1">
+                          <span className="font-bold text-base text-slate-900 dark:text-white font-headline truncate flex-1 min-w-0">{m.homeTeam?.name || "Gazde"}</span>
+                          <span className="shrink-0 whitespace-nowrap text-center text-lg font-black font-mono px-3 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-950 text-lime-600 dark:text-lime-400 border border-slate-200 dark:border-slate-800">
                             {m.homeScore ?? 0} - {m.awayScore ?? 0}
                           </span>
-                          <span className="truncate w-5/12 text-right">{m.awayTeam?.name || "Oaspeți"}</span>
+                          <span className="font-bold text-base text-slate-900 dark:text-white font-headline truncate flex-1 min-w-0 text-right">{m.awayTeam?.name || "Oaspeți"}</span>
                         </div>
 
                         {m.referee && (

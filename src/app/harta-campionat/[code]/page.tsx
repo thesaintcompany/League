@@ -87,10 +87,10 @@ export default async function StandaloneChampionshipMapPage({
       <PublicHeader currentTab="brackets" />
 
       {/* Hero Header for Standalone Championship Map */}
-      <section className="relative overflow-hidden bg-slate-950 border-b border-lime-400/20 py-12 px-4 sm:px-6 lg:px-8 text-white">
+      <section className="relative overflow-hidden bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-lime-400/20 py-12 px-4 sm:px-6 lg:px-8 text-slate-900 dark:text-white transition-colors duration-200">
         <div className="absolute top-0 right-0 w-96 h-96 bg-lime-400/10 rounded-full blur-3xl pointer-events-none"></div>
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-15 mix-blend-luminosity pointer-events-none"
+          className="absolute inset-0 bg-cover bg-center opacity-5 dark:opacity-15 mix-blend-luminosity pointer-events-none"
           style={{ backgroundImage: "url('/images/stadium-hero.jpg')" }}
         ></div>
 
@@ -100,24 +100,24 @@ export default async function StandaloneChampionshipMapPage({
               <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label tracking-widest shadow-md flex items-center gap-1.5">
                 <span>🎲</span> HARTA DEDICATĂ DE CAMPIONAT
               </span>
-              <span className="px-3 py-1 rounded-full bg-slate-800 text-lime-400 font-black text-xs font-label border border-lime-400/30 font-mono">
+              <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-lime-400 font-black text-xs font-label border border-slate-200 dark:border-lime-400/30 font-mono">
                 COD ACCES: #{shareCode}
               </span>
-              <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-xs font-label">
+              <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white font-bold text-xs font-label">
                 {championship?.sport || "Fotbal"} • {championship?.season || "Sezon 2026"}
               </span>
-              <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-label">
+              <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-label">
                 {championship?.scope === "national"
                   ? "🇷🇴 Competiție Națională"
                   : `📍 ${championship?.county || "Județean"}`}
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-none text-white drop-shadow-lg">
+            <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-none text-slate-950 dark:text-white">
               {championship?.name || "Harta Turneului Oficial"}
             </h1>
 
-            <p className="text-slate-300 text-sm max-w-2xl font-body leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-sm max-w-2xl font-body leading-relaxed">
               Pagină separată oficială dedicată arborelui eliminatoriu și meciurilor campionatului. Acces direct prin link securizat și cod unic.
             </p>
           </div>

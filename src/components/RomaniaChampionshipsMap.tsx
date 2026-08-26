@@ -139,7 +139,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
   return (
     <div className="space-y-10 font-body">
       {/* Hero Header */}
-      <section className="bg-slate-950 text-white rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-2xl border-2 border-lime-400/30">
+      <section className="bg-white dark:bg-slate-950 text-slate-900 dark:text-white rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-sm border border-slate-200 dark:border-lime-400/30 transition-colors duration-200">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-lime-400/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -148,25 +148,25 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
             <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[11px] uppercase font-label tracking-wider shadow-md flex items-center gap-1.5">
               <span>🗺️</span> HARTA INTERACTIVĂ A ROMÂNIEI PE JUDEȚE
             </span>
-            <span className="px-3 py-1 rounded-full bg-slate-900 text-white font-bold text-[11px] uppercase font-label border border-slate-700">
+            <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-[11px] uppercase font-label border border-slate-200 dark:border-slate-700">
               41 Județe + București
             </span>
-            <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 font-bold text-[11px] uppercase font-label border border-blue-400/30">
+            <span className="px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-500/20 text-blue-800 dark:text-blue-300 font-bold text-[11px] uppercase font-label border border-blue-200 dark:border-blue-400/30">
               {initialChampionships.length} Competiții • {initialVenues.length} Stadioane Naționale
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-none text-white">
+          <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-none text-slate-950 dark:text-white">
             Apasă pe Județ &amp; Explorează Competițiile
           </h1>
 
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-3xl font-body">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed max-w-3xl font-body">
             Fiecare județ are propriul său selector dedicat. Apasă pe oricare dintre cele <strong>42 de regiuni administrative</strong> de pe desenul vectorial al României pentru a deschide instant în panoul din dreapta ligile, turneele și bazele sportive arondate.
           </p>
 
           {/* Quick Scope Filter Bar */}
           <div className="pt-2 flex flex-wrap gap-2 items-center">
-            <span className="text-xs font-bold text-slate-400 font-label mr-2">Filtru Tip:</span>
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 font-label mr-2">Filtru Tip:</span>
             {[
               { id: "all", label: "Toate" },
               { id: "national", label: `🇷🇴 Naționale (${nationalChampionships.length})` },
@@ -180,7 +180,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold font-label transition fluid-press ${
                   selectedScope === sc.id
                     ? "bg-lime-400 text-slate-950 font-black shadow-md scale-105"
-                    : "bg-slate-900 text-slate-300 hover:text-white border border-slate-800"
+                    : "bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800"
                 }`}
               >
                 {sc.label}

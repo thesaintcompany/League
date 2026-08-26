@@ -7,7 +7,7 @@ export function PublicFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-slate-200 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl py-10 px-4 sm:px-6 lg:px-12 text-slate-600 dark:text-slate-400 font-body transition-colors duration-200 mt-auto">
+    <footer className="border-t border-slate-200 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl py-10 pb-24 md:pb-10 px-4 sm:px-6 lg:px-12 text-slate-600 dark:text-slate-400 font-body transition-colors duration-200 mt-auto">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         {/* Brand & Copyright */}
         <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 text-center sm:text-left">
@@ -42,8 +42,11 @@ export function PublicFooter() {
           <Link href="/campionat" className="hover:text-slate-950 dark:hover:text-white transition">
             Campionat
           </Link>
-          <Link href="/brackets" className="hover:text-slate-950 dark:hover:text-white transition">
-            Harta Zaruri
+          <Link href="/teams" className="hover:text-slate-950 dark:hover:text-white transition">
+            Echipe
+          </Link>
+          <Link href="/harta-romaniei" className="hover:text-slate-950 dark:hover:text-white transition">
+            Naționale
           </Link>
           <Link href="/venues" className="hover:text-slate-950 dark:hover:text-white transition">
             Arene &amp; Stadioane

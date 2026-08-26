@@ -121,32 +121,40 @@ export default async function OfficialMatchReportPage({
         </section>
 
         {/* Scoreboard Banner */}
-        <section className="border-2 border-slate-900 rounded-3xl p-6 sm:p-8 mb-8 text-center bg-slate-900 text-white flex justify-between items-center">
-          <div className="w-5/12 text-left">
-            <span className="text-[10px] font-label uppercase tracking-widest text-lime-400 font-bold block">
-              Gazde (Home)
-            </span>
-            <h2 className="text-xl sm:text-3xl font-black font-headline tracking-tight uppercase">
-              {match.homeTeam.name}
-            </h2>
-          </div>
+        <section className="border-2 border-slate-900 rounded-3xl p-6 sm:p-8 mb-8 bg-slate-900 text-white print:border-2 print:border-slate-900">
+          {/* Teams Row — always single line */}
+          <div className="flex items-center justify-between gap-3">
+            {/* Home Team */}
+            <div className="flex-1 min-w-0 text-left">
+              <span className="text-[10px] font-label uppercase tracking-widest text-lime-400 font-bold block mb-1">
+                Gazde (Home)
+              </span>
+              <h2 className="text-lg sm:text-2xl font-black font-headline tracking-tight uppercase truncate leading-tight">
+                {match.homeTeam.name}
+              </h2>
+            </div>
 
-          <div className="w-2/12 text-center">
-            <span className="text-4xl sm:text-6xl font-black data-font tabular-nums">
-              {match.homeScore != null ? match.homeScore : 0} : {match.awayScore != null ? match.awayScore : 0}
-            </span>
-            <span className="block text-[10px] font-label font-bold uppercase tracking-wider text-lime-400 mt-1">
-              {match.status === "finished" ? "Scor Final" : "În Desfășurare"}
-            </span>
-          </div>
+            {/* Score Pill — never wraps */}
+            <div className="shrink-0 flex flex-col items-center px-4 sm:px-6">
+              <span className="text-4xl sm:text-6xl font-black data-font tabular-nums whitespace-nowrap leading-none">
+                {match.homeScore != null ? match.homeScore : 0}
+                <span className="text-lime-400 mx-1">:</span>
+                {match.awayScore != null ? match.awayScore : 0}
+              </span>
+              <span className="text-[10px] font-label font-bold uppercase tracking-wider text-lime-400 mt-2">
+                {match.status === "finished" ? "Scor Final" : "În Desfășurare"}
+              </span>
+            </div>
 
-          <div className="w-5/12 text-right">
-            <span className="text-[10px] font-label uppercase tracking-widest text-lime-400 font-bold block">
-              Oaspeți (Away)
-            </span>
-            <h2 className="text-xl sm:text-3xl font-black font-headline tracking-tight uppercase">
-              {match.awayTeam.name}
-            </h2>
+            {/* Away Team */}
+            <div className="flex-1 min-w-0 text-right">
+              <span className="text-[10px] font-label uppercase tracking-widest text-lime-400 font-bold block mb-1">
+                Oaspeți (Away)
+              </span>
+              <h2 className="text-lg sm:text-2xl font-black font-headline tracking-tight uppercase truncate leading-tight">
+                {match.awayTeam.name}
+              </h2>
+            </div>
           </div>
         </section>
 
