@@ -160,18 +160,8 @@ function WelcomePortalForm() {
           </div>
 
           {/* Bottom Call to Public Page & Mobile Login Action */}
-          <div className="relative z-10 space-y-3">
-            {/* Mobile Prominent Login Action Button */}
-            <button
-              type="button"
-              onClick={() => setMobileView("auth")}
-              className="w-full lg:hidden py-4 rounded-2xl bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-xl shadow-lime-500/20 flex items-center justify-center gap-2 transition active:scale-95 border border-lime-300 mb-2"
-            >
-              <span className="material-symbols-outlined text-lg">login</span>
-              <span>Mergi la Autentificare / Login</span>
-              <span className="material-symbols-outlined text-lg">arrow_forward</span>
-            </button>
-
+          <div className="relative z-10 space-y-2.5">
+            {/* Card cu Campionate (ACCES PUBLIC LIBER) */}
             <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-700/80 backdrop-blur-md flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-2xl">
               <div>
                 <p className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-300">
@@ -193,19 +183,30 @@ function WelcomePortalForm() {
               </Link>
             </div>
 
-            {/* Quick public navigation links */}
-            <div className="flex flex-wrap gap-2 text-[11px] font-label font-bold text-slate-300 pt-2">
-              <Link href="/brackets" className="hover:text-lime-400 transition bg-white/5 px-2.5 py-1 rounded-lg">
-                🗺️ Harta Campionatului
+            {/* Sleek, Thin Mobile Login Button placed UNDER the Championships card */}
+            <button
+              type="button"
+              onClick={() => setMobileView("auth")}
+              className="w-full lg:hidden py-2.5 px-4 rounded-xl bg-lime-400/10 hover:bg-lime-400/20 border border-lime-400/30 text-lime-400 font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition active:scale-95 backdrop-blur-md"
+            >
+              <span className="material-symbols-outlined text-base">login</span>
+              <span>Mergi la Autentificare</span>
+              <span className="material-symbols-outlined text-base">arrow_forward</span>
+            </button>
+
+            {/* Quick public navigation links (1 line, 1 word each) */}
+            <div className="grid grid-cols-4 gap-1.5 text-[11px] font-label font-bold text-slate-300 pt-1 text-center">
+              <Link href="/brackets" className="hover:text-lime-400 transition bg-white/5 hover:bg-white/10 py-1.5 px-1 rounded-lg truncate">
+                🗺️ Hartă
               </Link>
-              <Link href="/venues" className="hover:text-lime-400 transition bg-white/5 px-2.5 py-1 rounded-lg">
-                🏟️ 59 Arene RO
+              <Link href="/venues" className="hover:text-lime-400 transition bg-white/5 hover:bg-white/10 py-1.5 px-1 rounded-lg truncate">
+                🏟️ Arene
               </Link>
-              <Link href="/players" className="hover:text-lime-400 transition bg-white/5 px-2.5 py-1 rounded-lg">
-                🥇 Top Golgheteri
+              <Link href="/players" className="hover:text-lime-400 transition bg-white/5 hover:bg-white/10 py-1.5 px-1 rounded-lg truncate">
+                🥇 Golgheteri
               </Link>
-              <Link href="/referees" className="hover:text-lime-400 transition bg-white/5 px-2.5 py-1 rounded-lg">
-                ⚖️ Corp Arbitri (30)
+              <Link href="/referees" className="hover:text-lime-400 transition bg-white/5 hover:bg-white/10 py-1.5 px-1 rounded-lg truncate">
+                ⚖️ Arbitri
               </Link>
             </div>
           </div>
@@ -213,11 +214,21 @@ function WelcomePortalForm() {
 
         {/* Right Side: Authentication Panel (Card 2 on Mobile) */}
         <div
-          className={`w-full lg:w-5/12 p-6 sm:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 ${
+          className={`w-full lg:w-5/12 p-6 sm:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 relative overflow-hidden ${
             mobileView === "auth" ? "flex" : "hidden lg:flex"
           }`}
         >
-          <div>
+          {/* Subtle Dynamic Football Action Watermark Background (<10% Contrast Shadow) */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-[0.06] dark:opacity-[0.08] z-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/legend-player-shadow-bw.jpg"
+              alt="Dynamic Football Shadow Background"
+              className="w-full h-full object-cover object-center filter grayscale contrast-[0.08] brightness-110 dark:brightness-90 scale-110"
+            />
+          </div>
+
+          <div className="relative z-10">
             {/* Mobile Header Navigation Back Button */}
             <div className="lg:hidden mb-4 pb-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
               <button
@@ -348,7 +359,7 @@ function WelcomePortalForm() {
             </form>
           </div>
 
-          <footer className="pt-6 mt-6 border-t border-slate-200 dark:border-slate-800 text-center space-y-1">
+          <footer className="pt-6 mt-6 border-t border-slate-200 dark:border-slate-800 text-center space-y-1 relative z-10">
             <p className="text-[11px] font-label text-slate-600 dark:text-slate-400">
               © {new Date().getFullYear()} <a href="https://tscquantum.ro" target="_blank" rel="noreferrer" className="font-bold text-slate-900 dark:text-lime-400 hover:underline">tscquantum.ro</a>. Toate drepturile aparțin <strong>tscquantum.ro</strong>.
             </p>
