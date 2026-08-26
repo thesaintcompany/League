@@ -66,7 +66,22 @@ export default async function TeamManagerDashboardPage() {
     }
   }
 
-  if (!team) {
+    let dbUser = userId ? await prisma.user.findUnique({ where: { id: userId } }) : null;
+    if (!dbUser && user.email) {
+      dbUser = await prisma.user.findUnique({ where: { email: user.email.toLowerCase().trim() } });
+    }
+    if (!dbUser) {
+      dbUser = await prisma.user.create({
+        data: {
+          ...(userId ? { id: userId } : {}),
+          email: user.email ? user.email.toLowerCase().trim() : `user_${Date.now()}@buu.ro`,
+          name: user.name || "Manager Echipă",
+          role: user.role || "team_leader",
+        },
+      });
+    }
+    const validOwnerId = dbUser.id;
+
     // If no team exists in database yet, create a default demo team
     const defaultChamp =
       (await prisma.championship.findFirst()) ||
@@ -76,7 +91,7 @@ export default async function TeamManagerDashboardPage() {
           sport: "Fotbal",
           format: "round_robin",
           startDate: new Date(),
-          ownerId: userId,
+          ownerId: validOwnerId,
         },
       }));
 
@@ -86,7 +101,7 @@ export default async function TeamManagerDashboardPage() {
         shortName: "POL",
         color: "#581c87",
         championshipId: defaultChamp.id,
-        managerId: userId,
+        managerId: validOwnerId,
         formation: "4-3-3",
         homeArena: "Stadionul Dan Păltinișanu (Timișoara)",
         headCoach: "Dan Alexa (Licență UEFA Pro)",

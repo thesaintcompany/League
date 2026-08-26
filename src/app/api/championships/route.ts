@@ -51,9 +51,28 @@ export async function POST(req: Request) {
       );
     }
 
-    const userId = (session.user as any).id;
+    let userId = (session.user as any).id;
     const userRole = (session.user as any).role || "";
+    const userEmail = (session.user as any).email || "";
+    const userName = (session.user as any).name || "Organizator";
     const isSuperAdmin = userRole === "super_admin" || userRole === "superadmin";
+
+    // Asigură existența utilizatorului în baza de date pentru foreign key `ownerId` -> `User.id`
+    let dbUser = userId ? await prisma.user.findUnique({ where: { id: userId } }) : null;
+    if (!dbUser && userEmail) {
+      dbUser = await prisma.user.findUnique({ where: { email: userEmail.toLowerCase().trim() } });
+    }
+    if (!dbUser) {
+      dbUser = await prisma.user.create({
+        data: {
+          ...(userId ? { id: userId } : {}),
+          email: userEmail ? userEmail.toLowerCase().trim() : `user_${Date.now()}@buu.ro`,
+          name: userName,
+          role: userRole || "organizer",
+        },
+      });
+    }
+    userId = dbUser.id;
 
     // Quota Enforcement: 1 free championship per organizer, then 280€ per additional championship
     const existingCount = await prisma.championship.count({

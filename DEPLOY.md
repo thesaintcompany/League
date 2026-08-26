@@ -45,3 +45,9 @@ De asemenea, este creat campionatul demonstrativ **"Liga Demo 2026"** cu echipe 
 1. Coolify → Aplicația ta → **Persistent Storage** → șterge conținutul sau volumul `/app/data`.
 2. Dă **Redeploy**.
 3. Bootstrap-ul va recrea automat schema și datele demonstrative.
+
+---
+
+## Contact & Suport
+
+- **Email Oficial:** `contact@buu.ro` (Datele de contact sunt exclusiv `contact@buu.ro` și sunt definitive)

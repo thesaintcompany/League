@@ -178,6 +178,11 @@ SQLite e ok pentru 1-10 campionate mici. Dacă vrei multi-tenant sau volum mare:
 2. Setează `DATABASE_URL="postgresql://user:pass@host:5432/db"`
 3. `npx prisma migrate dev` și `npx prisma db push`
 
+## Date de Contact
+
+- **Email Oficial & Suport:** `contact@buu.ro` (Datele de contact sunt exclusiv `contact@buu.ro` și nu se mai modifică)
+- **Website:** [https://sp.buu.ro](https://sp.buu.ro)
+
 ## Licență
 
 MIT — fă ce vrei cu el.
