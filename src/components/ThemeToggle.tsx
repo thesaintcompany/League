@@ -74,22 +74,16 @@ export function ThemeToggle({ variant = "compact", className = "" }: ThemeToggle
     );
   }
 
-  // Default compact
+  // Minimal gray button (default)
   return (
     <button
       type="button"
       onClick={toggleTheme}
-      title={isDark ? "Comută la Modul Luminos (Zi)" : "Comută la Modul Întunecat (Noapte)"}
+      title={isDark ? "Comută la Modul Luminos" : "Comută la Modul Întunecat"}
       aria-label="Comută mod noapte / zi"
-      className={`relative group p-2.5 rounded-2xl border transition-all duration-200 active:scale-95 flex items-center justify-center ${
-        isDark
-          ? "bg-slate-900 hover:bg-slate-800 text-amber-300 border-slate-700 hover:border-amber-400/50 shadow-md"
-          : "bg-white hover:bg-slate-50 text-slate-900 border-slate-200 hover:border-slate-300 shadow-sm"
-      } ${className}`}
+      className={`p-2 sm:p-2.5 rounded-xl transition-all duration-200 active:scale-95 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/60 ${className}`}
     >
-      <span className="text-sm leading-none transition-transform duration-300 group-hover:scale-125">
-        {isDark ? "🌙" : "☀️"}
-      </span>
+      <span className="text-sm leading-none">{isDark ? "🌙" : "☀️"}</span>
       <span className="sr-only">{isDark ? "Mod Noapte" : "Mod Zi"}</span>
     </button>
   );

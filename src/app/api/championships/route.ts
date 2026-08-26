@@ -15,6 +15,7 @@ const createSchema = z.object({
   scope: z.enum(["national", "judetean", "oras"]).default("national"),
   county: z.string().optional().nullable(),
   city: z.string().optional().nullable(),
+  logoUrl: z.string().optional().nullable(),
 });
 
 function generateShareCode(name: string) {
@@ -71,7 +72,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { name, sport, format, season, startDate, endDate, description, scope, county, city } = parsed.data;
+    const { name, sport, format, season, startDate, endDate, description, scope, county, city, logoUrl } = parsed.data;
 
     let parsedStartDate = new Date();
     if (startDate && startDate.trim() !== "") {
@@ -100,6 +101,7 @@ export async function POST(req: Request) {
         scope: scope || "national",
         county: county || (scope === "national" ? null : "Timiș"),
         city: city || null,
+        logoUrl: logoUrl?.trim() || null,
         isBracketPublished: true,
         shareCode,
       },

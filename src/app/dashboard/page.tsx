@@ -133,6 +133,31 @@ export default async function DashboardPage() {
             </div>
           </div>
 
+          {/* Quick Organizer Teams Action Card */}
+          <div className="card p-6 bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 text-white rounded-3xl border border-slate-800 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center text-2xl font-bold shrink-0">
+                👔
+              </div>
+              <div>
+                <h3 className="font-headline text-lg font-black uppercase text-white tracking-tight flex items-center gap-2">
+                  Echipe Organizator &amp; Invitații Lideri
+                </h3>
+                <p className="text-xs text-slate-400 font-body mt-0.5">
+                  Înscrie echipe existente din sistem sau trimite invitații prin email/WhatsApp managerilor noi, apoi extrage-le cu zarurile 🎲.
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href="/dashboard/organizer/teams"
+              className="px-5 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md transition active:scale-95 shrink-0 flex items-center gap-2"
+            >
+              <span>Mergi la Echipe Organizator</span>
+              <span className="material-symbols-outlined text-base">arrow_forward</span>
+            </Link>
+          </div>
+
           {/* Championships Section */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">

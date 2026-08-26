@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ROMANIAN_COUNTIES } from "@/lib/constants";
 import { InteractiveRomaniaSvgMap } from "@/components/InteractiveRomaniaSvgMap";
 import { useSportContext } from "@/context/SportContext";
+import { ChampionshipLogoBadge } from "@/components/ChampionshipLogoBadge";
 
 interface ChampionshipData {
   id: string;
@@ -15,6 +16,7 @@ interface ChampionshipData {
   scope: string; // "national" | "judetean" | "oras"
   county?: string | null;
   city?: string | null;
+  logoUrl?: string | null;
   description?: string | null;
   isBracketPublished: boolean;
   createdAt: string;
@@ -443,15 +445,18 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                           </span>
                         </div>
 
-                        <div>
-                          <h4 className="font-headline font-bold text-base sm:text-lg text-slate-900 dark:text-white group-hover:text-lime-600 dark:group-hover:text-lime-400 transition-colors break-words">
-                            {champ.name}
-                          </h4>
-                          {champ.description && (
-                            <p className="text-xs text-slate-600 dark:text-slate-400 font-body leading-relaxed mt-1 line-clamp-2">
-                              {champ.description}
-                            </p>
-                          )}
+                        <div className="flex items-center gap-3">
+                          <ChampionshipLogoBadge name={champ.name} logoUrl={champ.logoUrl} size="lg" />
+                          <div>
+                            <h4 className="font-headline font-bold text-base sm:text-lg text-slate-900 dark:text-white group-hover:text-lime-600 dark:group-hover:text-lime-400 transition-colors break-words">
+                              {champ.name}
+                            </h4>
+                            {champ.description && (
+                              <p className="text-xs text-slate-600 dark:text-slate-400 font-body leading-relaxed mt-1 line-clamp-2">
+                                {champ.description}
+                              </p>
+                            )}
+                          </div>
                         </div>
 
                         <div className="pt-2 flex flex-wrap items-center justify-between gap-2 text-xs font-label">

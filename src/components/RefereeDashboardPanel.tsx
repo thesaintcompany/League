@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { RefereeCalendar } from "./RefereeCalendar";
 
 export interface MatchOfficiatingItem {
   id: string;
@@ -358,7 +359,12 @@ export function RefereeDashboardPanel({
         )}
       </section>
 
-      {/* SECTION 2: OFFICIATED MATCHES HISTORY (Istoric Meciuri Arbitrate) */}
+      {/* SECTION 2: REFEREE CALENDAR & GOOGLE SYNC */}
+      <section>
+        <RefereeCalendar refereeName={refereeUser.name} />
+      </section>
+
+      {/* SECTION 3: OFFICIATED MATCHES HISTORY (Istoric Meciuri Arbitrate) */}
       <section className="space-y-4">
         <div className="flex justify-between items-center pb-2 border-b border-slate-800">
           <div className="flex items-center gap-2.5">

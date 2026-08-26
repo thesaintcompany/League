@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { appSignOut } from "@/lib/logout";
-import { ThemeToggle } from "./ThemeToggle";
 import { BrandLogo } from "./BrandLogo";
 
 interface NavItem {
@@ -88,6 +87,7 @@ export function Sidebar({ variant }: SidebarProps) {
     // Organizer Menu
     navItems = [
       { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
+      { name: "Echipe Organizator", href: "/dashboard/organizer/teams", icon: "groups" },
       { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
       { name: "Arene", href: "/venues", icon: "domain" },
@@ -186,16 +186,8 @@ export function Sidebar({ variant }: SidebarProps) {
         </nav>
       </div>
 
-      {/* Footer / Theme Toggle & Actions */}
+      {/* Footer / Actions */}
       <div className="mt-auto px-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
-        {/* Day / Night Switcher in Sidebar */}
-        <div className="flex items-center justify-between px-2 py-1">
-          <span className="text-[11px] font-label font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            Temă
-          </span>
-          <ThemeToggle variant="full" />
-        </div>
-
         {role === "organizer" && (
           <Link
             href="/dashboard/new"

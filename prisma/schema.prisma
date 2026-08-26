@@ -123,6 +123,7 @@ model Championship {
   scope       String   @default("national") // "national" | "judetean" | "oras"
   county      String?  // e.g. "Timiș", "București", "Cluj", "Iași", "Brașov"
   city        String?  // e.g. "Timișoara", "Cluj-Napoca", "București"
+  logoUrl     String?  // URL sau cale către sigla rotundă a campionatului
   isBracketPublished Boolean @default(true)
   diceRollCount      Int     @default(0) // Maximum 3 rolls allowed before publishing
   shareCode   String?  @unique // unique public share code e.g. "LP-2026-A1"
@@ -145,6 +146,7 @@ model Team {
   logoUrl         String?
   championshipId  String
   managerId       String?
+  managerEmail    String? // Emailul liderului/managerului invitat
   manager         User?   @relation("ManagedTeams", fields: [managerId], references: [id], onDelete: SetNull)
   headCoach       String?
   assistantCoach  String?

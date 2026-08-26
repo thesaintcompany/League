@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import Link from "next/link";
+import { VenueCalendar } from "./VenueCalendar";
 
 interface AdItem {
   id: string;
@@ -39,7 +40,7 @@ interface VenueData {
 }
 
 export function ArenaOwnerPanel({ initialVenue }: { initialVenue: VenueData | null }) {
-  const [activeTab, setActiveTab] = useState<"config" | "ads" | "announcements" | "ticker">("config");
+  const [activeTab, setActiveTab] = useState<"config" | "ads" | "announcements" | "ticker" | "calendar">("config");
 
   // Arena Config State
   const [name, setName] = useState(initialVenue?.name || "Baza Sportivă Vasport");
@@ -396,7 +397,25 @@ export function ArenaOwnerPanel({ initialVenue }: { initialVenue: VenueData | nu
           <span className="material-symbols-outlined text-lg">rss_feed</span>
           4. Ticker Marquee Defilant
         </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("calendar")}
+          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 ${
+            activeTab === "calendar"
+              ? "bg-surface-container-lowest text-blue-950 dark:text-lime-400 border-t-2 border-lime-400 shadow-sm"
+              : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+          }`}
+        >
+          <span className="material-symbols-outlined text-lg">calendar_month</span>
+          5. Calendar Google Sync 📅
+        </button>
       </div>
+
+      {/* TAB 5: CALENDAR ARENĂ GOOGLE SYNC */}
+      {activeTab === "calendar" && (
+        <VenueCalendar venueName={name} county={location} surface={surface} />
+      )}
 
       {/* TAB 1: CONFIGURARE ARENĂ */}
       {activeTab === "config" && (

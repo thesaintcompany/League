@@ -9,6 +9,7 @@ import { BracketVisualizer } from "./BracketVisualizer";
 import { AdminDiceConsole } from "./AdminDiceConsole";
 import { RefereeControlModal } from "./RefereeControlModal";
 import { MatchData } from "./MatchCard";
+import { OrganizerInvitationsModal } from "./OrganizerInvitationsModal";
 
 type Team = {
   id: string;
@@ -59,6 +60,7 @@ export function ChampionshipTabs({
   const [tab, setTab] = useState<TabKey>("standings");
   const [standings, setStandings] = useState<StandingRow[]>([]);
   const [editingMatch, setEditingMatch] = useState<MatchData | null>(null);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   useEffect(() => {
     if (tab !== "standings") return;
@@ -110,25 +112,36 @@ export function ChampionshipTabs({
 
   return (
     <div className="space-y-8">
-      {/* Tab Navigation Bar */}
-      <div className="bg-surface-container-lowest p-2 rounded-2xl border border-slate-200/60 dark:border-slate-800 shadow-sm inline-flex flex-wrap gap-2">
-        {TABS.map((t) => {
-          const isActive = tab === t.key;
-          return (
-            <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition-all duration-150 ${
-                isActive
-                  ? "bg-primary text-white shadow-sm font-black scale-100"
-                  : "text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
-              }`}
-            >
-              <span className="material-symbols-outlined text-[18px]">{t.icon}</span>
-              {t.label}
-            </button>
-          );
-        })}
+      {/* Tab Navigation Bar & Organizer Tools */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        <div className="bg-surface-container-lowest p-2 rounded-2xl border border-slate-200/60 dark:border-slate-800 shadow-sm inline-flex flex-wrap gap-2">
+          {TABS.map((t) => {
+            const isActive = tab === t.key;
+            return (
+              <button
+                key={t.key}
+                onClick={() => setTab(t.key)}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition-all duration-150 ${
+                  isActive
+                    ? "bg-primary text-white shadow-sm font-black scale-100"
+                    : "text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                }`}
+              >
+                <span className="material-symbols-outlined text-[18px]">{t.icon}</span>
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setShowInviteModal(true)}
+          className="px-5 py-3 rounded-2xl bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95 border border-lime-300"
+        >
+          <span className="material-symbols-outlined text-lg">send</span>
+          <span>Invită Lideri Echipă / Anunț Zaruri</span>
+        </button>
       </div>
 
       {/* Tab Content */}
@@ -197,6 +210,14 @@ export function ChampionshipTabs({
           onUpdated={() => router.refresh()}
         />
       )}
+
+      {/* Organizer WhatsApp / Email Invitations Modal */}
+      <OrganizerInvitationsModal
+        championshipId={championshipId}
+        championshipName="Campionat Ligue Pro"
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+      />
     </div>
   );
 }

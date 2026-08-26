@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { TopHeader } from "@/components/TopHeader";
+import { ChampionshipLogoBadge } from "@/components/ChampionshipLogoBadge";
 import { SPORTS, FORMATS, CHAMPIONSHIP_SCOPES, ROMANIAN_COUNTIES, FOOTBALL_CATEGORIES } from "@/lib/constants";
 
 export default function NewChampionshipPage() {
@@ -20,6 +21,7 @@ export default function NewChampionshipPage() {
     startDate: new Date().toISOString().split("T")[0],
     endDate: "",
     description: "",
+    logoUrl: "",
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -270,6 +272,81 @@ export default function NewChampionshipPage() {
                   onChange={(e) => update("name", e.target.value)}
                   placeholder="ex: Liga Pro România 2026 sau Cupa Timișoarei"
                 />
+              </div>
+
+              {/* Siglă Rotundă Campionat & Live Preview */}
+              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block">
+                    Siglă Oficială Campionat (Rotundă)
+                  </label>
+                  <span className="text-[10px] text-slate-400 font-label uppercase">Opțional</span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-5">
+                  {/* Live Badge Preview */}
+                  <div className="flex flex-col items-center gap-1.5 shrink-0">
+                    <ChampionshipLogoBadge
+                      name={form.name || "Campionat Pro"}
+                      logoUrl={form.logoUrl}
+                      size="xl"
+                    />
+                    <span className="text-[10px] font-label font-bold text-slate-400 uppercase">
+                      {form.logoUrl?.trim() ? "Siglă Imagine" : "Inițiale pe Fond Colorat"}
+                    </span>
+                  </div>
+
+                  {/* Logo URL Input & Presets */}
+                  <div className="flex-1 space-y-3 w-full">
+                    <div className="flex gap-2">
+                      <input
+                        type="url"
+                        className="w-full p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-500"
+                        value={form.logoUrl}
+                        onChange={(e) => update("logoUrl", e.target.value)}
+                        placeholder="https://domeniu.ro/sigla-campionat.png (sau lasă gol pentru inițiale)"
+                      />
+                      {form.logoUrl && (
+                        <button
+                          type="button"
+                          onClick={() => update("logoUrl", "")}
+                          className="px-3 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-red-500"
+                          title="Șterge sigla"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Presets */}
+                    <div className="flex flex-wrap gap-2 text-[11px] font-label font-semibold text-slate-500 dark:text-slate-400">
+                      <span>💡 Opțiuni:</span>
+                      <button
+                        type="button"
+                        onClick={() => update("logoUrl", "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=200&auto=format&fit=crop&q=80")}
+                        className="text-lime-600 dark:text-lime-400 hover:underline"
+                      >
+                        Model 1
+                      </button>
+                      <span>•</span>
+                      <button
+                        type="button"
+                        onClick={() => update("logoUrl", "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200&auto=format&fit=crop&q=80")}
+                        className="text-lime-600 dark:text-lime-400 hover:underline"
+                      >
+                        Model 2
+                      </button>
+                      <span>•</span>
+                      <button
+                        type="button"
+                        onClick={() => update("logoUrl", "")}
+                        className="text-slate-600 dark:text-slate-300 hover:underline font-bold"
+                      >
+                        Utilizează Fond Colorat cu Inițiale
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Scope Selection: Național vs Județean vs Local */}

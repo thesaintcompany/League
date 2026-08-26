@@ -4,7 +4,6 @@ import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { BrandLogo } from "@/components/BrandLogo";
 
 function WelcomePortalForm() {
@@ -17,6 +16,7 @@ function WelcomePortalForm() {
   const [selectedRole, setSelectedRole] = useState("organizer");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [mobileView, setMobileView] = useState<"championships" | "auth">("championships");
 
   const DEMO_ACCOUNTS = [
     {
@@ -107,20 +107,47 @@ function WelcomePortalForm() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden bg-slate-50 dark:bg-slate-950 font-body text-slate-900 dark:text-white transition-colors duration-200">
+    <main className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden bg-slate-50 dark:bg-slate-950 font-body text-slate-900 dark:text-white transition-colors duration-200">
       {/* Dynamic Ambient Background Glows */}
       <div className="absolute top-0 right-0 -mr-40 -mt-40 w-[600px] h-[600px] bg-lime-500/10 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 -ml-40 -mb-40 w-[600px] h-[600px] bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/5 blur-[150px] rounded-full pointer-events-none"></div>
 
-      {/* Floating Global Day/Night Switcher */}
-      <div className="absolute top-4 right-4 z-50">
-        <ThemeToggle variant="pill" />
+      {/* Mobile Segmented Card Controller */}
+      <div className="w-full max-w-6xl mb-3 lg:hidden flex bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md z-20">
+        <button
+          type="button"
+          onClick={() => setMobileView("championships")}
+          className={`flex-1 py-2.5 px-3 rounded-xl font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
+            mobileView === "championships"
+              ? "bg-lime-400 text-slate-950 shadow-md"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+          }`}
+        >
+          <span className="material-symbols-outlined text-lg">emoji_events</span>
+          <span>1. Campionate</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileView("auth")}
+          className={`flex-1 py-2.5 px-3 rounded-xl font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
+            mobileView === "auth"
+              ? "bg-lime-400 text-slate-950 shadow-md"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+          }`}
+        >
+          <span className="material-symbols-outlined text-lg">lock</span>
+          <span>2. Autentificare</span>
+        </button>
       </div>
 
       <section className="w-full max-w-6xl bg-white dark:bg-slate-900/90 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_25px_70px_rgba(0,0,0,0.15)] dark:shadow-[0_25px_70px_rgba(0,0,0,0.6)] flex flex-col lg:flex-row overflow-hidden z-10 border border-slate-200 dark:border-slate-800/80">
-        {/* Left Side: Teaser with Dynamic Goal Shot */}
-        <div className="w-full lg:w-7/12 relative min-h-[460px] lg:min-h-[680px] p-8 sm:p-12 flex flex-col justify-between overflow-hidden text-white group bg-slate-950">
+        {/* Left Side: Teaser with Dynamic Goal Shot (Card 1 on Mobile) */}
+        <div
+          className={`w-full lg:w-7/12 relative min-h-[460px] lg:min-h-[680px] p-6 sm:p-12 flex-col justify-between overflow-hidden text-white group bg-slate-950 ${
+            mobileView === "championships" ? "flex" : "hidden lg:flex"
+          }`}
+        >
           {/* Dynamic Background Goal Action Image */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -143,7 +170,7 @@ function WelcomePortalForm() {
           </div>
 
           {/* Center Pitch Title */}
-          <div className="relative z-10 my-auto py-8 space-y-4 max-w-xl">
+          <div className="relative z-10 my-auto py-6 sm:py-8 space-y-4 max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-slate-200 text-xs font-label border border-white/15">
               <span>⚡</span> Turnee, Campionate &amp; 33 Arene Omologate
             </div>
@@ -159,8 +186,19 @@ function WelcomePortalForm() {
             </p>
           </div>
 
-          {/* Bottom Call to Public Page */}
+          {/* Bottom Call to Public Page & Mobile Login Action */}
           <div className="relative z-10 space-y-3">
+            {/* Mobile Prominent Login Action Button */}
+            <button
+              type="button"
+              onClick={() => setMobileView("auth")}
+              className="w-full lg:hidden py-4 rounded-2xl bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-xl shadow-lime-500/20 flex items-center justify-center gap-2 transition active:scale-95 border border-lime-300 mb-2"
+            >
+              <span className="material-symbols-outlined text-lg">login</span>
+              <span>Mergi la Autentificare / Login</span>
+              <span className="material-symbols-outlined text-lg">arrow_forward</span>
+            </button>
+
             <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-700/80 backdrop-blur-md flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-2xl">
               <div>
                 <p className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-300">
@@ -200,9 +238,28 @@ function WelcomePortalForm() {
           </div>
         </div>
 
-        {/* Right Side: Authentication Panel */}
-        <div className="w-full lg:w-5/12 p-8 sm:p-12 bg-white dark:bg-slate-900 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800">
+        {/* Right Side: Authentication Panel (Card 2 on Mobile) */}
+        <div
+          className={`w-full lg:w-5/12 p-6 sm:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 ${
+            mobileView === "auth" ? "flex" : "hidden lg:flex"
+          }`}
+        >
           <div>
+            {/* Mobile Header Navigation Back Button */}
+            <div className="lg:hidden mb-4 pb-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => setMobileView("championships")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold font-label hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+              >
+                <span className="material-symbols-outlined text-base">arrow_back</span>
+                <span>Înapoi la Campionate</span>
+              </button>
+              <span className="text-[10px] font-mono text-lime-600 dark:text-lime-400 font-bold uppercase">
+                Pasul 2 / 2
+              </span>
+            </div>
+
             <header className="mb-6 flex justify-between items-start">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-headline font-black uppercase text-slate-900 dark:text-white tracking-tight">

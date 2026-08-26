@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
 import { TopHeader } from "@/components/TopHeader";
 import { ChampionshipTabs } from "@/components/ChampionshipTabs";
+import { ChampionshipLogoBadge } from "@/components/ChampionshipLogoBadge";
 
 export const dynamic = "force-dynamic";
 
@@ -60,24 +61,27 @@ export default async function ChampionshipDetailPage({
           <div className="card p-8 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200/80 dark:border-slate-800 rounded-3xl relative overflow-hidden shadow-sm">
             <div className="absolute top-0 right-0 w-80 h-80 bg-lime-400/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
 
-            <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2.5 py-0.5 bg-lime-400 text-slate-950 text-[10px] font-black rounded uppercase tracking-wider font-label">
-                    {champ.sport}
-                  </span>
-                  <span className="text-slate-400 text-xs font-label uppercase tracking-widest font-semibold">
-                    {champ.format === "knockout" ? "Turneu Eliminatoriu" : "Ligă Round-Robin"}
-                  </span>
+            <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <div className="flex items-center gap-5">
+                <ChampionshipLogoBadge name={champ.name} logoUrl={champ.logoUrl} size="2xl" />
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="px-2.5 py-0.5 bg-lime-400 text-slate-950 text-[10px] font-black rounded uppercase tracking-wider font-label">
+                      {champ.sport}
+                    </span>
+                    <span className="text-slate-400 text-xs font-label uppercase tracking-widest font-semibold">
+                      {champ.format === "knockout" ? "Turneu Eliminatoriu" : "Ligă Round-Robin"}
+                    </span>
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight font-headline">
+                    {champ.name}
+                  </h1>
+                  {champ.description && (
+                    <p className="text-slate-300 mt-2 text-sm max-w-2xl font-body">
+                      {champ.description}
+                    </p>
+                  )}
                 </div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight font-headline">
-                  {champ.name}
-                </h1>
-                {champ.description && (
-                  <p className="text-slate-300 mt-2 text-sm max-w-2xl font-body">
-                    {champ.description}
-                  </p>
-                )}
               </div>
 
               <div className="flex items-center gap-6 bg-white/10 px-6 py-4 rounded-2xl border border-white/10">

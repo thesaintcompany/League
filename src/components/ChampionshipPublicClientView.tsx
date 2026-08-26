@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { BracketVisualizer } from "./BracketVisualizer";
 import { MatchData } from "./MatchCard";
 import { useSportContext } from "@/context/SportContext";
+import { ChampionshipLogoBadge } from "./ChampionshipLogoBadge";
 
 interface Standing {
   position: number;
@@ -57,6 +58,7 @@ interface ChampionshipInfo {
   scope: string;
   county?: string | null;
   city?: string | null;
+  logoUrl?: string | null;
   shareCode: string;
   description?: string | null;
 }
@@ -199,14 +201,23 @@ export function ChampionshipPublicClientView({
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black italic tracking-tight font-headline uppercase leading-tight text-slate-900 dark:text-white drop-shadow-sm break-words">
-            {championship?.name || `${currentSportMeta.name} - Campionat Oficial`}
-          </h1>
+          <div className="flex items-center gap-4 pt-1">
+            <ChampionshipLogoBadge
+              name={championship?.name || "Campionat Pro"}
+              logoUrl={championship?.logoUrl}
+              size="2xl"
+            />
+            <div>
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black italic tracking-tight font-headline uppercase leading-tight text-slate-900 dark:text-white drop-shadow-sm break-words">
+                {championship?.name || `${currentSportMeta.name} - Campionat Oficial`}
+              </h1>
 
-          <p className="text-xs text-slate-600 dark:text-slate-300 font-body max-w-2xl">
-            {championship?.description ||
-              `Harta interactivă, arbore eliminatoriu, clasamente oficiale și telemetria meciurilor de ${currentSportMeta.name}.`}
-          </p>
+              <p className="text-xs text-slate-600 dark:text-slate-300 font-body max-w-2xl mt-1">
+                {championship?.description ||
+                  `Harta interactivă, arbore eliminatoriu, clasamente oficiale și telemetria meciurilor de ${currentSportMeta.name}.`}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Dropdown Switcher & Share */}
