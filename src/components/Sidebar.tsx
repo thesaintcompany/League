@@ -84,15 +84,20 @@ export function Sidebar({ variant }: SidebarProps) {
       { name: "Arene", href: "/venues", icon: "domain" },
     ];
   } else {
-    // Organizer Menu
+    // Organizer Menu (Controale Panou Organizator din imagine)
+    const isChampDetail = pathname.startsWith("/dashboard/championships/");
+    const activeBase = isChampDetail ? pathname : "/dashboard";
+
     navItems = [
+      { name: "Clasament General", href: `${activeBase}?tab=standings`, icon: "leaderboard" },
+      { name: "Program & Arbitraj", href: `${activeBase}?tab=matches`, icon: "sports_soccer" },
+      { name: "Arbore Eliminatoriu 🏆", href: isChampDetail ? `${activeBase}?tab=brackets` : "/brackets", icon: "account_tree" },
+      { name: "Echipe Înscrise 🛡️", href: "/dashboard/organizer/teams", icon: "shield" },
+      { name: "Bilete & Scanner Porți 🎟️", href: isChampDetail ? `${activeBase}?tab=tickets` : "/tickets/scanner", icon: "confirmation_number" },
+      { name: "Promotion Hub 📢", href: `${activeBase}?tab=promo`, icon: "campaign" },
       { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
-      { name: "Echipe Organizator", href: "/dashboard/organizer/teams", icon: "groups" },
-      { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
-      { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
+      { name: "Campionate & Harta", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Arene", href: "/venues", icon: "domain" },
-      { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
-      { name: "Corp Arbitri", href: "/referees", icon: "sports" },
       { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
     ];
   }
@@ -151,13 +156,12 @@ export function Sidebar({ variant }: SidebarProps) {
         </div>
 
         {/* Navigation Links */}
-        <nav className="px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-280px)]">
+        <nav className="px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-260px)]">
           {navItems.map((item) => {
-            const isTabMatch = item.href.includes("?tab=")
-              ? pathname === "/dashboard/admin" &&
-              (item.href.includes(`tab=${currentTab}`) ||
-                (item.href.includes("tab=branding") && (!currentTab || currentTab === "branding")))
-              : pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+            const itemTab = item.href.includes("?tab=") ? item.href.split("?tab=")[1] : null;
+            const isTabMatch = itemTab
+              ? currentTab === itemTab || (!currentTab && itemTab === "standings" && pathname.startsWith("/dashboard/championships/"))
+              : pathname === item.href;
             const isActive = isTabMatch;
             return (
               <Link
@@ -166,8 +170,8 @@ export function Sidebar({ variant }: SidebarProps) {
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-medium transition-all duration-200 ${isActive
                     ? isDarkTheme
-                      ? "bg-lime-400 text-slate-950 font-black shadow-lg shadow-lime-400/20"
-                      : "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-bold shadow-md"
+                      ? "bg-lime-400 text-slate-950 font-black shadow-lg shadow-lime-400/20 scale-[1.02]"
+                      : "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-bold shadow-md scale-[1.02]"
                     : isDarkTheme
                       ? "text-slate-300 hover:text-white hover:bg-slate-800/90"
                       : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70"

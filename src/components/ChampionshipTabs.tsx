@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { TeamsTab } from "./TeamsTab";
 import { MatchesTab } from "./MatchesTab";
 import { StandingsTable, StandingRow } from "./StandingsTable";
@@ -57,10 +57,23 @@ export function ChampionshipTabs({
   matches: Match[];
 }) {
   const router = useRouter();
-  const [tab, setTab] = useState<TabKey>("standings");
+  const searchParams = useSearchParams();
+  const urlTab = searchParams?.get("tab") as TabKey;
+  const [tab, setTab] = useState<TabKey>(urlTab || "standings");
   const [standings, setStandings] = useState<StandingRow[]>([]);
   const [editingMatch, setEditingMatch] = useState<MatchData | null>(null);
   const [showInviteModal, setShowInviteModal] = useState(false);
+
+  useEffect(() => {
+    if (urlTab && TABS.some((t) => t.key === urlTab)) {
+      setTab(urlTab);
+    }
+  }, [urlTab]);
+
+  function handleTabChange(newTab: TabKey) {
+    setTab(newTab);
+    router.push(`?tab=${newTab}`, { scroll: false });
+  }
 
   useEffect(() => {
     if (tab !== "standings") return;
@@ -120,7 +133,7 @@ export function ChampionshipTabs({
             return (
               <button
                 key={t.key}
-                onClick={() => setTab(t.key)}
+                onClick={() => handleTabChange(t.key)}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition-all duration-150 ${
                   isActive
                     ? "bg-primary text-white shadow-sm font-black scale-100"

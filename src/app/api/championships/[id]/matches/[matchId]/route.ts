@@ -28,6 +28,81 @@ const updateSchema = z.object({
   signedAt: z.string().optional().nullable(),
 });
 
+async function advanceBracketWinner(updatedMatch: any) {
+  if (updatedMatch.status !== "finished") return;
+
+  const homeScore = updatedMatch.homeScore ?? 0;
+  const awayScore = updatedMatch.awayScore ?? 0;
+
+  // Determine winner team ID
+  let winnerId = updatedMatch.homeTeamId;
+  if (awayScore > homeScore) {
+    winnerId = updatedMatch.awayTeamId;
+  } else if (homeScore === awayScore) {
+    // If tied, check penalties if available or default to home team
+    const homePen = parseInt(updatedMatch.homePenalties || "0") || 0;
+    const awayPen = parseInt(updatedMatch.awayPenalties || "0") || 0;
+    if (awayPen > homePen) {
+      winnerId = updatedMatch.awayTeamId;
+    }
+  }
+
+  if (!winnerId) return;
+
+  const currentRound = updatedMatch.round || 1;
+  const currentBracketIndex = updatedMatch.bracketIndex ?? 0;
+  const currentStage = updatedMatch.stage || "quarter_final";
+
+  // If already at final (round 3 or stage === "final"), no next match to advance to
+  if (currentStage === "final" || currentRound >= 3) return;
+
+  const nextRound = currentRound + 1;
+  const nextStage = currentStage === "quarter_final" ? "semi_final" : "final";
+  const nextBracketIndex = Math.floor(currentBracketIndex / 2);
+  const isHomeSlot = currentBracketIndex % 2 === 0;
+
+  // Find existing next match in bracket
+  const existingNextMatch = await prisma.match.findFirst({
+    where: {
+      championshipId: updatedMatch.championshipId,
+      OR: [
+        { round: nextRound, bracketIndex: nextBracketIndex },
+        { stage: nextStage, bracketIndex: nextBracketIndex },
+      ],
+    },
+  });
+
+  if (existingNextMatch) {
+    // Update existing next match with advancing winner
+    await prisma.match.update({
+      where: { id: existingNextMatch.id },
+      data: isHomeSlot ? { homeTeamId: winnerId } : { awayTeamId: winnerId },
+    });
+  } else {
+    // Get another team from championship as fallback opponent if needed
+    const champTeams = await prisma.team.findMany({
+      where: { championshipId: updatedMatch.championshipId },
+      take: 2,
+    });
+    const fallbackOpponent = champTeams.find((t) => t.id !== winnerId)?.id || winnerId;
+
+    await prisma.match.create({
+      data: {
+        championshipId: updatedMatch.championshipId,
+        round: nextRound,
+        stage: nextStage,
+        bracketIndex: nextBracketIndex,
+        homeTeamId: isHomeSlot ? winnerId : fallbackOpponent,
+        awayTeamId: !isHomeSlot ? winnerId : fallbackOpponent,
+        scheduledAt: new Date((updatedMatch.scheduledAt ? new Date(updatedMatch.scheduledAt).getTime() : Date.now()) + 2 * 86400000),
+        status: "scheduled",
+        venue: updatedMatch.venue || "Stadion Principal",
+        notes: `Precompletat automat - Câștigătoarea din Meciul #${currentBracketIndex + 1} (${currentStage})`,
+      },
+    });
+  }
+}
+
 export async function PATCH(
   req: Request,
   ctx: { params: { id: string; matchId: string } }
@@ -101,6 +176,10 @@ export async function PATCH(
     where: { id: match.id },
     data,
   });
+
+  if (updated.status === "finished") {
+    await advanceBracketWinner(updated);
+  }
 
   return NextResponse.json({ match: updated });
 }
