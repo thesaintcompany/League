@@ -147,7 +147,7 @@ export function ChampionshipPublicClientView({
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-none text-slate-900 dark:text-white drop-shadow-sm">
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black italic tracking-tight font-headline uppercase leading-tight text-slate-900 dark:text-white drop-shadow-sm break-words">
             {championship?.name || "Premier Elite Championship"}
           </h1>
 
@@ -158,12 +158,12 @@ export function ChampionshipPublicClientView({
         </div>
 
         {/* Dropdown Switcher & Share */}
-        <div className="flex items-center gap-3 w-full md:w-auto">
+        <div className="flex items-center gap-2 sm:gap-3 w-full md:w-auto">
           <div className="relative flex-1 md:w-72">
             <select
               value={championship?.id || ""}
               onChange={(e) => onSelectChampionship(e.target.value)}
-              className="w-full appearance-none bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 pl-4 pr-10 py-3 rounded-2xl shadow-md text-xs font-bold font-headline text-slate-900 dark:text-white focus:outline-none focus:border-lime-500 cursor-pointer"
+              className="w-full appearance-none bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 pl-3.5 sm:pl-4 pr-10 py-2.5 sm:py-3 rounded-2xl shadow-md text-xs font-bold font-headline text-slate-900 dark:text-white focus:outline-none focus:border-lime-500 cursor-pointer"
             >
               {allChampionships.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -179,7 +179,7 @@ export function ChampionshipPublicClientView({
           <button
             type="button"
             onClick={() => setShowShareModal(true)}
-            className="p-3 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-white rounded-2xl shadow-md border border-slate-300 dark:border-slate-800 hover:border-lime-500 transition-all flex items-center justify-center shrink-0"
+            className="p-2.5 sm:p-3 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-white rounded-2xl shadow-md border border-slate-300 dark:border-slate-800 hover:border-lime-500 transition-all flex items-center justify-center shrink-0"
             title="Distribuie Campionatul"
           >
             <span className="material-symbols-outlined text-lg">share</span>
@@ -187,37 +187,41 @@ export function ChampionshipPublicClientView({
         </div>
       </section>
 
-      {/* 2. View Switcher Tabs: Harta Campionatului (Zaruri) vs Clasament */}
-      <div className="flex flex-wrap items-center justify-between gap-4 bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-2 rounded-3xl backdrop-blur-md">
-        <div className="flex items-center gap-2">
+      {/* 2. View Switcher Tabs: Harta Campionatului vs Clasament */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-1.5 sm:p-2 rounded-3xl backdrop-blur-md">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <button
             type="button"
             onClick={() => setActiveView("bracket")}
-            className={`px-5 sm:px-6 py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${activeView === "bracket"
+            className={`flex-1 sm:flex-initial px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2 ${
+              activeView === "bracket"
                 ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
-              }`}
+            }`}
           >
-            <span>🌳</span> Harta Turneului (Arbore Eliminatoriu)
+            <span>🌳</span>
+            <span className="truncate">Harta Meciuri (Mindmap)</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveView("standings")}
-            className={`px-5 sm:px-6 py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${activeView === "standings"
+            className={`flex-1 sm:flex-initial px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2 ${
+              activeView === "standings"
                 ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
-              }`}
+            }`}
           >
-            <span>📊</span> Clasament &amp; Telemetrie Meciuri
+            <span>📊</span>
+            <span className="truncate">Clasament</span>
           </button>
         </div>
 
         <Link
           href={`/harta-campionat/${championship?.shareCode || "LP-2026"}`}
           target="_blank"
-          className="px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-lime-400 text-xs font-bold font-label uppercase flex items-center gap-1.5 transition border border-slate-300 dark:border-slate-700 shadow-sm"
+          className="px-4 py-2 sm:py-2.5 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-lime-400 text-xs font-bold font-label uppercase flex items-center justify-center gap-1.5 transition border border-slate-300 dark:border-slate-700 shadow-sm"
         >
-          <span>Deschide</span>
+          <span>Pagină Dedicată</span>
           <span className="material-symbols-outlined text-sm">open_in_new</span>
         </Link>
       </div>
@@ -236,15 +240,15 @@ export function ChampionshipPublicClientView({
         </div>
       ) : (
         /* 4. Main 12-Column Standings Grid Layout */
-        <div className="grid grid-cols-12 gap-8 animate-in fade-in">
+        <div className="grid grid-cols-12 gap-6 lg:gap-8 animate-in fade-in">
           {/* LEFT COLUMN: Leaderboard & Latest Results (8 cols) */}
-          <div className="col-span-12 xl:col-span-8 space-y-8">
+          <div className="col-span-12 xl:col-span-8 space-y-6 sm:space-y-8">
             {/* Card: Current Standings */}
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-xl">
-              <div className="px-6 sm:px-8 py-5 border-b border-slate-200 dark:border-slate-800/80 flex justify-between items-center bg-slate-50/50 dark:bg-slate-950/40">
+              <div className="px-4 sm:px-8 py-4 sm:py-5 border-b border-slate-200 dark:border-slate-800/80 flex flex-wrap justify-between items-center bg-slate-50/50 dark:bg-slate-950/40 gap-2">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
-                  <h2 className="text-lg sm:text-xl font-bold font-headline uppercase text-slate-900 dark:text-white tracking-tight">
+                  <h2 className="text-base sm:text-xl font-bold font-headline uppercase text-slate-900 dark:text-white tracking-tight">
                     Clasament General Oficial
                   </h2>
                 </div>
@@ -258,8 +262,13 @@ export function ChampionshipPublicClientView({
                 </button>
               </div>
 
+              {/* Mobile Table Scroll Hint */}
+              <div className="md:hidden px-4 py-1.5 bg-slate-50 dark:bg-slate-950/60 border-b border-slate-100 dark:border-slate-800 text-[10px] font-label text-slate-400 flex items-center gap-1">
+                <span>⟷</span> Glisează orizontal pentru statistici complete
+              </div>
+
               <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+                <table className="w-full text-left border-collapse min-w-[560px]">
                   <thead>
                     <tr className="bg-slate-50 dark:bg-slate-950/80 text-slate-500 dark:text-slate-400 font-label text-[10px] uppercase tracking-widest border-b border-slate-200 dark:border-slate-800">
                       <th className="px-6 sm:px-8 py-3.5 font-bold">Poz</th>

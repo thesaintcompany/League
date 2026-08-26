@@ -1,9 +1,11 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { ThemeToggle } from "./ThemeToggle";
+import { BrandLogo } from "./BrandLogo";
 
 interface NavItem {
   name: string;
@@ -20,6 +22,15 @@ export function Sidebar({ variant }: SidebarProps) {
   const { data: session } = useSession();
   const role = (session?.user as any)?.role || "organizer";
   const isSuperAdminRole = role === "super_admin" || role === "superadmin";
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    function handleToggle() {
+      setMobileOpen((prev) => !prev);
+    }
+    window.addEventListener("toggle-dashboard-sidebar", handleToggle);
+    return () => window.removeEventListener("toggle-dashboard-sidebar", handleToggle);
+  }, []);
 
   // Build role-specific navigation menu
   let navItems: NavItem[] = [];
@@ -63,24 +74,24 @@ export function Sidebar({ variant }: SidebarProps) {
     ];
   } else if (role === "arena_owner") {
     navItems = [
-      { name: "Gestiune Arenă & Reclame", href: "/dashboard/arena", icon: "stadium" },
-      { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
-      { name: "Nationale (Județe)", href: "/harta-romaniei", icon: "map" },
+      { name: "Panou Arenă & Reclame", href: "/dashboard/arena", icon: "stadium" },
+      { name: "Profil Bază Sportivă", href: "/profile", icon: "account_circle" },
       { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Nationale (Județe)", href: "/harta-romaniei", icon: "map" },
+      { name: "Harta Campionat", href: "/brackets", icon: "account_tree" },
       { name: "Pagina Publică", href: "/campionat", icon: "public" },
     ];
   } else if (role === "player") {
     navItems = [
-      { name: "Profil Fotbalist FUT", href: "/profile", icon: "sports_soccer" },
+      { name: "Fișă Jucător & Carieră", href: "/profile", icon: "account_circle" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Nationale (Județe)", href: "/harta-romaniei", icon: "map" },
       { name: "Harta Campionat", href: "/brackets", icon: "account_tree" },
       { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
-      { name: "Corp Arbitri", href: "/referees", icon: "badge" },
       { name: "Pagina Publică", href: "/campionat", icon: "public" },
     ];
   } else {
-    // Organizer Menu (Standard Organizer - No SuperAdmin Console, No Arena Management)
+    // Organizer Menu
     navItems = [
       { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
       { name: "Nationale (Județe)", href: "/harta-romaniei", icon: "map" },
@@ -95,87 +106,96 @@ export function Sidebar({ variant }: SidebarProps) {
 
   const isDarkTheme = variant === "dark";
 
-  return (
-    <aside className={`h-screen w-64 fixed left-0 top-0 z-40 border-r flex flex-col py-6 transition-colors duration-200 ${
-      isDarkTheme
-        ? "bg-slate-900 border-slate-800 text-white shadow-xl"
-        : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
-    }`}>
-      {/* Brand Header */}
-      <div className="px-6 mb-6">
-        <Link
-          href={
-            role === "referee"
-              ? "/dashboard/referee"
-              : role === "arena_owner"
-                ? "/dashboard/arena"
-                : role === "team_leader"
-                  ? "/dashboard/team"
-                  : "/dashboard"
-          }
-          className="block group"
-        >
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-lime-400 flex items-center justify-center text-slate-950 font-black text-lg shadow-sm">
-              ⚡
-            </div>
-            <div>
-              <span className={`text-xl font-extrabold tracking-tighter block leading-none ${isDarkTheme ? "text-white" : "text-slate-900 dark:text-white"}`}>
-                Ligue
-              </span>
-              <span className={`text-[10px] font-label uppercase tracking-widest block mt-0.5 font-bold ${isDarkTheme ? "text-lime-400" : "text-lime-600 dark:text-lime-400"}`}>
-                {role === "referee"
-                  ? "Oficial Arbitraj"
-                  : role === "arena_owner"
-                    ? "Panou Arenă"
-                    : role === "team_leader"
-                      ? "Manager Echipă"
-                      : role === "player"
-                        ? "Fișă Jucător"
-                        : "Pro Organizer"}
-              </span>
-            </div>
-          </div>
-        </Link>
-      </div>
+  const targetDashboardHref =
+    role === "referee"
+      ? "/dashboard/referee"
+      : role === "arena_owner"
+      ? "/dashboard/arena"
+      : role === "team_leader"
+      ? "/dashboard/team"
+      : isSuperAdminRole
+      ? "/dashboard/admin"
+      : "/dashboard";
 
-      {/* Navigation Links */}
-      <nav className="flex-1 px-3 space-y-1.5 overflow-y-auto">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-medium transition-all duration-200 ${
-                isActive
-                  ? isDarkTheme
-                    ? "bg-lime-400 text-slate-950 font-black shadow-lg shadow-lime-400/20"
-                    : "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-bold shadow-md"
-                  : isDarkTheme
+  const sidebarContent = (
+    <div className="flex flex-col h-full justify-between">
+      {/* Brand Header */}
+      <div>
+        <div className="px-5 mb-5 flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <BrandLogo
+              size="md"
+              href={targetDashboardHref}
+              onClick={() => setMobileOpen(false)}
+            />
+
+            {/* Close button on mobile */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(false)}
+              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+              aria-label="Închide meniu"
+            >
+              <span className="material-symbols-outlined text-xl">close</span>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[9px] font-label font-bold uppercase tracking-wider text-lime-600 dark:text-lime-400 border border-slate-200 dark:border-slate-800">
+              {role === "super_admin" || role === "superadmin"
+                ? "👑 Super Administrator"
+                : role === "referee"
+                ? "⚖️ Oficial Arbitraj"
+                : role === "arena_owner"
+                ? "🏟️ Panou Arenă"
+                : role === "team_leader"
+                ? "👔 Manager Echipă"
+                : role === "player"
+                ? "⚽ Fișă Jucător"
+                : "⚡ Pro Organizer"}
+            </span>
+          </div>
+        </div>
+
+        {/* Navigation Links */}
+        <nav className="px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-280px)]">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-medium transition-all duration-200 ${
+                  isActive
+                    ? isDarkTheme
+                      ? "bg-lime-400 text-slate-950 font-black shadow-lg shadow-lime-400/20"
+                      : "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-bold shadow-md"
+                    : isDarkTheme
                     ? "text-slate-300 hover:text-white hover:bg-slate-800/90"
                     : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70"
-              }`}
-            >
-              <span className={`material-symbols-outlined text-[22px] ${
-                isActive
-                  ? isDarkTheme ? "text-slate-950" : "text-lime-400 dark:text-slate-950"
-                  : isDarkTheme ? "text-slate-400" : "text-slate-500 dark:text-slate-400"
-              }`}>
-                {item.icon}
-              </span>
-              <span className="font-label text-sm">{item.name}</span>
-            </Link>
-          );
-        })}
-      </nav>
+                }`}
+              >
+                <span className={`material-symbols-outlined text-[20px] sm:text-[22px] ${
+                  isActive
+                    ? isDarkTheme ? "text-slate-950" : "text-lime-400 dark:text-slate-950"
+                    : isDarkTheme ? "text-slate-400" : "text-slate-500 dark:text-slate-400"
+                }`}>
+                  {item.icon}
+                </span>
+                <span className="font-label text-xs sm:text-sm">{item.name}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
 
       {/* Footer / Theme Toggle & Actions */}
-      <div className="mt-auto px-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
+      <div className="mt-auto px-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
         {/* Day / Night Switcher in Sidebar */}
         <div className="flex items-center justify-between px-2 py-1">
           <span className="text-[11px] font-label font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            Temă Interfață
+            Temă
           </span>
           <ThemeToggle variant="full" />
         </div>
@@ -183,30 +203,11 @@ export function Sidebar({ variant }: SidebarProps) {
         {role === "organizer" && (
           <Link
             href="/dashboard/new"
+            onClick={() => setMobileOpen(false)}
             className="w-full bg-lime-400 hover:bg-lime-300 text-slate-950 py-2.5 px-3 rounded-xl font-black flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 text-xs font-label uppercase tracking-wider"
           >
             <span className="material-symbols-outlined text-sm">add_circle</span>
             Turneu Nou
-          </Link>
-        )}
-
-        {role === "team_leader" && (
-          <Link
-            href="/dashboard/team"
-            className="w-full bg-lime-400 hover:bg-lime-300 text-slate-950 py-2.5 px-3 rounded-xl font-black flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 text-xs font-label uppercase tracking-wider"
-          >
-            <span className="material-symbols-outlined text-sm">forward_to_inbox</span>
-            Invită Jucător
-          </Link>
-        )}
-
-        {role === "referee" && (
-          <Link
-            href="/dashboard/referee"
-            className="w-full bg-lime-400 hover:bg-lime-300 text-slate-950 py-2.5 px-3 rounded-xl font-black flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 text-xs font-label uppercase tracking-wider"
-          >
-            <span className="material-symbols-outlined text-sm">sports</span>
-            Panou Arbitraj Live
           </Link>
         )}
 
@@ -225,6 +226,7 @@ export function Sidebar({ variant }: SidebarProps) {
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => signOut({ callbackUrl: "/" })}
                 title="Deconectare"
                 className="p-1.5 text-slate-400 hover:text-red-500 transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
@@ -234,11 +236,41 @@ export function Sidebar({ variant }: SidebarProps) {
             </div>
           </div>
         )}
-
-        <div className="text-[10px] font-mono text-center text-slate-400 dark:text-slate-500 pt-1 border-t border-slate-100 dark:border-slate-800/60">
-          © {new Date().getFullYear()} <a href="https://buu.ro" target="_blank" rel="noreferrer" className="font-bold text-slate-700 dark:text-lime-400 hover:underline">buu.ro</a> • <a href="mailto:contact@buu.ro" className="hover:underline">contact@buu.ro</a>
-        </div>
       </div>
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar (hidden on mobile, fixed on desktop) */}
+      <aside
+        className={`hidden lg:flex h-screen w-64 fixed left-0 top-0 z-40 border-r flex-col py-6 transition-colors duration-200 ${
+          isDarkTheme
+            ? "bg-slate-900 border-slate-800 text-white shadow-xl"
+            : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
+        }`}
+      >
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile Drawer (visible when mobileOpen is true) */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          <div
+            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in"
+          />
+          <div
+            className={`relative w-4/5 max-w-xs h-full py-6 shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200 border-r ${
+              isDarkTheme
+                ? "bg-slate-900 border-slate-800 text-white"
+                : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
+            }`}
+          >
+            {sidebarContent}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

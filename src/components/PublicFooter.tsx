@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { BrandLogo } from "./BrandLogo";
 
 export function PublicFooter() {
   const currentYear = new Date().getFullYear();
@@ -11,14 +12,7 @@ export function PublicFooter() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         {/* Brand & Copyright */}
         <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 text-center sm:text-left">
-          <Link href="/campionat" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-sm shadow-md">
-              ⚡
-            </div>
-            <span className="text-lg font-black italic tracking-tight text-slate-950 dark:text-white uppercase font-headline">
-              Ligue Pro
-            </span>
-          </Link>
+          <BrandLogo size="sm" href="/campionat" />
 
           <div className="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
 

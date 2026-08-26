@@ -125,7 +125,7 @@ export default async function PublicBracketsPage({
       <PublicHeader currentTab="brackets" />
 
       {/* Hero Banner with Stadium Glow & Unique Share Code */}
-      <section className="relative overflow-hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-lime-400/30 py-14 px-6 lg:px-12 shadow-sm transition-colors duration-200">
+      <section className="relative overflow-hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-lime-400/30 py-8 sm:py-12 lg:py-14 px-4 sm:px-6 lg:px-12 shadow-sm transition-colors duration-200">
         <div className="absolute top-0 right-0 w-96 h-96 bg-lime-400/10 rounded-full blur-3xl pointer-events-none"></div>
         <div
           className="absolute inset-0 bg-cover bg-center opacity-5 dark:opacity-15 mix-blend-luminosity pointer-events-none"
@@ -134,7 +134,7 @@ export default async function PublicBracketsPage({
 
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-6 relative z-10">
           <div className="space-y-3">
-            <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label tracking-widest shadow-md flex items-center gap-1.5">
                 <span>🎲</span> HARTA UNICĂ DE CAMPIONAT
               </span>
@@ -146,25 +146,25 @@ export default async function PublicBracketsPage({
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-none text-slate-950 dark:text-white">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black italic tracking-tight font-headline uppercase leading-tight text-slate-950 dark:text-white break-words">
               {championship?.name || "Harta Turneului Oficial"}
             </h1>
 
-            <p className="text-slate-600 dark:text-slate-300 text-sm max-w-2xl font-body leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm max-w-2xl font-body leading-relaxed">
               Arborele meciurilor eliminatorii generat prin tragere la sorți cu zaruri. Fiecare campionat are o hartă unică cu link public distribuit în timp real.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2.5 sm:gap-3">
             <Link
               href="/campionat"
-              className="px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 text-slate-900 dark:text-white font-headline font-bold text-xs uppercase tracking-wider transition border border-slate-200 dark:border-white/20"
+              className="px-4 py-2.5 sm:py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 text-slate-900 dark:text-white font-headline font-bold text-xs uppercase tracking-wider transition border border-slate-200 dark:border-white/20"
             >
               ← Clasament
             </Link>
             <Link
               href="/harta-romaniei"
-              className="px-4 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md"
+              className="px-4 py-2.5 sm:py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md"
             >
               🗺️ Nationale
             </Link>
@@ -173,7 +173,7 @@ export default async function PublicBracketsPage({
       </section>
 
       {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-10">
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10 flex-1 w-full space-y-6 sm:space-y-10">
         {/* Switcher for other available public championship maps */}
         {allPublishedChampionships.length > 1 && (
           <div className="card p-4 sm:p-5 bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">

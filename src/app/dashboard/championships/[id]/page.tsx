@@ -39,7 +39,7 @@ export default async function ChampionshipDetailPage({
       <Sidebar />
 
       {/* Main Container */}
-      <div className="flex-1 ml-64 flex flex-col min-w-0">
+      <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
           title={champ.name}
           subtitle={`${champ.sport} • ${champ.season || "Sezon Activ"}`}
@@ -49,12 +49,13 @@ export default async function ChampionshipDetailPage({
               className="btn btn-secondary text-xs uppercase tracking-wider font-bold py-2 px-3 rounded-xl flex items-center gap-1"
             >
               <span className="material-symbols-outlined text-[16px]">open_in_new</span>
-              Vizualizare Publică
+              <span className="hidden sm:inline">Vizualizare Publică</span>
+              <span className="sm:hidden">Public</span>
             </Link>
           }
         />
 
-        <main className="p-6 lg:p-10 space-y-8 max-w-7xl">
+        <main className="p-4 sm:p-6 lg:p-10 space-y-6 sm:space-y-8 max-w-7xl">
           {/* Championship Hero Card */}
           <div className="card p-8 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200/80 dark:border-slate-800 rounded-3xl relative overflow-hidden shadow-sm">
             <div className="absolute top-0 right-0 w-80 h-80 bg-lime-400/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>

@@ -89,13 +89,13 @@ export default async function RefereeDashboardPage() {
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex-1 ml-64 flex flex-col min-w-0">
+      <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
           title="Panou Oficial de Arbitraj"
           subtitle={`Bine ai venit, ${user.name || "Arbitru Oficial"} (${user.refereeBadge || "  Pro"})!`}
         />
 
-        <main className="p-6 sm:p-8 space-y-8 flex-1 max-w-7xl">
+        <main className="p-4 sm:p-8 space-y-6 sm:space-y-8 flex-1 max-w-7xl">
           <RefereeDashboardPanel
             refereeUser={{
               id: user.id,

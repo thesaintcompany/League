@@ -49,7 +49,7 @@ export default async function DashboardPage() {
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex-1 ml-64 flex flex-col min-w-0">
+      <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
           title="Panou Organizator"
           subtitle={`Bine ai revenit, ${session.user.name || session.user.email}!`}
@@ -59,12 +59,13 @@ export default async function DashboardPage() {
               className="btn btn-primary text-xs uppercase tracking-wider font-bold py-2.5 px-4 rounded-xl shadow-sm bg-slate-950 dark:bg-lime-400 text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-lime-300 flex items-center gap-1.5"
             >
               <span className="material-symbols-outlined text-[18px]">add_circle</span>
-              Campionat Nou
+              <span className="hidden sm:inline">Campionat Nou</span>
+              <span className="sm:hidden">Nou</span>
             </Link>
           }
         />
 
-        <main className="p-6 lg:p-10 space-y-8 max-w-7xl">
+        <main className="p-4 sm:p-6 lg:p-10 space-y-6 sm:space-y-8 max-w-7xl">
           {/* Bento Stats Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {/* Metric 1 */}

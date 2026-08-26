@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { BrandLogo } from "@/components/BrandLogo";
 
 function WelcomePortalForm() {
   const router = useRouter();
@@ -19,13 +20,22 @@ function WelcomePortalForm() {
 
   const DEMO_ACCOUNTS = [
     {
-      id: "organizer",
-      role: "Organizator",
+      id: "super_admin",
+      role: "Super Administrator",
       email: "admin@leaguehub.local",
-      pass: "Admin12345",
-      badge: "Control Total",
+      pass: "superadmin12345",
+      badge: "Full Admin & Logo",
       icon: "admin_panel_settings",
       color: "border-lime-400 bg-lime-500/10 text-lime-400",
+    },
+    {
+      id: "organizer",
+      role: "Organizator",
+      email: "demo@leaguehub.local",
+      pass: "demo12345",
+      badge: "Turnee & Zaruri",
+      icon: "emoji_events",
+      color: "border-blue-400 bg-blue-500/10 text-blue-400",
     },
     {
       id: "referee",
@@ -112,19 +122,7 @@ function WelcomePortalForm() {
 
           {/* Top Brand Tag */}
           <div className="relative z-10 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-2xl bg-lime-400 flex items-center justify-center text-slate-950 font-black shadow-lg">
-                <span className="material-symbols-outlined text-2xl">sports_soccer</span>
-              </div>
-              <div>
-                <span className="text-2xl font-black italic tracking-tighter font-headline text-white drop-shadow-md">
-                  LIGUE PRO
-                </span>
-                <span className="block text-[9px] font-black uppercase tracking-widest text-lime-400 font-label">
-                  🇷🇴 ROMÂNIA
-                </span>
-              </div>
-            </Link>
+            <BrandLogo size="lg" href="/" />
 
             <span className="px-3.5 py-1 rounded-full bg-slate-900/90 text-lime-400 font-black text-[10px] uppercase font-label border border-lime-400/40 shadow-lg flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>

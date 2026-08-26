@@ -2,12 +2,11 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-
 import { isSuperAdmin } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
-// GET system settings (platform commission %, payment gateways)
+// GET system settings (platform commission %, payment gateways, activeLogoUrl)
 export async function GET() {
   const session = await getServerSession(authOptions);
   const user = session?.user as any;
@@ -20,6 +19,7 @@ export async function GET() {
     settings = await prisma.systemSetting.create({
       data: {
         id: "default",
+        activeLogoUrl: "/images/logos/logo-1.png",
         platformFeePercent: 10.0,
         applePayEnabled: true,
         googlePayEnabled: true,
@@ -28,9 +28,10 @@ export async function GET() {
     });
   }
 
-  // If not admin, return only public config
+  // If not admin, return public config
   if (!isSuperAdmin(user)) {
     return NextResponse.json({
+      activeLogoUrl: settings.activeLogoUrl || "/images/logos/logo-1.png",
       platformFeePercent: settings.platformFeePercent,
       applePayEnabled: settings.applePayEnabled,
       googlePayEnabled: settings.googlePayEnabled,
@@ -66,12 +67,16 @@ export async function PUT(req: Request) {
   const user = session?.user as any;
 
   if (!isSuperAdmin(user)) {
-    return NextResponse.json({ error: "Neautorizat. Doar SuperAdmin poate modifica setările de ticketing." }, { status: 403 });
+    return NextResponse.json(
+      { error: "Neautorizat. Doar SuperAdmin poate modifica setările platformei și brandingul." },
+      { status: 403 }
+    );
   }
 
   try {
     const body = await req.json();
     const {
+      activeLogoUrl,
       platformFeePercent,
       stripePublishableKey,
       stripeSecretKey,
@@ -84,16 +89,18 @@ export async function PUT(req: Request) {
     const updated = await prisma.systemSetting.upsert({
       where: { id: "default" },
       update: {
-        platformFeePercent: typeof platformFeePercent === "number" ? platformFeePercent : 10.0,
-        stripePublishableKey: stripePublishableKey || null,
-        stripeSecretKey: stripeSecretKey || null,
-        paypalClientId: paypalClientId || null,
-        applePayEnabled: Boolean(applePayEnabled),
-        googlePayEnabled: Boolean(googlePayEnabled),
-        payoutMinThreshold: typeof payoutMinThreshold === "number" ? payoutMinThreshold : 100,
+        activeLogoUrl: activeLogoUrl || undefined,
+        platformFeePercent: typeof platformFeePercent === "number" ? platformFeePercent : undefined,
+        stripePublishableKey: stripePublishableKey !== undefined ? stripePublishableKey : undefined,
+        stripeSecretKey: stripeSecretKey !== undefined ? stripeSecretKey : undefined,
+        paypalClientId: paypalClientId !== undefined ? paypalClientId : undefined,
+        applePayEnabled: applePayEnabled !== undefined ? Boolean(applePayEnabled) : undefined,
+        googlePayEnabled: googlePayEnabled !== undefined ? Boolean(googlePayEnabled) : undefined,
+        payoutMinThreshold: typeof payoutMinThreshold === "number" ? payoutMinThreshold : undefined,
       },
       create: {
         id: "default",
+        activeLogoUrl: activeLogoUrl || "/images/logos/logo-1.png",
         platformFeePercent: typeof platformFeePercent === "number" ? platformFeePercent : 10.0,
         stripePublishableKey: stripePublishableKey || null,
         stripeSecretKey: stripeSecretKey || null,

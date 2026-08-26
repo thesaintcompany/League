@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
+import { BrandLogo } from "./BrandLogo";
 
 interface PublicHeaderProps {
   currentTab?: "campionat" | "romania-map" | "brackets" | "venues" | "players" | "referees" | "teams";
@@ -13,6 +14,7 @@ interface PublicHeaderProps {
 export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
   const pathname = usePathname();
   const isDark = variant === "dark";
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isCampionat = currentTab === "campionat" || pathname === "/campionat" || pathname === "/liga";
   const isRomaniaMap = currentTab === "romania-map" || pathname === "/harta-romaniei";
@@ -22,131 +24,149 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
   const useReferees = currentTab === "referees" || pathname.startsWith("/referees");
   const isTeams = currentTab === "teams" || pathname.startsWith("/teams") || pathname.startsWith("/echipe");
 
-  return (
-    <header className={`sticky top-0 z-50 backdrop-blur-xl border-b h-20 px-4 sm:px-6 lg:px-12 flex justify-between items-center font-body transition-colors duration-200 shadow-md ${isDark
-        ? "bg-slate-950/95 text-white border-slate-800/90"
-        : "bg-white/95 dark:bg-slate-950/95 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800/80"
-      }`}>
-      {/* Left: Brand & Badge & Navigation */}
-      <div className="flex items-center gap-4 sm:gap-6">
-        {/* Brand Logo */}
-        <Link href="/campionat" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-md group-hover:scale-105 transition-transform">
-            ⚡
-          </div>
-          <div>
-            <span className={`text-2xl font-black italic tracking-tight uppercase font-headline block leading-none ${isDark ? "text-white" : "text-slate-950 dark:text-white"}`}>
-              Ligue
-            </span>
-            <span className={`text-[9px] font-label font-bold tracking-widest uppercase ${isDark ? "text-lime-400" : "text-slate-600 dark:text-lime-400"}`}>
-              Pro România
-            </span>
-          </div>
-        </Link>
+  const navLinks = [
+    { href: "/campionat", label: "Campionat", active: isCampionat, icon: "emoji_events" },
+    { href: "/harta-romaniei", label: "Harta Județe", active: isRomaniaMap, icon: "map" },
+    { href: "/brackets", label: "Harta Meciuri", active: isBrackets, icon: "account_tree" },
+    { href: "/teams", label: "Echipe", active: isTeams, icon: "groups" },
+    { href: "/venues", label: "Arene & Stadioane", active: isVenues, icon: "stadium" },
+    { href: "/players", label: "Golgheteri", active: isPlayers, icon: "directions_run" },
+    { href: "/referees", label: "Corp Arbitri", active: useReferees, icon: "sports" },
+  ];
 
-        {/* Live Season Pulsing Pill */}
-        <div className={`hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold font-label ${isDark
-            ? "bg-slate-900 text-lime-400 border border-lime-400/30"
-            : "bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-lime-400 border border-slate-200 dark:border-lime-400/30"
-          }`}>
-          <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
-          SEZONUL 2025-2026 LIVE
+  return (
+    <>
+      <header
+        className={`sticky top-0 z-50 backdrop-blur-xl border-b h-16 sm:h-20 px-4 sm:px-6 lg:px-12 flex justify-between items-center font-body transition-colors duration-200 shadow-md ${isDark
+            ? "bg-slate-950/95 text-white border-slate-800/90"
+            : "bg-white/95 dark:bg-slate-950/95 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800/80"
+          }`}
+      >
+        {/* Left: Brand & Mobile Hamburger Toggle */}
+        <div className="flex items-center gap-3 sm:gap-6">
+          {/* Mobile Hamburger Button */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(true)}
+            className="lg:hidden p-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            aria-label="Deschide Meniu Navigare"
+          >
+            <span className="material-symbols-outlined text-2xl">menu</span>
+          </button>
+
+          {/* Brand Logo with Dynamic Active Logo from DB */}
+          <BrandLogo size="md" href="/campionat" />
+
+          {/* Live Season Pulsing Pill */}
+          <div
+            className={`hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold font-label ${isDark
+                ? "bg-slate-900 text-lime-400 border border-lime-400/30"
+                : "bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-lime-400 border border-slate-200 dark:border-lime-400/30"
+              }`}
+          >
+            <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+            <span className="tracking-wide uppercase text-[10px]">Ediția Oficială 2026</span>
+          </div>
         </div>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-6 text-xs font-label font-bold uppercase tracking-wider ml-4">
-          <Link
-            href="/campionat"
-            className={`transition-all duration-200 py-1.5 border-b-2 ${isCampionat
-                ? "text-lime-400 border-lime-400 font-black"
-                : isDark
-                  ? "text-slate-200 hover:text-white border-transparent"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
-              }`}
-          >
-            Campionat
-          </Link>
-          <Link
-            href="/harta-romaniei"
-            className={`transition-all duration-200 py-1.5 flex items-center gap-1.5 border-b-2 ${isRomaniaMap
-                ? "text-lime-400 border-lime-400 font-black"
-                : isDark
-                  ? "text-slate-200 hover:text-white border-transparent"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
-              }`}
-          >
-            <span>🇷🇴</span> Naționale
-          </Link>
-          <Link
-            href="/teams"
-            className={`transition-all duration-200 py-1.5 border-b-2 ${isTeams
-                ? "text-lime-400 border-lime-400 font-black"
-                : isDark
-                  ? "text-slate-200 hover:text-white border-transparent"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
-              }`}
-          >
-            Echipe
-          </Link>
-          <Link
-            href="/venues"
-            className={`transition-all duration-200 py-1.5 border-b-2 ${isVenues
-                ? "text-lime-400 border-lime-400 font-black"
-                : isDark
-                  ? "text-slate-200 hover:text-white border-transparent"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
-              }`}
-          >
-            Arene &amp; Stadioane
-          </Link>
-          <Link
-            href="/players"
-            className={`transition-all duration-200 py-1.5 border-b-2 ${isPlayers
-                ? "text-lime-400 border-lime-400 font-black"
-                : isDark
-                  ? "text-slate-200 hover:text-white border-transparent"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
-              }`}
-          >
-            Golgheteri
-          </Link>
-          <Link
-            href="/referees"
-            className={`transition-all duration-200 py-1.5 border-b-2 ${useReferees
-                ? "text-lime-400 border-lime-400 font-black"
-                : isDark
-                  ? "text-slate-200 hover:text-white border-transparent"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
-              }`}
-          >
-            Corp Arbitri
-          </Link>
+        {/* Center: Desktop Navigation Bar */}
+        <nav className="hidden lg:flex items-center gap-1.5 bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 p-1.5 rounded-2xl shadow-inner">
+          {navLinks.map((tab) => (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              className={`px-4 py-2 rounded-xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-1.5 ${tab.active
+                  ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm scale-100"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
+                }`}
+            >
+              <span className="material-symbols-outlined text-[15px]">{tab.icon}</span>
+              <span>{tab.label}</span>
+            </Link>
+          ))}
         </nav>
-      </div>
 
-      {/* Right Action Buttons */}
-      <div className="flex items-center gap-2.5 sm:gap-3">
-        {/* Day / Night Theme Switcher */}
-        <ThemeToggle variant="compact" />
+        {/* Right: Theme Toggle & Admin Portal Link */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeToggle />
 
-        <Link
-          href="/dashboard"
-          className={`hidden sm:inline-flex px-3.5 py-2.5 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition border active:scale-95 ${isDark
-              ? "bg-white/10 hover:bg-white/20 text-white border-white/20"
-              : "bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 text-slate-800 dark:text-white border-slate-200 dark:border-white/15"
-            }`}
-        >
-          Panou Organizator ↗
-        </Link>
-        <Link
-          href="/"
-          className="px-3.5 sm:px-5 py-2.5 rounded-xl bg-lime-400 text-slate-950 hover:bg-lime-300 text-xs font-headline font-black uppercase tracking-wider shadow-md transition active:scale-95 flex items-center gap-1.5"
-        >
-          <span className="material-symbols-outlined text-[18px]">login</span>
-          <span className="hidden sm:inline">Portal Autentificare</span>
-          <span className="sm:hidden">Cont</span>
-        </Link>
-      </div>
-    </header>
+          <Link
+            href="/signin"
+            className="px-3 sm:px-4 py-2 rounded-xl bg-lime-400 text-slate-950 hover:bg-lime-300 text-xs font-headline font-black uppercase tracking-wider shadow-md transition active:scale-95 flex items-center gap-1.5"
+          >
+            <span className="material-symbols-outlined text-[16px] sm:text-[18px]">login</span>
+            <span className="hidden sm:inline">Portal</span>
+            <span className="sm:hidden text-[11px]">Cont</span>
+          </Link>
+        </div>
+      </header>
+
+      {/* Mobile Slide-Out Navigation Drawer */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          {/* Backdrop Blur */}
+          <div
+            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in"
+          />
+
+          {/* Drawer Panel */}
+          <div className="relative w-4/5 max-w-xs bg-white dark:bg-slate-900 text-slate-900 dark:text-white h-full shadow-2xl p-6 flex flex-col justify-between z-10 animate-in slide-in-from-left duration-200 border-r border-slate-200 dark:border-slate-800">
+            <div>
+              {/* Drawer Top Header */}
+              <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
+                <BrandLogo size="sm" href="/campionat" onClick={() => setMobileMenuOpen(false)} />
+
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Navigation Items */}
+              <nav className="space-y-1">
+                {navLinks.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-headline font-bold uppercase tracking-wider transition ${item.active
+                        ? "bg-lime-400 text-slate-950 shadow-sm"
+                        : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                      }`}
+                  >
+                    <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+                    <span>{item.label}</span>
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            {/* Bottom Actions inside Drawer */}
+            <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2">
+              <Link
+                href="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-label font-bold text-xs uppercase flex items-center justify-center gap-1.5"
+              >
+                <span>Panou Organizator</span>
+                <span className="material-symbols-outlined text-sm">open_in_new</span>
+              </Link>
+              <Link
+                href="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow-md"
+              >
+                <span className="material-symbols-outlined text-base">login</span>
+                <span>Autentificare / Cont</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

@@ -242,6 +242,7 @@ model Match {
 
 model SystemSetting {
   id                    String   @id @default("default")
+  activeLogoUrl         String   @default("/images/logos/logo-1.png") // Logo-ul principal activ selectat de SuperAdmin
   platformFeePercent    Float    @default(10.0) // Comision platformă Super Admin %
   stripePublishableKey  String?
   stripeSecretKey       String?

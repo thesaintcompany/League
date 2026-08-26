@@ -67,13 +67,13 @@ export default async function ProfilePage({
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
       <Sidebar />
 
-      <div className="flex-1 ml-64 flex flex-col min-w-0">
+      <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
           title="Profil &amp; Setări Cont"
           subtitle={`Rol activ: ${roleLabels[currentRole] || "Utilizator"}`}
         />
 
-        <main className="p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-10">
+        <main className="p-4 sm:p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-8 sm:space-y-10">
           {/* Header Bar */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
             <div>

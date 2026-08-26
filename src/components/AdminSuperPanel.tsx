@@ -34,12 +34,17 @@ interface UserItem {
 }
 
 export function AdminSuperPanel() {
-  const [activeTab, setActiveTab] = useState<"venues" | "users" | "tickets" | "data_export">("venues");
+  const [activeTab, setActiveTab] = useState<"venues" | "users" | "tickets" | "data_export" | "branding">("venues");
   const [venues, setVenues] = useState<VenueItem[]>([]);
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [sportFilter, setSportFilter] = useState("all");
+
+  // Logo & Branding State
+  const [activeLogoUrl, setActiveLogoUrl] = useState<string>("/images/logos/logo-1.png");
+  const [customLogoInput, setCustomLogoInput] = useState<string>("");
+  const [savingLogo, setSavingLogo] = useState(false);
 
   // Demo Data & Export State
   const [demoStats, setDemoStats] = useState<{
@@ -113,6 +118,9 @@ export function AdminSuperPanel() {
       if (uData.users) setUsers(uData.users);
       if (sData.settings) {
         setTicketSettings(sData.settings);
+        if (sData.settings.activeLogoUrl) {
+          setActiveLogoUrl(sData.settings.activeLogoUrl);
+        }
         if (sData.stats) setTicketStats(sData.stats);
         if (sData.recentTransactions) setRecentTransactions(sData.recentTransactions);
       }
@@ -123,6 +131,29 @@ export function AdminSuperPanel() {
       console.error(e);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleSelectLogo(url: string) {
+    setSavingLogo(true);
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activeLogoUrl: url }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setActiveLogoUrl(url);
+        window.dispatchEvent(new CustomEvent("app-logo-updated", { detail: { logoUrl: url } }));
+        showToast("Logo-ul principal al platformei a fost actualizat pe tot site-ul! ✓");
+      } else {
+        alert(data.error || "Eroare la actualizarea logo-ului.");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSavingLogo(false);
     }
   }
 
@@ -530,6 +561,17 @@ export function AdminSuperPanel() {
             }`}
           >
             🎟️ Vânzări Bilete &amp; Comisioane
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("branding")}
+            className={`px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition ${
+              activeTab === "branding"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+            }`}
+          >
+            🎨 Identitate &amp; Logo (3 Variante)
           </button>
           <button
             type="button"
@@ -1277,6 +1319,257 @@ export function AdminSuperPanel() {
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. BRANDING & LOGO SELECTION TAB */}
+      {activeTab === "branding" && (
+        <div className="space-y-8 animate-in fade-in">
+          {/* Header Banner */}
+          <div className="card p-6 bg-slate-950 text-white border-2 border-lime-400/40 rounded-3xl shadow-xl space-y-4">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 pb-4 border-b border-slate-800">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400">
+                    SUPERADMIN BRANDING • IDENTITATE VIZUALĂ LIVE
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black font-headline uppercase tracking-tight text-white">
+                  Selectare Logo Principal al Aplicației
+                </h2>
+                <p className="text-xs text-slate-300 font-body max-w-2xl">
+                  Alege una dintre cele 3 variante grafice oficiale <strong>Pro Ligue România</strong>. Modificarea se propagă <strong>în timp real în baza de date și pe tot site-ul</strong> (header public, navigare mobilă, footer și panouri de control).
+                </p>
+              </div>
+
+              {/* Active Current Logo Indicator */}
+              <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 p-3 rounded-2xl">
+                <div className="w-10 h-10 rounded-xl bg-slate-950 flex items-center justify-center p-1 border border-lime-400/40 shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={activeLogoUrl}
+                    alt="Active Logo"
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
+                <div>
+                  <span className="text-[9px] font-label font-bold uppercase tracking-widest text-lime-400 block">
+                    Logo Activ în Prezent
+                  </span>
+                  <span className="text-xs font-bold text-white truncate max-w-[200px] block font-mono">
+                    {activeLogoUrl.split("/").pop()}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Live Header Simulation Preview */}
+            <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-label font-bold uppercase text-slate-400 tracking-wider">
+                  🔍 Previzualizare Live Header Public (Așa apare pentru vizitatori):
+                </span>
+                <span className="text-[10px] font-mono text-lime-400 font-bold">
+                  Sincronizat automat ✓
+                </span>
+              </div>
+              <div className="bg-slate-950 border border-slate-800/80 px-6 py-3 rounded-xl flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={activeLogoUrl}
+                    alt="Live Header Preview"
+                    className="h-9 w-auto object-contain"
+                  />
+                  <div className="hidden sm:flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-900 border border-lime-400/30 text-[10px] text-lime-400 font-label font-bold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse"></span>
+                    EDIȚIA OFICIALĂ 2026
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-slate-400 font-label">
+                  <span className="text-white font-bold">Campionat</span>
+                  <span>•</span>
+                  <span>Harta Județe</span>
+                  <span>•</span>
+                  <span>Echipe</span>
+                  <span className="ml-2 px-3 py-1 bg-lime-400 text-slate-950 font-black rounded-lg text-[10px]">
+                    PORTAL
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 3 Logo Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                id: "logo-1",
+                title: "Varianta 1 • Tricolor Speed Vortex",
+                subtitle: "Ediția Tricolor & Speed Vortex",
+                url: "/images/logos/logo-1.png",
+                badge: "🇷🇴 Tricolor Oficial",
+                badgeColor: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                description:
+                  "Minge de fotbal dinamică cu vortex de viteză și panglică tricoloră (Roșu, Galben, Albastru) + lettering metalic cromat cu reflexii 3D.",
+              },
+              {
+                id: "logo-2",
+                title: "Varianta 2 • Drapel Național & High Polish",
+                subtitle: "Ediția Linii Drapel & Steel Chrome",
+                url: "/images/logos/logo-2.png",
+                badge: "🇷🇴 Drapel Național",
+                badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+                description:
+                  "Linii drepte de viteză în culorile drapelului României cu minge lucioasă și text PRO LIGUE cu contur metalic robust de impact.",
+              },
+              {
+                id: "logo-3",
+                title: "Varianta 3 • Neon Electric Green & Flash",
+                subtitle: "Ediția Fulger & Glow Electric",
+                url: "/images/logos/logo-3.png",
+                badge: "⚡ Neon & Fulger",
+                badgeColor: "bg-lime-400/20 text-lime-400 border-lime-400/30",
+                description:
+                  "Energie pură cu glow verde neon, minge iluminată electric și fulger auriu integrat în cuvântul LIGUE pentru o prezență electrizantă.",
+              },
+            ].map((logoItem) => {
+              const isSelected = activeLogoUrl === logoItem.url;
+
+              return (
+                <div
+                  key={logoItem.id}
+                  className={`card p-6 bg-surface-container-lowest border rounded-3xl transition-all duration-300 flex flex-col justify-between space-y-6 ${
+                    isSelected
+                      ? "border-lime-500 ring-4 ring-lime-500/20 shadow-xl dark:bg-slate-900"
+                      : "border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700 shadow-sm"
+                  }`}
+                >
+                  <div className="space-y-4">
+                    {/* Card Header & Badges */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <span
+                          className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold font-label uppercase tracking-wider border mb-1.5 ${logoItem.badgeColor}`}
+                        >
+                          {logoItem.badge}
+                        </span>
+                        <h3 className="font-headline font-black text-lg text-slate-900 dark:text-white leading-tight">
+                          {logoItem.title}
+                        </h3>
+                      </div>
+
+                      {isSelected && (
+                        <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label tracking-wider shadow-sm shrink-0">
+                          <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                          ACTIV LIVE
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Dark Background Live Preview */}
+                    <div className="space-y-1.5">
+                      <span className="text-[9px] font-label font-bold uppercase text-slate-400">
+                        Pe fundal Dark (Tema Întunecată):
+                      </span>
+                      <div className="p-6 bg-slate-950 border border-slate-800 rounded-2xl flex items-center justify-center min-h-[120px]">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={logoItem.url}
+                          alt={logoItem.title}
+                          className="max-h-16 w-auto object-contain drop-shadow-md hover:scale-105 transition-transform"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Light Background Live Preview */}
+                    <div className="space-y-1.5">
+                      <span className="text-[9px] font-label font-bold uppercase text-slate-400">
+                        Pe fundal Light (Tema Luminoasă):
+                      </span>
+                      <div className="p-6 bg-slate-100 border border-slate-200 rounded-2xl flex items-center justify-center min-h-[120px]">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={logoItem.url}
+                          alt={logoItem.title}
+                          className="max-h-16 w-auto object-contain drop-shadow-sm hover:scale-105 transition-transform"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-xs text-slate-600 dark:text-slate-300 font-body leading-relaxed">
+                      {logoItem.description}
+                    </p>
+                  </div>
+
+                  {/* Activation Action Button */}
+                  <button
+                    type="button"
+                    disabled={savingLogo || isSelected}
+                    onClick={() => handleSelectLogo(logoItem.url)}
+                    className={`w-full py-3 px-4 rounded-2xl font-headline font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md ${
+                      isSelected
+                        ? "bg-lime-400 text-slate-950 cursor-default opacity-100 shadow-lime-400/20 ring-2 ring-lime-400"
+                        : "bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-800 dark:hover:bg-lime-400 dark:hover:text-slate-950 active:scale-95"
+                    }`}
+                  >
+                    {isSelected ? (
+                      <>
+                        <span className="material-symbols-outlined text-[18px]">verified</span>
+                        <span>Logo Principal Activ ✓</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="material-symbols-outlined text-[18px]">touch_app</span>
+                        <span>{savingLogo ? "Se aplică..." : "Alege ca Logo Principal"}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Custom Logo URL Box */}
+          <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-lime-600 dark:text-lime-400">link</span>
+              <h3 className="font-headline font-extrabold text-base text-slate-900 dark:text-white uppercase tracking-tight">
+                Opțiune: Introdu URL Logo Personalizat (Extern / CDN)
+              </h3>
+            </div>
+
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Dacă dorești să încarci un alt fișier sau să folosești un logo găzduit pe un server extern, lipește URL-ul direct mai jos:
+            </p>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (customLogoInput.trim()) {
+                  handleSelectLogo(customLogoInput.trim());
+                }
+              }}
+              className="flex flex-col sm:flex-row items-center gap-3"
+            >
+              <input
+                type="url"
+                placeholder="https://domeniul-tau.ro/images/logo-custom.png"
+                value={customLogoInput}
+                onChange={(e) => setCustomLogoInput(e.target.value)}
+                className="input text-xs flex-1"
+              />
+              <button
+                type="submit"
+                disabled={savingLogo || !customLogoInput.trim()}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-500 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md transition disabled:opacity-50"
+              >
+                {savingLogo ? "Se salvează..." : "Aplică URL Personalizat"}
+              </button>
+            </form>
           </div>
         </div>
       )}

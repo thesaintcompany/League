@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 
 export interface MatchData {
   id: string;
@@ -39,14 +40,14 @@ export function MatchCard({ match, onEdit, isAdmin = false }: MatchCardProps) {
 
   return (
     <div
-      className={`rounded-2xl p-5 shadow-sm transition-all duration-200 border ${
+      className={`rounded-2xl p-4 sm:p-5 shadow-sm transition-all duration-200 border ${
         isLive
           ? "bg-slate-900 text-white border-lime-500 ring-2 ring-lime-500/20"
           : "bg-surface-container-lowest dark:bg-slate-900 border-slate-200/60 dark:border-slate-800 hover:shadow-md"
       }`}
     >
       {/* Match Header */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-3 sm:mb-4">
         <div className="flex items-center gap-2">
           <span
             className={`text-[10px] font-label font-bold uppercase tracking-widest ${
@@ -75,17 +76,17 @@ export function MatchCard({ match, onEdit, isAdmin = false }: MatchCardProps) {
       </div>
 
       {/* Teams and Scoreboard */}
-      <div className="grid grid-cols-7 items-center gap-2 py-2">
+      <div className="grid grid-cols-7 items-center gap-1.5 sm:gap-2 py-2">
         {/* Home Team */}
-        <div className="col-span-3 text-center flex flex-col items-center">
+        <div className="col-span-3 text-center flex flex-col items-center min-w-0">
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm text-white shadow-sm mb-2 border border-black/10"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center font-bold text-xs sm:text-sm text-white shadow-sm mb-1.5 sm:mb-2 border border-black/10 shrink-0"
             style={{ backgroundColor: match.homeTeam.color || "#1e293b" }}
           >
             {match.homeTeam.shortName || match.homeTeam.name.substring(0, 3).toUpperCase()}
           </div>
           <p
-            className={`text-xs font-bold font-headline truncate max-w-full ${
+            className={`text-[11px] sm:text-xs font-bold font-headline truncate max-w-full px-1 ${
               isLive ? "text-white" : "text-blue-950 dark:text-white"
             }`}
             title={match.homeTeam.name}
@@ -95,19 +96,19 @@ export function MatchCard({ match, onEdit, isAdmin = false }: MatchCardProps) {
         </div>
 
         {/* Score / VS Center */}
-        <div className="col-span-1 text-center">
+        <div className="col-span-1 text-center shrink-0">
           {isLive || isFinished ? (
-            <div className="flex items-center justify-center gap-1">
+            <div className="flex items-center justify-center gap-0.5 sm:gap-1">
               <span
-                className={`text-2xl font-black data-font ${
+                className={`text-xl sm:text-2xl font-black data-font ${
                   isLive ? "text-lime-400" : "text-blue-950 dark:text-white"
                 }`}
               >
                 {match.homeScore ?? 0}
               </span>
-              <span className="text-slate-400 font-bold text-sm">:</span>
+              <span className="text-slate-400 font-bold text-xs sm:text-sm">:</span>
               <span
-                className={`text-2xl font-black data-font ${
+                className={`text-xl sm:text-2xl font-black data-font ${
                   isLive ? "text-lime-400" : "text-blue-950 dark:text-white"
                 }`}
               >
@@ -115,22 +116,22 @@ export function MatchCard({ match, onEdit, isAdmin = false }: MatchCardProps) {
               </span>
             </div>
           ) : (
-            <span className="text-xs font-label font-bold text-slate-400 uppercase tracking-widest">
+            <span className="text-[10px] sm:text-xs font-label font-bold text-slate-400 uppercase tracking-widest">
               VS
             </span>
           )}
         </div>
 
         {/* Away Team */}
-        <div className="col-span-3 text-center flex flex-col items-center">
+        <div className="col-span-3 text-center flex flex-col items-center min-w-0">
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm text-white shadow-sm mb-2 border border-black/10"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center font-bold text-xs sm:text-sm text-white shadow-sm mb-1.5 sm:mb-2 border border-black/10 shrink-0"
             style={{ backgroundColor: match.awayTeam.color || "#047857" }}
           >
             {match.awayTeam.shortName || match.awayTeam.name.substring(0, 3).toUpperCase()}
           </div>
           <p
-            className={`text-xs font-bold font-headline truncate max-w-full ${
+            className={`text-[11px] sm:text-xs font-bold font-headline truncate max-w-full px-1 ${
               isLive ? "text-white" : "text-blue-950 dark:text-white"
             }`}
             title={match.awayTeam.name}
@@ -141,24 +142,24 @@ export function MatchCard({ match, onEdit, isAdmin = false }: MatchCardProps) {
       </div>
 
       {/* Footer / Actions */}
-      <div className="mt-4 pt-3 border-t border-slate-200/50 dark:border-slate-800/50 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
-        <div className="flex items-center gap-1.5 truncate">
+      <div className="mt-3 sm:mt-4 pt-3 border-t border-slate-200/50 dark:border-slate-800/50 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
+        <div className="flex items-center gap-1.5 truncate max-w-[150px] sm:max-w-[200px]">
           <span className="material-symbols-outlined text-[15px]">stadium</span>
-          <span className="truncate">{match.venue || "Stadion Central"}</span>
+          <span className="truncate text-[11px] sm:text-xs">{match.venue || "Stadion Central"}</span>
         </div>
 
         <div className="flex items-center gap-2">
-          <a
+          <Link
             href={`/matches/${match.id}/promo`}
             className="text-[11px] font-label font-bold text-slate-600 dark:text-slate-300 hover:text-lime-600 flex items-center gap-0.5"
             title="Promo meci și bilete"
           >
             <span className="material-symbols-outlined text-[13px]">campaign</span>
             Promo
-          </a>
+          </Link>
 
           {(isFinished || isLive) && (
-            <a
+            <Link
               href={`/matches/${match.id}/report`}
               target="_blank"
               rel="noreferrer"
@@ -167,11 +168,12 @@ export function MatchCard({ match, onEdit, isAdmin = false }: MatchCardProps) {
             >
               <span className="material-symbols-outlined text-[13px]">description</span>
               PDF
-            </a>
+            </Link>
           )}
 
           {isAdmin && onEdit && (
             <button
+              type="button"
               onClick={() => onEdit(match)}
               className="flex items-center gap-1 font-label font-bold text-xs text-blue-950 dark:text-lime-400 hover:underline shrink-0 pl-1"
             >

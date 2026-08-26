@@ -179,13 +179,13 @@ export default async function TeamManagerDashboardPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
       <Sidebar />
 
-      <div className="flex-1 ml-64 flex flex-col min-w-0">
+      <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
           title="Consolă Manager Echipă &amp; Club"
           subtitle={`Gestiune lot, primul 11, invitații pe email, staff tehnic și calendar de deplasări`}
         />
 
-        <main className="p-6 lg:p-10 max-w-7xl">
+        <main className="p-4 sm:p-6 lg:p-10 max-w-7xl">
           <TeamManagerPanel initialTeam={teamData} />
         </main>
       </div>

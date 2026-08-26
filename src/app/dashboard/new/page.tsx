@@ -106,13 +106,13 @@ export default function NewChampionshipPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
       <Sidebar />
 
-      <div className="flex-1 ml-64 flex flex-col min-w-0">
+      <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
           title="Creează o Ligă / Campionat Nou"
           subtitle="Configurează o competiție nouă, un turneu eliminatoriu sau o cupă de jocuri amicale"
         />
 
-        <main className="p-6 lg:p-10 max-w-4xl space-y-8">
+        <main className="p-4 sm:p-6 lg:p-10 max-w-4xl space-y-6 sm:space-y-8">
           {/* Quick Presets Tray */}
           <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-3">
             <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
