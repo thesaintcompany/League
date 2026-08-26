@@ -162,6 +162,7 @@ export default async function PublicVenueDetailPage({
             floodlights: venue.floodlights,
             pricePerHour: venue.pricePerHour,
             imageUrl: venue.imageUrl,
+            galleryImages: venue.galleryImages,
             tickerText: venue.tickerText,
             tickerActive: venue.tickerActive,
             tickerSpeed: venue.tickerSpeed,

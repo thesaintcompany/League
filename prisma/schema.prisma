@@ -100,6 +100,7 @@ model Venue {
   isActive      Boolean  @default(true)
   pricePerHour  Int?
   imageUrl      String?
+  galleryImages String?  // JSON string: array of four public gallery image URLs
   ownerId       String?
   ads           String?  // JSON string: array of { id, title, imageUrl, linkUrl, isActive }
   announcements String?  // JSON string: array of { id, title, content, date, isActive }

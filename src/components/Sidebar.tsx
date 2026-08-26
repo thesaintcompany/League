@@ -29,6 +29,7 @@ export function Sidebar({ variant }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userChampionships, setUserChampionships] = useState<{ id: string; name: string; sport: string }[]>([]);
   const [selectedChampId, setSelectedChampId] = useState<string | null>(null);
+  const [arenaId, setArenaId] = useState<string | null>(null);
 
   useEffect(() => {
     function handleToggle() {
@@ -56,6 +57,14 @@ export function Sidebar({ variant }: SidebarProps) {
       })
       .catch(() => setUserChampionships([]));
   }, [session, selectedChampId]);
+
+  useEffect(() => {
+    if (role !== "arena_owner") return;
+    fetch("/api/arena")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => setArenaId(data?.venue?.id || null))
+      .catch(() => setArenaId(null));
+  }, [role]);
 
   // Build role-specific navigation menu
   let navItems: NavItem[] = [];
@@ -92,12 +101,13 @@ export function Sidebar({ variant }: SidebarProps) {
     ];
   } else if (role === "arena_owner") {
     navItems = [
-      { name: "Configurare Arenă", href: "/dashboard/arena?tab=config", icon: "settings" },
-      { name: "Campionate pe Arenă", href: "/dashboard/arena?tab=championships", icon: "emoji_events" },
-      { name: "Meciuri & Istoric", href: "/dashboard/arena?tab=calendar", icon: "history" },
-      { name: "Reclame & Sponsori", href: "/dashboard/arena?tab=ads", icon: "ad_units" },
-      { name: "Mesaje Arenă", href: "/dashboard/arena?tab=announcements", icon: "campaign" },
-      { name: "Ticker Arenă", href: "/dashboard/arena?tab=ticker", icon: "rss_feed" },
+      { name: "Configurare Arenă", href: "/dashboard/arena", icon: "settings" },
+      { name: "Campionate pe Arenă", href: "/dashboard/arena/championships", icon: "emoji_events" },
+      { name: "Meciuri & Istoric", href: "/dashboard/arena/matches", icon: "history" },
+      { name: "Reclame & Sponsori", href: "/dashboard/arena/ads", icon: "ad_units" },
+      { name: "Mesaje Arenă", href: "/dashboard/arena/announcements", icon: "campaign" },
+      { name: "Ticker Arenă", href: "/dashboard/arena/ticker", icon: "rss_feed" },
+      { name: "Vezi Arena Publică", href: arenaId ? `/venues/${arenaId}` : "/venues", icon: "public" },
     ];
   } else if (role === "player") {
     navItems = [

@@ -17,7 +17,7 @@ export function TopHeader({ title = "Championship Pro", subtitle, action, varian
   const { data: session } = useSession();
   const isDark = variant === "dark";
   const isArenaOwner = (session?.user as any)?.role === "arena_owner";
-  const profileHref = isArenaOwner ? "/dashboard/arena?tab=config" : "/profile";
+  const profileHref = isArenaOwner ? "/dashboard/arena" : "/profile";
 
   function handleToggleSidebar() {
     window.dispatchEvent(new CustomEvent("toggle-dashboard-sidebar"));

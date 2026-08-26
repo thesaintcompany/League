@@ -19,6 +19,7 @@ export interface VenueData {
   floodlights: boolean;
   pricePerHour?: number | null;
   imageUrl?: string | null;
+  galleryImages?: string | null;
   tickerText?: string | null;
   tickerActive?: boolean;
   tickerSpeed?: number;
@@ -112,6 +113,14 @@ export function VenueDetailClientView({
 
   // Dynamic Curated Photo Gallery based on Sport & Type
   const isHall = venue.sport === "baschet" || venue.sport === "volei" || venue.sport === "handbal" || venue.surface === "Parchet" || venue.name.toLowerCase().includes("sala") || venue.name.toLowerCase().includes("arena cluj");
+  const configuredGalleryImages = React.useMemo(() => {
+    try {
+      const parsed = venue.galleryImages ? JSON.parse(venue.galleryImages) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }, [venue.galleryImages]);
   
   const galleryPhotos = React.useMemo(() => {
     if (isHall) {
@@ -119,22 +128,22 @@ export function VenueDetailClientView({
         {
           title: "Vedere Panoramică Sală & Tribune",
           subtitle: "Parchet de nivel mondial omologat FIBA & EHF",
-          url: venue.imageUrl || "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200&auto=format&fit=crop&q=80",
+          url: configuredGalleryImages[0] || venue.imageUrl || "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200&auto=format&fit=crop&q=80",
         },
         {
           title: "Zonă Scaune Ergonomice & Tribuna Oficială",
           subtitle: "Vizibilitate optimă 360° din orice sector",
-          url: "https://images.unsplash.com/photo-1519766304817-4f37bda74a29?w=800&auto=format&fit=crop&q=80",
+          url: configuredGalleryImages[1] || "https://images.unsplash.com/photo-1519766304817-4f37bda74a29?w=800&auto=format&fit=crop&q=80",
         },
         {
           title: "Vedere Nocturnă & Iluminat Arhitectural",
           subtitle: "Show de lumini LED dinamic și climatizare centralizată",
-          url: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80",
+          url: configuredGalleryImages[2] || "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80",
         },
         {
           title: "Esplanada & Acces Public Suporteri",
           subtitle: "Turnicheți digitali cu scanare QR cod și ticketing mobil",
-          url: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&auto=format&fit=crop&q=80",
+          url: configuredGalleryImages[3] || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&auto=format&fit=crop&q=80",
         },
       ];
     }
@@ -143,25 +152,25 @@ export function VenueDetailClientView({
       {
         title: "Vedere Panoramică din Tribuna 1",
         subtitle: "Perspectivă completă peste suprafața de joc și nocturnă",
-        url: venue.imageUrl || "/images/stadium-hero.jpg",
+        url: configuredGalleryImages[0] || venue.imageUrl || "/images/stadium-hero.jpg",
       },
       {
         title: "Sectoare Tribune & Scaune Premium",
         subtitle: "Scaune moderne rabatabile în culorile arenei",
-        url: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&auto=format&fit=crop&q=80",
+        url: configuredGalleryImages[1] || "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&auto=format&fit=crop&q=80",
       },
       {
         title: "Spectacol Nocturn & Atmosferă Suporteri",
         subtitle: "Instalație de nocturnă de peste 2000 Lux conform UEFA",
-        url: "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&auto=format&fit=crop&q=80",
+        url: configuredGalleryImages[2] || "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&auto=format&fit=crop&q=80",
       },
       {
         title: "Piațeta Arenei & Porți de Intrare",
         subtitle: "Zonă pietonală largă, parcare AI și puncte de acces",
-        url: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&auto=format&fit=crop&q=80",
+        url: configuredGalleryImages[3] || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&auto=format&fit=crop&q=80",
       },
     ];
-  }, [isHall, venue.imageUrl]);
+  }, [isHall, venue.imageUrl, configuredGalleryImages]);
 
   return (
     <div className="space-y-12 font-body text-slate-900 dark:text-white transition-colors duration-200">
@@ -383,8 +392,8 @@ export function VenueDetailClientView({
                 Galerie Foto &amp; Facilități Arenă
               </h2>
             </div>
-            <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase hidden sm:inline-block">
-              4 Cadre de Înaltă Rezoluție
+            <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase">
+              4 Cadre Configurabile
             </span>
           </div>
 

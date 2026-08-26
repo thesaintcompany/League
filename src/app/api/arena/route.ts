@@ -20,35 +20,24 @@ export async function GET() {
   // If none exists yet, create or assign default venue for demo arena owner
   if (!venue) {
     if (userRole === "arena_owner" || userRole === "organizer") {
-      venue = await prisma.venue.findFirst({
-        where: { name: { contains: "Vasport" } },
+      venue = await prisma.venue.create({
+        data: {
+          ownerId: userId,
+          name: "Arena Sportivă Centrală",
+          location: "Timișoara",
+          address: "Calea Șagului nr. 175, Timișoara",
+          specs: "Teren sintetic profesional 55mm, nocturnă LED, vestiare moderne",
+          sport: "fotbal",
+          surface: "Sintetic",
+          capacity: 350,
+          floodlights: true,
+          pricePerHour: 180,
+          imageUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
+          tickerText: "Rezervări disponibile pentru weekend! Contactează recepția arenei pentru detalii și promoții.",
+          tickerActive: true,
+          tickerSpeed: 18,
+        },
       });
-
-      if (venue) {
-        venue = await prisma.venue.update({
-          where: { id: venue.id },
-          data: { ownerId: userId },
-        });
-      } else {
-        venue = await prisma.venue.create({
-          data: {
-            ownerId: userId,
-            name: "Arena Sportivă Centrală",
-            location: "Timișoara",
-            address: "Calea Șagului nr. 175, Timișoara",
-            specs: "Teren sintetic profesional 55mm, nocturnă LED, vestiare moderne",
-            sport: "fotbal",
-            surface: "Sintetic",
-            capacity: 350,
-            floodlights: true,
-            pricePerHour: 180,
-            imageUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
-            tickerText: "🔥 Rezervări disponibile pentru weekend! Contactează recepția arenei la 0722 000 111 pentru detalii și promoții.",
-            tickerActive: true,
-            tickerSpeed: 18,
-          },
-        });
-      }
     }
   }
 
@@ -56,13 +45,14 @@ export async function GET() {
 }
 
 export async function PATCH(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    return NextResponse.json({ error: "Neautorizat" }, { status: 401 });
-  }
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+      return NextResponse.json({ error: "Neautorizat" }, { status: 401 });
+    }
 
-  const userId = (session.user as any).id;
-  const body = await req.json();
+    const userId = (session.user as any).id;
+    const body = await req.json();
 
   let venue = await prisma.venue.findFirst({
     where: { ownerId: userId },
@@ -84,6 +74,7 @@ export async function PATCH(req: Request) {
         floodlights: body.floodlights !== undefined ? Boolean(body.floodlights) : true,
         pricePerHour: body.pricePerHour ? parseInt(body.pricePerHour) : null,
         imageUrl: body.imageUrl || null,
+        galleryImages: body.galleryImages ? JSON.stringify(body.galleryImages) : null,
         ads: body.ads ? JSON.stringify(body.ads) : null,
         announcements: body.announcements ? JSON.stringify(body.announcements) : null,
         tickerText: body.tickerText || null,
@@ -107,6 +98,7 @@ export async function PATCH(req: Request) {
         floodlights: body.floodlights !== undefined ? Boolean(body.floodlights) : venue.floodlights,
         pricePerHour: body.pricePerHour !== undefined ? (body.pricePerHour ? parseInt(body.pricePerHour) : null) : venue.pricePerHour,
         imageUrl: body.imageUrl !== undefined ? body.imageUrl : venue.imageUrl,
+        galleryImages: body.galleryImages !== undefined ? JSON.stringify(body.galleryImages) : venue.galleryImages,
         ads: body.ads !== undefined ? JSON.stringify(body.ads) : venue.ads,
         announcements: body.announcements !== undefined ? JSON.stringify(body.announcements) : venue.announcements,
         tickerText: body.tickerText !== undefined ? body.tickerText : venue.tickerText,
@@ -117,5 +109,12 @@ export async function PATCH(req: Request) {
     });
   }
 
-  return NextResponse.json({ venue, success: true });
+    return NextResponse.json({ venue, success: true });
+  } catch (error: any) {
+    console.error("Arena save error:", error);
+    return NextResponse.json(
+      { error: `Salvarea arenei a eșuat: ${error?.message || "eroare necunoscută"}` },
+      { status: 500 }
+    );
+  }
 }

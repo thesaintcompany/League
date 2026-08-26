@@ -42,6 +42,7 @@ interface VenueData {
   floodlights: boolean;
   pricePerHour?: number | null;
   imageUrl?: string | null;
+  galleryImages?: string | null;
   ads?: string | null;
   announcements?: string | null;
   tickerText?: string | null;
@@ -50,13 +51,13 @@ interface VenueData {
   calendarSyncUrl?: string | null;
 }
 
-export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initialVenue: VenueData | null, initialMatches?: any[] }) {
+export function ArenaOwnerPanel({ initialVenue, initialMatches = [], initialTab }: { initialVenue: VenueData | null, initialMatches?: any[], initialTab?: "config" | "championships" | "ads" | "announcements" | "ticker" | "calendar" }) {
   const searchParams = useSearchParams();
   const requestedTab = searchParams.get("tab");
-  const initialTab = requestedTab === "championships" || requestedTab === "ads" || requestedTab === "announcements" || requestedTab === "ticker" || requestedTab === "calendar"
+  const queryTab = requestedTab === "championships" || requestedTab === "ads" || requestedTab === "announcements" || requestedTab === "ticker" || requestedTab === "calendar"
     ? requestedTab
     : "config";
-  const [activeTab, setActiveTab] = useState<"config" | "championships" | "ads" | "announcements" | "ticker" | "calendar">(initialTab);
+  const [activeTab, setActiveTab] = useState<"config" | "championships" | "ads" | "announcements" | "ticker" | "calendar">(initialTab || queryTab);
 
   const [matches, setMatches] = useState(initialMatches);
 
@@ -73,6 +74,22 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initial
   const [imageUrl, setImageUrl] = useState(
     initialVenue?.imageUrl || "/images/stadium-hero.jpg"
   );
+  const defaultGalleryImages = [
+    imageUrl,
+    "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&auto=format&fit=crop&q=80",
+  ];
+  let savedGalleryImages = defaultGalleryImages;
+  try {
+    const parsedGalleryImages = initialVenue?.galleryImages ? JSON.parse(initialVenue.galleryImages) : [];
+    if (Array.isArray(parsedGalleryImages)) {
+      savedGalleryImages = defaultGalleryImages.map((fallback, index) => parsedGalleryImages[index] || fallback);
+    }
+  } catch {
+    savedGalleryImages = defaultGalleryImages;
+  }
+  const [galleryImages, setGalleryImages] = useState(savedGalleryImages);
 
   const amenityDefaults: AmenityItem[] = [
     { key: "parking", label: "Parcare", detail: "", icon: "local_parking", enabled: false },
@@ -176,6 +193,7 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initial
       const res = uploadEvent.target?.result as string;
       if (res) {
         setImageUrl(res);
+        setGalleryImages((current) => [res, ...current.slice(1)]);
         setShowPhotoModal(false);
         setMessage({
           text: "Fotografia arenei a fost actualizată! Apasă pe Salvează Modificările pentru a păstra modificările. ✓",
@@ -240,6 +258,7 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initial
           floodlights,
           pricePerHour,
           imageUrl,
+          galleryImages,
           amenities,
           ads,
           announcements,
@@ -587,6 +606,28 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initial
                 >
                   Încarcă Fișier 📁
                 </button>
+              </div>
+
+              <div className="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-3">
+                <div>
+                  <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">Galerie Publică</span>
+                  <p className="text-[11px] text-slate-500 font-label mt-1">Setează cele patru imagini care apar în galeria paginii arenei.</p>
+                </div>
+                {galleryImages.map((galleryImage, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-12 h-10 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={galleryImage} alt={`Cadru galerie ${index + 1}`} className="w-full h-full object-cover" />
+                    </div>
+                    <input
+                      type="url"
+                      className="input text-xs"
+                      value={galleryImage}
+                      onChange={(event) => setGalleryImages(galleryImages.map((image, imageIndex) => imageIndex === index ? event.target.value : image))}
+                      placeholder={`URL imagine ${index + 1}`}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           </div>

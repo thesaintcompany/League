@@ -530,9 +530,6 @@ async function ensureReferees() {
 }
 
 async function ensureVenues(arenaOwnerId) {
-  // Delete and recreate venues to ensure all Timis County arenas are present and up to date
-  await prisma.venue.deleteMany({});
-
   const TIMIS_VENUES = [
     // --- FOTBAL (Timișoara & Județul Timiș) ---
     {
@@ -1379,10 +1376,19 @@ async function ensureVenues(arenaOwnerId) {
     ...TIMIS_VENUES.map((v) => ({ ...v, county: "Timiș", status: "activ" })),
   ];
 
-  await prisma.venue.createMany({
-    data: ALL_VENUES,
-  });
-  console.log(`[seed] seeded ${ALL_VENUES.length} national stadiums, polyvalent halls, and county arenas across Romania`);
+  let createdCount = 0;
+  for (const venueData of ALL_VENUES) {
+    const existingVenue = await prisma.venue.findFirst({
+      where: { name: venueData.name },
+    });
+
+    if (!existingVenue) {
+      await prisma.venue.create({ data: venueData });
+      createdCount++;
+    }
+  }
+
+  console.log(`[seed] ensured ${ALL_VENUES.length} national stadiums, polyvalent halls, and county arenas (${createdCount} created)`);
 }
 
 async function ensureDemoChampionship(ownerId) {
