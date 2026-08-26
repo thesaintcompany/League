@@ -61,6 +61,9 @@ export default async function DashboardPage() {
               <span className="material-symbols-outlined text-[18px]">add_circle</span>
               <span className="hidden sm:inline">Campionat Nou</span>
               <span className="sm:hidden">Nou</span>
+              <span className="ml-1 text-[9px] font-mono font-black uppercase px-2 py-0.5 rounded-full bg-lime-400/20 text-lime-400 dark:bg-slate-950/40 dark:text-slate-950 border border-lime-400/40">
+                {championships.length === 0 ? "Gratuit" : "280 €"}
+              </span>
             </Link>
           }
         />

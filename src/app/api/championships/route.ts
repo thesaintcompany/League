@@ -33,7 +33,7 @@ export async function GET() {
     include: { _count: { select: { teams: true, matches: true } } },
   });
 
-  return NextResponse.json({ championships });
+  return NextResponse.json({ championships, count: championships.length });
 }
 
 export async function POST(req: Request) {
@@ -47,6 +47,27 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: "Date invalide: " + parsed.error.issues.map((i) => i.message).join(", ") },
         { status: 400 }
+      );
+    }
+
+    const userId = (session.user as any).id;
+    const userRole = (session.user as any).role || "";
+    const isSuperAdmin = userRole === "super_admin" || userRole === "superadmin";
+
+    // Quota Enforcement: 1 free championship per organizer, then 280€ per additional championship
+    const existingCount = await prisma.championship.count({
+      where: { ownerId: userId },
+    });
+
+    if (!isSuperAdmin && existingCount >= 1 && !body.isPaid) {
+      return NextResponse.json(
+        {
+          error: "Ai atins limita gratuită de 1 campionat pe cont. Pentru a lansa un campionat suplimentar este necesară achitarea tarifului de 280 € / competiție.",
+          code: "PAYMENT_REQUIRED",
+          existingCount,
+          feeAmountEur: 280,
+        },
+        { status: 402 }
       );
     }
 
@@ -68,7 +89,7 @@ export async function POST(req: Request) {
 
     const champ = await prisma.championship.create({
       data: {
-        ownerId: (session.user as any).id,
+        ownerId: userId,
         name: name.trim(),
         sport: sport?.trim() || "Fotbal",
         format: format?.trim() || "round_robin",
@@ -84,7 +105,7 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({ id: champ.id, championship: champ }, { status: 201 });
+    return NextResponse.json({ id: champ.id, championship: champ, isPaid: body.isPaid || false }, { status: 201 });
   } catch (err: any) {
     console.error("Error creating championship:", err);
     return NextResponse.json(
