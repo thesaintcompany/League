@@ -13,6 +13,7 @@ const profileSchema = z.object({
   bio: z.string().max(500).optional().nullable(),
   image: z.string().optional().nullable(), // Poză portret față
   coverPhotoUrl: z.string().optional().nullable(), // Poză în picioare / full-body
+  primarySport: z.string().max(50).optional().nullable(),
   position: z.string().max(50).optional().nullable(),
   jerseyNumber: z.number().int().min(1).max(99).optional().nullable(),
   preferredFoot: z.string().max(20).optional().nullable(),
@@ -38,6 +39,7 @@ export async function GET() {
       name: true,
       email: true,
       role: true,
+      primarySport: true,
       image: true,
       coverPhotoUrl: true,
       phone: true,

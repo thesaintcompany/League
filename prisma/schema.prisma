@@ -21,6 +21,7 @@ model User {
   signupIp      String?  // Adresa IP de la înregistrare
   
   // Profile fields for various roles
+  primarySport   String?  @default("fotbal") // sportul practicat (fotbal, tenis, padel, pingpong, baschet, volei, handbal)
   phone          String?
   bio            String?
   coverPhotoUrl  String? // poză în picioare / full-body action shot
@@ -175,6 +176,9 @@ model Team {
   fitnessCoach    String?
   formation       String? @default("4-3-3") // "4-3-3", "4-4-2", "3-5-2"
   homeArena       String?
+  sport           String? @default("fotbal")
+  description     String?
+  sponsors        String? // JSON string: [{ id, name, logoUrl, linkUrl, tier }]
   createdAt       DateTime @default(now())
 
   championship Championship @relation(fields: [championshipId], references: [id], onDelete: Cascade)
