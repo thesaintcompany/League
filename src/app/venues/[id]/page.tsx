@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { PublicHeader } from "@/components/PublicHeader";
+import { PublicFooter } from "@/components/PublicFooter";
 import { VenueDetailClientView } from "@/components/VenueDetailClientView";
 
 export const dynamic = "force-dynamic";
@@ -191,10 +192,7 @@ export default async function PublicVenueDetailPage({
         />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-950">
-        © {new Date().getFullYear()} Ligue Pro România • Profil Oficial Arenă Sportivă. Toate drepturile rezervate.
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

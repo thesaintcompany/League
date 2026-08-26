@@ -38,7 +38,7 @@ import { OrganizerTicketingTab } from "./OrganizerTicketingTab";
 const TABS = [
   { key: "standings", label: "Clasament General", icon: "leaderboard" },
   { key: "matches", label: "Program & Arbitraj", icon: "sports_soccer" },
-  { key: "brackets", label: "Arbore Brackets & Zaruri 🎲", icon: "casino" },
+  { key: "brackets", label: "Arbore Eliminatoriu 🏆", icon: "account_tree" },
   { key: "teams", label: "Echipe Înscrise 🛡️", icon: "shield" },
   { key: "tickets", label: "Bilete & Scanner Porți 🎟️", icon: "confirmation_number" },
   { key: "promo", label: "Promotion Hub 📢", icon: "campaign" },

@@ -3,6 +3,44 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+export async function GET(
+  req: Request,
+  ctx: { params: { id: string } }
+) {
+  const championship = await prisma.championship.findUnique({
+    where: { id: ctx.params.id },
+    select: {
+      id: true,
+      name: true,
+      isBracketPublished: true,
+      diceRollCount: true,
+    },
+  });
+
+  if (!championship) {
+    return NextResponse.json({ error: "Campionatul nu a fost găsit" }, { status: 404 });
+  }
+
+  const rollCount = championship.diceRollCount || 0;
+  const isPublished = Boolean(championship.isBracketPublished);
+  const rollsLeft = isPublished ? 0 : Math.max(0, 3 - rollCount);
+  const isLocked = isPublished || rollCount >= 3;
+
+  return NextResponse.json({
+    ok: true,
+    isBracketPublished: isPublished,
+    diceRollCount: rollCount,
+    rollsLeft,
+    isLocked,
+    maxRolls: 3,
+    lockReason: isPublished
+      ? "Harta meciurilor este publicată oficial"
+      : rollCount >= 3
+      ? "A fost atinsă limita maximă de 3 aruncări"
+      : null,
+  });
+}
+
 export async function POST(
   req: Request,
   ctx: { params: { id: string } }
@@ -23,11 +61,39 @@ export async function POST(
   }
 
   // Only organizer or championship owner can roll dice
-  const isOrganizer = user.role === "organizer" || championship.ownerId === user.id;
+  const isOrganizer = user.role === "organizer" || user.role === "superadmin" || championship.ownerId === user.id;
   if (!isOrganizer) {
     return NextResponse.json(
       { error: "Acces interzis: Doar organizatorul poate declanșa tragerea la sorți cu zaruri." },
       { status: 403 }
+    );
+  }
+
+  // RULE 1: If bracket / mindmap is already published, NO DICE ROLLS ALLOWED
+  if (championship.isBracketPublished) {
+    return NextResponse.json(
+      {
+        error:
+          "Harta meciurilor este deja publicată oficial. Nu se mai pot arunca zarurile pentru un campionat cu harta publicată!",
+        isLocked: true,
+        reason: "Harta este deja publică",
+      },
+      { status: 400 }
+    );
+  }
+
+  // RULE 2: Maximum 3 dice rolls allowed before publishing
+  const currentRolls = championship.diceRollCount || 0;
+  if (currentRolls >= 3) {
+    return NextResponse.json(
+      {
+        error:
+          "Ai atins numărul maxim de 3 trageri la sorți cu zaruri. Harta a fost blocată definitiv!",
+        isLocked: true,
+        diceRollCount: currentRolls,
+        rollsLeft: 0,
+      },
+      { status: 400 }
     );
   }
 
@@ -48,6 +114,7 @@ export async function POST(
   });
 
   const dbVenues = await prisma.venue.findMany({
+    where: { isActive: true },
     select: { name: true },
   });
 
@@ -108,15 +175,29 @@ export async function POST(
         status: "scheduled",
         venue: assignedVenue,
         referee: assignedReferee,
-        notes: `Generat prin Tragere la Sorți cu Zaruri 🎲 (Seed #${matchIdx + 1})`,
+        notes: `Generat prin Tragere la Sorți cu Zaruri 🎲 (Aruncarea #${currentRolls + 1}/3 - Seed #${matchIdx + 1})`,
       },
     });
     createdMatches.push(match);
   }
 
+  // Increment dice roll count
+  const nextRollCount = currentRolls + 1;
+  await prisma.championship.update({
+    where: { id: championship.id },
+    data: {
+      diceRollCount: nextRollCount,
+    },
+  });
+
+  const rollsRemaining = Math.max(0, 3 - nextRollCount);
+
   return NextResponse.json({
     ok: true,
-    message: `Au fost generate ${createdMatches.length} meciuri, iar arbitrii și arenele au fost distribuite aleatoriu!`,
+    diceRollCount: nextRollCount,
+    rollsLeft: rollsRemaining,
+    isLocked: nextRollCount >= 3,
+    message: `Tragere la sorți cu zaruri efectuată cu succes! (${nextRollCount}/3 aruncări utilizate • Mai ai ${rollsRemaining} ${rollsRemaining === 1 ? "aruncare" : "aruncări"} disponibile).`,
     matches: createdMatches,
   });
 }

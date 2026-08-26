@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { BracketVisualizer } from "@/components/BracketVisualizer";
 import { PublicHeader } from "@/components/PublicHeader";
+import { PublicFooter } from "@/components/PublicFooter";
 
 export const dynamic = "force-dynamic";
 
@@ -230,10 +231,7 @@ export default async function PublicBracketsPage({
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800 py-8 text-center text-xs font-label text-slate-500 mt-auto">
-        © {new Date().getFullYear()} Ligue Pro România • Sistem Unic de Distribuire Hărți Campionat. Toate drepturile rezervate.
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

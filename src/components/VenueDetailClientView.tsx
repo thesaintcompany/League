@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { VenueClaimModal } from "./VenueClaimModal";
 
 export interface VenueData {
   id: string;
@@ -54,6 +55,7 @@ export function VenueDetailClientView({
   finishedMatches,
 }: VenueDetailClientViewProps) {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
+  const [showClaimModal, setShowClaimModal] = useState(false);
 
   // Parse Ads and Announcements
   let activeAds: Array<{ id: string; title: string; imageUrl: string; linkUrl: string; isActive: boolean }> = [];
@@ -230,14 +232,56 @@ export function VenueDetailClientView({
                 <span>🎟️</span> Bilete Meciuri ({upcomingMatches.length})
               </a>
             )}
+
+            <button
+              type="button"
+              onClick={() => setShowClaimModal(true)}
+              className="bg-slate-900/80 hover:bg-slate-900 text-slate-200 hover:text-white border border-slate-700 font-label font-bold text-xs uppercase tracking-wider py-4 px-5 rounded-2xl transition flex items-center gap-2 shadow-lg backdrop-blur-md active:scale-95"
+              title="Revendică administrarea oficială a acestei arene"
+            >
+              <span>🏛️</span>
+              <span>Ești Administratorul Arenei?</span>
+            </button>
           </div>
         </div>
       </section>
 
       {/* Main Content Sections */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+        {/* Subtle Administrator Claim Card */}
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-sm">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-lime-400/20 text-lime-600 dark:text-lime-400 border border-lime-400/30 flex items-center justify-center text-2xl shrink-0">
+              🏛️
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-black uppercase font-label text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                  Oficial Bază Sportivă
+                </span>
+                <span className="text-xs text-slate-500 font-label">Verificare SuperAdmin</span>
+              </div>
+              <h3 className="font-headline font-bold text-base sm:text-lg text-slate-900 dark:text-white uppercase tracking-tight">
+                Administrezi sau Deții Această Arenă?
+              </h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400 max-w-2xl font-body leading-relaxed">
+                Dacă reprezinți societatea, clubul sau primăria ce administrează <strong>{venue.name}</strong>, revendică accesul oficial pentru a gestiona panourile publicitare, anunțurile cu ticker și rezervările meciurilor.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowClaimModal(true)}
+            className="px-6 py-3.5 rounded-2xl bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 hover:opacity-90 transition font-headline font-black text-xs uppercase tracking-wider shadow-md shrink-0 flex items-center gap-2 active:scale-95"
+          >
+            <span>Revendică Administrarea Arenei</span>
+            <span className="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+        </div>
+
         {/* Bento Stats Telemetry Grid */}
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-6 -mt-8 relative z-20">
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-6 relative z-20">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-xl space-y-1">
             <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
               Capacitate Spectatori
@@ -733,6 +777,15 @@ export function VenueDetailClientView({
           </div>
         </div>
       )}
+
+      {/* Official Arena Claim Modal */}
+      <VenueClaimModal
+        venueId={venue.id}
+        venueName={venue.name}
+        venueLocation={venue.location}
+        isOpen={showClaimModal}
+        onClose={() => setShowClaimModal(false)}
+      />
     </div>
   );
 }

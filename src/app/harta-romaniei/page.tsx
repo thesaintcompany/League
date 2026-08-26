@@ -1,20 +1,27 @@
 import { prisma } from "@/lib/prisma";
 import { PublicHeader } from "@/components/PublicHeader";
+import { PublicFooter } from "@/components/PublicFooter";
 import { RomaniaChampionshipsMap } from "@/components/RomaniaChampionshipsMap";
 
 export const dynamic = "force-dynamic";
 
 export default async function RomaniaMapPage() {
-  const championships = await prisma.championship.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      _count: {
-        select: { teams: true, matches: true },
+  const [championships, venues] = await Promise.all([
+    prisma.championship.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        _count: {
+          select: { teams: true, matches: true },
+        },
       },
-    },
-  });
+    }),
+    prisma.venue.findMany({
+      where: { isActive: true },
+      orderBy: [{ capacity: "desc" }, { name: "asc" }],
+    }),
+  ]);
 
-  const formatted = championships.map((c) => ({
+  const formattedChampionships = championships.map((c) => ({
     id: c.id,
     name: c.name,
     sport: c.sport,
@@ -30,6 +37,19 @@ export default async function RomaniaMapPage() {
     matchesCount: c._count.matches,
   }));
 
+  const formattedVenues = venues.map((v) => ({
+    id: v.id,
+    name: v.name,
+    location: v.location,
+    county: v.county,
+    address: v.address,
+    sport: v.sport,
+    surface: v.surface,
+    capacity: v.capacity,
+    floodlights: v.floodlights,
+    imageUrl: v.imageUrl,
+  }));
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200">
       {/* Top Navbar */}
@@ -37,13 +57,13 @@ export default async function RomaniaMapPage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-10">
-        <RomaniaChampionshipsMap initialChampionships={formatted} />
+        <RomaniaChampionshipsMap
+          initialChampionships={formattedChampionships}
+          initialVenues={formattedVenues}
+        />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-950">
-        © {new Date().getFullYear()} Ligue Pro România. Toate drepturile rezervate.
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

@@ -195,18 +195,18 @@ export function ChampionshipPublicClientView({
             onClick={() => setActiveView("bracket")}
             className={`px-5 sm:px-6 py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${
               activeView === "bracket"
-                ? "bg-lime-400 text-slate-950 font-black shadow-lg shadow-lime-400/20 scale-100"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
             }`}
           >
-            <span>🎲</span> Harta Campionatului (Zaruri &amp; Etape)
+            <span>🌳</span> Harta Turneului (Arbore Eliminatoriu)
           </button>
           <button
             type="button"
             onClick={() => setActiveView("standings")}
             className={`px-5 sm:px-6 py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${
               activeView === "standings"
-                ? "bg-lime-400 text-slate-950 font-black shadow-lg shadow-lime-400/20 scale-100"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
             }`}
           >
@@ -253,9 +253,9 @@ export function ChampionshipPublicClientView({
                 <button
                   type="button"
                   onClick={() => setActiveView("bracket")}
-                  className="text-xs font-bold font-label text-lime-600 dark:text-lime-400 uppercase tracking-widest hover:underline flex items-center gap-1"
+                  className="text-xs font-bold font-label text-slate-700 dark:text-lime-400 uppercase tracking-widest hover:underline flex items-center gap-1"
                 >
-                  <span>🎲 Vezi Harta Zaruri</span>
+                  <span>🌳 Vezi Harta Meciurilor</span>
                   <span className="material-symbols-outlined text-sm">arrow_forward</span>
                 </button>
               </div>
@@ -327,16 +327,16 @@ export function ChampionshipPublicClientView({
                             </td>
 
                             <td className="px-3 py-4 text-center font-mono text-slate-700 dark:text-slate-300">{team.played}</td>
-                            <td className="px-3 py-4 text-center font-mono text-lime-600 dark:text-lime-400 font-bold">{team.won}</td>
+                            <td className="px-3 py-4 text-center font-mono text-emerald-700 dark:text-lime-400 font-bold">{team.won}</td>
                             <td className="px-3 py-4 text-center font-mono text-slate-500 dark:text-slate-400">{team.drawn}</td>
-                            <td className="px-3 py-4 text-center font-mono text-red-500 dark:text-red-400">{team.lost}</td>
+                            <td className="px-3 py-4 text-center font-mono text-red-600 dark:text-red-400">{team.lost}</td>
                             <td className="px-3 py-4 text-center font-mono text-slate-600 dark:text-slate-400">
                               {team.goalDiff > 0 ? `+${team.goalDiff}` : team.goalDiff}
                             </td>
 
                             {/* Points */}
                             <td className="px-6 sm:px-8 py-4 text-right">
-                              <span className="text-base font-black font-mono text-lime-600 dark:text-lime-400">
+                              <span className="text-base font-black font-mono text-emerald-700 dark:text-lime-400">
                                 {team.points}
                               </span>
                             </td>
@@ -376,7 +376,7 @@ export function ChampionshipPublicClientView({
                     >
                       <div className="flex justify-between text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase">
                         <span>{m.stage}</span>
-                        <span className="text-lime-600 dark:text-lime-400">Finalizat ✓</span>
+                        <span className="text-emerald-700 dark:text-lime-400 font-bold">Finalizat ✓</span>
                       </div>
 
                       <div className="flex items-center justify-between">
@@ -392,7 +392,7 @@ export function ChampionshipPublicClientView({
                           </span>
                         </div>
 
-                        <div className="px-3 py-1 bg-white dark:bg-slate-900 rounded-xl font-mono font-black text-sm text-lime-600 dark:text-lime-400 border border-slate-300 dark:border-slate-800">
+                        <div className="px-3 py-1 bg-white dark:bg-slate-900 rounded-xl font-mono font-black text-sm text-slate-950 dark:text-lime-400 border border-slate-300 dark:border-slate-800 shadow-sm">
                           {m.homeScore ?? 0} : {m.awayScore ?? 0}
                         </div>
 

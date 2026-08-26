@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { PublicVenuesCatalog } from "@/components/PublicVenuesCatalog";
 import { PublicHeader } from "@/components/PublicHeader";
+import { PublicFooter } from "@/components/PublicFooter";
 
 export const dynamic = "force-dynamic";
 
@@ -56,10 +57,7 @@ export default async function PublicVenuesPage() {
         <PublicVenuesCatalog initialVenues={venues} />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-950">
-        © {new Date().getFullYear()} Ligue Pro România • Catalog Oficial Arene &amp; Stadioane. Toate drepturile rezervate.
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

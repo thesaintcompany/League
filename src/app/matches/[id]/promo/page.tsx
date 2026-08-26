@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { PublicHeader } from "@/components/PublicHeader";
+import { PublicFooter } from "@/components/PublicFooter";
 import { MatchPromoClientView } from "@/components/MatchPromoClientView";
 
 export const dynamic = "force-dynamic";
@@ -66,9 +67,7 @@ export default async function PublicMatchPromoPage({
             },
           }}
         />
-        <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 mt-auto bg-white dark:bg-slate-950">
-          © {new Date().getFullYear()} Ligue Pro România • Pagina Oficială de Promovare Meci. Toate drepturile rezervate.
-        </footer>
+        <PublicFooter />
       </div>
     );
   }
@@ -106,9 +105,7 @@ export default async function PublicMatchPromoPage({
           },
         }}
       />
-      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 mt-auto bg-white dark:bg-slate-950">
-        © {new Date().getFullYear()} Ligue Pro România • Pagina Oficială de Promovare Meci. Toate drepturile rezervate.
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

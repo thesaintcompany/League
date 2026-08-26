@@ -20,27 +20,27 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
   const useReferees = currentTab === "referees" || pathname.startsWith("/referees");
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800/80 h-20 px-4 sm:px-6 lg:px-12 flex justify-between items-center text-slate-900 dark:text-white font-body transition-colors duration-200">
+    <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800/80 h-20 px-4 sm:px-6 lg:px-12 flex justify-between items-center text-slate-900 dark:text-white font-body transition-colors duration-200 shadow-sm">
       {/* Left: Brand & Badge & Navigation */}
       <div className="flex items-center gap-4 sm:gap-6">
         {/* Brand Logo */}
         <Link href="/campionat" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-lg shadow-lime-400/20 group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 rounded-2xl bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 flex items-center justify-center font-black text-xl shadow-md group-hover:scale-105 transition-transform">
             ⚡
           </div>
           <div>
             <span className="text-2xl font-black italic tracking-tight text-slate-950 dark:text-white uppercase font-headline block leading-none">
               Ligue
             </span>
-            <span className="text-[9px] font-label font-bold text-lime-600 dark:text-lime-400 tracking-widest uppercase">
+            <span className="text-[9px] font-label font-bold text-slate-600 dark:text-lime-400 tracking-widest uppercase">
               Pro România
             </span>
           </div>
         </Link>
 
         {/* Live Season Pulsing Pill */}
-        <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lime-400/10 text-lime-600 dark:text-lime-400 border border-lime-400/30 text-xs font-bold font-label">
-          <span className="w-2 h-2 rounded-full bg-lime-500 dark:bg-lime-400 animate-pulse"></span>
+        <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-lime-400 border border-slate-200 dark:border-lime-400/30 text-xs font-bold font-label">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-lime-400 animate-pulse"></span>
           SEZONUL 2025-2026 LIVE
         </div>
 
@@ -50,7 +50,7 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
             href="/campionat"
             className={`transition-all duration-200 py-1.5 border-b-2 ${
               isCampionat
-                ? "text-slate-950 dark:text-lime-400 border-lime-500 dark:border-lime-400 font-black"
+                ? "text-slate-950 dark:text-lime-400 border-slate-950 dark:border-lime-400 font-black"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
             }`}
           >
@@ -60,7 +60,7 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
             href="/harta-romaniei"
             className={`transition-all duration-200 py-1.5 flex items-center gap-1.5 border-b-2 ${
               isRomaniaMap
-                ? "text-slate-950 dark:text-lime-400 border-lime-500 dark:border-lime-400 font-black"
+                ? "text-slate-950 dark:text-lime-400 border-slate-950 dark:border-lime-400 font-black"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
             }`}
           >
@@ -70,7 +70,7 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
             href="/brackets"
             className={`transition-all duration-200 py-1.5 flex items-center gap-1.5 border-b-2 ${
               isBrackets
-                ? "text-slate-950 dark:text-lime-400 border-lime-500 dark:border-lime-400 font-black"
+                ? "text-slate-950 dark:text-lime-400 border-slate-950 dark:border-lime-400 font-black"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
             }`}
           >
@@ -80,7 +80,7 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
             href="/venues"
             className={`transition-all duration-200 py-1.5 border-b-2 ${
               isVenues
-                ? "text-slate-950 dark:text-lime-400 border-lime-500 dark:border-lime-400 font-black"
+                ? "text-slate-950 dark:text-lime-400 border-slate-950 dark:border-lime-400 font-black"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
             }`}
           >
@@ -90,7 +90,7 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
             href="/players"
             className={`transition-all duration-200 py-1.5 border-b-2 ${
               isPlayers
-                ? "text-slate-950 dark:text-lime-400 border-lime-500 dark:border-lime-400 font-black"
+                ? "text-slate-950 dark:text-lime-400 border-slate-950 dark:border-lime-400 font-black"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
             }`}
           >
@@ -100,7 +100,7 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
             href="/referees"
             className={`transition-all duration-200 py-1.5 border-b-2 ${
               useReferees
-                ? "text-slate-950 dark:text-lime-400 border-lime-500 dark:border-lime-400 font-black"
+                ? "text-slate-950 dark:text-lime-400 border-slate-950 dark:border-lime-400 font-black"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
             }`}
           >
@@ -122,7 +122,7 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
         </Link>
         <Link
           href="/"
-          className="px-3.5 sm:px-5 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-500 text-slate-950 text-xs font-headline font-black uppercase tracking-wider shadow-lg shadow-lime-400/20 transition active:scale-95 flex items-center gap-1.5"
+          className="px-3.5 sm:px-5 py-2.5 rounded-xl bg-slate-950 text-white hover:bg-slate-800 dark:bg-lime-400 dark:text-slate-950 dark:hover:bg-lime-300 text-xs font-headline font-black uppercase tracking-wider shadow-md transition active:scale-95 flex items-center gap-1.5"
         >
           <span className="material-symbols-outlined text-[18px]">login</span>
           <span className="hidden sm:inline">Portal Autentificare</span>

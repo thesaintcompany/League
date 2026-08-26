@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PublicHeader } from "@/components/PublicHeader";
+import { PublicFooter } from "@/components/PublicFooter";
 import { RefereeBadgePill } from "@/components/PublicRefereesCatalog";
 
 export const dynamic = "force-dynamic";
@@ -307,10 +308,7 @@ export default async function PublicRefereeDetailPage({
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800 py-8 text-center text-xs font-label text-slate-500">
-        © {new Date().getFullYear()} Ligue Pro România • Corp Oficial de Arbitraj. Toate drepturile rezervate.
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

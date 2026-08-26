@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PublicHeader } from "@/components/PublicHeader";
+import { PublicFooter } from "@/components/PublicFooter";
 import { ChampionshipPublicClientView } from "@/components/ChampionshipPublicClientView";
 
 export const dynamic = "force-dynamic";
@@ -253,10 +254,7 @@ export default async function PublicChampionshipPage({
         }))}
       />
 
-      {/* Footer */}
-      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 mt-auto bg-white dark:bg-slate-950 transition-colors duration-200">
-        © {new Date().getFullYear()} Ligue Pro România • Format Kinetic High-Performance Championship. Toate drepturile rezervate.
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

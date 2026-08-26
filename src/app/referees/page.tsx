@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { PublicHeader } from "@/components/PublicHeader";
+import { PublicFooter } from "@/components/PublicFooter";
 import { PublicRefereesCatalog } from "@/components/PublicRefereesCatalog";
 
 export const dynamic = "force-dynamic";
@@ -43,10 +44,7 @@ export default async function PublicRefereesPage() {
         <PublicRefereesCatalog initialReferees={formattedReferees} />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs font-label text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-950">
-        © {new Date().getFullYear()} Ligue Pro România • Corp Oficial de Arbitraj. Toate drepturile rezervate.
-      </footer>
+      <PublicFooter />
     </div>
   );
 }

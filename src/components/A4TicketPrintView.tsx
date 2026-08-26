@@ -320,6 +320,9 @@ function SingleTicketCard({
           <p className="text-[10px] text-slate-500">
             Partener Oficial &amp; Sponsor: <strong>{ticket.match.sponsorName || "Ligue Pro Energy"}</strong> • {ticket.match.sponsorTagline || "Performanță Sportivă"}
           </p>
+          <p className="text-[9px] text-slate-400 font-mono">
+            Platformă securizată operată de <strong>buu.ro</strong> • Toate drepturile aparțin <strong>buu.ro</strong> • Asistență: <strong>contact@buu.ro</strong>
+          </p>
         </div>
 
         {/* Secondary Small QR Code for Match Promo / Mobile Telemetry */}
@@ -331,7 +334,7 @@ function SingleTicketCard({
           <div className="text-left">
             <span className="text-[8px] font-black uppercase text-slate-400 block">PAGINĂ PROMO</span>
             <span className="text-[10px] font-bold text-slate-900 block">Scanează cu telefonul</span>
-            <span className="text-[8px] text-slate-500">Video &amp; Clasament Live</span>
+            <span className="text-[8px] text-slate-500">buu.ro • Live Telemetry</span>
           </div>
         </div>
       </div>

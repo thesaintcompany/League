@@ -24,7 +24,7 @@ export function Sidebar() {
       { name: "Meciuri & Panou Arbitraj", href: "/dashboard/referee", icon: "sports" },
       { name: "Profil & Setări Oficiale", href: "/profile", icon: "account_circle" },
       { name: "Nationale (Județe)", href: "/harta-romaniei", icon: "map" },
-      { name: "Campionat", href: "/brackets", icon: "casino" },
+      { name: "Harta Campionat", href: "/brackets", icon: "account_tree" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Corp Arbitri", href: "/referees", icon: "badge" },
       { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
@@ -35,7 +35,7 @@ export function Sidebar() {
       { name: "Panou Manager Echipă", href: "/dashboard/team", icon: "badge" },
       { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
       { name: "Nationale (Județe)", href: "/harta-romaniei", icon: "map" },
-      { name: "Campionat", href: "/brackets", icon: "casino" },
+      { name: "Harta Campionat", href: "/brackets", icon: "account_tree" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
       { name: "Corp Arbitri", href: "/referees", icon: "sports" },
@@ -54,7 +54,7 @@ export function Sidebar() {
       { name: "Profil Fotbalist FUT", href: "/profile", icon: "sports_soccer" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Nationale (Județe)", href: "/harta-romaniei", icon: "map" },
-      { name: "Campionat", href: "/brackets", icon: "casino" },
+      { name: "Harta Campionat", href: "/brackets", icon: "account_tree" },
       { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
       { name: "Corp Arbitri", href: "/referees", icon: "badge" },
       { name: "Pagina Publică", href: "/campionat", icon: "public" },
@@ -66,7 +66,7 @@ export function Sidebar() {
       { name: "Consolă SuperAdmin", href: "/dashboard/admin", icon: "admin_panel_settings" },
       { name: "Gestiune Arenă & Reclame", href: "/dashboard/arena", icon: "stadium" },
       { name: "Nationale (Județe)", href: "/harta-romaniei", icon: "map" },
-      { name: "Campionat", href: "/brackets", icon: "casino" },
+      { name: "Harta Campionat", href: "/brackets", icon: "account_tree" },
       { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Corp Arbitri", href: "/referees", icon: "sports" },
@@ -202,6 +202,10 @@ export function Sidebar() {
             </div>
           </div>
         )}
+
+        <div className="text-[10px] font-mono text-center text-slate-400 dark:text-slate-500 pt-1 border-t border-slate-100 dark:border-slate-800/60">
+          © {new Date().getFullYear()} <a href="https://buu.ro" target="_blank" rel="noreferrer" className="font-bold text-slate-700 dark:text-lime-400 hover:underline">buu.ro</a> • <a href="mailto:contact@buu.ro" className="hover:underline">contact@buu.ro</a>
+        </div>
       </div>
     </aside>
   );
