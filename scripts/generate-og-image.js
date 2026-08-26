@@ -158,7 +158,7 @@ async function generateOgImage() {
         left: 0,
       },
     ])
-    .jpeg({ quality: 92 })
+    .jpeg({ quality: 100, chromaSubsampling: "4:4:4" })
     .toBuffer();
 
   // Write to all OG image target locations (DO NOT TOUCH hero-goal-pristine.jpg!)

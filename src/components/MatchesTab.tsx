@@ -91,7 +91,7 @@ export function MatchesTab({
               awayTeamId: teams[j].id,
               scheduledAt: new Date(now + matchIdx * 86400000).toISOString(),
               round: Math.floor(matchIdx / 2) + 1,
-              venue: "Stadion Principal",
+              venue: singleVenueEnabled && defaultVenue ? defaultVenue : null,
             }),
           });
           matchIdx++;

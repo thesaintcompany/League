@@ -305,7 +305,7 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initial
               className="inline-block font-headline font-bold text-xs text-lime-300 animate-marquee"
               style={{ animationDuration: `${tickerSpeed}s` }}
             >
-              {tickerText} • {name} • Tarif: {pricePerHour} RON/oră • Nocturnă LED: {floodlights ? "Disponibilă ✓" : "Fără"}
+              {tickerText} • {name} • Tarif: {pricePerHour} RON/oră • Nocturnă LED: {floodlights ? "Disponibilă ✓" : "Indisponibilă"}
             </div>
           </div>
         </div>

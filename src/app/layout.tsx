@@ -37,13 +37,6 @@ export const metadata: Metadata = {
         alt: "PRO L4GUE • Aplicația care îți organizează campionatul!",
         type: "image/jpeg",
       },
-      {
-        url: "/images/hero-goal-og.jpg",
-        width: 1200,
-        height: 630,
-        alt: "PRO L4GUE • Aplicația care îți organizează campionatul!",
-        type: "image/jpeg",
-      },
     ],
     locale: "ro_RO",
     type: "website",
@@ -102,23 +95,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ro" suppressHydrationWarning>
       <head>
-        {/* OpenGraph & Social Share Fallback Tags */}
-        <meta property="og:title" content="PRO L4GUE • Aplicația care îți organizează campionatul!" />
-        <meta property="og:description" content="Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!" />
-        <meta property="og:image" content="https://sp.buu.ro/og-image.jpg" />
-        <meta property="og:image:secure_url" content="https://sp.buu.ro/og-image.jpg" />
-        <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="PRO L4GUE • Aplicația care îți organizează campionatul!" />
-        <meta property="og:url" content="https://sp.buu.ro/" />
-        <meta property="og:site_name" content="PRO L4GUE ROMÂNIA" />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="PRO L4GUE • Aplicația care îți organizează campionatul!" />
-        <meta name="twitter:description" content="Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!" />
-        <meta name="twitter:image" content="https://sp.buu.ro/og-image.jpg" />
-
         {/* Schema.org Structured Data (JSON-LD) */}
         <script
           type="application/ld+json"

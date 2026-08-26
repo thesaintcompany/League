@@ -41,7 +41,7 @@ export default async function PublicVenueDetailPage({
   if (!venue) notFound();
 
   // Show only matches directly linked to this arena through the saved venue name.
-  const allMatches = await prisma.match.findMany({
+  const venueMatches = await prisma.match.findMany({
     where: { venue: venue.name },
     include: {
       homeTeam: true,
@@ -50,6 +50,14 @@ export default async function PublicVenueDetailPage({
     },
     orderBy: { scheduledAt: "asc" },
   });
+
+  const allMatches = venue.sport === "multifunctional"
+    ? venueMatches
+    : venueMatches.filter((match) => {
+        const venueSport = venue.sport.toLowerCase();
+        const championshipSport = match.championship?.sport?.toLowerCase();
+        return !championshipSport || championshipSport === venueSport;
+      });
 
   const upcomingMatches = allMatches.filter(
     (m) => m.status === "scheduled" || m.status === "live"
