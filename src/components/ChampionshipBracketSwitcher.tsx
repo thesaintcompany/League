@@ -43,8 +43,8 @@ export function ChampionshipBracketSwitcher({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         {/* Left: Active Championship Overview */}
         <div className="flex items-center gap-3.5 min-w-0">
-          <div className="w-10 h-10 rounded-2xl bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 flex items-center justify-center font-black text-lg shrink-0 shadow-sm">
-            🏆
+          <div className="w-10 h-10 rounded-2xl bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 flex items-center justify-center font-black shrink-0 shadow-sm">
+            <span className="material-symbols-outlined text-xl">emoji_events</span>
           </div>
 
           <div className="min-w-0">

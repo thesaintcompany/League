@@ -230,7 +230,7 @@ export function BracketVisualizer({
                 : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
-            Finala 🏆
+            Finala
           </button>
         </div>
       )}

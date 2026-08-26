@@ -325,7 +325,7 @@ export default function NewChampionshipPage() {
                   Configurare Competiție
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                  Campionatul va fi salvat instantaneu în baza de date și va apărea în selectorul public de ligi.
+                  Campionatul va fi salvat instantaneu în baza de date și va apărea în selectorul public de ligi și campionate.
                 </p>
               </div>
             </div>
@@ -453,8 +453,8 @@ export default function NewChampionshipPage() {
                       type="button"
                       onClick={() => update("scope", sc.value as any)}
                       className={`p-3 rounded-xl border text-xs font-headline font-bold text-left transition flex flex-col justify-between gap-1.5 ${form.scope === sc.value
-                          ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md scale-[1.02]"
-                          : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400"
+                        ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md scale-[1.02]"
+                        : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400"
                         }`}
                     >
                       <span className="text-xs">{sc.label}</span>
@@ -562,11 +562,10 @@ export default function NewChampionshipPage() {
                         key={cat.value}
                         type="button"
                         onClick={() => update("category", cat.value)}
-                        className={`p-2.5 rounded-xl border text-xs font-headline font-bold text-center transition flex items-center justify-center gap-1.5 ${
-                          form.category === cat.value
+                        className={`p-2.5 rounded-xl border text-xs font-headline font-bold text-center transition flex items-center justify-center gap-1.5 ${form.category === cat.value
                             ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-950 dark:border-lime-400 shadow-sm"
                             : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400"
-                        }`}
+                          }`}
                       >
                         <span>{cat.label.split(" (")[0]}</span>
                       </button>
@@ -600,11 +599,10 @@ export default function NewChampionshipPage() {
                           key={cat.value}
                           type="button"
                           onClick={() => update("category", cat.value)}
-                          className={`p-2.5 rounded-xl border text-xs font-headline font-bold text-center transition ${
-                            form.category === cat.value
+                          className={`p-2.5 rounded-xl border text-xs font-headline font-bold text-center transition ${form.category === cat.value
                               ? "bg-emerald-600 text-white border-emerald-600 shadow-sm font-black"
                               : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400"
-                          }`}
+                            }`}
                         >
                           <span>{cat.label}</span>
                         </button>
@@ -771,11 +769,10 @@ export default function NewChampionshipPage() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("card")}
-                  className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${
-                    paymentMethod === "card"
+                  className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${paymentMethod === "card"
                       ? "bg-lime-400/10 border-lime-500 text-slate-900 dark:text-white font-bold ring-1 ring-lime-400"
                       : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
-                  }`}
+                    }`}
                 >
                   <span className="material-symbols-outlined text-lg text-lime-500">credit_card</span>
                   <span className="text-xs">Card Bancar</span>
@@ -784,11 +781,10 @@ export default function NewChampionshipPage() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("apple_pay")}
-                  className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${
-                    paymentMethod === "apple_pay"
+                  className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${paymentMethod === "apple_pay"
                       ? "bg-lime-400/10 border-lime-500 text-slate-900 dark:text-white font-bold ring-1 ring-lime-400"
                       : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
-                  }`}
+                    }`}
                 >
                   <span className="material-symbols-outlined text-lg text-lime-500">phone_iphone</span>
                   <span className="text-xs">Apple Pay</span>
@@ -797,11 +793,10 @@ export default function NewChampionshipPage() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("google_pay")}
-                  className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${
-                    paymentMethod === "google_pay"
+                  className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${paymentMethod === "google_pay"
                       ? "bg-lime-400/10 border-lime-500 text-slate-900 dark:text-white font-bold ring-1 ring-lime-400"
                       : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
-                  }`}
+                    }`}
                 >
                   <span className="material-symbols-outlined text-lg text-lime-500">contactless</span>
                   <span className="text-xs">Google Pay</span>
@@ -810,11 +805,10 @@ export default function NewChampionshipPage() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("invoice")}
-                  className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${
-                    paymentMethod === "invoice"
+                  className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${paymentMethod === "invoice"
                       ? "bg-lime-400/10 border-lime-500 text-slate-900 dark:text-white font-bold ring-1 ring-lime-400"
                       : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300"
-                  }`}
+                    }`}
                 >
                   <span className="material-symbols-outlined text-lg text-lime-500">receipt_long</span>
                   <span className="text-xs">Factură Fiscală</span>

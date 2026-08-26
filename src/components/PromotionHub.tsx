@@ -59,8 +59,8 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-md">
-                📢
+              <div className="w-10 h-10 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-black shadow-md">
+                <span className="material-symbols-outlined text-2xl">campaign</span>
               </div>
               <h2 className="text-2xl font-black italic tracking-tight font-headline uppercase text-blue-950 dark:text-white">
                 Promotion Hub &amp; Social Media Generator
