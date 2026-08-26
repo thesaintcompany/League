@@ -239,6 +239,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
             <img
               src={coverPhotoUrl}
               alt="Poză în picioare jucător"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src =
+                  "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80";
+              }}
               className="w-full h-full object-cover object-center group-hover/cover:scale-105 transition-transform duration-500"
             />
             {/* Double-Click Hover Indicator */}
@@ -278,6 +282,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
               <img
                 src={image}
                 alt="Poză față portret"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src =
+                    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80";
+                }}
                 className="w-full h-full object-cover group-hover/avatar:scale-110 transition-transform"
               />
               <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center text-lime-400">

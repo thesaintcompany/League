@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
+import { getCurrentSeasonYear } from "@/lib/season";
 
 function WelcomePortalForm() {
   const router = useRouter();
@@ -138,7 +139,7 @@ function WelcomePortalForm() {
 
             <span className="px-3.5 py-1 rounded-full bg-slate-900/90 text-lime-400 font-black text-[10px] uppercase font-label border border-lime-400/40 shadow-lg flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
-              SEZON 2026 LIVE
+              SEZON {getCurrentSeasonYear()}
             </span>
           </div>
 

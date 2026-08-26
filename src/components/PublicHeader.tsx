@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { BrandLogo } from "./BrandLogo";
 import { SportSubHeader } from "./SportSubHeader";
+import { getCurrentSeasonYear } from "@/lib/season";
 
 interface PublicHeaderProps {
   currentTab?: "campionat" | "romania-map" | "brackets" | "venues" | "players" | "referees" | "teams";
@@ -77,7 +78,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
-            <span className="tracking-wide uppercase text-[10px]">2026</span>
+            <span className="tracking-wide uppercase text-[10px]">{getCurrentSeasonYear()}</span>
           </div>
         </div>
 

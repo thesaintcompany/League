@@ -161,9 +161,13 @@ export default async function PublicPlayerDetailPage({
                 <div className="aspect-[9/12] w-full rounded-2xl overflow-hidden relative bg-slate-900 border border-amber-400/30 shadow-inner group">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={defaultCover}
+                    src={defaultAvatar}
                     alt={player.name}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80";
+                    }}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-5">
                     <span className="text-[10px] font-label font-bold text-amber-400 uppercase tracking-widest">

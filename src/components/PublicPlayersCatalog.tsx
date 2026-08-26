@@ -255,6 +255,10 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                             "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80"
                           }
                           alt={player.name}
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src =
+                              "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80";
+                          }}
                           className="w-full h-full object-cover object-top"
                         />
                       </div>
