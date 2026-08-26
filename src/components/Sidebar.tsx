@@ -92,11 +92,12 @@ export function Sidebar({ variant }: SidebarProps) {
     ];
   } else if (role === "arena_owner") {
     navItems = [
-      { name: "Panou Arenă & Reclame", href: "/dashboard/arena", icon: "stadium" },
-      { name: "Profil Bază Sportivă", href: "/profile", icon: "account_circle" },
-      { name: "Arene", href: "/venues", icon: "domain" },
-      { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
-      { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
+      { name: "Configurare Arenă", href: "/dashboard/arena?tab=config", icon: "settings" },
+      { name: "Campionate pe Arenă", href: "/dashboard/arena?tab=championships", icon: "emoji_events" },
+      { name: "Meciuri & Istoric", href: "/dashboard/arena?tab=calendar", icon: "history" },
+      { name: "Reclame & Sponsori", href: "/dashboard/arena?tab=ads", icon: "ad_units" },
+      { name: "Mesaje Arenă", href: "/dashboard/arena?tab=announcements", icon: "campaign" },
+      { name: "Ticker Arenă", href: "/dashboard/arena?tab=ticker", icon: "rss_feed" },
     ];
   } else if (role === "player") {
     navItems = [

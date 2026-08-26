@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { VenueCalendar } from "./VenueCalendar";
 
 interface AdItem {
@@ -41,7 +42,12 @@ interface VenueData {
 }
 
 export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initialVenue: VenueData | null, initialMatches?: any[] }) {
-  const [activeTab, setActiveTab] = useState<"config" | "ads" | "announcements" | "ticker" | "calendar">("config");
+  const searchParams = useSearchParams();
+  const requestedTab = searchParams.get("tab");
+  const initialTab = requestedTab === "championships" || requestedTab === "ads" || requestedTab === "announcements" || requestedTab === "ticker" || requestedTab === "calendar"
+    ? requestedTab
+    : "config";
+  const [activeTab, setActiveTab] = useState<"config" | "championships" | "ads" | "announcements" | "ticker" | "calendar">(initialTab);
 
   const [matches, setMatches] = useState(initialMatches);
 
@@ -236,6 +242,14 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initial
     }
   }
 
+  const arenaChampionships = Array.from(
+    new Map(
+      matches
+        .filter((match) => match.championshipId)
+        .map((match) => [match.championshipId, match])
+    ).values()
+  );
+
   return (
     <div className="space-y-8 font-body">
       {/* Hidden File Input for Double Click Photo Upload */}
@@ -344,6 +358,19 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initial
 
         <button
           type="button"
+          onClick={() => setActiveTab("championships")}
+          className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 ${
+            activeTab === "championships"
+              ? "bg-surface-container-lowest text-blue-950 dark:text-lime-400 border-t-2 border-lime-400 shadow-sm"
+              : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+          }`}
+        >
+          <span className="material-symbols-outlined text-lg">emoji_events</span>
+          Campionate pe Arenă ({arenaChampionships.length})
+        </button>
+
+        <button
+          type="button"
           onClick={() => setActiveTab("ads")}
           className={`px-5 py-3 rounded-t-2xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 ${
             activeTab === "ads"
@@ -394,6 +421,37 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initial
           5. Calendar Google Sync 📅
         </button>
       </div>
+
+      {activeTab === "championships" && (
+        <div className="space-y-6">
+          <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm">
+            <h3 className="text-xl font-bold font-headline text-blue-950 dark:text-white">Campionate programate pe arena ta</h3>
+            <p className="text-xs text-slate-500 font-label mt-1">Lista este construită doar din meciurile care aparțin calendarului acestei arene.</p>
+          </div>
+
+          {arenaChampionships.length === 0 ? (
+            <div className="card p-10 text-center bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm text-sm text-slate-500">
+              Nu există campionate cu meciuri programate pe această arenă.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {arenaChampionships.map((championship) => (
+                <div key={championship.championshipId} className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-5">
+                  <div>
+                    <span className="text-[10px] font-label font-bold uppercase tracking-widest text-lime-600 dark:text-lime-400">Campionat pe arenă</span>
+                    <h4 className="text-lg font-bold font-headline text-blue-950 dark:text-white mt-1">{championship.championshipName}</h4>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Link href={`/campionat?id=${championship.championshipId}`} target="_blank" className="btn btn-secondary text-xs font-bold">Vezi Campionatul ↗</Link>
+                    <Link href={`/brackets?id=${championship.championshipId}`} target="_blank" className="btn btn-secondary text-xs font-bold">Bracket ↗</Link>
+                    <Link href={`/matches/${championship.id}/promo`} target="_blank" className="btn btn-primary text-xs font-bold">Promo Meci ↗</Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* TAB 5: CALENDAR ARENĂ GOOGLE SYNC */}
       {activeTab === "calendar" && (

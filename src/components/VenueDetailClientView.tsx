@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { VenueClaimModal } from "./VenueClaimModal";
 import { isTicketSalesClosed } from "@/lib/tickets";
+import { translateMatchStage } from "@/lib/constants";
 
 export interface VenueData {
   id: string;
@@ -539,7 +540,7 @@ export function VenueDetailClientView({
                           VS
                         </span>
                         <span className="text-[10px] font-label font-bold text-slate-400 uppercase mt-0.5">
-                          {m.stage || "Etapă Oficială"}
+                          {translateMatchStage(m.stage)}
                         </span>
                       </div>
 

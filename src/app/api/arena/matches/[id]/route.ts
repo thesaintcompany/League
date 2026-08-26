@@ -19,6 +19,11 @@ export async function PATCH(
       return NextResponse.json({ error: "Acces interzis" }, { status: 403 });
     }
 
+    const ownerVenue = await prisma.venue.findFirst({
+      where: { ownerId: user.id },
+      select: { name: true },
+    });
+
     const { id } = params;
 
     // Check if it's a blocked slot
@@ -40,6 +45,10 @@ export async function PATCH(
 
     if (!match) {
       return NextResponse.json({ error: "Evenimentul nu a fost găsit." }, { status: 404 });
+    }
+
+    if (!ownerVenue || match.venue !== ownerVenue.name) {
+      return NextResponse.json({ error: "Evenimentul nu aparține arenei tale." }, { status: 403 });
     }
 
     // Clear venue and scheduledAt

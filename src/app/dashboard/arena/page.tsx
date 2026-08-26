@@ -31,7 +31,7 @@ export default async function ArenaOwnerDashboardPage() {
   // Fetch real matches scheduled at this arena
   let matchesData: any[] = [];
   if (venue) {
-    const scheduledMatches = await prisma.match.findMany({
+    const venueMatches = await prisma.match.findMany({
       where: { venue: venue.name },
       include: {
         homeTeam: true,
@@ -40,6 +40,13 @@ export default async function ArenaOwnerDashboardPage() {
       },
       orderBy: { scheduledAt: "asc" },
     });
+
+    const scheduledMatches = venue.sport === "multifunctional"
+      ? venueMatches
+      : venueMatches.filter((match) => {
+          const championshipSport = match.championship?.sport?.toLowerCase();
+          return !championshipSport || championshipSport === venue.sport.toLowerCase();
+        });
 
     const blockedSlots = await prisma.venueBlockedSlot.findMany({
       where: { venueId: venue.id },
@@ -53,6 +60,7 @@ export default async function ArenaOwnerDashboardPage() {
         type: "match",
         homeTeam: m.homeTeam.name,
         awayTeam: m.awayTeam.name,
+        championshipId: m.championshipId,
         championshipName: m.championship.name,
         scheduledAt: m.scheduledAt.toISOString(),
         venue: m.venue,

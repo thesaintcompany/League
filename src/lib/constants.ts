@@ -26,6 +26,18 @@ export function isIndividualSport(sport?: string | null): boolean {
   );
 }
 
+export function translateMatchStage(stage?: string | null): string {
+  const labels: Record<string, string> = {
+    group: "Faza grupelor",
+    round_robin: "Etapă eliminatorie",
+    quarter_final: "Sferturi de finală",
+    semi_final: "Semifinală",
+    final: "Finală",
+  };
+
+  return stage ? labels[stage] || stage : "Etapă oficială";
+}
+
 export const FORMATS = [
   { value: "round_robin", label: "Round-robin (toți cu toți)" },
   { value: "knockout", label: "Knockout (eliminare directă)" },
