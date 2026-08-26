@@ -3,16 +3,19 @@ import type { Metadata } from "next";
 import { Providers } from "@/components/Providers";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
 
+const appDomain = process.env.NEXT_PUBLIC_APP_URL || "https://sp.buu.ro";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://tscquantum.ro"),
+  metadataBase: new URL(appDomain),
   title: {
-    default: "PRO L4GUE • Și tu poți fi un profesionist în sport. Începe acum!",
+    default: "PRO L4GUE • Aplicația care îți organizează campionatul!",
     template: "%s | PRO L4GUE ROMÂNIA",
   },
   description:
-    "Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Și tu poți fi un profesionist în sport — începe acum!",
+    "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!",
   keywords: [
     "PRO L4GUE",
+    "aplicatia care iti organizeaza campionatul",
     "campionat fotbal",
     "turnee fotbal romania",
     "clasamente oficiale",
@@ -21,17 +24,25 @@ export const metadata: Metadata = {
     "profesionist in sport",
   ],
   openGraph: {
-    title: "PRO L4GUE • Și tu poți fi un profesionist în sport. Începe acum!",
+    title: "PRO L4GUE • Aplicația care îți organizează campionatul!",
     description:
-      "Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Operat de TSC QUANTUM S.R.L. Începe acum!",
-    url: "https://tscquantum.ro",
+      "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!",
+    url: appDomain,
     siteName: "PRO L4GUE ROMÂNIA",
     images: [
       {
-        url: "/images/hero-goal.jpg",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "PRO L4GUE • Și tu poți fi un profesionist în sport. Începe acum!",
+        alt: "PRO L4GUE • Aplicația care îți organizează campionatul!",
+        type: "image/jpeg",
+      },
+      {
+        url: "/images/hero-goal-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "PRO L4GUE • Aplicația care îți organizează campionatul!",
+        type: "image/jpeg",
       },
     ],
     locale: "ro_RO",
@@ -39,10 +50,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PRO L4GUE • Și tu poți fi un profesionist în sport. Începe acum!",
+    title: "PRO L4GUE • Aplicația care îți organizează campionatul!",
     description:
-      "Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Și tu poți fi un profesionist în sport — începe acum!",
-    images: ["/images/hero-goal.jpg"],
+      "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!",
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -56,9 +67,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "@type": "SportsOrganization",
     "name": "PRO L4GUE ROMÂNIA",
     "alternateName": "PRO LIGUE",
-    "url": "https://tscquantum.ro",
-    "logo": "https://tscquantum.ro/images/logos/logo-1.png",
-    "image": "https://tscquantum.ro/images/hero-goal.jpg",
+    "url": appDomain,
+    "logo": `${appDomain}/images/logos/logo-1.png`,
+    "image": `${appDomain}/images/hero-goal.jpg`,
     "description": "Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Și tu poți fi un profesionist în sport — începe acum!",
     "slogan": "Și tu poți fi un profesionist în sport - începe acum!",
     "legalName": "TSC QUANTUM S.R.L.",
@@ -80,10 +91,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "PRO L4GUE ROMÂNIA",
-    "url": "https://tscquantum.ro",
+    "url": appDomain,
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://tscquantum.ro/harta-romaniei?search={search_term_string}",
+      "target": `${appDomain}/harta-romaniei?search={search_term_string}`,
       "query-input": "required name=search_term_string"
     }
   };
@@ -92,13 +103,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ro" suppressHydrationWarning>
       <head>
         {/* OpenGraph & Social Share Fallback Tags */}
-        <meta property="og:title" content="PRO L4GUE • Și tu poți fi un profesionist în sport. Începe acum!" />
-        <meta property="og:description" content="Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!" />
-        <meta property="og:image" content="https://tscquantum.ro/images/hero-goal.jpg" />
+        <meta property="og:title" content="PRO L4GUE • Aplicația care îți organizează campionatul!" />
+        <meta property="og:description" content="Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!" />
+        <meta property="og:image" content="https://sp.buu.ro/og-image.jpg" />
+        <meta property="og:image:secure_url" content="https://sp.buu.ro/og-image.jpg" />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="PRO L4GUE • Aplicația care îți organizează campionatul!" />
+        <meta property="og:url" content="https://sp.buu.ro/" />
+        <meta property="og:site_name" content="PRO L4GUE ROMÂNIA" />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="PRO L4GUE • Și tu poți fi un profesionist în sport. Începe acum!" />
-        <meta name="twitter:image" content="https://tscquantum.ro/images/hero-goal.jpg" />
+        <meta name="twitter:title" content="PRO L4GUE • Aplicația care îți organizează campionatul!" />
+        <meta name="twitter:description" content="Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!" />
+        <meta name="twitter:image" content="https://sp.buu.ro/og-image.jpg" />
 
         {/* Schema.org Structured Data (JSON-LD) */}
         <script
