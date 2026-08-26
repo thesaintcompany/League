@@ -41,6 +41,8 @@ export function ChampionshipTabs({
   championshipId,
   sport = "Fotbal",
   championshipName = "Campionat Pro",
+  shareCode,
+  isBracketPublished = false,
   county,
   teams: initialTeams,
   matches: initialMatches,
@@ -51,6 +53,8 @@ export function ChampionshipTabs({
   championshipId: string;
   sport?: string;
   championshipName?: string;
+  shareCode?: string | null;
+  isBracketPublished?: boolean;
   county?: string | null;
   teams: Team[];
   matches: Match[];
@@ -349,17 +353,6 @@ export function ChampionshipTabs({
             )}
           </button>
 
-          {/* 2. Invită Competitori / Lideri Echipă (Modal Trigger) */}
-          <button
-            type="button"
-            onClick={() => setShowInviteModal(true)}
-            className="flex-1 sm:flex-initial px-7 py-3.5 rounded-2xl bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-lg transition active:scale-95 border border-lime-300"
-          >
-            <span className="material-symbols-outlined text-lg">send</span>
-            <span>
-              {isIndividual ? "Invită Competitori (WhatsApp / Email)" : "Invită Lideri Echipă / Anunț Zaruri"}
-            </span>
-          </button>
         </div>
       )}
 
@@ -394,6 +387,10 @@ export function ChampionshipTabs({
             {/* Live Knockout Bracket Visualizer with Publish toggle */}
             <BracketVisualizer
               championshipId={championshipId}
+              championshipName={championshipName}
+              sport={sport}
+              shareCode={shareCode || undefined}
+              isPublished={isBracketPublished}
               matches={matchDataList}
               isAdmin={true}
               onEditMatch={(m) => setEditingMatch(m)}

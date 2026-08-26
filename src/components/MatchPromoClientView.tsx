@@ -65,9 +65,11 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
   const [buyerName, setBuyerName] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
+  const [promoCode, setPromoCode] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"card" | "apple_pay" | "google_pay" | "paypal">("card");
   const [processing, setProcessing] = useState(false);
   const [purchasedTicket, setPurchasedTicket] = useState<{ id: string; ticketCode: string } | null>(null);
+  const [purchasedWithPromo, setPurchasedWithPromo] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
   const scheduledDate = React.useMemo(() => {
@@ -83,6 +85,8 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
 
   const unitPrice = priceMap[ticketSector] || (match.ticketPrice || 25);
   const totalPrice = unitPrice * ticketCount;
+  const hasFreeTicketCode = promoCode.trim().length > 0;
+  const displayedTotal = hasFreeTicketCode ? 0 : totalPrice;
 
   useEffect(() => {
     function updateCountdown() {
@@ -103,7 +107,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
     return () => clearInterval(interval);
   }, [scheduledDate]);
 
-  const shareUrl = typeof window !== "undefined" ? window.location.href : `https://sp.tscquantum.ro/matches/${match.id}/promo`;
+  const shareUrl = typeof window !== "undefined" ? window.location.href : `/matches/${match.id}/promo`;
 
   function copyPromoLink() {
     navigator.clipboard.writeText(shareUrl);
@@ -128,6 +132,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
           buyerPhone,
           paymentMethod,
           seatSector: ticketSector,
+          promoCode: promoCode.trim() || undefined,
         }),
       });
 
@@ -137,6 +142,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
           id: data.tickets[0].id,
           ticketCode: data.tickets[0].ticketCode,
         });
+        setPurchasedWithPromo(Boolean(data.isFreeTicket));
       } else {
         alert(data.error || "Eroare la emiterea biletului.");
       }
@@ -437,7 +443,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                 <span className="text-5xl block animate-bounce">🎟️</span>
                 <div>
                   <span className="text-[10px] uppercase font-mono font-bold text-lime-600 dark:text-lime-400">
-                    PLATĂ CONFIRMATĂ CU SUCCES
+                    {purchasedWithPromo ? "COD PROMO VALIDAT CU SUCCES" : "PLATĂ CONFIRMATĂ CU SUCCES"}
                   </span>
                   <h4 className="font-headline font-black text-xl text-slate-900 dark:text-white uppercase mt-1">
                     Biletul tău este Gata!
@@ -546,8 +552,24 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                   </div>
                 </div>
 
+                <div className="pt-3 border-t border-slate-200 dark:border-slate-800">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400 font-label block mb-1.5">
+                    Cod Bilet Gratuit / Influencer
+                  </label>
+                  <input
+                    type="text"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                    placeholder="ex: VIP-AB12CD"
+                    className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-2xl text-xs font-black font-mono uppercase text-slate-900 dark:text-white placeholder:font-sans placeholder:font-bold placeholder:text-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-lime-400 shadow-sm transition"
+                  />
+                  <p className="mt-1.5 text-[10px] text-slate-500 dark:text-slate-400">
+                    Un cod valid emite bilete gratuite până la limita stabilită de organizator.
+                  </p>
+                </div>
+
                 {/* Payment Gateway Selector */}
-                <div className="space-y-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+                {!hasFreeTicketCode && <div className="space-y-2 pt-3 border-t border-slate-200 dark:border-slate-800">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400 font-label block">
                     Alege Metoda de Plată
                   </span>
@@ -605,7 +627,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                       <span className="text-[10px] font-label font-bold">PayPal</span>
                     </button>
                   </div>
-                </div>
+                </div>}
 
                 {/* Total & Checkout Button */}
                 <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-3">
@@ -614,7 +636,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                       Total de Plată ({ticketCount} bilet{ticketCount > 1 ? "e" : ""}):
                     </span>
                     <span className="text-2xl font-black font-mono text-emerald-600 dark:text-lime-400">
-                      {totalPrice} RON
+                      {displayedTotal} RON
                     </span>
                   </div>
 
@@ -623,7 +645,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                     disabled={processing}
                     className="w-full py-4 bg-lime-400 hover:bg-lime-300 disabled:opacity-50 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-xl transition active:scale-95 flex items-center justify-center gap-2"
                   >
-                    <span>🔒</span> {processing ? "Procesare Plată..." : `Plătește ${totalPrice} RON & Emite Bilet`}
+                    <span>{hasFreeTicketCode ? "🎟️" : "🔒"}</span> {processing ? "Se emite biletul..." : hasFreeTicketCode ? "Validează Codul & Emite Bilet Gratuit" : `Plătește ${totalPrice} RON & Emite Bilet`}
                   </button>
                 </div>
               </form>

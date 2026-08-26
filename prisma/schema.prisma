@@ -243,6 +243,7 @@ model Match {
   awayTeam     Team         @relation("AwayTeam", fields: [awayTeamId], references: [id])
   ticketTiers  TicketTier[]
   tickets      Ticket[]
+  promoCodes   TicketPromoCode[]
 
   @@index([championshipId])
   @@index([scheduledAt])
@@ -287,6 +288,22 @@ model TicketTier {
   tickets     Ticket[]
 
   @@index([matchId])
+}
+
+model TicketPromoCode {
+  id             String   @id @default(cuid())
+  matchId        String
+  code           String
+  maxRedemptions Int      @default(5)
+  redeemedCount  Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  match          Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  @@unique([matchId, code])
+  @@index([matchId, isActive])
 }
 
 model Ticket {
@@ -343,5 +360,4 @@ model VenueClaim {
   @@index([status])
   @@index([applicantEmail])
 }
-
 

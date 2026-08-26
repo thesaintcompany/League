@@ -17,6 +17,7 @@ export async function POST(req: Request) {
       buyerPhone,
       paymentMethod = "card", // "card" | "paypal" | "apple_pay" | "google_pay"
       seatSector = "Tribuna 1",
+      promoCode,
     } = body;
 
     if (!matchId || !buyerName || !buyerEmail) {
@@ -44,6 +45,29 @@ export async function POST(req: Request) {
       );
     }
 
+    const count = Math.max(1, parseInt(quantity) || 1);
+    const normalizedPromoCode = String(promoCode || "").trim().toUpperCase();
+    let appliedPromoCode: { id: string; code: string; maxRedemptions: number; redeemedCount: number } | null = null;
+
+    if (normalizedPromoCode) {
+      appliedPromoCode = await prisma.ticketPromoCode.findFirst({
+        where: { matchId: match.id, code: normalizedPromoCode, isActive: true },
+        select: { id: true, code: true, maxRedemptions: true, redeemedCount: true },
+      });
+
+      if (!appliedPromoCode) {
+        return NextResponse.json({ error: "Codul pentru bilete gratuite este invalid sau nu mai este activ." }, { status: 400 });
+      }
+
+      const availableTickets = appliedPromoCode.maxRedemptions - appliedPromoCode.redeemedCount;
+      if (count > availableTickets) {
+        return NextResponse.json(
+          { error: `Codul mai are disponibile doar ${availableTickets} bilete gratuite.` },
+          { status: 400 }
+        );
+      }
+    }
+
     // Determine price from tier or match default
     let unitPrice = match.ticketPrice || 25;
     let selectedTierName = seatSector;
@@ -57,11 +81,14 @@ export async function POST(req: Request) {
       }
     }
 
+    if (appliedPromoCode) {
+      unitPrice = 0;
+    }
+
     // Get Platform Fee Percent from SystemSetting
     const setting = await prisma.systemSetting.findUnique({ where: { id: "default" } });
     const feePercent = setting?.platformFeePercent ?? 10.0;
 
-    const count = Math.max(1, parseInt(quantity) || 1);
     const createdTickets = [];
 
     for (let i = 0; i < count; i++) {
@@ -99,7 +126,7 @@ export async function POST(req: Request) {
           price: unitPrice,
           platformFee,
           organizerPayout,
-          paymentMethod,
+          paymentMethod: appliedPromoCode ? "promo_code" : paymentMethod,
           paymentStatus: "paid",
           status: "valid",
           qrPayload,
@@ -117,12 +144,22 @@ export async function POST(req: Request) {
       createdTickets.push(ticket);
     }
 
+    if (appliedPromoCode) {
+      await prisma.ticketPromoCode.update({
+        where: { id: appliedPromoCode.id },
+        data: { redeemedCount: { increment: count } },
+      });
+    }
+
     return NextResponse.json({
       success: true,
-      message: `S-au emis cu succes ${createdTickets.length} bilet(e)!`,
+      message: appliedPromoCode
+        ? `S-au emis cu succes ${createdTickets.length} bilet(e) gratuit(e) cu codul ${appliedPromoCode.code}!`
+        : `S-au emis cu succes ${createdTickets.length} bilet(e)!`,
       tickets: createdTickets,
       firstTicketCode: createdTickets[0].ticketCode,
       redirectUrl: `/tickets/${createdTickets[0].id}/print`,
+      isFreeTicket: Boolean(appliedPromoCode),
     });
   } catch (error: any) {
     console.error("Error processing ticket purchase:", error);

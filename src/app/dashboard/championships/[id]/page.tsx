@@ -117,6 +117,8 @@ export default async function ChampionshipDetailPage({
             championshipId={champ.id}
             sport={champ.sport}
             championshipName={champ.name}
+            shareCode={champ.shareCode}
+            isBracketPublished={champ.isBracketPublished}
             county={champ.county}
             teams={champ.teams.map((t) => ({
               id: t.id,

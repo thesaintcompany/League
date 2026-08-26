@@ -1,12 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MatchData } from "./MatchCard";
 
 interface PromotionHubProps {
   matches: MatchData[];
   championshipName: string;
 }
+
+type FreeTicketCode = {
+  code: string;
+  maxRedemptions: number;
+  redeemedCount: number;
+};
 
 export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
   const [selectedMatchId, setSelectedMatchId] = useState<string>(
@@ -15,12 +21,35 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
   const [format, setFormat] = useState<"story" | "post">("story");
   const [template, setTemplate] = useState<"kinetic" | "hyper" | "minimal">("kinetic");
   const [ticketPrice, setTicketPrice] = useState<number>(25);
-  const [ticketUrl, setTicketUrl] = useState<string>("https://sp.tscquantum.ro/tickets");
+  const [ticketUrl, setTicketUrl] = useState<string>("/tickets");
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+  const [arenaImage, setArenaImage] = useState<string | null>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
+  const [freeTicketCode, setFreeTicketCode] = useState<FreeTicketCode | null>(null);
+  const [freeTicketLimit, setFreeTicketLimit] = useState(5);
+  const [creatingFreeTicketCode, setCreatingFreeTicketCode] = useState(false);
+  const [copiedFreeTicketCode, setCopiedFreeTicketCode] = useState(false);
   const [sponsorName, setSponsorName] = useState<string>("Banca Transilvania / Dedeman");
   const [sponsorTagline, setSponsorTagline] = useState<string>(
     "Partener Principal al Sportului Românesc"
   );
   const [copied, setCopied] = useState(false);
+
+  // Linkurile promoționale folosesc mereu domeniul pe care este deschisă aplicația.
+  useEffect(() => {
+    setTicketUrl(`${window.location.origin}/tickets`);
+  }, []);
+
+  useEffect(() => {
+    if (!selectedMatchId) return;
+    fetch(`/api/matches/${selectedMatchId}/promo-codes`)
+      .then((response) => response.json())
+      .then((data) => {
+        setFreeTicketCode(data.promoCode || null);
+        if (data.promoCode?.maxRedemptions) setFreeTicketLimit(data.promoCode.maxRedemptions);
+      })
+      .catch(() => setFreeTicketCode(null));
+  }, [selectedMatchId]);
 
   const selectedMatch = matches.find((m) => m.id === selectedMatchId) || matches[0];
 
@@ -34,9 +63,9 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
 
   const promoUrl = typeof window !== "undefined"
     ? `${window.location.origin}/matches/${selectedMatch.id}/promo`
-    : `https://sp.tscquantum.ro/matches/${selectedMatch.id}/promo`;
+    : `/matches/${selectedMatch.id}/promo`;
 
-  const shareText = `🔥 MECIUL ETAPEI în ${championshipName}!\n⚽ ${selectedMatch.homeTeam.name} vs ${selectedMatch.awayTeam.name}\n📍 Stadion: ${selectedMatch.venue || "Arena Oficială"}\n📅 Data: ${new Date(selectedMatch.scheduledAt || Date.now()).toLocaleDateString("ro-RO", { weekday: "long", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}\n🎟️ Bilete (${ticketPrice} RON): ${promoUrl}`;
+  const shareText = `🔥 MECIUL ETAPEI în ${championshipName}!\n⚽ ${selectedMatch.homeTeam.name} vs ${selectedMatch.awayTeam.name}\n📍 Stadion: ${selectedMatch.venue || "Arena Oficială"}\n📅 Data: ${new Date(selectedMatch.scheduledAt || Date.now()).toLocaleDateString("ro-RO", { weekday: "long", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}\n🎟️ Bilete (${ticketPrice} RON): ${ticketUrl}`;
 
   function copyPromoLink() {
     navigator.clipboard.writeText(promoUrl);
@@ -50,6 +79,76 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
 
   function shareFacebook() {
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(promoUrl)}`, "_blank");
+  }
+
+  function shareX() {
+    window.open(
+      `https://x.com/intent/post?text=${encodeURIComponent(`🔥 ${selectedMatch.homeTeam.name} vs ${selectedMatch.awayTeam.name} în ${championshipName}`)}&url=${encodeURIComponent(promoUrl)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
+
+  function shareLinkedIn() {
+    window.open(
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(promoUrl)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
+
+  function shareInstagram() {
+    navigator.clipboard.writeText(promoUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+    window.open("https://www.instagram.com/", "_blank", "noopener,noreferrer");
+  }
+
+  async function generateFreeTicketCode() {
+    if (!selectedMatch) return;
+    setCreatingFreeTicketCode(true);
+    try {
+      const response = await fetch(`/api/matches/${selectedMatch.id}/promo-codes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ maxRedemptions: freeTicketLimit }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Nu am putut genera codul.");
+      setFreeTicketCode(data.promoCode);
+    } catch (error: any) {
+      setImageError(error.message || "Nu am putut genera codul pentru bilete gratuite.");
+    } finally {
+      setCreatingFreeTicketCode(false);
+    }
+  }
+
+  function copyFreeTicketCode() {
+    if (!freeTicketCode) return;
+    navigator.clipboard.writeText(freeTicketCode.code);
+    setCopiedFreeTicketCode(true);
+    setTimeout(() => setCopiedFreeTicketCode(false), 2500);
+  }
+
+  function loadImage(file: File | undefined, target: "background" | "arena") {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setImageError("Alege un fișier imagine (PNG, JPG, WebP sau SVG).");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setImageError("Imaginea poate avea cel mult 5 MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const image = typeof reader.result === "string" ? reader.result : null;
+      if (target === "background") setBackgroundImage(image);
+      else setArenaImage(image);
+      setImageError(null);
+    };
+    reader.readAsDataURL(file);
   }
 
   return (
@@ -150,9 +249,105 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
                 value={ticketUrl}
                 onChange={(e) => setTicketUrl(e.target.value)}
                 className="input text-xs"
-                placeholder="https://sp.tscquantum.ro/tickets"
+                placeholder="https://domeniul-tau.ro/tickets"
               />
             </div>
+
+            <div className="rounded-2xl border border-amber-300 bg-amber-50 p-3.5 space-y-3 dark:border-amber-500/30 dark:bg-amber-500/10">
+              <div className="flex items-start gap-2">
+                <span className="material-symbols-outlined text-lg text-amber-600 dark:text-amber-300">confirmation_number</span>
+                <div>
+                  <p className="text-xs font-black font-headline text-amber-950 dark:text-amber-100">Bilete gratuite pentru influenceri</p>
+                  <p className="text-[10px] leading-relaxed text-amber-800 dark:text-amber-200">Codul se validează direct în pagina de bilete și emite bilete cu preț 0 RON.</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <label className="text-[10px] font-bold text-amber-900 dark:text-amber-100">Număr bilete</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={100}
+                  value={freeTicketLimit}
+                  onChange={(event) => setFreeTicketLimit(Math.min(100, Math.max(1, Number(event.target.value) || 1)))}
+                  className="w-16 rounded-lg border border-amber-300 bg-white px-2 py-1.5 text-center text-xs font-black text-slate-900 outline-none focus:border-amber-500 dark:border-amber-500/40 dark:bg-slate-950 dark:text-white"
+                />
+                <button
+                  type="button"
+                  onClick={generateFreeTicketCode}
+                  disabled={creatingFreeTicketCode}
+                  className="ml-auto rounded-lg bg-amber-400 px-2.5 py-1.5 text-[10px] font-black uppercase text-amber-950 transition hover:bg-amber-300 disabled:opacity-60"
+                >
+                  {creatingFreeTicketCode ? "Se creează..." : freeTicketCode ? "Regenerează" : "Generează"}
+                </button>
+              </div>
+
+              {freeTicketCode && (
+                <div className="flex items-center gap-2 rounded-xl bg-white p-2 dark:bg-slate-950">
+                  <code className="min-w-0 flex-1 truncate text-xs font-black tracking-wider text-slate-900 dark:text-lime-400">{freeTicketCode.code}</code>
+                  <button
+                    type="button"
+                    onClick={copyFreeTicketCode}
+                    title="Copiază codul"
+                    className="rounded-lg bg-slate-100 p-1.5 text-slate-800 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
+                  >
+                    <span className="material-symbols-outlined text-base">{copiedFreeTicketCode ? "check" : "content_copy"}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-2.5">
+              <label className="label">Imagine de Fundal pentru Cartonaș</label>
+              <label className="flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 px-3 py-3 text-xs font-bold text-slate-700 transition hover:border-lime-400 hover:bg-lime-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-lime-400/10">
+                <span className="material-symbols-outlined text-lg text-lime-600 dark:text-lime-400">add_photo_alternate</span>
+                {backgroundImage ? "Înlocuiește fundalul" : "Încarcă fundalul"}
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                  className="sr-only"
+                  onChange={(event) => loadImage(event.target.files?.[0], "background")}
+                />
+              </label>
+              {backgroundImage && (
+                <button
+                  type="button"
+                  onClick={() => setBackgroundImage(null)}
+                  className="text-[11px] font-bold text-rose-600 hover:underline dark:text-rose-400"
+                >
+                  Elimină fundalul
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-2.5">
+              <label className="label">Fotografie Arenă / Locație</label>
+              <label className="flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 px-3 py-3 text-xs font-bold text-slate-700 transition hover:border-cyan-400 hover:bg-cyan-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-cyan-400/10">
+                <span className="material-symbols-outlined text-lg text-cyan-600 dark:text-cyan-400">stadium</span>
+                {arenaImage ? "Înlocuiește fotografia arenei" : "Încarcă fotografia arenei"}
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                  className="sr-only"
+                  onChange={(event) => loadImage(event.target.files?.[0], "arena")}
+                />
+              </label>
+              {arenaImage && (
+                <button
+                  type="button"
+                  onClick={() => setArenaImage(null)}
+                  className="text-[11px] font-bold text-rose-600 hover:underline dark:text-rose-400"
+                >
+                  Elimină fotografia arenei
+                </button>
+              )}
+            </div>
+
+            {imageError && (
+              <p className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-[11px] font-semibold text-rose-700 dark:border-rose-900/60 dark:bg-rose-950/30 dark:text-rose-300">
+                {imageError}
+              </p>
+            )}
 
             <div>
               <label className="label">Sponsor Oficial / Reclame Cluburi</label>
@@ -212,8 +407,17 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
               format === "story" ? "aspect-[9/16]" : "aspect-square"
             }`}
           >
+            {backgroundImage && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={backgroundImage}
+                alt="Fundal cartonaș promoțional"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            )}
+
             {/* Background Texture with Stadium glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-primary to-slate-950 p-6 flex flex-col justify-between relative overflow-hidden">
+            <div className="absolute inset-0 z-10 bg-gradient-to-br from-slate-950/90 via-primary/80 to-slate-950/90 p-6 flex flex-col justify-between overflow-hidden">
               <div className="absolute top-0 right-0 w-48 h-48 bg-lime-400/20 rounded-full blur-3xl pointer-events-none"></div>
               <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -272,13 +476,23 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
 
                 {/* Match Info Pills */}
                 <div className="grid grid-cols-2 gap-2 text-left">
-                  <div className="bg-white/10 backdrop-blur-md p-2.5 rounded-xl border border-white/15">
-                    <p className="text-[8px] font-label text-slate-300 uppercase font-bold">
+                  <div className="relative overflow-hidden bg-white/10 backdrop-blur-md p-2.5 rounded-xl border border-white/15">
+                    {arenaImage && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={arenaImage}
+                        alt={selectedMatch.venue || "Arena meciului"}
+                        className="absolute inset-0 h-full w-full object-cover opacity-40"
+                      />
+                    )}
+                    <div className="relative z-10">
+                      <p className="text-[8px] font-label text-slate-300 uppercase font-bold">
                       🏟️ ARENĂ
-                    </p>
-                    <p className="text-[10px] font-bold text-white truncate">
-                      {selectedMatch.venue || "Arena Națională"}
-                    </p>
+                      </p>
+                      <p className="text-[10px] font-bold text-white truncate">
+                        {selectedMatch.venue || "Arena Națională"}
+                      </p>
+                    </div>
                   </div>
                   <div className="bg-white/10 backdrop-blur-md p-2.5 rounded-xl border border-white/15">
                     <p className="text-[8px] font-label text-slate-300 uppercase font-bold">
@@ -325,43 +539,17 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
               3. Distribuie Direct pe Rețele
             </h3>
 
-            {/* WhatsApp */}
-            <button
-              type="button"
-              onClick={shareWhatsApp}
-              className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs font-label transition shadow-md"
-            >
-              <div className="flex items-center gap-2.5">
-                <span className="text-lg">💬</span>
-                <span>Trimite pe WhatsApp</span>
-              </div>
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </button>
-
-            {/* Facebook */}
-            <button
-              type="button"
-              onClick={shareFacebook}
-              className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs font-label transition shadow-md"
-            >
-              <div className="flex items-center gap-2.5">
-                <span className="text-lg">📘</span>
-                <span>Postează pe Facebook</span>
-              </div>
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </button>
-
-            {/* Copy Promo Link */}
-            <button
-              type="button"
-              onClick={copyPromoLink}
-              className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-900 dark:text-white font-bold text-xs font-label transition"
-            >
-              <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[18px]">share</span>
-                <span>{copied ? "Link Copiat! ✓" : "Copiază Link Promo"}</span>
-              </div>
-            </button>
+            <div className="grid grid-cols-3 gap-2.5">
+              <button type="button" onClick={shareWhatsApp} title="Trimite pe WhatsApp" aria-label="Trimite pe WhatsApp" className="aspect-square rounded-2xl bg-emerald-500 text-xl text-white shadow-sm transition hover:bg-emerald-600 hover:scale-105 active:scale-95">💬</button>
+              <button type="button" onClick={shareFacebook} title="Postează pe Facebook" aria-label="Postează pe Facebook" className="aspect-square rounded-2xl bg-blue-600 text-xl text-white shadow-sm transition hover:bg-blue-700 hover:scale-105 active:scale-95">f</button>
+              <button type="button" onClick={shareX} title="Publică pe X" aria-label="Publică pe X" className="aspect-square rounded-2xl bg-slate-950 text-xl text-white shadow-sm transition hover:bg-slate-800 hover:scale-105 active:scale-95">𝕏</button>
+              <button type="button" onClick={shareLinkedIn} title="Distribuie pe LinkedIn" aria-label="Distribuie pe LinkedIn" className="aspect-square rounded-2xl bg-sky-700 text-sm font-black text-white shadow-sm transition hover:bg-sky-800 hover:scale-105 active:scale-95">in</button>
+              <button type="button" onClick={shareInstagram} title="Copiază linkul și deschide Instagram" aria-label="Copiază linkul și deschide Instagram" className="aspect-square rounded-2xl bg-gradient-to-br from-amber-400 via-rose-500 to-violet-600 text-xl text-white shadow-sm transition hover:brightness-110 hover:scale-105 active:scale-95"><span className="material-symbols-outlined">photo_camera</span></button>
+              <button type="button" onClick={copyPromoLink} title={copied ? "Link copiat" : "Copiază linkul promo"} aria-label="Copiază linkul promo" className="aspect-square rounded-2xl bg-slate-100 text-slate-800 shadow-sm transition hover:bg-slate-200 hover:scale-105 active:scale-95 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"><span className="material-symbols-outlined">{copied ? "check" : "share"}</span></button>
+            </div>
+            <p className="text-center text-[10px] font-label text-slate-400">
+              Pentru Instagram, linkul se copiază automat și se deschide aplicația web.
+            </p>
           </div>
 
           <div className="card p-6 bg-surface-container-low dark:bg-slate-800/40 rounded-3xl space-y-3">
@@ -369,7 +557,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
               💡 Sfaturi de Promovare
             </h4>
             <p className="text-xs text-slate-500 leading-relaxed font-body">
-              Distribuie linkul în grupurile de suporteri cu 24h înainte de meci pentru a maximiza vânzarea de bilete și prezența spectatorilor în tribune!
+              Distribuie linkul în grupurile de suporteri cu 48–24h înainte de meci. Apelează și la influenceri locali: oferă-le codul de bilete gratuite generat mai sus, pentru a-și putea imprima biletele direct din pagina meciului.
             </p>
           </div>
         </div>
