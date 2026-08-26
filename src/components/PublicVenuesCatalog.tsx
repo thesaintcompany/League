@@ -210,15 +210,15 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
       <section className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-6 transition-colors">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 flex items-center justify-center font-black text-xl shadow-md">
-              🗺️
+            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-lime-400 flex items-center justify-center font-bold text-base border border-slate-200 dark:border-slate-700">
+              <span className="material-symbols-outlined text-xl">map</span>
             </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-bold font-headline text-slate-900 dark:text-white uppercase tracking-tight">
+              <h2 className="text-base sm:text-lg font-semibold text-slate-900 dark:text-white uppercase tracking-tight">
                 Filtrare pe Județe &amp; Regiuni
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                Apasă pe un județ pentru a vedea arenele și sălile polivalente disponibile
+              <p className="text-xs text-slate-500 font-normal">
+                Selectează un județ pentru a vizualiza arenele disponibile
               </p>
             </div>
           </div>
@@ -227,13 +227,13 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
             <button
               type="button"
               onClick={() => setSelectedCounty("all")}
-              className={`px-4 py-2 rounded-xl text-xs font-bold font-label transition fluid-press ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition ${
                 selectedCounty === "all"
-                  ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
+                  ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 font-semibold shadow-sm"
                   : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
               }`}
             >
-              🇷🇴 Toate Județele ({initialVenues.length})
+              Toate Județele ({initialVenues.length})
             </button>
           </div>
         </div>
@@ -324,12 +324,12 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
               value={capacityFilter}
               onChange={(e) => setCapacityFilter(e.target.value)}
               aria-label="Filtru Capacitate Tribune"
-              className="w-full px-3.5 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400 transition"
             >
-              <option value="all">👥 Orice Capacitate</option>
-              <option value="over10k">🏟️ Peste 10.000 locuri (Arene Majore)</option>
-              <option value="3k-10k">🎪 3.000 – 10.000 locuri (Săli Polivalente)</option>
-              <option value="under3k">⚡ Sub 3.000 locuri (Baze Municipale)</option>
+              <option value="all">Orice Capacitate</option>
+              <option value="over10k">Peste 10.000 locuri (Arene Majore)</option>
+              <option value="3k-10k">3.000 – 10.000 locuri (Săli Polivalente)</option>
+              <option value="under3k">Sub 3.000 locuri (Baze Locale)</option>
             </select>
           </div>
 
@@ -339,12 +339,12 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               aria-label="Filtru Stadiu Arenă"
-              className="w-full px-3 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition"
+              className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400 transition"
             >
               <option value="all">Status: Toate</option>
-              <option value="activ">✅ Active</option>
-              <option value="constructie">🏗️ În Construcție</option>
-              <option value="proiect">📐 Proiect</option>
+              <option value="activ">Active</option>
+              <option value="constructie">În Construcție</option>
+              <option value="proiect">În Proiect</option>
             </select>
 
             {/* View Mode Buttons */}
@@ -504,20 +504,47 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
 
                     {/* Floating Badges */}
-                    <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
-                      <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label shadow-sm">
-                        {venue.sport.toUpperCase()}
-                      </span>
-                      <span className="px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md text-amber-300 font-headline font-black text-xs">
-                        👥 {venue.capacity.toLocaleString("ro-RO")} locuri
+                    <div className="absolute top-2.5 left-2.5 right-2.5 flex justify-between items-start gap-1">
+                      <div className="flex flex-wrap gap-1 max-w-[65%]">
+                        {(venue.sport || "fotbal").split(",").map((sp, sIdx) => {
+                          const sTrim = sp.trim().toLowerCase();
+                          const iconName =
+                            sTrim === "fotbal"
+                              ? "sports_soccer"
+                              : sTrim === "tenis"
+                              ? "sports_tennis"
+                              : sTrim === "padel"
+                              ? "sports_tennis"
+                              : sTrim === "pingpong"
+                              ? "table_tennis"
+                              : sTrim === "baschet"
+                              ? "sports_basketball"
+                              : sTrim === "volei"
+                              ? "sports_volleyball"
+                              : sTrim === "handbal"
+                              ? "sports_handball"
+                              : "stadium";
+                          return (
+                            <span
+                              key={sIdx}
+                              className="px-2 py-0.5 rounded-md bg-lime-400 text-slate-950 text-[9px] font-semibold uppercase tracking-wider shadow-sm flex items-center gap-1"
+                            >
+                              <span className="material-symbols-outlined text-[12px]">{iconName}</span>
+                              <span>{sp.trim()}</span>
+                            </span>
+                          );
+                        })}
+                      </div>
+                      <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-amber-300 font-medium text-[11px] shrink-0">
+                        {venue.capacity.toLocaleString("ro-RO")} locuri
                       </span>
                     </div>
 
                     {/* Status badge if not active */}
                     {venue.status && venue.status !== "activ" && (
-                      <div className="absolute bottom-3 left-3">
-                        <span className="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[9px] font-black uppercase font-label">
-                          {venue.status === "constructie" ? "🏗️ În Construcție" : "📐 În Proiect"}
+                      <div className="absolute bottom-2.5 left-2.5">
+                        <span className="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[9px] font-semibold uppercase tracking-wider">
+                          {venue.status === "constructie" ? "În Construcție" : "În Proiect"}
                         </span>
                       </div>
                     )}
@@ -531,7 +558,8 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                           {venue.name}
                         </h3>
                         <p className="text-xs text-slate-500 dark:text-slate-400 font-label flex items-center gap-1 mt-1">
-                          <span>📍 {venue.location}</span>
+                          <span className="material-symbols-outlined text-[13px] text-slate-400">location_on</span>
+                          <span>{venue.location}</span>
                           {venue.county && <span>• Jud. {venue.county}</span>}
                         </p>
                       </div>
@@ -543,13 +571,13 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                       )}
 
                       <div className="grid grid-cols-2 gap-2 text-[11px] font-label pt-2 border-t border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-emerald-600 dark:text-lime-400">🌱</span>
-                          <span>Suprafață: <strong className="text-slate-900 dark:text-white">{venue.surface}</strong></span>
+                        <div className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[13px] text-slate-400">grass</span>
+                          <span>Suprafață: <strong className="text-slate-900 dark:text-white font-medium">{venue.surface}</strong></span>
                         </div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-amber-600 dark:text-amber-400">💡</span>
-                          <span>Nocturnă: <strong className="text-slate-900 dark:text-white">{venue.floodlights ? "Da ✓" : "Nu"}</strong></span>
+                        <div className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[13px] text-slate-400">light_mode</span>
+                          <span>Nocturnă: <strong className="text-slate-900 dark:text-white font-medium">{venue.floodlights ? "Da" : "Nu"}</strong></span>
                         </div>
                       </div>
                     </div>

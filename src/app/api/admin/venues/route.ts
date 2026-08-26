@@ -9,7 +9,7 @@ const venueSchema = z.object({
   location: z.string().min(2).max(120),
   address: z.string().max(200).optional().nullable(),
   specs: z.string().max(500).optional().nullable(),
-  sport: z.enum(["fotbal", "baschet", "volei", "multifunctional"]).default("fotbal"),
+  sport: z.string().default("fotbal"),
   surface: z.string().max(50).default("Sintetic"),
   capacity: z.number().int().min(0).default(100),
   floodlights: z.boolean().default(true),

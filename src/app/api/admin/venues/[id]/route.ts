@@ -9,7 +9,7 @@ const updateVenueSchema = z.object({
   location: z.string().min(2).max(120).optional(),
   address: z.string().max(200).optional().nullable(),
   specs: z.string().max(500).optional().nullable(),
-  sport: z.enum(["fotbal", "baschet", "volei", "multifunctional"]).optional(),
+  sport: z.string().optional(),
   surface: z.string().max(50).optional(),
   capacity: z.number().int().min(0).optional(),
   floodlights: z.boolean().optional(),

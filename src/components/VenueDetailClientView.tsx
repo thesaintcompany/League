@@ -210,15 +210,46 @@ export function VenueDetailClientView({
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 w-full">
           <div className="space-y-4 max-w-3xl">
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label shadow-lg flex items-center gap-1.5">
-                <span>🏟️</span> ARENĂ OFICIALĂ LIGUE PRO
+              <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-semibold uppercase tracking-wider font-label shadow-sm flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[15px]">stadium</span> ARENĂ OFICIALĂ LIGUE PRO
               </span>
-              <span className="px-3.5 py-1 rounded-full bg-slate-900/90 backdrop-blur-md text-white text-xs font-bold font-label uppercase border border-slate-700">
-                {venue.sport || "Fotbal"} • {venue.surface || "Gazon Natural"}
+              {(venue.sport || "Fotbal").split(",").map((s, idx) => {
+                const spTrimmed = s.trim();
+                const spLower = spTrimmed.toLowerCase();
+                const iconName =
+                  spLower === "fotbal"
+                    ? "sports_soccer"
+                    : spLower === "tenis"
+                    ? "sports_tennis"
+                    : spLower === "padel"
+                    ? "sports_tennis"
+                    : spLower === "pingpong"
+                    ? "table_tennis"
+                    : spLower === "baschet"
+                    ? "sports_basketball"
+                    : spLower === "volei"
+                    ? "sports_volleyball"
+                    : spLower === "handbal"
+                    ? "sports_handball"
+                    : "stadium";
+                return (
+                  <span
+                    key={idx}
+                    className="px-3 py-1 rounded-full bg-slate-900/90 backdrop-blur-md text-white text-xs font-medium font-label uppercase border border-slate-700 flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-[14px] text-slate-300">{iconName}</span>
+                    <span>{spTrimmed}</span>
+                  </span>
+                );
+              })}
+              <span className="px-3 py-1 rounded-full bg-slate-900/90 backdrop-blur-md text-slate-300 text-xs font-medium font-label uppercase border border-slate-700 flex items-center gap-1">
+                <span className="material-symbols-outlined text-[14px]">grass</span>
+                <span>{venue.surface || "Gazon Natural"}</span>
               </span>
               {venue.floodlights && (
-                <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-xs font-label border border-lime-400/30">
-                  ⚡ Nocturnă Omologată
+                <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-medium text-xs font-label border border-lime-400/30 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-[14px]">light_mode</span>
+                  <span>Nocturnă Omologată</span>
                 </span>
               )}
             </div>
@@ -244,28 +275,29 @@ export function VenueDetailClientView({
               href={`https://maps.google.com/?q=${encodeURIComponent(venue.name + " " + (venue.address || venue.location))}`}
               target="_blank"
               rel="noreferrer"
-              className="bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider py-4 px-6 rounded-2xl shadow-xl transition flex items-center gap-2 active:scale-95"
+              className="bg-lime-400 hover:bg-lime-300 text-slate-950 font-medium text-xs uppercase tracking-wider py-3.5 px-5 rounded-xl shadow-md transition flex items-center gap-2 active:scale-95"
             >
               <span className="material-symbols-outlined text-lg">navigation</span>
-              Indicații Rutiere GPS ↗
+              <span>Indicații Rutiere GPS</span>
             </a>
 
             {upcomingMatches.length > 0 && (
               <a
                 href="#upcoming-matches"
-                className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-headline font-bold text-xs uppercase tracking-wider py-4 px-6 rounded-2xl border border-white/20 transition flex items-center gap-2 active:scale-95"
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-medium text-xs uppercase tracking-wider py-3.5 px-5 rounded-xl border border-white/20 transition flex items-center gap-2 active:scale-95"
               >
-                <span>🎟️</span> Bilete Meciuri ({upcomingMatches.length})
+                <span className="material-symbols-outlined text-base">confirmation_number</span>
+                <span>Bilete Meciuri ({upcomingMatches.length})</span>
               </a>
             )}
 
             {activeAds.length > 0 && (
               <a
                 href="#arena-sponsors"
-                className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-headline font-bold text-xs uppercase tracking-wider py-4 px-6 rounded-2xl border border-white/20 transition flex items-center gap-2 active:scale-95"
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-medium text-xs uppercase tracking-wider py-3.5 px-5 rounded-xl border border-white/20 transition flex items-center gap-2 active:scale-95"
               >
                 <span className="material-symbols-outlined text-lg">campaign</span>
-                Reclame &amp; Sponsori ({activeAds.length})
+                <span>Reclame &amp; Sponsori ({activeAds.length})</span>
               </a>
             )}
           </div>
@@ -552,30 +584,28 @@ export function VenueDetailClientView({
 
                     {/* Footer Date & Direct Ticket Link */}
                     <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                      <div>
-                        <span className="text-[10px] font-label font-bold uppercase tracking-wider text-slate-400 block">
-                          Data Disputării
-                        </span>
-                        <span className="text-xs font-bold font-body text-slate-700 dark:text-slate-300 capitalize">
-                          📅 {formattedDate}
-                        </span>
+                      <div className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300">
+                        <span className="material-symbols-outlined text-[15px] text-slate-400">calendar_month</span>
+                        <span className="capitalize">{formattedDate}</span>
                       </div>
 
                       <div className="flex items-center gap-2">
                         {!isTicketSalesClosed(m) ? (
                           <Link
                             href={`/matches/${m.id}/promo`}
-                            className="flex-1 sm:flex-initial px-5 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md flex items-center justify-center gap-1.5 active:scale-95"
+                            className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-medium text-xs uppercase tracking-wider transition shadow-sm flex items-center justify-center gap-1.5 active:scale-95"
                           >
-                            <span>🎟️</span> Cumpără Bilet ({m.ticketPrice || 30} RON)
+                            <span className="material-symbols-outlined text-[15px]">confirmation_number</span>
+                            <span>Cumpără Bilet ({m.ticketPrice || 30} RON)</span>
                           </Link>
                         ) : (
                           <Link
                             href={`/matches/${m.id}/promo`}
-                            className="flex-1 sm:flex-initial px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-headline font-bold text-xs uppercase tracking-wider transition border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 hover:bg-slate-200 dark:hover:bg-slate-700"
+                            className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-medium text-xs uppercase tracking-wider transition border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 hover:bg-slate-200 dark:hover:bg-slate-700"
                             title="Vânzarea online a biletelor este închisă (ziua meciului sau meci finalizat)"
                           >
-                            <span>🔒</span> Vânzare Închisă • Detalii Meci
+                            <span className="material-symbols-outlined text-[14px]">lock</span>
+                            <span>Vânzare Închisă</span>
                           </Link>
                         )}
                       </div>
@@ -703,7 +733,10 @@ export function VenueDetailClientView({
                                 })
                               : "FINALIZAT"}
                           </span>
-                          <span className="text-lime-600 dark:text-lime-400 font-bold">✓ Finalizat</span>
+                          <span className="text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                            <span>Finalizat</span>
+                          </span>
                         </div>
 
                         {/* Score Banner */}
@@ -728,7 +761,8 @@ export function VenueDetailClientView({
                             target="_blank"
                             className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-xl text-[11px] font-bold font-label uppercase tracking-wider text-center block transition border border-slate-200 dark:border-slate-700"
                           >
-                            📄 Raport Meci PDF
+                            <span className="material-symbols-outlined text-[14px] mr-1">description</span>
+                            Raport Meci PDF
                           </Link>
                         </div>
                       </div>
