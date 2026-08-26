@@ -88,21 +88,21 @@ export function ChampionshipPublicClientView({
   topScorers: TopScorer[];
 }) {
   const router = useRouter();
-  const { selectedSport, currentSportMeta } = useSportContext();
+  const { selectedSport, selectedCategory, currentSportMeta, matchesCategoryFilter } = useSportContext();
   const [activeView, setActiveView] = useState<"bracket" | "standings">("bracket");
   const [showShareModal, setShowShareModal] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
-  // Filter championships for active selected sport
+  // Filter championships for active selected sport and category
   const sportChampionships = useMemo(() => {
     return allChampionships.filter((c) => {
       const cSport = (c.sport || "").toLowerCase();
-      return (
+      const matchesSport =
         cSport.includes(selectedSport) ||
-        (selectedSport === "fotbal" && (cSport.includes("minifotbal") || cSport.includes("futsal")))
-      );
+        (selectedSport === "fotbal" && (cSport.includes("minifotbal") || cSport.includes("futsal")));
+      return matchesSport && matchesCategoryFilter(`${c.name} ${c.sport || ""}`);
     });
-  }, [allChampionships, selectedSport]);
+  }, [allChampionships, selectedSport, selectedCategory, matchesCategoryFilter]);
 
   // If current championship is not in active sport and we have matching championships, redirect to first match
   useEffect(() => {

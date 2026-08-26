@@ -4,13 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { TopHeader } from "@/components/TopHeader";
-import { SPORTS, FORMATS, CHAMPIONSHIP_SCOPES, ROMANIAN_COUNTIES } from "@/lib/constants";
+import { SPORTS, FORMATS, CHAMPIONSHIP_SCOPES, ROMANIAN_COUNTIES, FOOTBALL_CATEGORIES } from "@/lib/constants";
 
 export default function NewChampionshipPage() {
   const router = useRouter();
   const [form, setForm] = useState({
     name: "",
     sport: "Fotbal",
+    category: "masculin",
     format: "round_robin" as "round_robin" | "knockout" | "groups_knockout",
     season: "2026",
     scope: "national" as "national" | "judetean" | "oras",
@@ -299,6 +300,34 @@ export default function NewChampionshipPage() {
                   </select>
                 </div>
               </div>
+
+              {/* Football Category Selector */}
+              {form.sport.toLowerCase().includes("fotbal") && (
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">⚽</span>
+                    <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block">
+                      Categorie Fotbal
+                    </label>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {FOOTBALL_CATEGORIES.map((cat) => (
+                      <button
+                        key={cat.value}
+                        type="button"
+                        onClick={() => update("category", cat.value)}
+                        className={`p-2.5 rounded-xl border text-xs font-headline font-bold text-center transition flex items-center justify-center gap-1.5 ${
+                          form.category === cat.value
+                            ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-950 dark:border-lime-400 shadow-sm"
+                            : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400"
+                        }`}
+                      >
+                        <span>{cat.label.split(" (")[0]}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>

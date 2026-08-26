@@ -25,8 +25,8 @@ export default async function AdminMasterPage() {
 
       <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
-          title="Consolă SuperAdmin • Gestiune Baze &amp; Utilizatori"
-          subtitle="Control complet peste cele 33 de arene din Județul Timiș și conturile platformei"
+          title="Consolă SuperAdministrator • Setări Globale & Control Sistem"
+          subtitle="Setări aplicație, logo-uri, integrări API, permisiuni utilizatori, telemetrie și audit de securitate"
         />
 
         <main className="p-4 sm:p-6 lg:p-10 max-w-7xl mx-auto w-full space-y-6 sm:space-y-8">
@@ -38,11 +38,11 @@ export default async function AdminMasterPage() {
                   SuperAdmin Mode
                 </span>
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                  Județul Timiș (Fotbal, Baschet, Volei, Multifuncțional)
+                  PRO L4GUE • Panou Master de Administrare Sistem
                 </span>
               </div>
-              <h1 className="text-3xl font-black italic tracking-tight font-headline uppercase text-slate-900 dark:text-white mt-1">
-                Gestiune Arene &amp; Toți Utilizatorii
+              <h1 className="text-2xl sm:text-3xl font-black italic tracking-tight font-headline uppercase text-slate-900 dark:text-white mt-1">
+                Centrul de Comandă &amp; Configurare Aplicație
               </h1>
             </div>
 
@@ -51,13 +51,7 @@ export default async function AdminMasterPage() {
                 href="/venues"
                 className="btn btn-secondary text-xs uppercase tracking-wider font-bold py-2.5 px-4 rounded-xl"
               >
-                Catalog Public Arene ↗
-              </Link>
-              <Link
-                href="/dashboard"
-                className="btn btn-primary text-xs uppercase tracking-wider font-bold py-2.5 px-5 rounded-xl bg-primary text-white hover:bg-slate-800 shadow-sm"
-              >
-                Panou Turnee
+                Catalog Arene ↗
               </Link>
             </div>
           </div>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { ThemeToggle } from "./ThemeToggle";
 import { BrandLogo } from "./BrandLogo";
@@ -19,6 +19,8 @@ interface SidebarProps {
 
 export function Sidebar({ variant }: SidebarProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentTab = searchParams?.get("tab");
   const { data: session } = useSession();
   const role = (session?.user as any)?.role || "organizer";
   const isSuperAdminRole = role === "super_admin" || role === "superadmin";
@@ -37,17 +39,13 @@ export function Sidebar({ variant }: SidebarProps) {
 
   if (isSuperAdminRole) {
     navItems = [
-      { name: "Consolă SuperAdmin", href: "/dashboard/admin", icon: "admin_panel_settings" },
-      { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
-      { name: "Gestiune Arenă & Reclame", href: "/dashboard/arena", icon: "stadium" },
-      { name: "Panou Manager Echipă", href: "/dashboard/team", icon: "badge" },
-      { name: "Meciuri & Panou Arbitraj", href: "/dashboard/referee", icon: "sports" },
-      { name: "Vezi Campionate", href: "/harta-romaniei", icon: "emoji_events" },
-      { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
-      { name: "Arene", href: "/venues", icon: "domain" },
-      { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
-      { name: "Corp Arbitri", href: "/referees", icon: "sports" },
-      { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
+      { name: "Setări Aplicație & Logo", href: "/dashboard/admin?tab=branding", icon: "tune" },
+      { name: "API & Integrare Plăți", href: "/dashboard/admin?tab=api_integrations", icon: "key" },
+      { name: "Permisiuni & Utilizatori", href: "/dashboard/admin?tab=users", icon: "manage_accounts" },
+      { name: "Statistici Utilizare", href: "/dashboard/admin?tab=analytics", icon: "analytics" },
+      { name: "Istoric Login & Securitate", href: "/dashboard/admin?tab=login_history", icon: "history" },
+      { name: "Infrastructură Arene", href: "/dashboard/admin?tab=venues", icon: "domain" },
+      { name: "Bază de Date & Backup", href: "/dashboard/admin?tab=data_export", icon: "database" },
     ];
   } else if (role === "referee") {
     navItems = [
@@ -154,7 +152,12 @@ export function Sidebar({ variant }: SidebarProps) {
         {/* Navigation Links */}
         <nav className="px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-280px)]">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+            const isTabMatch = item.href.includes("?tab=")
+              ? pathname === "/dashboard/admin" &&
+                (item.href.includes(`tab=${currentTab}`) ||
+                  (item.href.includes("tab=branding") && (!currentTab || currentTab === "branding")))
+              : pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+            const isActive = isTabMatch;
             return (
               <Link
                 key={item.name}

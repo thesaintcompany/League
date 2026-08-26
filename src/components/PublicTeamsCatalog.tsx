@@ -44,7 +44,7 @@ const PRESET_ROMANIAN_CLUBS = [
 ];
 
 export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] }) {
-  const { selectedSport, currentSportMeta } = useSportContext();
+  const { selectedSport, selectedCategory: globalCategory, currentSportMeta, matchesCategoryFilter } = useSportContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
@@ -67,16 +67,16 @@ export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] 
     }));
   }, [initialTeams]);
 
-  // Filter strictly by active selected sport
+  // Filter strictly by active selected sport and category
   const sportFilteredTeams = useMemo(() => {
     return allTeams.filter((t) => {
       const s = (t.championship?.sport || "fotbal").toLowerCase();
-      return (
+      const matchesSport =
         s.includes(selectedSport) ||
-        (selectedSport === "fotbal" && (s.includes("minifotbal") || s.includes("futsal")))
-      );
+        (selectedSport === "fotbal" && (s.includes("minifotbal") || s.includes("futsal")));
+      return matchesSport && matchesCategoryFilter(`${t.name} ${t.championship?.name || ""}`);
     });
-  }, [allTeams, selectedSport]);
+  }, [allTeams, selectedSport, globalCategory, matchesCategoryFilter]);
 
   const filteredTeams = useMemo(() => {
     return sportFilteredTeams.filter((team) => {

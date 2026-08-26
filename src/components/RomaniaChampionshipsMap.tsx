@@ -52,22 +52,22 @@ const ROMANIAN_REGIONS: Record<string, string[]> = {
 };
 
 export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = [] }: RomaniaMapProps) {
-  const { selectedSport, currentSportMeta } = useSportContext();
+  const { selectedSport, selectedCategory, currentSportMeta, matchesCategoryFilter } = useSportContext();
   const [selectedCounty, setSelectedCounty] = useState<string>("Timiș");
   const [activeTab, setActiveTab] = useState<"championships" | "venues">("championships");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedScope, setSelectedScope] = useState<string>("all"); // "all" | "national" | "judetean" | "oras"
 
-  // 1. Strict filtering by chosen global sport
+  // 1. Strict filtering by chosen global sport and category
   const sportChampionships = useMemo(() => {
     return initialChampionships.filter((c) => {
       const cSport = (c.sport || "").toLowerCase();
-      return (
+      const matchesSport =
         cSport.includes(selectedSport) ||
-        (selectedSport === "fotbal" && (cSport.includes("minifotbal") || cSport.includes("futsal")))
-      );
+        (selectedSport === "fotbal" && (cSport.includes("minifotbal") || cSport.includes("futsal")));
+      return matchesSport && matchesCategoryFilter(`${c.name} ${c.sport || ""}`);
     });
-  }, [initialChampionships, selectedSport]);
+  }, [initialChampionships, selectedSport, selectedCategory, matchesCategoryFilter]);
 
   const sportVenues = useMemo(() => {
     return initialVenues.filter((v) => {

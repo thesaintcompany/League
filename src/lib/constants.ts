@@ -14,6 +14,13 @@ export const FORMATS = [
   { value: "groups_knockout", label: "Grupe + knockout" },
 ] as const;
 
+export const FOOTBALL_CATEGORIES = [
+  { value: "masculin", label: "Masculin (Seniori • Fotbal 11v11)" },
+  { value: "feminin", label: "Feminin (Fotbal Feminin)" },
+  { value: "futsal", label: "Futsal & Minifotbal (Sală & Minifotbal)" },
+  { value: "juniori", label: "Juniori & Tineret (U19, U17, U15, Academii)" },
+] as const;
+
 export const CHAMPIONSHIP_SCOPES = [
   { value: "national", label: "🇷🇴 Național (Toată România - Toate Județele)" },
   { value: "judetean", label: "🏛️ Județean (Județ Specific)" },

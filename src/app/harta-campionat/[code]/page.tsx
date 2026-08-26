@@ -82,7 +82,7 @@ export default async function StandaloneChampionshipMapPage({
   const shareCode = championship?.shareCode || (championship?.id ? `LP-${championship.id.slice(-6).toUpperCase()}` : "LP-OFFICIAL");
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200 overflow-x-hidden max-w-full">
       {/* Top Navbar */}
       <PublicHeader currentTab="brackets" />
 
@@ -140,7 +140,7 @@ export default async function StandaloneChampionshipMapPage({
       </section>
 
       {/* Main Interactive Bracket Visualizer Canvas */}
-      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10 flex-1 w-full space-y-6 sm:space-y-10">
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-10 flex-1 w-full space-y-6 sm:space-y-10 overflow-x-hidden max-w-full">
         {isPrivate ? (
           <div className="card p-12 text-center text-slate-400 bg-white dark:bg-slate-900 border border-amber-400/40 rounded-3xl space-y-4">
             <span className="material-symbols-outlined text-5xl text-amber-400 block">

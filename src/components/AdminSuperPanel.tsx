@@ -2,6 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
+
+export type AdminTab =
+  | "branding"
+  | "api_integrations"
+  | "users"
+  | "analytics"
+  | "login_history"
+  | "venues"
+  | "data_export";
 
 interface VenueItem {
   id: string;
@@ -33,18 +43,39 @@ interface UserItem {
   };
 }
 
+interface LoginLogItem {
+  id: string;
+  userName: string;
+  userEmail: string;
+  role: string;
+  ip: string;
+  location: string;
+  device: string;
+  timestamp: string;
+  status: "success" | "blocked" | "2fa";
+  action: string;
+}
+
 export function AdminSuperPanel() {
-  const [activeTab, setActiveTab] = useState<"venues" | "users" | "tickets" | "data_export" | "branding">("venues");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const queryTab = searchParams?.get("tab") as AdminTab | null;
+
+  const [activeTab, setActiveTab] = useState<AdminTab>(queryTab || "branding");
   const [venues, setVenues] = useState<VenueItem[]>([]);
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [userSearchQuery, setUserSearchQuery] = useState("");
+  const [userRoleFilter, setUserRoleFilter] = useState("all");
   const [sportFilter, setSportFilter] = useState("all");
 
   // Logo & Branding State
   const [activeLogoUrl, setActiveLogoUrl] = useState<string>("/images/logos/logo-1.png");
   const [customLogoInput, setCustomLogoInput] = useState<string>("");
   const [savingLogo, setSavingLogo] = useState(false);
+  const [appName, setAppName] = useState("PRO L4GUE ROMANIA");
+  const [appSlogan, setAppSlogan] = useState("Platforma Națională de Competiții Sportive & Arbitraj Oficial");
 
   // Demo Data & Export State
   const [demoStats, setDemoStats] = useState<{
@@ -59,7 +90,7 @@ export function AdminSuperPanel() {
   } | null>(null);
   const [togglingDemo, setTogglingDemo] = useState(false);
 
-  // Ticketing & Platform Fee Settings State
+  // Ticketing & API Settings State
   const [ticketSettings, setTicketSettings] = useState({
     platformFeePercent: 10.0,
     stripePublishableKey: "",
@@ -77,6 +108,72 @@ export function AdminSuperPanel() {
   });
   const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
   const [savingSettings, setSavingSettings] = useState(false);
+  const [showSecretKey, setShowSecretKey] = useState(false);
+
+  // Audit Logs State
+  const [logFilter, setLogFilter] = useState("all");
+  const [loginLogs] = useState<LoginLogItem[]>([
+    {
+      id: "log-1",
+      userName: "Super Administrator",
+      userEmail: "admin@league.ro",
+      role: "super_admin",
+      ip: "86.120.45.19",
+      location: "Timișoara, RO",
+      device: "Chrome 122 (Windows 11)",
+      timestamp: "2026-08-26 12:35",
+      status: "success",
+      action: "Autentificare Sesiune Master SuperAdmin",
+    },
+    {
+      id: "log-2",
+      userName: "Bogdan Stanciu",
+      userEmail: "bogdan.ref@league.ro",
+      role: "referee",
+      ip: "188.24.112.5",
+      location: "București, RO",
+      device: "Safari 17 (iPhone 15 Pro)",
+      timestamp: "2026-08-26 11:42",
+      status: "success",
+      action: "Validare Raport Meci (VAR & Arbitraj)",
+    },
+    {
+      id: "log-3",
+      userName: "Radu Popa",
+      userEmail: "radu.popa@gmail.com",
+      role: "organizer",
+      ip: "82.77.190.22",
+      location: "Cluj-Napoca, RO",
+      device: "Firefox 123 (macOS)",
+      timestamp: "2026-08-26 10:15",
+      status: "success",
+      action: "Generare Arbore Eliminatoriu cu Zaruri",
+    },
+    {
+      id: "log-4",
+      userName: "Necunoscut (Robot)",
+      userEmail: "bot@security-crawler.test",
+      role: "guest",
+      ip: "45.134.21.99",
+      location: "Frankfurt, DE",
+      device: "Python-requests/2.31",
+      timestamp: "2026-08-26 09:04",
+      status: "blocked",
+      action: "Tentativă acces neautorizat blocată de WAF",
+    },
+    {
+      id: "log-5",
+      userName: "Alexandru Munteanu",
+      userEmail: "alex.arena@arena-timis.ro",
+      role: "arena_owner",
+      ip: "86.120.10.88",
+      location: "Timișoara, RO",
+      device: "Edge 122 (Windows 10)",
+      timestamp: "2026-08-26 08:20",
+      status: "success",
+      action: "Actualizare Tarif Nocturnă Arenă",
+    },
+  ]);
 
   // Edit / Create Modal State
   const [modalOpen, setModalOpen] = useState(false);
@@ -96,6 +193,18 @@ export function AdminSuperPanel() {
   });
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+
+  // Sync tab with URL query parameter
+  useEffect(() => {
+    if (queryTab && queryTab !== activeTab) {
+      setActiveTab(queryTab);
+    }
+  }, [queryTab, activeTab]);
+
+  function switchTab(tab: AdminTab) {
+    setActiveTab(tab);
+    router.push(`/dashboard/admin?tab=${tab}`, { scroll: false });
+  }
 
   useEffect(() => {
     loadData();
@@ -202,7 +311,7 @@ export function AdminSuperPanel() {
         body: JSON.stringify(ticketSettings),
       });
       if (res.ok) {
-        showToast("Setările de comision și plăți au fost salvate cu succes! ✓");
+        showToast("Setările API și comisionul au fost salvate cu succes! ✓");
         loadData();
       }
     } catch (err) {
@@ -258,7 +367,6 @@ export function AdminSuperPanel() {
     setSaving(true);
     try {
       if (editingVenue) {
-        // PATCH
         const res = await fetch(`/api/admin/venues/${editingVenue.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -270,7 +378,6 @@ export function AdminSuperPanel() {
           loadData();
         }
       } else {
-        // POST
         const res = await fetch(`/api/admin/venues`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -346,10 +453,22 @@ export function AdminSuperPanel() {
     return matchesSport && matchesQuery;
   });
 
-  const footballCount = venues.filter((v) => v.sport === "fotbal").length;
-  const basketballCount = venues.filter((v) => v.sport === "baschet").length;
-  const volleyballCount = venues.filter((v) => v.sport === "volei").length;
-  const multiCount = venues.filter((v) => v.sport === "multifunctional").length;
+  // Filter users
+  const filteredUsers = users.filter((u) => {
+    const matchesRole = userRoleFilter === "all" || u.role === userRoleFilter;
+    const q = userSearchQuery.toLowerCase();
+    const matchesQuery =
+      !q ||
+      (u.name && u.name.toLowerCase().includes(q)) ||
+      u.email.toLowerCase().includes(q) ||
+      u.role.toLowerCase().includes(q);
+    return matchesRole && matchesQuery;
+  });
+
+  const filteredLogs = loginLogs.filter((log) => {
+    if (logFilter === "all") return true;
+    return log.status === logFilter;
+  });
 
   return (
     <div className="space-y-8 font-body">
@@ -361,969 +480,105 @@ export function AdminSuperPanel() {
         </div>
       )}
 
-      {/* SuperAdmin System Control Bar (Demo & Export Controls) */}
-      <div className="card p-6 bg-slate-950 text-white border-2 border-lime-400/40 rounded-3xl shadow-xl space-y-4">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 pb-4 border-b border-slate-800">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400">
-                SUPERADMIN CONSOLE • GESTIUNE DATE DEMO &amp; EXPORT
-              </span>
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black font-headline uppercase tracking-tight text-white">
-              Centru Control Date &amp; Export Producție
-            </h2>
-            <p className="text-xs text-slate-300 font-body max-w-2xl">
-              Arenele naționale (59) și utilizatorii reali înregistrați sunt <strong>100% permanenți și protejați</strong>. Doar campionatele, echipele și meciurile demonstrative sunt comutate de datele demo.
-            </p>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
-            {demoStats?.isDemoActive ? (
-              <button
-                type="button"
-                disabled={togglingDemo}
-                onClick={() => handleToggleDemo("deactivate")}
-                className="px-4 py-2.5 bg-red-600/90 hover:bg-red-600 text-white rounded-xl text-xs font-black font-headline uppercase tracking-wider transition-all active:scale-95 flex items-center gap-1.5 shadow-md"
-              >
-                <span className="material-symbols-outlined text-[18px]">delete_sweep</span>
-                <span>{togglingDemo ? "Se curăță..." : "Dezactivează Date Demo"}</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                disabled={togglingDemo}
-                onClick={() => handleToggleDemo("activate")}
-                className="px-4 py-2.5 bg-lime-400 hover:bg-lime-300 text-slate-950 rounded-xl text-xs font-black font-headline uppercase tracking-wider transition-all active:scale-95 flex items-center gap-1.5 shadow-md shadow-lime-400/20"
-              >
-                <span className="material-symbols-outlined text-[18px]">bolt</span>
-                <span>{togglingDemo ? "Se populează..." : "Activează Date Demo"}</span>
-              </button>
-            )}
-
-            <button
-              type="button"
-              onClick={() => handleExportUsers("json")}
-              className="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-xl text-xs font-bold font-label uppercase tracking-wider transition-all active:scale-95 flex items-center gap-1.5 border border-slate-700 shadow-sm"
-              title="Exportă datele utilizatorilor reali în format JSON"
-            >
-              <span className="material-symbols-outlined text-[16px] text-lime-400">download</span>
-              <span>Export JSON</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleExportUsers("csv")}
-              className="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-xl text-xs font-bold font-label uppercase tracking-wider transition-all active:scale-95 flex items-center gap-1.5 border border-slate-700 shadow-sm"
-              title="Exportă datele utilizatorilor reali în format Excel / CSV"
-            >
-              <span className="material-symbols-outlined text-[16px] text-lime-400">table_chart</span>
-              <span>Export CSV</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Protection & Telemetry Badges */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-lime-400/10 text-lime-400 flex items-center justify-center font-black text-lg">
-              🏟️
-            </div>
-            <div>
-              <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
-                Arene Naționale (Permanent)
-              </span>
-              <span className="font-bold text-white text-xs">
-                59 Arene Omologate • 100% Protejate
-              </span>
-            </div>
-          </div>
-
-          <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-black text-lg">
-              👥
-            </div>
-            <div>
-              <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
-                Utilizatori Reali (Date Principale)
-              </span>
-              <span className="font-bold text-white text-xs">
-                {demoStats?.realUsersCount ?? users.length} Conturi Reale Înregistrate
-              </span>
-            </div>
-          </div>
-
-          <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-black text-lg">
-              🎲
-            </div>
-            <div>
-              <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
-                Status Date Demo
-              </span>
-              <span className={`font-bold text-xs ${demoStats?.isDemoActive ? "text-lime-400" : "text-amber-400"}`}>
-                {demoStats?.isDemoActive ? "Active Live ✓ (Campionate & Zaruri)" : "Dezactivate (Fără meciuri demo)"}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Hero Stats Bento */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-        <div className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm">
-          <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-            Total Arene Timiș
-          </span>
-          <p className="text-3xl font-black data-font text-blue-950 dark:text-white mt-1">
-            {venues.length}
-          </p>
-          <p className="text-[11px] text-lime-600 dark:text-lime-400 font-label font-bold mt-1">
-            {venues.filter((v) => v.isActive).length} Active Live ✓
-          </p>
-        </div>
-
-        <div className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm">
-          <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-            Terenuri Fotbal ⚽
-          </span>
-          <p className="text-3xl font-black data-font text-blue-950 dark:text-white mt-1">
-            {footballCount}
-          </p>
-          <p className="text-[11px] text-slate-500 font-label">Timișoara &amp; Județ</p>
-        </div>
-
-        <div className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm">
-          <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-            Terenuri Baschet 🏀
-          </span>
-          <p className="text-3xl font-black data-font text-amber-500 mt-1">
-            {basketballCount}
-          </p>
-          <p className="text-[11px] text-slate-500 font-label">Parchet &amp; Aer Liber</p>
-        </div>
-
-        <div className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm">
-          <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-            Terenuri Volei 🏐
-          </span>
-          <p className="text-3xl font-black data-font text-cyan-500 mt-1">
-            {volleyballCount}
-          </p>
-          <p className="text-[11px] text-slate-500 font-label">Sală &amp; Nisip Fin</p>
-        </div>
-
-        <div className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm">
-          <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-            Multifuncționale 🏟️
-          </span>
-          <p className="text-3xl font-black data-font text-purple-500 mt-1">
-            {multiCount}
-          </p>
-          <p className="text-[11px] text-slate-500 font-label">Timiș 4 All, UPT etc.</p>
-        </div>
-      </div>
-
-      {/* Main Tab Switcher & Action Bar */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="flex flex-wrap items-center gap-2 bg-slate-100 dark:bg-slate-950 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800">
+      {/* Main Tab Switcher Bar */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 sm:p-4 rounded-3xl shadow-sm">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            onClick={() => setActiveTab("venues")}
-            className={`px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition ${
-              activeTab === "venues"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-            }`}
-          >
-            🏟️ Gestiune Arene ({venues.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("users")}
-            className={`px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition ${
-              activeTab === "users"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-            }`}
-          >
-            👥 Utilizatori &amp; Roluri ({users.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("tickets")}
-            className={`px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition ${
-              activeTab === "tickets"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-            }`}
-          >
-            🎟️ Vânzări Bilete &amp; Comisioane
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("branding")}
-            className={`px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition ${
+            onClick={() => switchTab("branding")}
+            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
               activeTab === "branding"
                 ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
             }`}
           >
-            🎨 Identitate &amp; Logo (3 Variante)
+            <span>🎨</span>
+            <span>Setări Aplicație &amp; Logo</span>
           </button>
+
           <button
             type="button"
-            onClick={() => setActiveTab("data_export")}
-            className={`px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition ${
-              activeTab === "data_export"
+            onClick={() => switchTab("api_integrations")}
+            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+              activeTab === "api_integrations"
                 ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
             }`}
           >
-            💾 Date Demo &amp; Export Sistem
+            <span>🔑</span>
+            <span>API &amp; Integrare Plăți</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => switchTab("users")}
+            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+              activeTab === "users"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
+            }`}
+          >
+            <span>👥</span>
+            <span>Permisiuni &amp; Utilizatori ({users.length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => switchTab("analytics")}
+            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+              activeTab === "analytics"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
+            }`}
+          >
+            <span>📊</span>
+            <span>Statistici &amp; Telemetrie</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => switchTab("login_history")}
+            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+              activeTab === "login_history"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
+            }`}
+          >
+            <span>🛡️</span>
+            <span>Istoric Login &amp; Audit</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => switchTab("venues")}
+            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+              activeTab === "venues"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
+            }`}
+          >
+            <span>🏟️</span>
+            <span>Arene ({venues.length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => switchTab("data_export")}
+            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+              activeTab === "data_export"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
+            }`}
+          >
+            <span>💾</span>
+            <span>Bază de Date &amp; Backup</span>
           </button>
         </div>
-
-        {activeTab === "venues" && (
-          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-            <input
-              type="text"
-              placeholder="Caută arenă, adresă sau oraș..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="input text-xs min-w-[240px] flex-1"
-            />
-            <button
-              type="button"
-              onClick={openCreateModal}
-              className="px-5 py-2.5 bg-lime-400 hover:bg-lime-500 text-slate-950 rounded-xl font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition active:scale-95"
-            >
-              <span className="material-symbols-outlined text-[18px]">add_circle</span>
-              Adaugă Arenă Nouă
-            </button>
-          </div>
-        )}
       </div>
 
-      {/* 1. VENUES TAB */}
-      {activeTab === "venues" && (
-        <div className="space-y-4">
-          {/* Sport filter chips */}
-          <div className="flex flex-wrap items-center gap-2">
-            {[
-              { id: "all", label: "Toate Disciplinele" },
-              { id: "fotbal", label: "⚽ Fotbal" },
-              { id: "baschet", label: "🏀 Baschet" },
-              { id: "volei", label: "🏐 Volei" },
-              { id: "multifunctional", label: "🏟️ Multifuncțional" },
-            ].map((s) => (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => setSportFilter(s.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition ${
-                  sportFilter === s.id
-                    ? "bg-blue-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
-                    : "bg-surface-container-low text-slate-600 dark:text-slate-400 hover:bg-slate-200"
-                }`}
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Venues Master Table */}
-          <div className="card bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="font-label text-[10px] text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800">
-                    <th className="py-4 px-4">Denumire Arenă &amp; Sport</th>
-                    <th className="py-4 px-4">Locație &amp; Adresă</th>
-                    <th className="py-4 px-4">Specificații &amp; Suprafață</th>
-                    <th className="py-4 px-4">Capacitate &amp; Nocturnă</th>
-                    <th className="py-4 px-4">Tarif Oră</th>
-                    <th className="py-4 px-4 text-center">Status</th>
-                    <th className="py-4 px-4 text-right">Acțiuni Admin</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-body">
-                  {filteredVenues.length === 0 ? (
-                    <tr>
-                      <td colSpan={7} className="py-12 text-center text-slate-500 font-label">
-                        Nu au fost găsite arene conform filtrelor selectate.
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredVenues.map((v) => (
-                      <tr key={v.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
-                        {/* Name & Sport */}
-                        <td className="py-4 px-4 font-headline">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-900 flex-shrink-0 shadow-sm">
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={v.imageUrl || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80"}
-                                alt={v.name}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div>
-                              <Link
-                                href={`/venues/${v.id}`}
-                                className="font-bold text-sm text-blue-950 dark:text-white hover:text-lime-600 dark:hover:text-lime-400 block leading-tight"
-                              >
-                                {v.name}
-                              </Link>
-                              <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase text-slate-600 dark:text-slate-300 font-label inline-block mt-0.5">
-                                {v.sport}
-                              </span>
-                            </div>
-                          </div>
-                        </td>
-
-                        {/* Location & Address */}
-                        <td className="py-4 px-4">
-                          <span className="font-bold text-slate-900 dark:text-slate-200 block">
-                            {v.location}
-                          </span>
-                          <span className="text-[11px] text-slate-500 font-label block truncate max-w-[200px]">
-                            {v.address || "Timișoara"}
-                          </span>
-                        </td>
-
-                        {/* Specs & Surface */}
-                        <td className="py-4 px-4">
-                          <span className="font-bold text-slate-800 dark:text-slate-300 block">
-                            {v.surface}
-                          </span>
-                          <span className="text-[11px] text-slate-500 font-label block truncate max-w-[240px]">
-                            {v.specs || "Dotare standard"}
-                          </span>
-                        </td>
-
-                        {/* Capacity & Floodlights */}
-                        <td className="py-4 px-4">
-                          <span className="font-black text-sm data-font text-blue-950 dark:text-white block">
-                            {v.capacity.toLocaleString("ro-RO")} locuri
-                          </span>
-                          <span className="text-[10px] text-slate-500 font-label flex items-center gap-1">
-                            {v.floodlights ? "💡 Nocturnă Activă" : "Fără nocturnă"}
-                          </span>
-                        </td>
-
-                        {/* Price */}
-                        <td className="py-4 px-4 font-black data-font text-sm text-lime-600 dark:text-lime-400">
-                          {v.pricePerHour && v.pricePerHour > 0 ? `${v.pricePerHour} RON/h` : "Gratuit"}
-                        </td>
-
-                        {/* Status Switch */}
-                        <td className="py-4 px-4 text-center">
-                          <button
-                            type="button"
-                            onClick={() => toggleActive(v)}
-                            className={`px-3 py-1 rounded-full text-[10px] font-black uppercase font-label transition ${
-                              v.isActive
-                                ? "bg-lime-100 text-lime-900 dark:bg-lime-950/60 dark:text-lime-400 border border-lime-300"
-                                : "bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300 border border-red-200"
-                            }`}
-                          >
-                            {v.isActive ? "ACTIV ✓" : "INACTIV ✕"}
-                          </button>
-                        </td>
-
-                        {/* Actions */}
-                        <td className="py-4 px-4 text-right">
-                          <div className="inline-flex items-center gap-2">
-                            <button
-                              type="button"
-                              onClick={() => openEditModal(v)}
-                              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition"
-                              title="Editează Arenă"
-                            >
-                              <span className="material-symbols-outlined text-[16px]">edit</span>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteVenue(v)}
-                              className="p-2 rounded-xl bg-red-50 hover:bg-red-100 dark:bg-red-950/40 text-red-600 transition"
-                              title="Șterge Arenă"
-                            >
-                              <span className="material-symbols-outlined text-[16px]">delete</span>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 2. USERS TAB */}
-      {activeTab === "users" && (
-        <div className="card bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="font-label text-[10px] text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800">
-                  <th className="py-4 px-4">Utilizator</th>
-                  <th className="py-4 px-4">Email &amp; Telefon</th>
-                  <th className="py-4 px-4">Rol Utilizator (Modificabil)</th>
-                  <th className="py-4 px-4">Ecuson / Acreditare</th>
-                  <th className="py-4 px-4">Campionate / Arene</th>
-                  <th className="py-4 px-4 text-right">Data Înregistrării</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-body">
-                {users.map((u) => (
-                  <tr key={u.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
-                    {/* User Profile */}
-                    <td className="py-4 px-4 font-headline">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-sm shadow-sm">
-                          {u.name?.substring(0, 2).toUpperCase() || "US"}
-                        </div>
-                        <div>
-                          <span className="font-bold text-sm text-blue-950 dark:text-white block leading-tight">
-                            {u.name || "Fără Nume"}
-                          </span>
-                          <span className="text-[10px] text-slate-400 font-label block">
-                            ID: {u.id.substring(0, 8).toUpperCase()}
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-
-                    {/* Email & Phone */}
-                    <td className="py-4 px-4">
-                      <span className="font-medium text-slate-900 dark:text-slate-200 block">
-                        {u.email}
-                      </span>
-                      <span className="text-[11px] text-slate-500 font-label block">
-                        {u.phone || "Fără telefon"}
-                      </span>
-                    </td>
-
-                    {/* Role Dropdown */}
-                    <td className="py-4 px-4">
-                      <select
-                        value={u.role || "organizer"}
-                        onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                        className="input text-xs font-bold font-label py-1.5 px-3 rounded-xl bg-surface-container-low"
-                      >
-                        <option value="super_admin">⚡ Super Admin</option>
-                        <option value="organizer">👑 Organizator Oficial</option>
-                        <option value="referee">⚖️ Arbitru Licențiat</option>
-                        <option value="player">🏃 Fotbalist / Jucător</option>
-                        <option value="arena_owner">🏟️ Proprietar Arenă</option>
-                        <option value="team_leader">🛡️ Manager Echipă</option>
-                      </select>
-                    </td>
-
-                    {/* Badge */}
-                    <td className="py-4 px-4">
-                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                        {u.refereeBadge || "—"}
-                      </span>
-                    </td>
-
-                    {/* Count */}
-                    <td className="py-4 px-4 text-xs font-label">
-                      <span className="text-slate-600 dark:text-slate-400">
-                        {u._count?.championships || 0} Campionate • {u._count?.venues || 0} Arene
-                      </span>
-                    </td>
-
-                    {/* Date */}
-                    <td className="py-4 px-4 text-right text-xs font-label text-slate-500">
-                      {new Date(u.createdAt).toLocaleDateString("ro-RO", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* 3. TICKETING & COMMISSIONS TAB */}
-      {activeTab === "tickets" && (
-        <div className="space-y-8 animate-in fade-in">
-          {/* Financial Summary Bento */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-1">
-              <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-                Total Bilete Emise
-              </span>
-              <p className="text-3xl font-black data-font text-blue-950 dark:text-white">
-                {ticketStats.totalTicketsSold}
-              </p>
-              <p className="text-xs text-slate-500 font-label">Bilete vândute online pe platformă</p>
-            </div>
-
-            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-1">
-              <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-                Volum Brut Încasat
-              </span>
-              <p className="text-3xl font-black data-font text-blue-950 dark:text-white">
-                {ticketStats.totalGrossRevenue.toFixed(2)} RON
-              </p>
-              <p className="text-xs text-slate-500 font-label">Valoare totală tranzacții spectatori</p>
-            </div>
-
-            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-1 border-l-4 border-l-lime-400">
-              <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-                Venit Net Platformă ({ticketSettings.platformFeePercent}%)
-              </span>
-              <p className="text-3xl font-black data-font text-lime-600 dark:text-lime-400">
-                {ticketStats.totalPlatformFees.toFixed(2)} RON
-              </p>
-              <p className="text-xs text-lime-600 dark:text-lime-400 font-label font-bold">
-                Comision reținut automat de SuperAdmin
-              </p>
-            </div>
-
-            <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-1 border-l-4 border-l-blue-500">
-              <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-                Viramente Organizatori
-              </span>
-              <p className="text-3xl font-black data-font text-blue-600 dark:text-blue-400">
-                {ticketStats.totalOrganizerPayouts.toFixed(2)} RON
-              </p>
-              <p className="text-xs text-slate-500 font-label">Bani virați în conturile organizatorilor</p>
-            </div>
-          </div>
-
-          {/* Platform Settings & Payment Gateways Config */}
-          <div className="card p-6 sm:p-8 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
-            <div className="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-800">
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-lime-600 font-label">
-                  CONTROL FINANCIAR &amp; GATEWAY-URI PLĂȚI
-                </span>
-                <h3 className="text-xl font-bold font-headline uppercase text-blue-950 dark:text-white mt-0.5">
-                  Setări Comision Platformă &amp; Integrări Plăți (Stripe, PayPal, Apple &amp; Google Pay)
-                </h3>
-              </div>
-              <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase font-label">
-                SuperAdmin Only
-              </span>
-            </div>
-
-            <form onSubmit={handleSaveTicketSettings} className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                {/* Platform Commission Fee % */}
-                <div>
-                  <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1.5">
-                    Procent Comision Platformă (%) *
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      step="0.1"
-                      min="0"
-                      max="50"
-                      required
-                      value={ticketSettings.platformFeePercent}
-                      onChange={(e) =>
-                        setTicketSettings({ ...ticketSettings, platformFeePercent: parseFloat(e.target.value) || 0 })
-                      }
-                      className="input text-sm font-bold data-font pr-8"
-                    />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">%</span>
-                  </div>
-                  <p className="text-[11px] text-slate-500 font-label mt-1">
-                    Ex: 10% comision din valoarea fiecărui bilet vândut.
-                  </p>
-                </div>
-
-                {/* Stripe Publishable Key */}
-                <div>
-                  <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1.5">
-                    Stripe Publishable Key
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="pk_live_..."
-                    value={ticketSettings.stripePublishableKey || ""}
-                    onChange={(e) => setTicketSettings({ ...ticketSettings, stripePublishableKey: e.target.value })}
-                    className="input text-xs font-mono"
-                  />
-                  <p className="text-[11px] text-slate-500 font-label mt-1">Carduri Visa/Mastercard &amp; Apple Pay</p>
-                </div>
-
-                {/* PayPal Client ID */}
-                <div>
-                  <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1.5">
-                    PayPal Client ID
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="AbCdEfG..."
-                    value={ticketSettings.paypalClientId || ""}
-                    onChange={(e) => setTicketSettings({ ...ticketSettings, paypalClientId: e.target.value })}
-                    className="input text-xs font-mono"
-                  />
-                  <p className="text-[11px] text-slate-500 font-label mt-1">Plăți rapide PayPal &amp; PayLater</p>
-                </div>
-              </div>
-
-              {/* Digital Wallets Toggles */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-surface-container-low border border-slate-200/60 dark:border-slate-800">
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={ticketSettings.applePayEnabled}
-                    onChange={(e) => setTicketSettings({ ...ticketSettings, applePayEnabled: e.target.checked })}
-                    className="rounded text-lime-500 focus:ring-lime-400 w-4 h-4"
-                  />
-                  <div>
-                    <span className="text-xs font-bold font-label text-blue-950 dark:text-white block">
-                      🍎 Activează Apple Pay la Checkout
-                    </span>
-                    <span className="text-[10px] text-slate-500">Plată cu 1-click pe iPhone, iPad și Mac</span>
-                  </div>
-                </label>
-
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={ticketSettings.googlePayEnabled}
-                    onChange={(e) => setTicketSettings({ ...ticketSettings, googlePayEnabled: e.target.checked })}
-                    className="rounded text-lime-500 focus:ring-lime-400 w-4 h-4"
-                  />
-                  <div>
-                    <span className="text-xs font-bold font-label text-blue-950 dark:text-white block">
-                      🟢 Activează Google Pay &amp; Wallet
-                    </span>
-                    <span className="text-[10px] text-slate-500">Plată rapidă pe telefoane Android și Chrome</span>
-                  </div>
-                </label>
-              </div>
-
-              <div className="flex justify-end pt-2">
-                <button
-                  type="submit"
-                  disabled={savingSettings}
-                  className="px-6 py-3 rounded-2xl bg-lime-400 hover:bg-lime-500 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg transition active:scale-95 flex items-center gap-2"
-                >
-                  <span className="material-symbols-outlined text-base">save</span>
-                  {savingSettings ? "Se salvează..." : "Salvează Setările Financiare ✓"}
-                </button>
-              </div>
-            </form>
-          </div>
-
-          {/* Recent Ticket Transactions Table */}
-          <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
-            <div className="flex justify-between items-center pb-2 border-b border-slate-100 dark:border-slate-800">
-              <div>
-                <h3 className="text-lg font-bold font-headline uppercase text-blue-950 dark:text-white">
-                  📋 Jurnal Tranzacții Bilete &amp; Scanări Porți
-                </h3>
-                <p className="text-xs text-slate-500 font-label">
-                  Toate biletele emise, cota platformei, viramentele și validările la porți
-                </p>
-              </div>
-              <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-mono font-bold">
-                {recentTransactions.length} Înregistrări
-              </span>
-            </div>
-
-            {recentTransactions.length === 0 ? (
-              <div className="p-8 text-center text-xs text-slate-500 italic">
-                Nu există încă tranzacții de bilete înregistrate. Puteți cumpăra un bilet de test din pagina Promo a oricărui meci!
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-200/60 dark:border-slate-800 text-[10px] uppercase font-label font-bold text-slate-400">
-                      <th className="py-3 px-3">Cod Bilet</th>
-                      <th className="py-3 px-3">Meci &amp; Arenă</th>
-                      <th className="py-3 px-3">Cumpărător</th>
-                      <th className="py-3 px-3">Sector</th>
-                      <th className="py-3 px-3 text-right">Preț Total</th>
-                      <th className="py-3 px-3 text-right">Comision Platformă</th>
-                      <th className="py-3 px-3 text-right">Virament Org.</th>
-                      <th className="py-3 px-3 text-center">Status Poartă</th>
-                      <th className="py-3 px-3 text-right">Acțiuni</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs">
-                    {recentTransactions.map((t) => (
-                      <tr key={t.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition">
-                        <td className="py-3.5 px-3 font-mono font-bold text-lime-600 dark:text-lime-400">
-                          #{t.ticketCode}
-                        </td>
-                        <td className="py-3.5 px-3">
-                          <p className="font-bold text-blue-950 dark:text-white truncate max-w-[180px]">
-                            {t.match?.homeTeam?.name} vs {t.match?.awayTeam?.name}
-                          </p>
-                          <span className="text-[10px] text-slate-400">{t.match?.venue || "Arenă"}</span>
-                        </td>
-                        <td className="py-3.5 px-3">
-                          <p className="font-bold text-slate-800 dark:text-slate-200 truncate max-w-[140px]">
-                            {t.buyerName}
-                          </p>
-                          <span className="text-[10px] text-slate-400">{t.buyerEmail}</span>
-                        </td>
-                        <td className="py-3.5 px-3 font-label font-bold text-slate-700 dark:text-slate-300">
-                          {t.seatSector}
-                        </td>
-                        <td className="py-3.5 px-3 text-right font-mono font-black text-slate-900 dark:text-white">
-                          {t.price} RON
-                        </td>
-                        <td className="py-3.5 px-3 text-right font-mono font-bold text-lime-600 dark:text-lime-400">
-                          +{t.platformFee} RON
-                        </td>
-                        <td className="py-3.5 px-3 text-right font-mono font-bold text-blue-600 dark:text-blue-400">
-                          {t.organizerPayout} RON
-                        </td>
-                        <td className="py-3.5 px-3 text-center">
-                          {t.status === "used" ? (
-                            <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-[10px] font-black uppercase font-mono border border-emerald-300 dark:border-emerald-800">
-                              ✓ SCANAT INTRARE
-                            </span>
-                          ) : (
-                            <span className="px-2.5 py-1 rounded-full bg-lime-100 dark:bg-lime-950 text-lime-800 dark:text-lime-300 text-[10px] font-black uppercase font-mono border border-lime-300 dark:border-lime-800">
-                              VALID (NESCANAT)
-                            </span>
-                          )}
-                        </td>
-                        <td className="py-3.5 px-3 text-right">
-                          <Link
-                            href={`/tickets/${t.id}/print`}
-                            target="_blank"
-                            className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-lime-400 hover:text-slate-950 transition text-[11px] font-bold font-label uppercase"
-                          >
-                            Bilet A4 PDF ↗
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* 4. DATA & EXPORT TAB */}
-      {activeTab === "data_export" && (
-        <div className="space-y-6 animate-in fade-in">
-          {/* Architecture Card */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
-              <div>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-600 dark:text-lime-400">
-                  ARHITECTURĂ &amp; GUVERNANȚĂ DATE • SUPERADMIN EXCLUSIV
-                </span>
-                <h3 className="text-xl font-black font-headline uppercase text-slate-900 dark:text-white mt-1">
-                  Separarea Datelor Principale vs. Date Demo
-                </h3>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleExportUsers("json")}
-                  className="px-4 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-100 rounded-2xl text-xs font-black font-headline uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2 shadow-md"
-                >
-                  <span className="material-symbols-outlined text-base">download</span>
-                  <span>Export JSON</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleExportUsers("csv")}
-                  className="px-4 py-2.5 bg-lime-400 hover:bg-lime-500 text-slate-950 rounded-2xl text-xs font-black font-headline uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2 shadow-md shadow-lime-400/20"
-                >
-                  <span className="material-symbols-outlined text-base">table_chart</span>
-                  <span>Export CSV</span>
-                </button>
-              </div>
-            </div>
-
-            {/* 3-Column Architecture Matrix */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Box 1: Arenas */}
-              <div className="p-5 rounded-3xl bg-slate-50 dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-800 space-y-3">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-2xl">🏟️</span>
-                  <div>
-                    <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
-                      59 Arene
-                    </h4>
-                    <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase">
-                      Infrastructură Permanentă
-                    </span>
-                  </div>
-                </div>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-body">
-                  Toate cele 59 de arene, terenuri și baze sportive din Timiș și România sunt <strong>date de infrastructură permanentă</strong>.
-                </p>
-                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-bold text-emerald-700 dark:text-emerald-300">
-                  ✓ Nu sunt șterse niciodată la comutarea datelor demo.
-                </div>
-              </div>
-
-              {/* Box 2: Real Users */}
-              <div className="p-5 rounded-3xl bg-slate-50 dark:bg-slate-950 border-2 border-blue-500/40 space-y-3">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-2xl">👤</span>
-                  <div>
-                    <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
-                      Utilizatori Reali ({demoStats?.realUsersCount ?? 0})
-                    </h4>
-                    <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400 uppercase">
-                      Date Principale de Producție
-                    </span>
-                  </div>
-                </div>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-body">
-                  Toate conturile create prin formularul de înregistrare, campionatele oficiale și biletele cumpărate de persoane reale.
-                </p>
-                <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/30 text-[11px] font-bold text-blue-700 dark:text-blue-300">
-                  ✓ Protejate 100% și disponibile pentru export securizat.
-                </div>
-              </div>
-
-              {/* Box 3: Demo Data */}
-              <div className="p-5 rounded-3xl bg-slate-50 dark:bg-slate-950 border-2 border-lime-400 space-y-3">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-2xl">🎲</span>
-                  <div>
-                    <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
-                      Date Demonstrative
-                    </h4>
-                    <span className="text-[10px] font-mono font-bold text-lime-600 dark:text-lime-400 uppercase">
-                      {demoStats?.isDemoActive ? "Active Live" : "Dezactivate"}
-                    </span>
-                  </div>
-                </div>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-body">
-                  Campionatele demonstrative cu zaruri, 8 echipe de probă și meciurile demonstrative pentru testarea platformei.
-                </p>
-                <div className="pt-2">
-                  {demoStats?.isDemoActive ? (
-                    <button
-                      type="button"
-                      disabled={togglingDemo}
-                      onClick={() => handleToggleDemo("deactivate")}
-                      className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-black font-headline uppercase tracking-wider transition active:scale-95 shadow-md flex items-center justify-center gap-2"
-                    >
-                      <span className="material-symbols-outlined text-sm">delete_sweep</span>
-                      <span>Dezactivează Date Demo</span>
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      disabled={togglingDemo}
-                      onClick={() => handleToggleDemo("activate")}
-                      className="w-full py-2.5 bg-lime-400 hover:bg-lime-300 text-slate-950 rounded-xl text-xs font-black font-headline uppercase tracking-wider transition active:scale-95 shadow-md flex items-center justify-center gap-2"
-                    >
-                      <span className="material-symbols-outlined text-sm">bolt</span>
-                      <span>Activează Date Demo</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Real Users Export Preview Table */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
-              <div>
-                <h3 className="text-lg font-black font-headline uppercase text-slate-900 dark:text-white">
-                  👥 Utilizatori Principali Reali ({users.filter((u) => !u.email.endsWith("@leaguehub.local") && !u.email.endsWith("@league.local")).length})
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                  Conturile reale înregistrate în sistem ce vor fi incluse în fișierele de export
-                </p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleExportUsers("csv")}
-                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold font-label uppercase flex items-center gap-1.5 transition text-slate-900 dark:text-white"
-                >
-                  <span className="material-symbols-outlined text-sm">file_download</span>
-                  <span>Descarcă CSV</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleExportUsers("json")}
-                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold font-label uppercase flex items-center gap-1.5 transition text-slate-900 dark:text-white"
-                >
-                  <span className="material-symbols-outlined text-sm">data_object</span>
-                  <span>Descarcă JSON</span>
-                </button>
-              </div>
-            </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-200 dark:border-slate-800 text-[10px] uppercase font-label font-bold text-slate-400 bg-slate-50 dark:bg-slate-950">
-                    <th className="py-3 px-4">Utilizator</th>
-                    <th className="py-3 px-4">Email</th>
-                    <th className="py-3 px-4">Rol Cont</th>
-                    <th className="py-3 px-4">Telefon</th>
-                    <th className="py-3 px-4 text-center">Campionate</th>
-                    <th className="py-3 px-4 text-center">Arene</th>
-                    <th className="py-3 px-4 text-right">Data Înregistrării</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs">
-                  {users
-                    .filter((u) => !u.email.endsWith("@leaguehub.local") && !u.email.endsWith("@league.local"))
-                    .map((u) => (
-                      <tr key={u.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition">
-                        <td className="py-3.5 px-4 font-bold text-slate-900 dark:text-white">
-                          {u.name || "Nume nesetat"}
-                        </td>
-                        <td className="py-3.5 px-4 font-mono text-slate-600 dark:text-slate-300">
-                          {u.email}
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase font-mono border border-blue-500/20">
-                            {u.role}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 text-slate-500 font-mono">
-                          {u.phone || "—"}
-                        </td>
-                        <td className="py-3.5 px-4 text-center font-bold text-slate-900 dark:text-white font-mono">
-                          {u._count?.championships || 0}
-                        </td>
-                        <td className="py-3.5 px-4 text-center font-bold text-slate-900 dark:text-white font-mono">
-                          {u._count?.venues || 0}
-                        </td>
-                        <td className="py-3.5 px-4 text-right text-slate-500 font-mono text-[11px]">
-                          {new Date(u.createdAt).toLocaleDateString("ro-RO")}
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 5. BRANDING & LOGO SELECTION TAB */}
+      {/* ========================================================================= */}
+      {/* 1. BRANDING & APPLICATION SETTINGS TAB */}
+      {/* ========================================================================= */}
       {activeTab === "branding" && (
         <div className="space-y-8 animate-in fade-in">
           {/* Header Banner */}
@@ -1333,20 +588,20 @@ export function AdminSuperPanel() {
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400">
-                    SUPERADMIN BRANDING • IDENTITATE VIZUALĂ LIVE
+                    SUPERADMIN BRANDING • SETĂRI APLICAȚIE &amp; LOGO
                   </span>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-black font-headline uppercase tracking-tight text-white">
-                  Selectare Logo Principal al Aplicației
+                  Identitate Vizuală &amp; Logo Principal
                 </h2>
                 <p className="text-xs text-slate-300 font-body max-w-2xl">
-                  Alege una dintre cele 3 variante grafice oficiale <strong>Pro Ligue România</strong>. Modificarea se propagă <strong>în timp real în baza de date și pe tot site-ul</strong> (header public, navigare mobilă, footer și panouri de control).
+                  Selectează logo-ul oficial al platformei sau introdu un URL extern. Modificarea este salvată <strong>în timp real în baza de date</strong> și actualizată instantaneu pe tot site-ul.
                 </p>
               </div>
 
-              {/* Active Current Logo Indicator */}
+              {/* Current Active Logo */}
               <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 p-3 rounded-2xl">
-                <div className="w-10 h-10 rounded-xl bg-slate-950 flex items-center justify-center p-1 border border-lime-400/40 shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-slate-950 flex items-center justify-center p-1 border border-lime-400/40 shrink-0">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={activeLogoUrl}
@@ -1356,20 +611,20 @@ export function AdminSuperPanel() {
                 </div>
                 <div>
                   <span className="text-[9px] font-label font-bold uppercase tracking-widest text-lime-400 block">
-                    Logo Activ în Prezent
+                    Logo Activ Live
                   </span>
-                  <span className="text-xs font-bold text-white truncate max-w-[200px] block font-mono">
+                  <span className="text-xs font-bold text-white truncate max-w-[180px] block font-mono">
                     {activeLogoUrl.split("/").pop()}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Live Header Simulation Preview */}
+            {/* Live Header Preview */}
             <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-label font-bold uppercase text-slate-400 tracking-wider">
-                  🔍 Previzualizare Live Header Public (Așa apare pentru vizitatori):
+                  🔍 Previzualizare Antet Public (Live Demo):
                 </span>
                 <span className="text-[10px] font-mono text-lime-400 font-bold">
                   Sincronizat automat ✓
@@ -1385,55 +640,52 @@ export function AdminSuperPanel() {
                   />
                   <div className="hidden sm:flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-900 border border-lime-400/30 text-[10px] text-lime-400 font-label font-bold">
                     <span className="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse"></span>
-                    EDIȚIA OFICIALĂ 2026
+                    EDIȚIA NAȚIONALĂ 2026
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-400 font-label">
-                  <span className="text-white font-bold">Campionat</span>
+                <div className="flex items-center gap-3 text-xs text-slate-400 font-label">
+                  <span className="text-white font-bold">Campionate</span>
                   <span>•</span>
-                  <span>Harta Județe</span>
+                  <span>Meciuri</span>
                   <span>•</span>
-                  <span>Echipe</span>
-                  <span className="ml-2 px-3 py-1 bg-lime-400 text-slate-950 font-black rounded-lg text-[10px]">
-                    PORTAL
-                  </span>
+                  <span>Arene</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* 3 Logo Cards Grid */}
+          {/* 3 Logo Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 id: "logo-1",
-                title: "Varianta 1 • Neon Electric Green & Lightning Pulse (Principal)",
-                subtitle: "Logo-ul Oficial PRO LIGUE ROMANIA",
+                title: "Varianta 1 • PRO L4GUE - ROMÂNIA (Principal)",
+                subtitle: "Logo-ul Oficial cu Fulger & Neon Green",
                 url: "/images/logos/logo-1.png",
-                badge: "⚡ Oficial • Neon & Fulger",
+                badge: "⚡ Principal • HD Transparent",
                 badgeColor: "bg-lime-400/20 text-lime-400 border-lime-400/30",
                 description:
-                  "Logo-ul oficial PRO LIGUE ROMANIA cu minge dinamică în vortex verde neon, banner aerodinamic și fulger electric verde aprins.",
+                  "Logo-ul oficial PRO L4GUE ROMANIA cu font futuristic, vortex dinamic, fulger auriu și detalii de impact pentru header.",
               },
               {
                 id: "logo-2",
-                title: "Varianta 2 • Drapel Național & High Polish",
-                subtitle: "Ediția Linii Drapel & Steel Chrome",
+                title: "Varianta 2 • Linii Drapel & Steel Chrome",
+                subtitle: "Ediția Tricolor & Finisaj Metalic",
                 url: "/images/logos/logo-2.png",
                 badge: "🇷🇴 Drapel Național",
                 badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
                 description:
-                  "Linii drepte de viteză în culorile drapelului României cu minge lucioasă și text PRO LIGUE cu contur metalic robust de impact.",
+                  "Linii dinamice în culorile drapelului României cu minge de meci lucioasă și contur metalic robust.",
               },
               {
                 id: "logo-3",
-                title: "Varianta 3 • Neon Electric Green & Flash",
-                subtitle: "Ediția Fulger & Glow Electric",
+                title: "Varianta 3 • Neon Vortex & Gold Flash",
+                subtitle: "Ediția Glow & Energie Electrică",
                 url: "/images/logos/logo-3.png",
-                badge: "⚡ Neon & Fulger",
+                badge: "⚡ Glow Electric",
                 badgeColor: "bg-lime-400/20 text-lime-400 border-lime-400/30",
                 description:
-                  "Energie pură cu glow verde neon, minge iluminată electric și fulger auriu integrat în cuvântul LIGUE pentru o prezență electrizantă.",
+                  "Energie pură cu glow verde neon, minge iluminată electric și fulger integrat pentru prezență spectaculoasă.",
               },
             ].map((logoItem) => {
               const isSelected = activeLogoUrl === logoItem.url;
@@ -1448,7 +700,6 @@ export function AdminSuperPanel() {
                   }`}
                 >
                   <div className="space-y-4">
-                    {/* Card Header & Badges */}
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <span
@@ -1456,7 +707,7 @@ export function AdminSuperPanel() {
                         >
                           {logoItem.badge}
                         </span>
-                        <h3 className="font-headline font-black text-lg text-slate-900 dark:text-white leading-tight">
+                        <h3 className="font-headline font-black text-base text-slate-900 dark:text-white leading-tight">
                           {logoItem.title}
                         </h3>
                       </div>
@@ -1469,43 +720,41 @@ export function AdminSuperPanel() {
                       )}
                     </div>
 
-                    {/* Dark Background Live Preview */}
-                    <div className="space-y-1.5">
+                    {/* Dark Preview */}
+                    <div className="space-y-1">
                       <span className="text-[9px] font-label font-bold uppercase text-slate-400">
-                        Pe fundal Dark (Tema Întunecată):
+                        Pe fundal Dark (Noapte):
                       </span>
-                      <div className="p-6 bg-slate-950 border border-slate-800 rounded-2xl flex items-center justify-center min-h-[120px]">
+                      <div className="p-5 bg-slate-950 border border-slate-800 rounded-2xl flex items-center justify-center min-h-[110px]">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={logoItem.url}
                           alt={logoItem.title}
-                          className="max-h-16 w-auto object-contain drop-shadow-md hover:scale-105 transition-transform"
+                          className="max-h-14 w-auto object-contain drop-shadow-md hover:scale-105 transition-transform"
                         />
                       </div>
                     </div>
 
-                    {/* Light Background Live Preview */}
-                    <div className="space-y-1.5">
+                    {/* Light Preview */}
+                    <div className="space-y-1">
                       <span className="text-[9px] font-label font-bold uppercase text-slate-400">
-                        Pe fundal Light (Tema Luminoasă):
+                        Pe fundal Light (Zi):
                       </span>
-                      <div className="p-6 bg-slate-100 border border-slate-200 rounded-2xl flex items-center justify-center min-h-[120px]">
+                      <div className="p-5 bg-slate-100 border border-slate-200 rounded-2xl flex items-center justify-center min-h-[110px]">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={logoItem.url}
                           alt={logoItem.title}
-                          className="max-h-16 w-auto object-contain drop-shadow-sm hover:scale-105 transition-transform"
+                          className="max-h-14 w-auto object-contain drop-shadow-sm hover:scale-105 transition-transform"
                         />
                       </div>
                     </div>
 
-                    {/* Description */}
                     <p className="text-xs text-slate-600 dark:text-slate-300 font-body leading-relaxed">
                       {logoItem.description}
                     </p>
                   </div>
 
-                  {/* Activation Action Button */}
                   <button
                     type="button"
                     disabled={savingLogo || isSelected}
@@ -1533,43 +782,972 @@ export function AdminSuperPanel() {
             })}
           </div>
 
-          {/* Custom Logo URL Box */}
-          <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-lime-600 dark:text-lime-400">link</span>
-              <h3 className="font-headline font-extrabold text-base text-slate-900 dark:text-white uppercase tracking-tight">
-                Opțiune: Introdu URL Logo Personalizat (Extern / CDN)
-              </h3>
+          {/* Custom Logo URL & Metadata */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-lime-600 dark:text-lime-400">link</span>
+                <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
+                  URL Logo Personalizat (Extern)
+                </h3>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Poți încărca un logo propriu pe un server extern sau CDN și să introduci adresa direct:
+              </p>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (customLogoInput.trim()) {
+                    handleSelectLogo(customLogoInput.trim());
+                  }
+                }}
+                className="flex flex-col sm:flex-row items-center gap-3"
+              >
+                <input
+                  type="url"
+                  placeholder="https://domeniu.ro/logo-custom.png"
+                  value={customLogoInput}
+                  onChange={(e) => setCustomLogoInput(e.target.value)}
+                  className="input text-xs flex-1"
+                />
+                <button
+                  type="submit"
+                  disabled={savingLogo || !customLogoInput.trim()}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-sm transition disabled:opacity-50"
+                >
+                  {savingLogo ? "Se salvează..." : "Aplică"}
+                </button>
+              </form>
             </div>
 
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Dacă dorești să încarci un alt fișier sau să folosești un logo găzduit pe un server extern, lipește URL-ul direct mai jos:
-            </p>
+            <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-blue-500">settings_applications</span>
+                <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
+                  Nume Aplicație &amp; Titlu
+                </h3>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Titlu Aplicație
+                  </label>
+                  <input
+                    type="text"
+                    value={appName}
+                    onChange={(e) => setAppName(e.target.value)}
+                    className="input text-xs font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Slogan / Subtitlu Oficial
+                  </label>
+                  <input
+                    type="text"
+                    value={appSlogan}
+                    onChange={(e) => setAppSlogan(e.target.value)}
+                    className="input text-xs font-medium"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (customLogoInput.trim()) {
-                  handleSelectLogo(customLogoInput.trim());
-                }
-              }}
-              className="flex flex-col sm:flex-row items-center gap-3"
-            >
-              <input
-                type="url"
-                placeholder="https://domeniul-tau.ro/images/logo-custom.png"
-                value={customLogoInput}
-                onChange={(e) => setCustomLogoInput(e.target.value)}
-                className="input text-xs flex-1"
-              />
+      {/* ========================================================================= */}
+      {/* 2. API INTEGRATIONS & PAYMENT GATEWAYS TAB */}
+      {/* ========================================================================= */}
+      {activeTab === "api_integrations" && (
+        <div className="space-y-8 animate-in fade-in">
+          {/* Header Card */}
+          <div className="card p-6 bg-slate-950 text-white border-2 border-lime-400/40 rounded-3xl shadow-xl space-y-4">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 pb-4 border-b border-slate-800">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400">
+                    SUPERADMIN API • INTEGRARE PLĂȚI &amp; WEBHOOKS
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black font-headline uppercase tracking-tight text-white">
+                  Chei API, Gateways &amp; Comision Vânzări
+                </h2>
+                <p className="text-xs text-slate-300 font-body max-w-2xl">
+                  Configurează conexiunile securizate cu procesatorii de plăți (Stripe, PayPal, Apple Pay, Google Pay) și stabilește comisionul platformei per bilet vândut.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 px-4 py-2.5 rounded-2xl">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span className="text-xs font-mono font-bold text-emerald-400">
+                  Webhook Live: 200 OK
+                </span>
+              </div>
+            </div>
+
+            {/* Quick Metrics */}
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-2">
+              <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800">
+                <span className="text-[10px] font-label font-bold uppercase text-slate-400 block">
+                  Total Bilete Vândute
+                </span>
+                <span className="text-2xl font-black data-font text-white">
+                  {ticketStats.totalTicketsSold}
+                </span>
+              </div>
+              <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800">
+                <span className="text-[10px] font-label font-bold uppercase text-slate-400 block">
+                  Venituri Brute
+                </span>
+                <span className="text-2xl font-black data-font text-lime-400">
+                  {ticketStats.totalGrossRevenue.toLocaleString("ro-RO")} RON
+                </span>
+              </div>
+              <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800">
+                <span className="text-[10px] font-label font-bold uppercase text-slate-400 block">
+                  Comisioane Încasate ({ticketSettings.platformFeePercent}%)
+                </span>
+                <span className="text-2xl font-black data-font text-amber-400">
+                  {ticketStats.totalPlatformFees.toLocaleString("ro-RO")} RON
+                </span>
+              </div>
+              <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800">
+                <span className="text-[10px] font-label font-bold uppercase text-slate-400 block">
+                  Plăți Organizatori
+                </span>
+                <span className="text-2xl font-black data-font text-blue-400">
+                  {ticketStats.totalOrganizerPayouts.toLocaleString("ro-RO")} RON
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Settings Form */}
+          <form onSubmit={handleSaveTicketSettings} className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Stripe API Credentials */}
+              <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">💳</span>
+                  <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
+                    Configurare Stripe API
+                  </h3>
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                      Stripe Publishable Key (Cheie Publică)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="pk_live_51..."
+                      value={ticketSettings.stripePublishableKey || ""}
+                      onChange={(e) =>
+                        setTicketSettings({ ...ticketSettings, stripePublishableKey: e.target.value })
+                      }
+                      className="input text-xs font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[10px] font-label font-bold uppercase text-slate-400">
+                        Stripe Secret Key (Cheie Secretă)
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setShowSecretKey(!showSecretKey)}
+                        className="text-[10px] font-mono text-blue-600 dark:text-blue-400 hover:underline"
+                      >
+                        {showSecretKey ? "Ascunde" : "Arată Cheia"}
+                      </button>
+                    </div>
+                    <input
+                      type={showSecretKey ? "text" : "password"}
+                      placeholder="sk_live_51..."
+                      value={ticketSettings.stripeSecretKey || ""}
+                      onChange={(e) =>
+                        setTicketSettings({ ...ticketSettings, stripeSecretKey: e.target.value })
+                      }
+                      className="input text-xs font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* PayPal & Mobile Pay */}
+              <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🅿️</span>
+                  <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
+                    PayPal &amp; Portofele Mobile
+                  </h3>
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                      PayPal Client ID
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="client_id_..."
+                      value={ticketSettings.paypalClientId || ""}
+                      onChange={(e) =>
+                        setTicketSettings({ ...ticketSettings, paypalClientId: e.target.value })
+                      }
+                      className="input text-xs font-mono"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 pt-2">
+                    <label className="flex items-center gap-2 p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={ticketSettings.applePayEnabled}
+                        onChange={(e) =>
+                          setTicketSettings({ ...ticketSettings, applePayEnabled: e.target.checked })
+                        }
+                        className="rounded text-lime-500 focus:ring-lime-400"
+                      />
+                      <span className="text-xs font-bold font-label">🍎 Apple Pay</span>
+                    </label>
+
+                    <label className="flex items-center gap-2 p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={ticketSettings.googlePayEnabled}
+                        onChange={(e) =>
+                          setTicketSettings({ ...ticketSettings, googlePayEnabled: e.target.checked })
+                        }
+                        className="rounded text-lime-500 focus:ring-lime-400"
+                      />
+                      <span className="text-xs font-bold font-label">🟢 Google Pay</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Commission & Thresholds */}
+              <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">💰</span>
+                  <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
+                    Comision Platformă &amp; Praguri
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                      Comision Platformă (%)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      max="50"
+                      value={ticketSettings.platformFeePercent}
+                      onChange={(e) =>
+                        setTicketSettings({
+                          ...ticketSettings,
+                          platformFeePercent: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                      className="input text-xs font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                      Prag Minim Retragere (RON)
+                    </label>
+                    <input
+                      type="number"
+                      min="10"
+                      value={ticketSettings.payoutMinThreshold}
+                      onChange={(e) =>
+                        setTicketSettings({
+                          ...ticketSettings,
+                          payoutMinThreshold: parseInt(e.target.value) || 100,
+                        })
+                      }
+                      className="input text-xs font-bold"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Webhook Endpoints Box */}
+              <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">🔗</span>
+                  <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
+                    Webhook Endpoints Active
+                  </h3>
+                </div>
+
+                <div className="space-y-2 text-xs">
+                  <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 font-mono text-[11px] flex justify-between items-center">
+                    <span className="truncate">https://sp.buu.ro/api/webhooks/stripe</span>
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
+                      Stripe Live
+                    </span>
+                  </div>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 font-mono text-[11px] flex justify-between items-center">
+                    <span className="truncate">https://sp.buu.ro/api/webhooks/paypal</span>
+                    <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-bold">
+                      PayPal Live
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
               <button
                 type="submit"
-                disabled={savingLogo || !customLogoInput.trim()}
-                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-500 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md transition disabled:opacity-50"
+                disabled={savingSettings}
+                className="px-8 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md transition active:scale-95 flex items-center gap-2"
               >
-                {savingLogo ? "Se salvează..." : "Aplică URL Personalizat"}
+                <span className="material-symbols-outlined text-lg">save</span>
+                <span>{savingSettings ? "Se salvează..." : "Salvează Setările API & Plăți ✓"}</span>
               </button>
-            </form>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 3. PERMISSIONS & USERS RBAC TAB */}
+      {/* ========================================================================= */}
+      {activeTab === "users" && (
+        <div className="space-y-6 animate-in fade-in">
+          {/* Permissions Matrix Overview */}
+          <div className="card p-6 bg-slate-950 text-white border-2 border-lime-400/40 rounded-3xl shadow-xl space-y-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800">
+              <div>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400 block mb-1">
+                  SUPERADMIN RBAC • CONTROL PERMISIUNI &amp; ROLURI
+                </span>
+                <h2 className="text-xl font-black font-headline uppercase text-white">
+                  Matricea de Roluri și Drepturi de Acces
+                </h2>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleExportUsers("csv")}
+                  className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl border border-slate-700 flex items-center gap-1.5 transition"
+                >
+                  <span className="material-symbols-outlined text-sm text-lime-400">table_chart</span>
+                  <span>Export CSV</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleExportUsers("json")}
+                  className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl border border-slate-700 flex items-center gap-1.5 transition"
+                >
+                  <span className="material-symbols-outlined text-sm text-lime-400">data_object</span>
+                  <span>Export JSON</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 text-xs">
+              {[
+                { role: "super_admin", label: "SuperAdmin", desc: "Acces Total Platformă", color: "bg-red-500/20 text-red-400 border-red-500/30" },
+                { role: "organizer", label: "Organizator", desc: "Campionate & Meciuri", color: "bg-lime-500/20 text-lime-400 border-lime-500/30" },
+                { role: "referee", label: "Arbitru", desc: "VAR & Rapoarte Meci", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
+                { role: "arena_owner", label: "Proprietar Arenă", desc: "Disponibilitate Teren", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+                { role: "team_leader", label: "Manager Echipă", desc: "Lot & Înscrieri", color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
+                { role: "player", label: "Jucător", desc: "Profil & Statistici", color: "bg-slate-500/20 text-slate-300 border-slate-500/30" },
+              ].map((r) => (
+                <div key={r.role} className={`p-3 rounded-2xl border ${r.color}`}>
+                  <span className="font-bold block uppercase text-[11px]">{r.label}</span>
+                  <span className="text-[10px] opacity-80 block">{r.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* User Search & Filter */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-2">
+              {["all", "super_admin", "organizer", "referee", "arena_owner", "team_leader", "player"].map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setUserRoleFilter(r)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-label font-bold uppercase transition ${
+                    userRoleFilter === r
+                      ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                  }`}
+                >
+                  {r === "all" ? "Toți Utilizatorii" : r}
+                </button>
+              ))}
+            </div>
+
+            <input
+              type="text"
+              placeholder="Caută utilizator după nume, email..."
+              value={userSearchQuery}
+              onChange={(e) => setUserSearchQuery(e.target.value)}
+              className="input text-xs w-full sm:w-72"
+            />
+          </div>
+
+          {/* Users Table */}
+          <div className="card bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="font-label text-[10px] text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800">
+                    <th className="py-4 px-4">Utilizator</th>
+                    <th className="py-4 px-4">Email</th>
+                    <th className="py-4 px-4">Rol Curent</th>
+                    <th className="py-4 px-4">Schimbă Permisiuni (Rol)</th>
+                    <th className="py-4 px-4 text-center">Campionate</th>
+                    <th className="py-4 px-4 text-center">Arene</th>
+                    <th className="py-4 px-4 text-right">Data Înscrierii</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-body">
+                  {filteredUsers.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="py-12 text-center text-slate-500 font-label">
+                        Nu au fost găsiți utilizatori conform criteriilor de căutare.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredUsers.map((u) => (
+                      <tr key={u.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                        <td className="py-3.5 px-4 font-bold text-slate-900 dark:text-white">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white flex items-center justify-center font-black text-xs shrink-0">
+                              {u.name ? u.name[0].toUpperCase() : "U"}
+                            </div>
+                            <span className="truncate">{u.name || "Nume nesetat"}</span>
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-4 font-mono text-slate-600 dark:text-slate-300">
+                          {u.email}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span
+                            className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase font-mono border ${
+                              u.role === "super_admin" || u.role === "superadmin"
+                                ? "bg-red-500/10 text-red-500 border-red-500/20"
+                                : u.role === "referee"
+                                ? "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                                : u.role === "organizer"
+                                ? "bg-lime-500/10 text-lime-600 dark:text-lime-400 border-lime-500/20"
+                                : "bg-blue-500/10 text-blue-500 border-blue-500/20"
+                            }`}
+                          >
+                            {u.role}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <select
+                            value={u.role}
+                            onChange={(e) => handleRoleChange(u.id, e.target.value)}
+                            className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl px-2.5 py-1 font-bold focus:outline-none focus:border-lime-500 cursor-pointer"
+                          >
+                            <option value="organizer">⚡ Pro Organizer</option>
+                            <option value="super_admin">👑 Super Administrator</option>
+                            <option value="referee">⚖️ Arbitru Oficial (RIFA)</option>
+                            <option value="arena_owner">🏟️ Proprietar Arenă</option>
+                            <option value="team_leader">👔 Manager Echipă</option>
+                            <option value="player">⚽ Jucător</option>
+                          </select>
+                        </td>
+                        <td className="py-3.5 px-4 text-center font-bold text-slate-900 dark:text-white font-mono">
+                          {u._count?.championships || 0}
+                        </td>
+                        <td className="py-3.5 px-4 text-center font-bold text-slate-900 dark:text-white font-mono">
+                          {u._count?.venues || 0}
+                        </td>
+                        <td className="py-3.5 px-4 text-right text-slate-500 font-mono text-[11px]">
+                          {new Date(u.createdAt).toLocaleDateString("ro-RO")}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 4. ANALYTICS & TELEMETRY TAB */}
+      {/* ========================================================================= */}
+      {activeTab === "analytics" && (
+        <div className="space-y-8 animate-in fade-in">
+          {/* Header Bento */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="card p-6 bg-surface-container-lowest border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm">
+              <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
+                Arene Omologate
+              </span>
+              <p className="text-3xl font-black data-font text-slate-900 dark:text-white mt-1">
+                {venues.length}
+              </p>
+              <p className="text-xs text-lime-600 dark:text-lime-400 font-bold font-label mt-1">
+                {venues.filter((v) => v.isActive).length} Active Live
+              </p>
+            </div>
+
+            <div className="card p-6 bg-surface-container-lowest border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm">
+              <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
+                Total Utilizatori
+              </span>
+              <p className="text-3xl font-black data-font text-blue-600 dark:text-blue-400 mt-1">
+                {users.length}
+              </p>
+              <p className="text-xs text-slate-500 font-label mt-1">
+                {demoStats?.realUsersCount ?? users.length} Conturi Reale
+              </p>
+            </div>
+
+            <div className="card p-6 bg-surface-container-lowest border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm">
+              <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
+                Terenuri Fotbal ⚽
+              </span>
+              <p className="text-3xl font-black data-font text-amber-500 mt-1">
+                {venues.filter((v) => v.sport === "fotbal").length}
+              </p>
+              <p className="text-xs text-slate-500 font-label mt-1">Sintetic &amp; Gazon</p>
+            </div>
+
+            <div className="card p-6 bg-surface-container-lowest border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm">
+              <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
+                Baschet &amp; Volei 🏀🏐
+              </span>
+              <p className="text-3xl font-black data-font text-purple-500 mt-1">
+                {venues.filter((v) => v.sport === "baschet" || v.sport === "volei").length}
+              </p>
+              <p className="text-xs text-slate-500 font-label mt-1">Săli &amp; Exterior</p>
+            </div>
+          </div>
+
+          {/* System Telemetry & Health */}
+          <div className="card p-6 bg-slate-950 text-white border border-slate-800 rounded-3xl space-y-6 shadow-xl">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <h3 className="font-headline font-black text-lg uppercase text-white">
+                  Telemetrie Sistem &amp; Infrastructură
+                </h3>
+              </div>
+              <span className="text-xs font-mono text-slate-400">
+                Uptime: 99.98% • Latency: ~1.2ms
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono">
+              <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-1">
+                <span className="text-slate-400 text-[10px] uppercase font-bold block">Bază de Date</span>
+                <p className="text-sm font-bold text-white">SQLite Engine Pro (WAL Mode)</p>
+                <p className="text-emerald-400 text-[11px]">✓ Conexiune Activă (league.db)</p>
+              </div>
+
+              <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-1">
+                <span className="text-slate-400 text-[10px] uppercase font-bold block">Runtime &amp; Server</span>
+                <p className="text-sm font-bold text-white">Next.js 14 App Router + Node</p>
+                <p className="text-emerald-400 text-[11px]">✓ Memorie Heap: Stabilă</p>
+              </div>
+
+              <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-1">
+                <span className="text-slate-400 text-[10px] uppercase font-bold block">Securitate &amp; Sesiuni</span>
+                <p className="text-sm font-bold text-white">NextAuth JWT + RBAC Shield</p>
+                <p className="text-emerald-400 text-[11px]">✓ 0 Alerte Critice</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 5. LOGIN HISTORY & AUDIT LOGS TAB */}
+      {/* ========================================================================= */}
+      {activeTab === "login_history" && (
+        <div className="space-y-6 animate-in fade-in">
+          {/* Header Card */}
+          <div className="card p-6 bg-slate-950 text-white border-2 border-lime-400/40 rounded-3xl shadow-xl space-y-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800">
+              <div>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400 block mb-1">
+                  SUPERADMIN AUDIT • JURNAL SECURITATE &amp; LOGIN
+                </span>
+                <h2 className="text-xl font-black font-headline uppercase text-white">
+                  Istoric Conectări &amp; Activitate Administratori
+                </h2>
+              </div>
+
+              {/* Status Filter */}
+              <div className="flex items-center gap-2">
+                {[
+                  { id: "all", label: "Toate Jurnalele" },
+                  { id: "success", label: "✅ Reușite" },
+                  { id: "blocked", label: "⛔ Blocări WAF" },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setLogFilter(item.id)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                      logFilter === item.id
+                        ? "bg-lime-400 text-slate-950 font-black"
+                        : "bg-slate-900 text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-300">
+              Monitorizează sesiunile active, adresele IP, dispozitivele de autentificare și acțiunile administrative pentru conformitate și securitate maximă.
+            </p>
+          </div>
+
+          {/* Audit Logs Table */}
+          <div className="card bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="font-label text-[10px] text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800">
+                    <th className="py-4 px-4">Utilizator &amp; Email</th>
+                    <th className="py-4 px-4">Rol</th>
+                    <th className="py-4 px-4">Adresă IP &amp; Locație</th>
+                    <th className="py-4 px-4">Dispozitiv / Browser</th>
+                    <th className="py-4 px-4">Acțiune Înregistrată</th>
+                    <th className="py-4 px-4 text-center">Status</th>
+                    <th className="py-4 px-4 text-right">Data &amp; Ora</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-body">
+                  {filteredLogs.map((log) => (
+                    <tr key={log.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                      <td className="py-3.5 px-4 font-bold text-slate-900 dark:text-white">
+                        <div>
+                          <span>{log.userName}</span>
+                          <span className="text-[11px] text-slate-500 font-mono block">{log.userEmail}</span>
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-mono font-bold">
+                          {log.role}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 font-mono text-slate-700 dark:text-slate-300">
+                        <div>
+                          <span>{log.ip}</span>
+                          <span className="text-[10px] text-slate-500 block">{log.location}</span>
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-4 text-slate-600 dark:text-slate-400">
+                        {log.device}
+                      </td>
+                      <td className="py-3.5 px-4 font-medium text-slate-800 dark:text-slate-200">
+                        {log.action}
+                      </td>
+                      <td className="py-3.5 px-4 text-center">
+                        <span
+                          className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${
+                            log.status === "success"
+                              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                              : "bg-red-500/10 text-red-500 border border-red-500/20"
+                          }`}
+                        >
+                          {log.status === "success" ? "Succes ✓" : "Blocat ⛔"}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-right text-slate-500 font-mono text-[11px]">
+                        {log.timestamp}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 6. VENUES MANAGEMENT TAB */}
+      {/* ========================================================================= */}
+      {activeTab === "venues" && (
+        <div className="space-y-4 animate-in fade-in">
+          {/* Header Action Bar */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-2">
+              {[
+                { id: "all", label: "Toate Disciplinele" },
+                { id: "fotbal", label: "⚽ Fotbal" },
+                { id: "baschet", label: "🏀 Baschet" },
+                { id: "volei", label: "🏐 Volei" },
+                { id: "multifunctional", label: "🏟️ Multifuncțional" },
+              ].map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => setSportFilter(s.id)}
+                  className={`px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition ${
+                    sportFilter === s.id
+                      ? "bg-blue-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                  }`}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                placeholder="Caută arenă, adresă sau oraș..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="input text-xs w-full sm:w-64"
+              />
+              <button
+                type="button"
+                onClick={openCreateModal}
+                className="px-5 py-2.5 bg-lime-400 hover:bg-lime-300 text-slate-950 rounded-xl font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition active:scale-95 shrink-0"
+              >
+                <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                <span>Adaugă Arenă</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Venues Master Table */}
+          <div className="card bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="font-label text-[10px] text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800">
+                    <th className="py-4 px-4">Denumire Arenă &amp; Sport</th>
+                    <th className="py-4 px-4">Locație &amp; Adresă</th>
+                    <th className="py-4 px-4">Suprafață</th>
+                    <th className="py-4 px-4">Capacitate</th>
+                    <th className="py-4 px-4">Tarif Oră</th>
+                    <th className="py-4 px-4 text-center">Status</th>
+                    <th className="py-4 px-4 text-right">Acțiuni Admin</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-body">
+                  {filteredVenues.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="py-12 text-center text-slate-500 font-label">
+                        Nu au fost găsite arene conform filtrelor selectate.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredVenues.map((v) => (
+                      <tr key={v.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                        <td className="py-4 px-4 font-headline">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-900 flex-shrink-0 shadow-sm">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={v.imageUrl || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80"}
+                                alt={v.name}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div>
+                              <Link
+                                href={`/venues/${v.id}`}
+                                className="font-bold text-sm text-blue-950 dark:text-white hover:text-lime-600 dark:hover:text-lime-400 block leading-tight"
+                              >
+                                {v.name}
+                              </Link>
+                              <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase text-slate-600 dark:text-slate-300 font-label inline-block mt-0.5">
+                                {v.sport}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="py-4 px-4">
+                          <span className="font-bold text-slate-900 dark:text-slate-200 block">
+                            {v.location}
+                          </span>
+                          <span className="text-[11px] text-slate-500 font-label block truncate max-w-[180px]">
+                            {v.address || "Timișoara"}
+                          </span>
+                        </td>
+
+                        <td className="py-4 px-4 font-bold text-slate-800 dark:text-slate-300">
+                          {v.surface}
+                        </td>
+
+                        <td className="py-4 px-4 font-black data-font text-blue-950 dark:text-white">
+                          {v.capacity.toLocaleString("ro-RO")} locuri
+                        </td>
+
+                        <td className="py-4 px-4 font-black data-font text-sm text-lime-600 dark:text-lime-400">
+                          {v.pricePerHour && v.pricePerHour > 0 ? `${v.pricePerHour} RON/h` : "Gratuit"}
+                        </td>
+
+                        <td className="py-4 px-4 text-center">
+                          <button
+                            type="button"
+                            onClick={() => toggleActive(v)}
+                            className={`px-2.5 py-1 rounded-full font-label text-[10px] font-black uppercase transition ${
+                              v.isActive
+                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                                : "bg-slate-200 dark:bg-slate-800 text-slate-500"
+                            }`}
+                          >
+                            {v.isActive ? "ACTIV ✓" : "INACTIV"}
+                          </button>
+                        </td>
+
+                        <td className="py-4 px-4 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => openEditModal(v)}
+                              className="p-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                              title="Editează"
+                            >
+                              <span className="material-symbols-outlined text-[18px]">edit</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteVenue(v)}
+                              className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 transition"
+                              title="Șterge"
+                            >
+                              <span className="material-symbols-outlined text-[18px]">delete</span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 7. DATABASE & BACKUP TAB */}
+      {/* ========================================================================= */}
+      {activeTab === "data_export" && (
+        <div className="space-y-8 animate-in fade-in">
+          {/* Header Card */}
+          <div className="card p-6 bg-slate-950 text-white border-2 border-lime-400/40 rounded-3xl shadow-xl space-y-4">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 pb-4 border-b border-slate-800">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400">
+                    SUPERADMIN DATABASE • BACKUP &amp; DATE DEMO
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black font-headline uppercase tracking-tight text-white">
+                  Centru Control Date, Export &amp; Siguranță Bază de Date
+                </h2>
+                <p className="text-xs text-slate-300 font-body max-w-2xl">
+                  Cele 59 de Arene Naționale și toți utilizatorii reali sunt <strong>100% permanenți și protejați</strong>. Comutarea datelor demo afectează exclusiv turneele de test.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                {demoStats?.isDemoActive ? (
+                  <button
+                    type="button"
+                    disabled={togglingDemo}
+                    onClick={() => handleToggleDemo("deactivate")}
+                    className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-black font-headline uppercase tracking-wider transition active:scale-95 flex items-center gap-1.5 shadow-md"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">delete_sweep</span>
+                    <span>{togglingDemo ? "Se curăță..." : "Dezactivează Date Demo"}</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={togglingDemo}
+                    onClick={() => handleToggleDemo("activate")}
+                    className="px-4 py-2.5 bg-lime-400 hover:bg-lime-300 text-slate-950 rounded-xl text-xs font-black font-headline uppercase tracking-wider transition active:scale-95 flex items-center gap-1.5 shadow-md shadow-lime-400/20"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">bolt</span>
+                    <span>{togglingDemo ? "Se populează..." : "Activează Date Demo"}</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => handleExportUsers("json")}
+                  className="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-xl text-xs font-bold font-label uppercase tracking-wider transition flex items-center gap-1.5 border border-slate-700 shadow-sm"
+                >
+                  <span className="material-symbols-outlined text-[16px] text-lime-400">download</span>
+                  <span>Export JSON</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Badges */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-lime-400/10 text-lime-400 flex items-center justify-center font-black text-lg">
+                  🏟️
+                </div>
+                <div>
+                  <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
+                    Arene Naționale (Permanent)
+                  </span>
+                  <span className="font-bold text-white text-xs">
+                    59 Arene • 100% Protejate
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-black text-lg">
+                  👥
+                </div>
+                <div>
+                  <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
+                    Utilizatori Reali (Date Principale)
+                  </span>
+                  <span className="font-bold text-white text-xs">
+                    {demoStats?.realUsersCount ?? users.length} Conturi Reale Protejate
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-black text-lg">
+                  🎲
+                </div>
+                <div>
+                  <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
+                    Status Date Demo
+                  </span>
+                  <span className="font-bold text-white text-xs">
+                    {demoStats?.isDemoActive ? "Active Live" : "Dezactivate"}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

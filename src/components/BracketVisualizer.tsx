@@ -255,16 +255,16 @@ export function BracketVisualizer({
       {/* On mobile in 'tree' mode: horizontal smooth touch scroll container with full fine connector lines */}
       {/* On mobile in 'stages' mode: single active column */}
       <div
-        className={`w-full relative z-10 transition-all duration-300 ${
+        className={`w-full max-w-full relative z-10 transition-all duration-300 ${
           mobileViewMode === "tree"
-            ? "overflow-x-auto pb-4 scroll-smooth scrollbar-thin snap-x"
-            : ""
+            ? "overflow-x-auto pb-4 scroll-smooth scrollbar-thin snap-x overscroll-x-contain"
+            : "overflow-hidden"
         }`}
       >
         <div
-          className={`flex items-stretch gap-0 ${
+          className={`flex items-stretch gap-0 w-full ${
             mobileViewMode === "tree"
-              ? "min-w-[840px] md:min-w-0"
+              ? "min-w-[760px] lg:min-w-0"
               : "flex-col md:flex-row"
           }`}
         >

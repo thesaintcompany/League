@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export type SportType = "fotbal" | "baschet" | "volei" | "handbal" | "tenis";
+export type FootballCategoryType = "all" | "masculin" | "feminin" | "futsal" | "juniori";
 
 export interface SportOption {
   id: SportType;
@@ -15,6 +16,13 @@ export interface SportOption {
   description: string;
 }
 
+export interface CategoryOption {
+  id: string;
+  name: string;
+  shortName: string;
+  icon: string;
+}
+
 export const AVAILABLE_SPORTS: SportOption[] = [
   {
     id: "fotbal",
@@ -23,7 +31,7 @@ export const AVAILABLE_SPORTS: SportOption[] = [
     icon: "⚽",
     accentColor: "text-lime-400 border-lime-400 bg-lime-400/10",
     badgeBg: "bg-lime-400 text-slate-950",
-    description: "Campionate județene și naționale de fotbal 11v11, minifotbal 6v6 și futsal.",
+    description: "Campionate județene și naționale: Masculin, Feminin, Futsal și Juniori.",
   },
   {
     id: "baschet",
@@ -63,46 +71,65 @@ export const AVAILABLE_SPORTS: SportOption[] = [
   },
 ];
 
+export const FOOTBALL_CATEGORIES: CategoryOption[] = [
+  { id: "all", name: "Toate", shortName: "Toate", icon: "🌐" },
+  { id: "masculin", name: "Masculin (Seniori)", shortName: "Masculin", icon: "👨" },
+  { id: "feminin", name: "Feminin", shortName: "Feminin", icon: "👩" },
+  { id: "futsal", name: "Futsal / Sală", shortName: "Futsal", icon: "⚡" },
+  { id: "juniori", name: "Juniori & Tineret", shortName: "Juniori", icon: "⭐" },
+];
+
 interface SportContextType {
   selectedSport: SportType;
+  selectedCategory: string;
   currentSportMeta: SportOption;
   availableSports: SportOption[];
-  isSportLocked: boolean; // True on inner pages (/campionat, /teams, etc.), False on /harta-romaniei
+  footballCategories: CategoryOption[];
+  isSportLocked: boolean;
   selectSport: (sport: SportType) => void;
+  selectCategory: (category: string) => void;
+  matchesCategoryFilter: (text: string) => boolean;
   unlockAndNavigateToMap: () => void;
 }
 
 const SportContext = createContext<SportContextType | undefined>(undefined);
 
 const STORAGE_KEY = "proligue_selected_sport";
+const CATEGORY_STORAGE_KEY = "proligue_selected_category";
 
 export function SportProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Primary page where choosing/switching sports is allowed
   const isMapPage = pathname === "/harta-romaniei";
 
   const [selectedSport, setSelectedSport] = useState<SportType>("fotbal");
-  const [hydrated, setHydrated] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   useEffect(() => {
-    // 1. Check URL query param first
-    const paramSport = searchParams.get("sport")?.toLowerCase() as SportType | null;
+    // 1. Check URL query params
+    const paramSport = searchParams?.get("sport")?.toLowerCase() as SportType | null;
     if (paramSport && AVAILABLE_SPORTS.some((s) => s.id === paramSport)) {
       setSelectedSport(paramSport);
       localStorage.setItem(STORAGE_KEY, paramSport);
-      setHydrated(true);
-      return;
+    } else {
+      const saved = localStorage.getItem(STORAGE_KEY) as SportType | null;
+      if (saved && AVAILABLE_SPORTS.some((s) => s.id === saved)) {
+        setSelectedSport(saved);
+      }
     }
 
-    // 2. Check localStorage
-    const saved = localStorage.getItem(STORAGE_KEY) as SportType | null;
-    if (saved && AVAILABLE_SPORTS.some((s) => s.id === saved)) {
-      setSelectedSport(saved);
+    const paramCategory = searchParams?.get("cat")?.toLowerCase();
+    if (paramCategory && FOOTBALL_CATEGORIES.some((c) => c.id === paramCategory)) {
+      setSelectedCategory(paramCategory);
+      localStorage.setItem(CATEGORY_STORAGE_KEY, paramCategory);
+    } else {
+      const savedCat = localStorage.getItem(CATEGORY_STORAGE_KEY);
+      if (savedCat && FOOTBALL_CATEGORIES.some((c) => c.id === savedCat)) {
+        setSelectedCategory(savedCat);
+      }
     }
-    setHydrated(true);
   }, [searchParams]);
 
   function selectSport(sport: SportType) {
@@ -111,6 +138,41 @@ export function SportProvider({ children }: { children: ReactNode }) {
       localStorage.setItem(STORAGE_KEY, sport);
       window.dispatchEvent(new CustomEvent("app-sport-changed", { detail: { sport } }));
     }
+  }
+
+  function selectCategory(category: string) {
+    setSelectedCategory(category);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(CATEGORY_STORAGE_KEY, category);
+      window.dispatchEvent(new CustomEvent("app-category-changed", { detail: { category } }));
+    }
+  }
+
+  function matchesCategoryFilter(text: string): boolean {
+    if (selectedSport !== "fotbal" || selectedCategory === "all") return true;
+    const lower = (text || "").toLowerCase();
+
+    if (selectedCategory === "feminin") {
+      return lower.includes("feminin") || lower.includes("fete") || lower.includes("wmn");
+    }
+    if (selectedCategory === "futsal") {
+      return lower.includes("futsal") || lower.includes("minifotbal") || lower.includes("sala") || lower.includes("5v5") || lower.includes("6v6");
+    }
+    if (selectedCategory === "juniori") {
+      return lower.includes("junior") || lower.includes("tineret") || lower.includes("u19") || lower.includes("u17") || lower.includes("u15") || lower.includes("copii");
+    }
+    if (selectedCategory === "masculin") {
+      const isOther =
+        lower.includes("feminin") ||
+        lower.includes("fete") ||
+        lower.includes("junior") ||
+        lower.includes("tineret") ||
+        lower.includes("u19") ||
+        lower.includes("u17") ||
+        lower.includes("futsal");
+      return !isOther || lower.includes("masculin") || lower.includes("seniori");
+    }
+    return true;
   }
 
   function unlockAndNavigateToMap() {
@@ -124,10 +186,14 @@ export function SportProvider({ children }: { children: ReactNode }) {
     <SportContext.Provider
       value={{
         selectedSport,
+        selectedCategory,
         currentSportMeta,
         availableSports: AVAILABLE_SPORTS,
+        footballCategories: FOOTBALL_CATEGORIES,
         isSportLocked: !isMapPage,
         selectSport,
+        selectCategory,
+        matchesCategoryFilter,
         unlockAndNavigateToMap,
       }}
     >
