@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -18,6 +18,18 @@ function WelcomePortalForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [mobileView, setMobileView] = useState<"championships" | "auth">("championships");
+  const [demoPreFillDisabled, setDemoPreFillDisabled] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/settings/public")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.demoPreFillDisabled) {
+          setDemoPreFillDisabled(true);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const DEMO_ACCOUNTS = [
     {
@@ -268,39 +280,46 @@ function WelcomePortalForm() {
             </header>
 
             {/* Fast 1-Click Demo Accounts Selector */}
-            <div className="mb-6 space-y-2">
-              <span className="text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">
-                Alege Rapid Cont Demo (1-Click Login):
-              </span>
-              <div className="grid grid-cols-2 gap-2">
-                {DEMO_ACCOUNTS.map((acc) => {
-                  const isSelected = email === acc.email;
-                  return (
-                    <button
-                      key={acc.id}
-                      type="button"
-                      onClick={() => pickAccount(acc)}
-                      className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between ${isSelected
-                          ? "border-lime-500 bg-lime-500/10 text-slate-950 dark:text-white shadow-md ring-1 ring-lime-400"
-                          : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
-                        }`}
-                    >
-                      <div className="flex justify-between items-center w-full mb-1">
-                        <span className="material-symbols-outlined text-[18px] text-lime-600 dark:text-lime-400">
-                          {acc.icon}
+            {!demoPreFillDisabled ? (
+              <div className="mb-6 space-y-2">
+                <span className="text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">
+                  Alege Rapid Cont Demo (1-Click Login):
+                </span>
+                <div className="grid grid-cols-2 gap-2">
+                  {DEMO_ACCOUNTS.map((acc) => {
+                    const isSelected = email === acc.email;
+                    return (
+                      <button
+                        key={acc.id}
+                        type="button"
+                        onClick={() => pickAccount(acc)}
+                        className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between ${isSelected
+                            ? "border-lime-500 bg-lime-500/10 text-slate-950 dark:text-white shadow-md ring-1 ring-lime-400"
+                            : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
+                          }`}
+                      >
+                        <div className="flex justify-between items-center w-full mb-1">
+                          <span className="material-symbols-outlined text-[18px] text-lime-600 dark:text-lime-400">
+                            {acc.icon}
+                          </span>
+                          <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-label">
+                            {acc.badge}
+                          </span>
+                        </div>
+                        <span className="font-headline font-bold text-xs block leading-tight">
+                          {acc.role}
                         </span>
-                        <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-label">
-                          {acc.badge}
-                        </span>
-                      </div>
-                      <span className="font-headline font-bold text-xs block leading-tight">
-                        {acc.role}
-                      </span>
-                    </button>
-                  );
-                })}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="mb-6 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-semibold flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-lg text-amber-500">no_accounts</span>
+                <span>Precompletarea conturilor demo a fost dezactivată de către SuperAdmin. Se permite doar autentificarea directă.</span>
+              </div>
+            )}
 
             {/* Login Form */}
             <form onSubmit={onSubmit} className="space-y-4">

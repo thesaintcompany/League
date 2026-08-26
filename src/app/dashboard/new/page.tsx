@@ -5,7 +5,17 @@ import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { TopHeader } from "@/components/TopHeader";
 import { ChampionshipLogoBadge } from "@/components/ChampionshipLogoBadge";
-import { SPORTS, FORMATS, CHAMPIONSHIP_SCOPES, ROMANIAN_COUNTIES, FOOTBALL_CATEGORIES } from "@/lib/constants";
+import {
+  SPORTS,
+  FORMATS,
+  CHAMPIONSHIP_SCOPES,
+  ROMANIAN_COUNTIES,
+  FOOTBALL_CATEGORIES,
+  TENNIS_CATEGORIES,
+  TENNIS_SURFACES,
+  TENNIS_SETS_RULES,
+  isIndividualSport,
+} from "@/lib/constants";
 
 export default function NewChampionshipPage() {
   const router = useRouter();
@@ -51,48 +61,90 @@ export default function NewChampionshipPage() {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
-  // Quick preset templates
-  function applyPreset(type: "national" | "judetean" | "knockout" | "friendly") {
-    if (type === "national") {
+  // Shorter, clean suggested names
+  const SHORT_PRESET_NAMES = {
+    friendly: ["Meciuri Amicale", "Turneu Demonstrativ", "Cupa Amicală", "Meciuri de Pregătire", "Liga Amatorilor"],
+    tennis_singles: ["Tenis Simplu", "Turneu Tenis", "Cupa la Simplu", "Open Tenis", "Master Tenis"],
+    tennis_doubles: ["Tenis Dublu", "Turneu Padel", "Cupa la Dublu", "Padel & Dublu", "Open Dublu"],
+    national: ["SuperLiga Națională", "Cupa României", "Liga Națională", "Campionatul Național", "Liga Pro"],
+    judetean: ["Liga Județeană", "Cupa Județeană", "Liga Locală", "Campionat Județean", "SuperLiga Locală"],
+    knockout: ["Cupa Eliminatorie", "Turneu cu Zaruri", "Cupa Knockout", "Liga Eliminatorie", "Turneu Flash"],
+  };
+
+  function getRandomShortName(type?: keyof typeof SHORT_PRESET_NAMES) {
+    if (type && SHORT_PRESET_NAMES[type]) {
+      const list = SHORT_PRESET_NAMES[type];
+      return list[Math.floor(Math.random() * list.length)];
+    }
+    const allLists = Object.values(SHORT_PRESET_NAMES).flat();
+    return allLists[Math.floor(Math.random() * allLists.length)];
+  }
+
+  // Quick preset templates with shorter, random names
+  function applyPreset(type: "national" | "judetean" | "knockout" | "friendly" | "tennis_singles" | "tennis_doubles") {
+    const name = getRandomShortName(type);
+    if (type === "tennis_singles") {
       setForm((f) => ({
         ...f,
-        name: "SuperLiga Națională România 2026",
+        name,
+        sport: "Tenis",
+        category: "simplu_masculin",
+        format: "knockout",
+        scope: "national",
+        season: "2026",
+        description: "Turneu de tenis simplu cu tablou eliminatoriu direct între jucători.",
+      }));
+    } else if (type === "tennis_doubles") {
+      setForm((f) => ({
+        ...f,
+        name,
+        sport: "Padel",
+        category: "dublu_masculin",
+        format: "knockout",
+        scope: "national",
+        season: "2026",
+        description: "Competiție pe perechi cu meciuri în sistem de 3 seturi.",
+      }));
+    } else if (type === "national") {
+      setForm((f) => ({
+        ...f,
+        name,
         sport: "Fotbal",
         format: "round_robin",
         scope: "national",
         season: "2026",
-        description: "Campionat național de elită cu vizibilitate în toate județele României.",
+        description: "Campionat național de elită cu meciuri în sistem tur-retur.",
       }));
     } else if (type === "judetean") {
       setForm((f) => ({
         ...f,
-        name: "Liga Județeană Timiș 2026",
+        name,
         sport: "Fotbal",
         format: "round_robin",
         scope: "judetean",
         county: "Timiș",
         season: "2026",
-        description: "Campionat oficial arondat Județului Timiș și arenelor sportive locale.",
+        description: "Campionat oficial arondat județului Timiș.",
       }));
     } else if (type === "knockout") {
       setForm((f) => ({
         ...f,
-        name: "Cupa Eliminatorie cu Zaruri 2026",
+        name,
         sport: "Fotbal",
         format: "knockout",
         scope: "national",
         season: "2026",
-        description: "Turneu eliminatoriu direct cu tragere la sorți algoritmică prin zaruri (Sferturi -> Semifinale -> Finală).",
+        description: "Turneu eliminatoriu direct cu tragere la sorți prin zaruri.",
       }));
     } else if (type === "friendly") {
       setForm((f) => ({
         ...f,
-        name: "Turneu Demonstrativ & Meciuri Amicale Inter-Ligi",
+        name,
         sport: "Fotbal",
         format: "round_robin",
         scope: "national",
         season: "2026",
-        description: "Partide amicale de verificare și jocuri demonstrative între cluburi din ligi diferite.",
+        description: "Partide amicale de verificare și jocuri demonstrative.",
       }));
     }
   }
@@ -199,7 +251,27 @@ export default function NewChampionshipPage() {
             <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
               ⚡ Șabloane Rapide (1-Click Fill)
             </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 w-full">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 w-full">
+              <button
+                type="button"
+                onClick={() => applyPreset("tennis_singles")}
+                className="p-3.5 sm:p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
+              >
+                <div className="text-base">🎾</div>
+                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Tenis Simplu</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400">Jucători direcți & Seeds</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => applyPreset("tennis_doubles")}
+                className="p-3.5 sm:p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
+              >
+                <div className="text-base">🏸</div>
+                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Tenis / Padel Dublu</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400">Turneu pe perechi</div>
+              </button>
+
               <button
                 type="button"
                 onClick={() => applyPreset("national")}
@@ -217,7 +289,7 @@ export default function NewChampionshipPage() {
               >
                 <div className="text-base">📍</div>
                 <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Ligă Județeană</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Arondată unui județ (ex: Timiș)</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400">Arondată unui județ</div>
               </button>
 
               <button
@@ -227,7 +299,7 @@ export default function NewChampionshipPage() {
               >
                 <div className="text-base">🎲</div>
                 <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Turneu cu Zaruri</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Arbore eliminatoriu direct</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400">Arbore eliminatoriu</div>
               </button>
 
               <button
@@ -237,7 +309,7 @@ export default function NewChampionshipPage() {
               >
                 <div className="text-base">🤝</div>
                 <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Meciuri Amicale</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Jocuri demonstrative inter-ligi</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400">Partide demonstrative</div>
               </button>
             </div>
           </div>
@@ -260,18 +332,37 @@ export default function NewChampionshipPage() {
 
             <form onSubmit={onSubmit} className="space-y-6">
               <div>
-                <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1.5" htmlFor="name">
-                  Nume Campionat / Ligă *
-                </label>
-                <input
-                  id="name"
-                  required
-                  minLength={2}
-                  className="w-full p-3 rounded-2xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-lime-500 dark:focus:border-lime-400"
-                  value={form.name}
-                  onChange={(e) => update("name", e.target.value)}
-                  placeholder="ex: Liga Pro România 2026 sau Cupa Timișoarei"
-                />
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block" htmlFor="name">
+                    Nume Campionat / Ligă *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => update("name", getRandomShortName())}
+                    className="text-[11px] font-label font-bold text-lime-600 dark:text-lime-400 hover:underline flex items-center gap-1"
+                  >
+                    <span>🎲 Nume Scurt Aleatoriu</span>
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    id="name"
+                    required
+                    minLength={2}
+                    className="w-full p-3 rounded-2xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-lime-500 dark:focus:border-lime-400"
+                    value={form.name}
+                    onChange={(e) => update("name", e.target.value)}
+                    placeholder="ex: Meciuri Amicale sau Turneu Demonstrativ"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => update("name", getRandomShortName())}
+                    className="px-3.5 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs shrink-0 flex items-center gap-1"
+                    title="Generează alt nume scurt aleatoriu"
+                  >
+                    <span>🎲</span>
+                  </button>
+                </div>
               </div>
 
               {/* Siglă Rotundă Campionat & Live Preview */}
@@ -480,6 +571,79 @@ export default function NewChampionshipPage() {
                         <span>{cat.label.split(" (")[0]}</span>
                       </button>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tennis & Padel Category & Surface Selector */}
+              {isIndividualSport(form.sport) && (
+                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">🎾</span>
+                    <div>
+                      <label className="text-xs font-bold font-headline text-emerald-900 dark:text-emerald-300 uppercase block">
+                        Configurare Specifică Tenis / Padel (Participanți Individuali)
+                      </label>
+                      <p className="text-[11px] text-emerald-700 dark:text-emerald-400 font-label">
+                        În această competiție poți înscrie și invita direct jucători pe tablou (fără a fi obligatorie o echipă de fotbal).
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 block">
+                      Tablou &amp; Categorie de Concurs
+                    </label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {TENNIS_CATEGORIES.map((cat) => (
+                        <button
+                          key={cat.value}
+                          type="button"
+                          onClick={() => update("category", cat.value)}
+                          className={`p-2.5 rounded-xl border text-xs font-headline font-bold text-center transition ${
+                            form.category === cat.value
+                              ? "bg-emerald-600 text-white border-emerald-600 shadow-sm font-black"
+                              : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400"
+                          }`}
+                        >
+                          <span>{cat.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-emerald-500/20">
+                    <div>
+                      <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 block mb-1">
+                        Suprafață de Joc Teren
+                      </label>
+                      <select
+                        className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-bold text-slate-900 dark:text-white"
+                        onChange={(e) => update("description", `${form.description ? form.description + " • " : ""}Suprafață: ${e.target.value}`)}
+                      >
+                        {TENNIS_SURFACES.map((s) => (
+                          <option key={s.value} value={s.value}>
+                            {s.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 block mb-1">
+                        Format Seturi &amp; Regulament
+                      </label>
+                      <select
+                        className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs font-bold text-slate-900 dark:text-white"
+                        onChange={(e) => update("description", `${form.description ? form.description + " • " : ""}Regulament: ${e.target.value}`)}
+                      >
+                        {TENNIS_SETS_RULES.map((r) => (
+                          <option key={r.value} value={r.value}>
+                            {r.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
               )}

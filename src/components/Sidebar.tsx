@@ -91,9 +91,9 @@ export function Sidebar({ variant }: SidebarProps) {
     navItems = [
       { name: "Clasament General", href: `${activeBase}?tab=standings`, icon: "leaderboard" },
       { name: "Program & Arbitraj", href: `${activeBase}?tab=matches`, icon: "sports_soccer" },
-      { name: "Arbore Eliminatoriu 🏆", href: isChampDetail ? `${activeBase}?tab=brackets` : "/brackets", icon: "account_tree" },
-      { name: "Echipe Înscrise 🛡️", href: "/dashboard/organizer/teams", icon: "shield" },
-      { name: "Promotion Hub 📢", href: `${activeBase}?tab=promo`, icon: "campaign" },
+      { name: "Arbore Eliminatoriu", href: isChampDetail ? `${activeBase}?tab=brackets` : "/brackets", icon: "account_tree" },
+      { name: "Echipe Înscrise", href: "/dashboard/organizer/teams", icon: "shield" },
+      { name: "Promotion Hub", href: `${activeBase}?tab=promo`, icon: "campaign" },
       { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
       { name: "Campionate & Harta", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Arene", href: "/venues", icon: "domain" },
@@ -140,16 +140,16 @@ export function Sidebar({ variant }: SidebarProps) {
           <div className="flex items-center gap-1.5">
             <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[9px] font-label font-bold uppercase tracking-wider text-lime-600 dark:text-lime-400 border border-slate-200 dark:border-slate-800">
               {role === "super_admin" || role === "superadmin"
-                ? "👑 Super Administrator"
+                ? "Super Administrator"
                 : role === "referee"
-                  ? "⚖️ Oficial Arbitraj"
+                  ? "Oficial Arbitraj"
                   : role === "arena_owner"
-                    ? "🏟️ Panou Arenă"
+                    ? "Panou Arenă"
                     : role === "team_leader"
-                      ? "👔 Manager Echipă"
+                      ? "Manager Echipă"
                       : role === "player"
-                        ? "⚽ Fișă Jucător"
-                        : "⚡ Pro Organizer"}
+                        ? "Fișă Jucător"
+                        : "Pro Organizer"}
             </span>
           </div>
         </div>

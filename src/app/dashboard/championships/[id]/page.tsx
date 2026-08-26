@@ -115,6 +115,8 @@ export default async function ChampionshipDetailPage({
           {/* Championship Tabs (Standings, Matches, Teams) */}
           <ChampionshipTabs
             championshipId={champ.id}
+            sport={champ.sport}
+            championshipName={champ.name}
             teams={champ.teams.map((t) => ({
               id: t.id,
               name: t.name,

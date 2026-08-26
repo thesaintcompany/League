@@ -3,10 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { MatchData } from "./MatchCard";
+import { isIndividualSport } from "@/lib/constants";
 
 interface RefereeControlModalProps {
   match: MatchData;
   championshipId: string;
+  sport?: string;
   isOpen: boolean;
   onClose: () => void;
   onUpdated: () => void;
@@ -23,10 +25,12 @@ interface RefereeOption {
 export function RefereeControlModal({
   match,
   championshipId,
+  sport = "Fotbal",
   isOpen,
   onClose,
   onUpdated,
 }: RefereeControlModalProps) {
+  const isIndividual = isIndividualSport(sport);
   const [activeTab, setActiveTab] = useState<"organizer" | "live_score" | "report">("organizer");
 
   // Match core details
@@ -35,41 +39,54 @@ export function RefereeControlModal({
   const [status, setStatus] = useState<"scheduled" | "live" | "finished">(
     (match.status as any) || "scheduled"
   );
-  const [venue, setVenue] = useState<string>(match.venue || "");
+  const [venue, setVenue] = useState<string>(
+    match.venue || (isIndividual ? "Teren Central (Zgură)" : "")
+  );
   const [scheduledAt, setScheduledAt] = useState<string>(
     match.scheduledAt ? new Date(match.scheduledAt).toISOString().slice(0, 16) : ""
   );
 
+  // Tennis-specific set scores
+  const [tennisSet1, setTennisSet1] = useState<string>("6-4");
+  const [tennisSet2, setTennisSet2] = useState<string>("3-6");
+  const [tennisSet3, setTennisSet3] = useState<string>("7-5");
+
   // Referee & Organizer settings
   const [refereeName, setRefereeName] = useState<string>(
-    match.referee || "Cristian Balaj"
+    match.referee || (isIndividual ? "Adrian Ungur (Arbitru Scaun FRT)" : "Cristian Balaj")
   );
   const [availableReferees, setAvailableReferees] = useState<RefereeOption[]>([]);
   const [refereeDeadlineDays, setRefereeDeadlineDays] = useState<number>(3);
   const [refereeNotes, setRefereeNotes] = useState<string>(
-    "Partida se va desfășura în conformitate cu regulamentul oficial. Verificați legitimațiile jucătorilor înainte de fluierul de start."
+    isIndividual
+      ? "Meci de tenis simplu. Sistem cel mai bun din 3 seturi cu tiebreak clasic la 6-6. Pauză de hidratare permisă la fiecare schimbare de teren."
+      : "Partida se va desfășura în conformitate cu regulamentul oficial. Verificați legitimațiile jucătorilor înainte de fluierul de start."
   );
 
-  // Match telemetry
-  const [homeOffsides, setHomeOffsides] = useState<number>(0);
-  const [awayOffsides, setAwayOffsides] = useState<number>(0);
-  const [homeFouls, setHomeFouls] = useState<number>(0);
-  const [awayFouls, setAwayFouls] = useState<number>(0);
-  const [homeCorners, setHomeCorners] = useState<number>(0);
-  const [awayCorners, setAwayCorners] = useState<number>(0);
+  // Match telemetry (Football: Offsides/Fouls/Corners vs Tennis: Aces/DoubleFaults/BreakPoints)
+  const [homeStat1, setHomeStat1] = useState<number>(0); // Offsides or Aces
+  const [awayStat1, setAwayStat1] = useState<number>(0);
+  const [homeStat2, setHomeStat2] = useState<number>(0); // Fouls or Double Faults
+  const [awayStat2, setAwayStat2] = useState<number>(0);
+  const [homeStat3, setHomeStat3] = useState<number>(0); // Corners or Break Points
+  const [awayStat3, setAwayStat3] = useState<number>(0);
 
   // Events Log
   const [events, setEvents] = useState<any[]>([]);
-  const [newEventMinute, setNewEventMinute] = useState<number>(75);
-  const [newEventType, setNewEventType] = useState<string>("goal");
+  const [newEventMinute, setNewEventMinute] = useState<number>(isIndividual ? 1 : 75);
+  const [newEventType, setNewEventType] = useState<string>(isIndividual ? "ace" : "goal");
   const [newEventTeam, setNewEventTeam] = useState<string>(match.homeTeam.name);
   const [newEventPlayer, setNewEventPlayer] = useState<string>("");
   const [newEventNote, setNewEventNote] = useState<string>("");
 
   // Report observations
-  const [pitchCondition, setPitchCondition] = useState("Excelent");
+  const [pitchCondition, setPitchCondition] = useState(
+    isIndividual ? "Suprafață Zgură impecabilă / Linii curate" : "Excelent"
+  );
   const [crowdConduct, setCrowdConduct] = useState("Sportivă / Fără incidente");
-  const [signedBy, setSignedBy] = useState(match.referee || "Cristian Balaj");
+  const [signedBy, setSignedBy] = useState(
+    match.referee || (isIndividual ? "Adrian Ungur" : "Cristian Balaj")
+  );
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -112,8 +129,8 @@ export function RefereeControlModal({
     setNewEventPlayer("");
     setNewEventNote("");
 
-    // Auto increment score if goal
-    if (newEventType === "goal") {
+    // Auto increment score if goal or set win
+    if (newEventType === "goal" || newEventType === "set_won") {
       if (newEventTeam === match.homeTeam.name) {
         setHomeScore((s) => s + 1);
       } else {
@@ -127,6 +144,10 @@ export function RefereeControlModal({
     setSaving(true);
 
     try {
+      const tennisNoteSummary = isIndividual
+        ? `Seturi: [${tennisSet1}], [${tennisSet2}], [${tennisSet3}] • ${refereeNotes}`
+        : refereeNotes;
+
       const res = await fetch(
         `/api/championships/${championshipId}/matches/${match.id}`,
         {
@@ -140,15 +161,15 @@ export function RefereeControlModal({
             scheduledAt: scheduledAt ? new Date(scheduledAt).toISOString() : undefined,
             referee: refereeName,
             events: JSON.stringify(events),
-            homeOffsides,
-            awayOffsides,
-            homeFouls,
-            awayFouls,
-            homeCorners,
-            awayCorners,
+            homeOffsides: homeStat1,
+            awayOffsides: awayStat1,
+            homeFouls: homeStat2,
+            awayFouls: awayStat2,
+            homeCorners: homeStat3,
+            awayCorners: awayStat3,
             pitchCondition,
             crowdConduct,
-            refereeNotes,
+            refereeNotes: tennisNoteSummary,
             signedBy,
             signedAt: new Date().toISOString(),
           }),
@@ -176,12 +197,17 @@ export function RefereeControlModal({
         <div className="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-md">
-              ⚙️
+              {isIndividual ? "🎾" : "⚙️"}
             </div>
             <div>
-              <h3 className="text-lg font-bold font-headline text-slate-900 dark:text-white">
-                Panou Organizare Meci &amp; Arbitraj
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-bold font-headline text-slate-900 dark:text-white">
+                  {isIndividual ? "Panou Organizare Meci & Arbitraj Scaun" : "Panou Organizare Meci & Arbitraj"}
+                </h3>
+                <span className="px-2 py-0.5 rounded bg-lime-400/20 text-lime-600 dark:text-lime-400 text-[10px] font-black uppercase font-mono">
+                  {sport}
+                </span>
+              </div>
               <p className="text-xs font-label text-slate-400">
                 {match.homeTeam.name} vs {match.awayTeam.name} • Etapa {match.round}
               </p>
@@ -208,7 +234,7 @@ export function RefereeControlModal({
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
-            📋 Organizare &amp; Arbitri
+            {isIndividual ? "📋 Organizare & Arbitru Scaun" : "📋 Organizare & Arbitri"}
           </button>
 
           <button
@@ -220,7 +246,7 @@ export function RefereeControlModal({
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
-            ⚽ Scor &amp; Evenimente
+            {isIndividual ? "🎾 Scor Seturi & Puncte" : "⚽ Scor & Evenimente"}
           </button>
 
           <button
@@ -249,7 +275,7 @@ export function RefereeControlModal({
             <div className="bg-slate-50 dark:bg-slate-800/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-headline font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
-                  <span>👔</span> Delegare Arbitru Oficial
+                  <span>{isIndividual ? "🎾" : "👔"}</span> {isIndividual ? "Delegare Arbitru de Scaun (Umpire)" : "Delegare Arbitru Oficial"}
                 </span>
                 <span className="text-[10px] font-label font-bold text-slate-500 dark:text-slate-400">
                   Selectat: {refereeName}
@@ -299,17 +325,27 @@ export function RefereeControlModal({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1">
-                    Selectează Arbitru Certificat
+                    {isIndividual ? "Selectează Arbitru Tenis Certificat" : "Selectează Arbitru Certificat"}
                   </label>
                   <select
                     value={refereeName}
                     onChange={(e) => setRefereeName(e.target.value)}
                     className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
                   >
-                    <option value="Cristian Balaj">Cristian Balaj (Arbitru FIFA / Național)</option>
-                    <option value="Ovidiu Hațegan">Ovidiu Hațegan (Arbitru FIFA Elite)</option>
-                    <option value="Istvan Kovacs">Istvan Kovacs (Arbitru UEFA)</option>
-                    <option value="Radu Petrescu">Radu Petrescu (Arbitru Liga 1)</option>
+                    {isIndividual ? (
+                      <>
+                        <option value="Adrian Ungur (Arbitru Scaun FRT)">Adrian Ungur (Arbitru Scaun FRT)</option>
+                        <option value="Raluca Olaru (Arbitru ITF Gold)">Raluca Olaru (Arbitru ITF Gold)</option>
+                        <option value="Andrei Pavel (Arbitru Supervizor)">Andrei Pavel (Arbitru Supervizor)</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="Cristian Balaj">Cristian Balaj (Arbitru FIFA / Național)</option>
+                        <option value="Ovidiu Hațegan">Ovidiu Hațegan (Arbitru FIFA Elite)</option>
+                        <option value="Istvan Kovacs">Istvan Kovacs (Arbitru UEFA)</option>
+                        <option value="Radu Petrescu">Radu Petrescu (Arbitru Liga 1)</option>
+                      </>
+                    )}
                     {availableReferees.map((r) => (
                       <option key={r.id} value={r.name}>
                         {r.name} {r.refereeBadge ? `(${r.refereeBadge})` : "• Arbitru Certificat"}
@@ -335,14 +371,14 @@ export function RefereeControlModal({
               {/* Referee Instructions & Notes */}
               <div>
                 <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1">
-                  Notițe &amp; Instrucțiuni Tehnice pentru Arbitru
+                  {isIndividual ? "Notițe & Instrucțiuni Tehnice pentru Arbitrul de Scaun" : "Notițe & Instrucțiuni Tehnice pentru Arbitru"}
                 </label>
                 <textarea
                   value={refereeNotes}
                   onChange={(e) => setRefereeNotes(e.target.value)}
                   rows={2}
                   className="w-full p-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-body text-slate-900 dark:text-white"
-                  placeholder="Instrucțiuni speciale, reguli de departajare, telefoane de urgență..."
+                  placeholder="Instrucțiuni speciale, reguli de tiebreak, pauze medicale, telefoane de urgență..."
                 />
               </div>
             </div>
@@ -363,13 +399,13 @@ export function RefereeControlModal({
 
               <div>
                 <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1">
-                  📍 Stadion / Arenă Oficială
+                  📍 {isIndividual ? "Teren / Arenă de Tenis" : "Stadion / Arenă Oficială"}
                 </label>
                 <input
                   type="text"
                   value={venue}
                   onChange={(e) => setVenue(e.target.value)}
-                  placeholder="ex: Arena Națională"
+                  placeholder={isIndividual ? "ex: Terenul Central - Zgură" : "ex: Arena Națională"}
                   className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
                 />
               </div>
@@ -407,7 +443,7 @@ export function RefereeControlModal({
             <div className="bg-slate-950 text-white p-6 rounded-2xl shadow-xl flex items-center justify-between border border-slate-800">
               <div className="text-center w-5/12">
                 <span className="text-[10px] font-label uppercase tracking-widest text-lime-400 font-bold block mb-1">
-                  Gazde
+                  {isIndividual ? "Jucător 1 (Serviciu)" : "Gazde"}
                 </span>
                 <p className="text-base font-bold font-headline truncate mb-3">
                   {match.homeTeam.name}
@@ -429,6 +465,9 @@ export function RefereeControlModal({
                     +
                   </button>
                 </div>
+                <span className="text-[10px] text-slate-400 font-mono mt-1 block">
+                  {isIndividual ? "Seturi Câștigate" : "Goluri"}
+                </span>
               </div>
 
               <div className="text-center w-2/12">
@@ -440,7 +479,7 @@ export function RefereeControlModal({
 
               <div className="text-center w-5/12">
                 <span className="text-[10px] font-label uppercase tracking-widest text-lime-400 font-bold block mb-1">
-                  Oaspeți
+                  {isIndividual ? "Jucător 2 (Primitor)" : "Oaspeți"}
                 </span>
                 <p className="text-base font-bold font-headline truncate mb-3">
                   {match.awayTeam.name}
@@ -462,8 +501,52 @@ export function RefereeControlModal({
                     +
                   </button>
                 </div>
+                <span className="text-[10px] text-slate-400 font-mono mt-1 block">
+                  {isIndividual ? "Seturi Câștigate" : "Goluri"}
+                </span>
               </div>
             </div>
+
+            {/* Tennis Detailed Set Scores */}
+            {isIndividual && (
+              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-2">
+                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-emerald-800 dark:text-emerald-300 block">
+                  Scor Detaliat pe Seturi (Game-uri)
+                </span>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="text-[10px] text-slate-400 block mb-0.5">Set 1</label>
+                    <input
+                      type="text"
+                      value={tennisSet1}
+                      onChange={(e) => setTennisSet1(e.target.value)}
+                      placeholder="ex: 6-4"
+                      className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-bold text-center"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-slate-400 block mb-0.5">Set 2</label>
+                    <input
+                      type="text"
+                      value={tennisSet2}
+                      onChange={(e) => setTennisSet2(e.target.value)}
+                      placeholder="ex: 3-6"
+                      className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-bold text-center"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-slate-400 block mb-0.5">Set 3 / Decisiv</label>
+                    <input
+                      type="text"
+                      value={tennisSet3}
+                      onChange={(e) => setTennisSet3(e.target.value)}
+                      placeholder="ex: 7-5"
+                      className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-bold text-center"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Match Status Selector */}
             <div>
@@ -496,66 +579,66 @@ export function RefereeControlModal({
             <div className="grid grid-cols-3 gap-4 bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl">
               <div className="space-y-1.5 text-center">
                 <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
-                  Offside-uri
+                  {isIndividual ? "Asuri (Aces)" : "Offside-uri"}
                 </span>
                 <div className="flex items-center justify-center gap-2">
                   <button
                     type="button"
-                    onClick={() => setHomeOffsides((o) => Math.max(0, o + 1))}
+                    onClick={() => setHomeStat1((o) => Math.max(0, o + 1))}
                     className="px-2 py-1 bg-white dark:bg-slate-700 rounded text-xs font-bold shadow-sm"
                   >
-                    +G ({homeOffsides})
+                    +J1 ({homeStat1})
                   </button>
                   <button
                     type="button"
-                    onClick={() => setAwayOffsides((o) => Math.max(0, o + 1))}
+                    onClick={() => setAwayStat1((o) => Math.max(0, o + 1))}
                     className="px-2 py-1 bg-white dark:bg-slate-700 rounded text-xs font-bold shadow-sm"
                   >
-                    +O ({awayOffsides})
+                    +J2 ({awayStat1})
                   </button>
                 </div>
               </div>
 
               <div className="space-y-1.5 text-center">
                 <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
-                  Faulturi
+                  {isIndividual ? "Duble Greșeli" : "Faulturi"}
                 </span>
                 <div className="flex items-center justify-center gap-2">
                   <button
                     type="button"
-                    onClick={() => setHomeFouls((f) => Math.max(0, f + 1))}
+                    onClick={() => setHomeStat2((f) => Math.max(0, f + 1))}
                     className="px-2 py-1 bg-white dark:bg-slate-700 rounded text-xs font-bold shadow-sm"
                   >
-                    +G ({homeFouls})
+                    +J1 ({homeStat2})
                   </button>
                   <button
                     type="button"
-                    onClick={() => setAwayFouls((f) => Math.max(0, f + 1))}
+                    onClick={() => setAwayStat2((f) => Math.max(0, f + 1))}
                     className="px-2 py-1 bg-white dark:bg-slate-700 rounded text-xs font-bold shadow-sm"
                   >
-                    +O ({awayFouls})
+                    +J2 ({awayStat2})
                   </button>
                 </div>
               </div>
 
               <div className="space-y-1.5 text-center">
                 <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
-                  Cornere
+                  {isIndividual ? "Puncte Break" : "Cornere"}
                 </span>
                 <div className="flex items-center justify-center gap-2">
                   <button
                     type="button"
-                    onClick={() => setHomeCorners((c) => Math.max(0, c + 1))}
+                    onClick={() => setHomeStat3((c) => Math.max(0, c + 1))}
                     className="px-2 py-1 bg-white dark:bg-slate-700 rounded text-xs font-bold shadow-sm"
                   >
-                    +G ({homeCorners})
+                    +J1 ({homeStat3})
                   </button>
                   <button
                     type="button"
-                    onClick={() => setAwayCorners((c) => Math.max(0, c + 1))}
+                    onClick={() => setAwayStat3((c) => Math.max(0, c + 1))}
                     className="px-2 py-1 bg-white dark:bg-slate-700 rounded text-xs font-bold shadow-sm"
                   >
-                    +O ({awayCorners})
+                    +J2 ({awayStat3})
                   </button>
                 </div>
               </div>
@@ -564,7 +647,7 @@ export function RefereeControlModal({
             {/* Quick Add Event Form */}
             <div className="space-y-3 bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl">
               <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
-                Adaugă Eveniment (Gol, Cartonaș, Schimbare)
+                {isIndividual ? "Adaugă Eveniment Tenis (As, Break, Set Câștigat, Avertisment)" : "Adaugă Eveniment (Gol, Cartonaș, Schimbare)"}
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs">
                 <input
@@ -573,7 +656,7 @@ export function RefereeControlModal({
                   max={120}
                   value={newEventMinute}
                   onChange={(e) => setNewEventMinute(parseInt(e.target.value) || 1)}
-                  placeholder="Minut"
+                  placeholder={isIndividual ? "Set / Game" : "Minut"}
                   className="input text-xs"
                 />
                 <select
@@ -581,11 +664,23 @@ export function RefereeControlModal({
                   onChange={(e) => setNewEventType(e.target.value)}
                   className="input text-xs"
                 >
-                  <option value="goal">⚽ Gol</option>
-                  <option value="yellow_card">🟨 Cartonaș Galben</option>
-                  <option value="red_card">🟥 Cartonaș Roșu</option>
-                  <option value="offside">🚩 Offside</option>
-                  <option value="sub">🔄 Schimbare</option>
+                  {isIndividual ? (
+                    <>
+                      <option value="ace">🎾 As Serviciu (Ace)</option>
+                      <option value="break">💥 Break de Serviciu</option>
+                      <option value="set_won">🏆 Set Câștigat</option>
+                      <option value="double_fault">❌ Dublă Greșeală</option>
+                      <option value="warning">⚠️ Avertisment Conduită</option>
+                    </>
+                  ) : (
+                    <>
+                      <option value="goal">⚽ Gol</option>
+                      <option value="yellow_card">🟨 Cartonaș Galben</option>
+                      <option value="red_card">🟥 Cartonaș Roșu</option>
+                      <option value="offside">🚩 Offside</option>
+                      <option value="sub">🔄 Schimbare</option>
+                    </>
+                  )}
                 </select>
                 <select
                   value={newEventTeam}
@@ -608,7 +703,7 @@ export function RefereeControlModal({
                   type="text"
                   value={newEventNote}
                   onChange={(e) => setNewEventNote(e.target.value)}
-                  placeholder="Detalii / Asistent opțional..."
+                  placeholder="Detalii opționale (ex: As la T, Viteză 195 km/h)..."
                   className="input text-xs flex-1"
                 />
                 <button
@@ -629,7 +724,7 @@ export function RefereeControlModal({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1">
-                  Starea Terenului de Joc
+                  {isIndividual ? "Starea Terenului & Zgurei" : "Starea Terenului de Joc"}
                 </label>
                 <input
                   type="text"
@@ -654,7 +749,7 @@ export function RefereeControlModal({
 
             <div>
               <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1">
-                Semnătură Arbitru Delegat
+                {isIndividual ? "Semnătură Arbitru de Scaun (Chair Umpire)" : "Semnătură Arbitru Delegat"}
               </label>
               <input
                 type="text"

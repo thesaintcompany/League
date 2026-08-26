@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { MatchCard, MatchData } from "./MatchCard";
 import { RefereeControlModal } from "./RefereeControlModal";
+import { isIndividualSport } from "@/lib/constants";
 
 type Team = { id: string; name: string; shortName?: string | null; color?: string | null };
 type Match = {
@@ -21,11 +22,13 @@ type Match = {
 
 export function MatchesTab({
   championshipId,
+  sport = "Fotbal",
   teams,
   matches,
   onChanged,
 }: {
   championshipId: string;
+  sport?: string;
   teams: Team[];
   matches: Match[];
   onChanged: () => void;
@@ -115,6 +118,8 @@ export function MatchesTab({
     },
   }));
 
+  const isIndividual = isIndividualSport(sport);
+
   return (
     <div className="space-y-6">
       {/* Action Bar */}
@@ -122,7 +127,7 @@ export function MatchesTab({
         <div className="flex items-center gap-2">
           <span className="w-2 h-5 bg-lime-500 rounded-full"></span>
           <h2 className="text-lg font-bold font-headline text-blue-950 dark:text-white">
-            Program Meciuri &amp; Arbitraj ({matches.length})
+            Program Meciuri &amp; Arbitraj {isIndividual ? "Tenis 🎾" : ""} ({matches.length})
           </h2>
         </div>
 
@@ -154,7 +159,7 @@ export function MatchesTab({
       {teams.length < 2 && (
         <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-xs font-semibold text-amber-800 dark:text-amber-300 flex items-center gap-2">
           <span className="material-symbols-outlined text-[18px]">warning</span>
-          Ai nevoie de cel puțin 2 echipe înregistrate pentru a putea programa meciuri.
+          Ai nevoie de cel puțin 2 {isIndividual ? "competitori înregistrați (jucători/echipe)" : "echipe înregistrate"} pentru a putea programa meciuri.
         </div>
       )}
 
@@ -165,7 +170,7 @@ export function MatchesTab({
           className="card p-6 bg-surface-container-lowest border-slate-200 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in"
         >
           <div>
-            <label className="label">Echipa Gazdă *</label>
+            <label className="label">{isIndividual ? "Competitor 1 *" : "Echipa Gazdă *"}</label>
             <select
               required
               className="input"
@@ -181,7 +186,7 @@ export function MatchesTab({
           </div>
 
           <div>
-            <label className="label">Echipa Oaspete *</label>
+            <label className="label">{isIndividual ? "Competitor 2 *" : "Echipa Oaspete *"}</label>
             <select
               required
               className="input"
@@ -219,10 +224,10 @@ export function MatchesTab({
           </div>
 
           <div className="sm:col-span-2">
-            <label className="label">Locație / Stadion</label>
+            <label className="label">{isIndividual ? "Teren / Arenă de Tenis" : "Locație / Stadion"}</label>
             <input
               type="text"
-              placeholder="ex: Arena Națională"
+              placeholder={isIndividual ? "ex: Teren Central (Zgură)" : "ex: Arena Națională"}
               className="input"
               value={form.venue}
               onChange={(e) => setForm({ ...form, venue: e.target.value })}
@@ -252,7 +257,7 @@ export function MatchesTab({
       {matches.length === 0 ? (
         <div className="card p-12 text-center text-slate-500 bg-surface-container-lowest">
           <span className="material-symbols-outlined text-4xl text-slate-300 mb-2 block">
-            sports_soccer
+            {isIndividual ? "sports_tennis" : "sports_soccer"}
           </span>
           <p className="font-bold text-sm text-slate-700 dark:text-slate-300">
             Niciun meci programat
@@ -290,6 +295,7 @@ export function MatchesTab({
         <RefereeControlModal
           match={editingMatch}
           championshipId={championshipId}
+          sport={sport}
           isOpen={true}
           onClose={() => setEditingMatch(null)}
           onUpdated={onChanged}

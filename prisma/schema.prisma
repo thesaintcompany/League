@@ -265,6 +265,7 @@ model SystemSetting {
   googlePayEnvironment  String?  @default("PRODUCTION")
   googlePayEnabled      Boolean  @default(true)
   payoutMinThreshold    Int      @default(100)
+  demoPreFillDisabled   Boolean  @default(false)
   updatedAt             DateTime @updatedAt
 }
 

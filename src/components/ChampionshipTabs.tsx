@@ -10,6 +10,9 @@ import { AdminDiceConsole } from "./AdminDiceConsole";
 import { RefereeControlModal } from "./RefereeControlModal";
 import { MatchData } from "./MatchCard";
 import { OrganizerInvitationsModal } from "./OrganizerInvitationsModal";
+import { PromotionHub } from "./PromotionHub";
+import { OrganizerTicketingTab } from "./OrganizerTicketingTab";
+import { isIndividualSport } from "@/lib/constants";
 
 type Team = {
   id: string;
@@ -33,33 +36,36 @@ type Match = {
   awayTeam: { id: string; name: string; shortName?: string | null; color?: string | null };
 };
 
-import { PromotionHub } from "./PromotionHub";
-import { OrganizerTicketingTab } from "./OrganizerTicketingTab";
-
-const TABS = [
-  { key: "standings", label: "Clasament General", icon: "leaderboard" },
-  { key: "matches", label: "Program & Arbitraj", icon: "sports_soccer" },
-  { key: "brackets", label: "Arbore Eliminatoriu 🏆", icon: "account_tree" },
-  { key: "teams", label: "Echipe Înscrise 🛡️", icon: "shield" },
-  { key: "tickets", label: "Bilete & Scanner Porți 🎟️", icon: "confirmation_number" },
-  { key: "promo", label: "Promotion Hub 📢", icon: "campaign" },
-] as const;
-
-type TabKey = (typeof TABS)[number]["key"];
-
 export function ChampionshipTabs({
   championshipId,
+  sport = "Fotbal",
+  championshipName = "Campionat Pro",
   teams: initialTeams,
   matches: initialMatches,
 }: {
   championshipId: string;
+  sport?: string;
+  championshipName?: string;
   teams: Team[];
   matches: Match[];
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const isIndividual = isIndividualSport(sport);
+
+  const TABS = [
+    { key: "standings", label: "Clasament General", icon: "leaderboard" },
+    { key: "matches", label: isIndividual ? "Meciuri & Arbitraj" : "Program & Arbitraj", icon: isIndividual ? "sports_tennis" : "sports_soccer" },
+    { key: "brackets", label: isIndividual ? "Tablou Concurs (Draw)" : "Arbore Eliminatoriu", icon: "account_tree" },
+    { key: "teams", label: isIndividual ? "Competitori Înscriși" : "Echipe Înscrise", icon: isIndividual ? "person" : "shield" },
+    { key: "tickets", label: "Bilete & Scanner Porți", icon: "confirmation_number" },
+    { key: "promo", label: "Promotion Hub", icon: "campaign" },
+  ] as const;
+
+  type TabKey = (typeof TABS)[number]["key"];
+
   const urlTab = searchParams?.get("tab") as TabKey;
-  const [tab, setTab] = useState<TabKey>(urlTab || "standings");
+  const [tab, setTab] = useState<TabKey>(urlTab || (isIndividual ? "brackets" : "standings"));
   const [standings, setStandings] = useState<StandingRow[]>([]);
   const [editingMatch, setEditingMatch] = useState<MatchData | null>(null);
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -153,7 +159,9 @@ export function ChampionshipTabs({
           className="px-5 py-3 rounded-2xl bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95 border border-lime-300"
         >
           <span className="material-symbols-outlined text-lg">send</span>
-          <span>Invită Lideri Echipă / Anunț Zaruri</span>
+          <span>
+            {isIndividual ? "Invită Competitori (WhatsApp/Email)" : "Invită Lideri Echipă / Anunț Zaruri"}
+          </span>
         </button>
       </div>
 
@@ -164,6 +172,7 @@ export function ChampionshipTabs({
         {tab === "matches" && (
           <MatchesTab
             championshipId={championshipId}
+            sport={sport}
             teams={initialTeams}
             matches={initialMatches}
             onChanged={() => router.refresh()}
@@ -175,6 +184,7 @@ export function ChampionshipTabs({
             {/* Interactive Dice Console for Random Seed */}
             <AdminDiceConsole
               championshipId={championshipId}
+              sport={sport}
               teams={initialTeams}
               onDrawCompleted={() => router.refresh()}
             />
@@ -193,6 +203,7 @@ export function ChampionshipTabs({
         {tab === "teams" && (
           <TeamsTab
             championshipId={championshipId}
+            sport={sport}
             teams={initialTeams}
             onChanged={() => router.refresh()}
           />
@@ -208,7 +219,7 @@ export function ChampionshipTabs({
         {tab === "promo" && (
           <PromotionHub
             matches={matchDataList}
-            championshipName="Campionat Ligue Pro"
+            championshipName={championshipName}
           />
         )}
       </div>
@@ -218,6 +229,7 @@ export function ChampionshipTabs({
         <RefereeControlModal
           match={editingMatch}
           championshipId={championshipId}
+          sport={sport}
           isOpen={true}
           onClose={() => setEditingMatch(null)}
           onUpdated={() => router.refresh()}
@@ -227,7 +239,8 @@ export function ChampionshipTabs({
       {/* Organizer WhatsApp / Email Invitations Modal */}
       <OrganizerInvitationsModal
         championshipId={championshipId}
-        championshipName="Campionat Ligue Pro"
+        championshipName={championshipName}
+        sport={sport}
         isOpen={showInviteModal}
         onClose={() => setShowInviteModal(false)}
       />

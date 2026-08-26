@@ -12,6 +12,7 @@ export async function GET() {
         platformFeePercent: true,
         applePayEnabled: true,
         googlePayEnabled: true,
+        demoPreFillDisabled: true,
       },
     });
 
@@ -20,6 +21,7 @@ export async function GET() {
       platformFeePercent: settings?.platformFeePercent ?? 10.0,
       applePayEnabled: settings?.applePayEnabled ?? true,
       googlePayEnabled: settings?.googlePayEnabled ?? true,
+      demoPreFillDisabled: settings?.demoPreFillDisabled ?? false,
     });
   } catch (err) {
     return NextResponse.json({
@@ -27,6 +29,7 @@ export async function GET() {
       platformFeePercent: 10.0,
       applePayEnabled: true,
       googlePayEnabled: true,
+      demoPreFillDisabled: false,
     });
   }
 }

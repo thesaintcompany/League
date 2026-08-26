@@ -220,6 +220,86 @@ export function AdminSuperPanel() {
   });
   const [newPasswordVal, setNewPasswordVal] = useState("");
   const [savingUser, setSavingUser] = useState(false);
+  const [userAccountTypeFilter, setUserAccountTypeFilter] = useState<"all" | "real" | "demo">("all");
+  const [togglingDemoUsers, setTogglingDemoUsers] = useState(false);
+  const [newSuperAdminPassModal, setNewSuperAdminPassModal] = useState<string | null>(null);
+
+  function isDemoUser(email: string) {
+    return (
+      email.endsWith("@leaguehub.local") ||
+      email.endsWith("@league.local") ||
+      ["arbitru@leaguehub.local", "jucator@leaguehub.local", "arena@leaguehub.local", "lider@leaguehub.local"].includes(email)
+    );
+  }
+
+  async function handleRevokeAllDemo() {
+    const confirmed = confirm(
+      "🚫 ANULARE DREPTURI USERI DEMO & PRECOMPLETARE LOGIN\n\n" +
+        "Ești sigur că dorești să execuți această acțiune?\n\n" +
+        "1. Toți utilizatorii demo vor fi DEZACTIVAȚI definitv.\n" +
+        "2. Precompletarea conturilor demo pe pagina de autentificare va fi ELIMINATĂ.\n" +
+        "3. SuperAdmin NU va fi anulat/dezactivat, dar i se va genera o NOUĂ PAROLĂ securizată!\n\n" +
+        "Apasă OK pentru a anula accesul demo."
+    );
+    if (!confirmed) return;
+
+    setTogglingDemoUsers(true);
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "revoke_all_demo" }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message || "Drepturile demo au fost anulate cu succes! ✓");
+        if (data.newSuperAdminPassword) {
+          setNewSuperAdminPassModal(data.newSuperAdminPassword);
+        }
+        loadData();
+      } else {
+        alert(data.error || "Eroare la anularea drepturilor demo.");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTogglingDemoUsers(false);
+    }
+  }
+
+  async function handleBulkDemoUsers(action: "deactivate" | "activate") {
+    const isDeactivate = action === "deactivate";
+    const confirmed = confirm(
+      isDeactivate
+        ? "⚠️ Sigur dorești să DEZACTIVEZI toți utilizatorii demo?\n\n" +
+            "Conturile demonstrative vor fi marcate ca DEZACTIVATE și nu se vor mai putea autentifica.\n\n" +
+            "🛡️ Utilizatorii reali și arenele NU sunt afectați!"
+        : "⚡ Sigur dorești să REACTIVEZI toți utilizatorii demo?"
+    );
+    if (!confirmed) return;
+
+    setTogglingDemoUsers(true);
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: isDeactivate ? "deactivate_all_demo" : "activate_all_demo",
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message || "Operațiune realizată cu succes! ✓");
+        loadData();
+      } else {
+        alert(data.error || "Eroare la actualizarea utilizatorilor demo.");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTogglingDemoUsers(false);
+    }
+  }
 
   // Sync tab with URL query parameter
   useEffect(() => {
@@ -617,13 +697,18 @@ export function AdminSuperPanel() {
   // Filter users
   const filteredUsers = users.filter((u) => {
     const matchesRole = userRoleFilter === "all" || u.role === userRoleFilter;
+    const isDemo = isDemoUser(u.email);
+    const matchesType =
+      userAccountTypeFilter === "all" ||
+      (userAccountTypeFilter === "demo" && isDemo) ||
+      (userAccountTypeFilter === "real" && !isDemo);
     const q = userSearchQuery.toLowerCase();
     const matchesQuery =
       !q ||
       (u.name && u.name.toLowerCase().includes(q)) ||
       u.email.toLowerCase().includes(q) ||
       u.role.toLowerCase().includes(q);
-    return matchesRole && matchesQuery;
+    return matchesRole && matchesType && matchesQuery;
   });
 
   const filteredLogs = loginLogs.filter((log) => {
@@ -641,101 +726,7 @@ export function AdminSuperPanel() {
         </div>
       )}
 
-      {/* Main Tab Switcher Bar */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 sm:p-4 rounded-3xl shadow-sm">
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => switchTab("branding")}
-            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-              activeTab === "branding"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
-            }`}
-          >
-            <span>🎨</span>
-            <span>Setări Aplicație &amp; Logo</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => switchTab("api_integrations")}
-            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-              activeTab === "api_integrations"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
-            }`}
-          >
-            <span>🔑</span>
-            <span>API &amp; Integrare Plăți</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => switchTab("users")}
-            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-              activeTab === "users"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
-            }`}
-          >
-            <span>👥</span>
-            <span>Permisiuni &amp; Utilizatori ({users.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => switchTab("analytics")}
-            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-              activeTab === "analytics"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
-            }`}
-          >
-            <span>📊</span>
-            <span>Statistici &amp; Telemetrie</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => switchTab("login_history")}
-            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-              activeTab === "login_history"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
-            }`}
-          >
-            <span>🛡️</span>
-            <span>Istoric Login &amp; Audit</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => switchTab("venues")}
-            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-              activeTab === "venues"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
-            }`}
-          >
-            <span>🏟️</span>
-            <span>Arene ({venues.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => switchTab("data_export")}
-            className={`px-4 py-2.5 rounded-2xl font-label text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
-              activeTab === "data_export"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60"
-            }`}
-          >
-            <span>💾</span>
-            <span>Bază de Date &amp; Backup</span>
-          </button>
-        </div>
-      </div>
+      {/* Content Tabs (Navigation controlled exclusively by Left Sidebar) */}
 
       {/* ========================================================================= */}
       {/* 1. BRANDING & APPLICATION SETTINGS TAB */}
@@ -1514,7 +1505,40 @@ export function AdminSuperPanel() {
                   Matricea de Roluri și Drepturi de Acces
                 </h2>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Bulk Demo Users Actions */}
+                <button
+                  type="button"
+                  disabled={togglingDemoUsers}
+                  onClick={handleRevokeAllDemo}
+                  className="px-4 py-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-headline font-black text-xs uppercase tracking-wider rounded-xl shadow-lg border border-red-400/50 flex items-center gap-1.5 transition active:scale-95"
+                  title="Anulează definitiv toate drepturile demo, oprește precompletarea pe login și securizează parola SuperAdmin"
+                >
+                  <span className="material-symbols-outlined text-sm">no_accounts</span>
+                  <span>{togglingDemoUsers ? "Se procesează..." : "Anulează Drepturi Demo & Precompletare"}</span>
+                </button>
+
+                <button
+                  type="button"
+                  disabled={togglingDemoUsers}
+                  onClick={() => handleBulkDemoUsers("deactivate")}
+                  className="px-3.5 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 text-xs font-bold rounded-xl border border-red-500/30 flex items-center gap-1.5 transition active:scale-95 shadow-sm"
+                  title="Dezactivează toate conturile demo din sistem"
+                >
+                  <span className="material-symbols-outlined text-sm">block</span>
+                  <span>{togglingDemoUsers ? "Se procesează..." : "Dezactivează Useri Demo"}</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={togglingDemoUsers}
+                  onClick={() => handleBulkDemoUsers("activate")}
+                  className="px-3.5 py-2 bg-lime-400/10 hover:bg-lime-400/20 text-lime-600 dark:text-lime-400 text-xs font-bold rounded-xl border border-lime-400/30 flex items-center gap-1.5 transition active:scale-95 shadow-sm"
+                  title="Reactivează toate conturile demo"
+                >
+                  <span className="material-symbols-outlined text-sm">check_circle</span>
+                  <span>Activează Useri Demo</span>
+                </button>
+
                 <button
                   type="button"
                   onClick={() => handleExportUsers("csv")}
@@ -1554,6 +1578,43 @@ export function AdminSuperPanel() {
           {/* User Search & Filter */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-2">
+              {/* Account Type Filters (Real vs Demo) */}
+              <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 mr-2">
+                <button
+                  type="button"
+                  onClick={() => setUserAccountTypeFilter("all")}
+                  className={`px-3 py-1 rounded-xl text-xs font-headline font-bold uppercase transition ${
+                    userAccountTypeFilter === "all"
+                      ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm"
+                      : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  Toate ({users.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUserAccountTypeFilter("real")}
+                  className={`px-3 py-1 rounded-xl text-xs font-headline font-bold uppercase transition ${
+                    userAccountTypeFilter === "real"
+                      ? "bg-lime-400 text-slate-950 font-black shadow-sm"
+                      : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  👥 Reale ({users.filter((u) => !isDemoUser(u.email)).length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUserAccountTypeFilter("demo")}
+                  className={`px-3 py-1 rounded-xl text-xs font-headline font-bold uppercase transition ${
+                    userAccountTypeFilter === "demo"
+                      ? "bg-purple-500 text-white font-black shadow-sm"
+                      : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  🤖 Demo ({users.filter((u) => isDemoUser(u.email)).length})
+                </button>
+              </div>
+
               {["all", "super_admin", "organizer", "referee", "arena_owner", "team_leader", "player"].map((r) => (
                 <button
                   key={r}
@@ -1565,7 +1626,7 @@ export function AdminSuperPanel() {
                       : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
                   }`}
                 >
-                  {r === "all" ? "Toți Utilizatorii" : r}
+                  {r === "all" ? "Toate Rolurile" : r}
                 </button>
               ))}
             </div>
@@ -1610,9 +1671,16 @@ export function AdminSuperPanel() {
                               {u.name ? u.name[0].toUpperCase() : "U"}
                             </div>
                             <div>
-                              <p className="font-bold text-slate-900 dark:text-white text-xs">
-                                {u.name || "Nume nesetat"}
-                              </p>
+                              <div className="flex items-center gap-1.5">
+                                <p className="font-bold text-slate-900 dark:text-white text-xs">
+                                  {u.name || "Nume nesetat"}
+                                </p>
+                                {isDemoUser(u.email) && (
+                                  <span className="px-1.5 py-0.2 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 text-[9px] font-black uppercase font-mono">
+                                    🤖 DEMO
+                                  </span>
+                                )}
+                              </div>
                               <p className="font-mono text-[11px] text-slate-500 dark:text-slate-400">
                                 {u.email} {u.phone ? `• ${u.phone}` : ""}
                               </p>
@@ -2130,7 +2198,7 @@ export function AdminSuperPanel() {
             </div>
 
             {/* Badges */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
               <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-lime-400/10 text-lime-400 flex items-center justify-center font-black text-lg">
                   🏟️
@@ -2154,13 +2222,37 @@ export function AdminSuperPanel() {
                     Utilizatori Reali (Date Principale)
                   </span>
                   <span className="font-bold text-white text-xs">
-                    {demoStats?.realUsersCount ?? users.length} Conturi Reale Protejate
+                    {demoStats?.realUsersCount ?? users.filter((u) => !isDemoUser(u.email)).length} Conturi Reale Protejate
                   </span>
                 </div>
               </div>
 
               <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-black text-lg">
+                  🤖
+                </div>
+                <div>
+                  <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
+                    Utilizatori Demo
+                  </span>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="font-bold text-white text-xs">
+                      {users.filter((u) => isDemoUser(u.email)).length} Conturi
+                    </span>
+                    <button
+                      type="button"
+                      disabled={togglingDemoUsers}
+                      onClick={() => handleBulkDemoUsers("deactivate")}
+                      className="px-2 py-0.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500/30 text-[10px] font-bold border border-red-500/30 transition"
+                    >
+                      Dezactivează
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-black text-lg">
                   🎲
                 </div>
                 <div>
@@ -2551,6 +2643,59 @@ export function AdminSuperPanel() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* SuperAdmin New Password Display Modal (After revoking demo rights) */}
+      {newSuperAdminPassModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
+          <div className="card p-6 sm:p-8 max-w-md w-full bg-slate-900 border-2 border-lime-400/60 rounded-3xl shadow-2xl space-y-6 text-white text-left">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-lime-400/20 text-lime-400 flex items-center justify-center border border-lime-400/40">
+                <span className="material-symbols-outlined text-2xl">key</span>
+              </div>
+              <div>
+                <h3 className="text-lg font-headline font-black uppercase text-white">
+                  Acces Demo Anulat cu Succes!
+                </h3>
+                <p className="text-xs text-slate-300 font-label">
+                  Precompletarea pe login a fost dezactivată.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+              <span className="text-[10px] font-label font-bold uppercase text-slate-400 tracking-widest block">
+                🔒 NOUA PAROLĂ PENTRU SUPERADMIN:
+              </span>
+              <div className="flex items-center justify-between bg-slate-900 px-3.5 py-2.5 rounded-xl border border-lime-500/40">
+                <code className="text-sm font-mono font-bold text-lime-400 select-all">
+                  {newSuperAdminPassModal}
+                </code>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(newSuperAdminPassModal);
+                    showToast("Parola nouă a fost copiată în clipboard! 📋");
+                  }}
+                  className="px-3 py-1 bg-lime-400 text-slate-950 rounded-lg text-xs font-bold hover:bg-lime-300 transition"
+                >
+                  Copiază 📋
+                </button>
+              </div>
+              <p className="text-[11px] text-amber-300 font-body leading-relaxed pt-1">
+                ⚠️ SuperAdmin rămâne singurul cont activ. Salvează această nouă parolă într-un loc sigur pentru a te putea autentifica ulterior!
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setNewSuperAdminPassModal(null)}
+              className="w-full py-3 bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider rounded-xl transition shadow-lg"
+            >
+              Am salvat parola. Închide ✓
+            </button>
           </div>
         </div>
       )}

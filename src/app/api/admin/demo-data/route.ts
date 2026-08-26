@@ -82,6 +82,54 @@ export async function POST(req: Request) {
   try {
     const { action } = await req.json();
 
+    if (action === "deactivate_demo_users") {
+      const res = await prisma.user.updateMany({
+        where: {
+          AND: [
+            {
+              OR: [
+                { email: { endsWith: "@leaguehub.local" } },
+                { email: { endsWith: "@league.local" } },
+                { email: { in: DEMO_EMAILS } },
+              ],
+            },
+            { email: { not: "admin@leaguehub.local" } },
+          ],
+        },
+        data: { isActive: false },
+      });
+
+      return NextResponse.json({
+        success: true,
+        count: res.count,
+        message: `${res.count} utilizatori demo au fost dezactivați! (Acces blocat, utilizatorii reali nu sunt afectați)`,
+      });
+    }
+
+    if (action === "activate_demo_users") {
+      const res = await prisma.user.updateMany({
+        where: {
+          AND: [
+            {
+              OR: [
+                { email: { endsWith: "@leaguehub.local" } },
+                { email: { endsWith: "@league.local" } },
+                { email: { in: DEMO_EMAILS } },
+              ],
+            },
+            { email: { not: "admin@leaguehub.local" } },
+          ],
+        },
+        data: { isActive: true },
+      });
+
+      return NextResponse.json({
+        success: true,
+        count: res.count,
+        message: `${res.count} utilizatori demo au fost reactivați cu succes! ✓`,
+      });
+    }
+
     if (action === "deactivate") {
       // 1. Delete Demo Matches
       await prisma.match.deleteMany({

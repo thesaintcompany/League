@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChampionshipLogoBadge } from "./ChampionshipLogoBadge";
 import { AdminDiceConsole } from "./AdminDiceConsole";
+import { isIndividualSport } from "@/lib/constants";
 
 interface ChampionshipItem {
   id: string;
@@ -103,8 +104,9 @@ export function OrganizerTeamsPanel() {
   }
 
   const activeChamp = championships.find((c) => c.id === activeChampId);
+  const isIndividual = isIndividualSport(activeChamp?.sport);
 
-  // Submit Handler: Invite New Team (Team Name + Manager Email)
+  // Submit Handler: Invite New Team/Competitor
   async function handleInviteNewTeam(e: React.FormEvent) {
     e.preventDefault();
     if (!newTeamName.trim() || !activeChampId) return;
@@ -133,7 +135,7 @@ export function OrganizerTeamsPanel() {
         throw new Error(data.error || "Eroare la trimiterea invitației");
       }
 
-      setSuccessMsg(data.message || `Echipa "${newTeamName}" a fost adăugată cu succes!`);
+      setSuccessMsg(data.message || `${isIndividual ? "Competitorul / Jucătorul" : "Echipa"} "${newTeamName}" a fost adăugat cu succes!`);
       if (data.inviteLink) {
         setLastInviteLink(data.inviteLink);
       }
@@ -149,7 +151,7 @@ export function OrganizerTeamsPanel() {
     }
   }
 
-  // Submit Handler: Enroll Existing Team in System
+  // Submit Handler: Enroll Existing Team/Competitor in System
   async function handleEnrollExistingTeam(teamId: string, teamName: string) {
     if (!activeChampId) return;
     setSubmitting(true);
@@ -169,10 +171,10 @@ export function OrganizerTeamsPanel() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Eroare la înscrierea echipei");
+        throw new Error(data.error || "Eroare la înscrierea competitorului");
       }
 
-      setSuccessMsg(data.message || `Echipa "${teamName}" a fost înscrisă în campionat!`);
+      setSuccessMsg(data.message || `${isIndividual ? "Competitorul" : "Echipa"} "${teamName}" a fost înscris în campionat!`);
       loadData(activeChampId);
     } catch (err: any) {
       setError(err.message);
@@ -181,9 +183,9 @@ export function OrganizerTeamsPanel() {
     }
   }
 
-  // Delete Team Handler
+  // Delete Team / Competitor Handler
   async function handleDeleteTeam(teamId: string, teamName: string) {
-    if (!confirm(`Ești sigur că vrei să elimini echipa "${teamName}" din acest campionat?`)) {
+    if (!confirm(`Ești sigur că vrei să elimini ${isIndividual ? "competitorul" : "echipa"} "${teamName}" din acest campionat?`)) {
       return;
     }
 
@@ -193,9 +195,9 @@ export function OrganizerTeamsPanel() {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Eroare la eliminarea echipei");
+        throw new Error(data.error || "Eroare la eliminare");
       }
-      setSuccessMsg(data.message || `Echipa "${teamName}" a fost eliminată.`);
+      setSuccessMsg(data.message || `${isIndividual ? "Competitorul" : "Echipa"} "${teamName}" a fost eliminat.`);
       loadData(activeChampId);
     } catch (err: any) {
       setError(err.message);
@@ -222,16 +224,18 @@ export function OrganizerTeamsPanel() {
                 👔 PANOU EXCLUSIV ORGANIZATOR
               </span>
               <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-[10px] uppercase font-label border border-slate-200 dark:border-slate-700">
-                Gestiune Invitații Echipe
+                {isIndividual ? "Gestiune Invitații Competitori (Jucători / Echipe)" : "Gestiune Invitații Echipe"}
               </span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-black italic tracking-tight font-headline uppercase leading-tight text-slate-900 dark:text-white">
-              Centrul de Invitații &amp; Lansare Echipe ⚽
+              {isIndividual ? "Centrul de Invitații & Lansare Competitori 🎾" : "Centrul de Invitații & Lansare Echipe ⚽"}
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl font-body">
-              Adaugă echipe din catalogul platformei sau trimite invitații pe email managerilor noi. Echipele înscrise vor fi extrase automat în <strong>sistemul de zaruri 🎲</strong> pentru perecherea în meciuri!
+              {isIndividual
+                ? "Înscrie competitori (jucători direct sau perechi/echipe) din catalogul platformei sau trimite invitații direct pe email/WhatsApp. Competitorii vor fi extrasi automat în sistemul de zaruri 🎲 pentru tablou!"
+                : "Adaugă echipe din catalogul platformei sau trimite invitații pe email managerilor noi. Echipele înscrise vor fi extrase automat în sistemul de zaruri 🎲 pentru perecherea în meciuri!"}
             </p>
           </div>
 
@@ -248,7 +252,7 @@ export function OrganizerTeamsPanel() {
               }`}
             >
               <span className="text-lg">🎲</span>
-              <span>Lansează cu Zaruri ({teams.length} Echipe)</span>
+              <span>Lansează cu Zaruri ({teams.length} {isIndividual ? "Competitori" : "Echipe"})</span>
             </button>
           </div>
         </div>
@@ -340,7 +344,7 @@ export function OrganizerTeamsPanel() {
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                ✉️ Invitație Echipă Nouă
+                {isIndividual ? "✉️ Invitație Competitor (Jucător / Echipă)" : "✉️ Invitație Echipă Nouă"}
               </button>
               <button
                 type="button"
@@ -351,31 +355,33 @@ export function OrganizerTeamsPanel() {
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                ⚡ Echipă Existentă ({availableTeams.length})
+                {isIndividual ? `⚡ Competitor Existent (${availableTeams.length})` : `⚡ Echipă Existentă (${availableTeams.length})`}
               </button>
             </div>
 
-            {/* MODE 1: Invite New Team (Team Name + Email Manager) */}
+            {/* MODE 1: Invite New Team/Competitor */}
             {inviteMode === "invite_new" && (
               <form onSubmit={handleInviteNewTeam} className="space-y-4">
                 <div className="space-y-1">
                   <h3 className="text-base font-bold font-headline uppercase text-slate-900 dark:text-white">
-                    Adaugă Echipă Nouă &amp; Email Manager
+                    {isIndividual ? "Adaugă Competitor Nou (Jucător / Echipă) & Email" : "Adaugă Echipă Nouă & Email Manager"}
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                    Completează numele echipei și adresa de email a liderului pentru a genera invitația.
+                    {isIndividual
+                      ? "Completează numele jucătorului/competitorului și adresa de email pentru a genera invitația."
+                      : "Completează numele echipei și adresa de email a liderului pentru a genera invitația."}
                   </p>
                 </div>
 
                 <div>
                   <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1">
-                    Nume Echipă *
+                    {isIndividual ? "Nume Competitor / Jucător *" : "Nume Echipă *"}
                   </label>
                   <input
                     type="text"
                     required
                     className="w-full p-3 rounded-2xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-500"
-                    placeholder="ex: FC Timișoara Pro"
+                    placeholder={isIndividual ? "ex: Andrei Popescu (CS Dinamo)" : "ex: FC Timișoara Pro"}
                     value={newTeamName}
                     onChange={(e) => setNewTeamName(e.target.value)}
                   />
@@ -383,13 +389,13 @@ export function OrganizerTeamsPanel() {
 
                 <div>
                   <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1">
-                    Email Lider / Manager Echipă *
+                    {isIndividual ? "Email Competitor / Jucător *" : "Email Lider / Manager Echipă *"}
                   </label>
                   <input
                     type="email"
                     required
                     className="w-full p-3 rounded-2xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-500"
-                    placeholder="manager@echipa.ro"
+                    placeholder={isIndividual ? "jucator@tenis.ro" : "manager@echipa.ro"}
                     value={newManagerEmail}
                     onChange={(e) => setNewManagerEmail(e.target.value)}
                   />
@@ -404,7 +410,7 @@ export function OrganizerTeamsPanel() {
                       type="text"
                       maxLength={4}
                       className="w-full p-3 rounded-2xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs uppercase font-mono text-slate-900 dark:text-white focus:outline-none focus:border-lime-500"
-                      placeholder="FCT"
+                      placeholder={isIndividual ? "POP" : "FCT"}
                       value={newShortName}
                       onChange={(e) => setNewShortName(e.target.value)}
                     />
@@ -412,7 +418,7 @@ export function OrganizerTeamsPanel() {
 
                   <div>
                     <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1">
-                      Culoare Echipă
+                      Culoare Echipament
                     </label>
                     <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800">
                       <input
@@ -432,7 +438,7 @@ export function OrganizerTeamsPanel() {
                   className="w-full py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md transition active:scale-95 flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-sm">send</span>
-                  <span>{submitting ? "Se trimite..." : "Adaugă Echipă & Generează Invitație 🚀"}</span>
+                  <span>{submitting ? "Se trimite..." : isIndividual ? "Adaugă Competitor & Generează Invitație 🚀" : "Adaugă Echipă & Generează Invitație 🚀"}</span>
                 </button>
 
                 {/* Invite Link Generated Card */}
@@ -464,13 +470,15 @@ export function OrganizerTeamsPanel() {
 
                     <a
                       href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                        `Invitație Oficială pentru echipa ta în Campionatul ${activeChamp?.name || ""}: ${lastInviteLink}`
+                        isIndividual
+                          ? `Invitație Oficială ca jucător/competitor în Turneul de Tenis ${activeChamp?.name || ""}: ${lastInviteLink}`
+                          : `Invitație Oficială pentru echipa ta în Campionatul ${activeChamp?.name || ""}: ${lastInviteLink}`
                       )}`}
                       target="_blank"
                       rel="noreferrer"
                       className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-black uppercase font-headline tracking-wider flex items-center justify-center gap-2 shadow"
                     >
-                      <span>💬</span> Trimite pe WhatsApp Managerului
+                      <span>💬</span> {isIndividual ? "Trimite pe WhatsApp Jucătorului" : "Trimite pe WhatsApp Managerului"}
                     </a>
                   </div>
                 )}
@@ -482,16 +490,18 @@ export function OrganizerTeamsPanel() {
               <div className="space-y-4">
                 <div className="space-y-1">
                   <h3 className="text-base font-bold font-headline uppercase text-slate-900 dark:text-white">
-                    Catalog Echipe Înregistrate
+                    {isIndividual ? "Catalog Competitori Înregistrați" : "Catalog Echipe Înregistrate"}
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                    Selectează o echipă din baza de date pentru a o adăuga instant în acest campionat.
+                    {isIndividual
+                      ? "Selectează un competitor din baza de date pentru a-l adăuga instant pe tablou."
+                      : "Selectează o echipă din baza de date pentru a o adăuga instant în acest campionat."}
                   </p>
                 </div>
 
                 <input
                   type="text"
-                  placeholder="Caută după nume echipă sau email manager..."
+                  placeholder={isIndividual ? "Caută după nume competitor sau email..." : "Caută după nume echipă sau email manager..."}
                   className="w-full p-3 rounded-2xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-500"
                   value={existingSearch}
                   onChange={(e) => setExistingSearch(e.target.value)}
@@ -500,7 +510,7 @@ export function OrganizerTeamsPanel() {
                 <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
                   {filteredAvailableTeams.length === 0 ? (
                     <p className="text-xs text-slate-500 italic text-center py-6">
-                      Nu au fost găsite echipe disponibile în sistem.
+                      {isIndividual ? "Nu au fost găsiți competitori disponibili în sistem." : "Nu au fost găsite echipe disponibile în sistem."}
                     </p>
                   ) : (
                     filteredAvailableTeams.map((t) => (
@@ -520,7 +530,7 @@ export function OrganizerTeamsPanel() {
                               {t.name}
                             </span>
                             <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate block">
-                              Manager: {t.manager?.name || t.manager?.email || "Fără manager"}
+                              {isIndividual ? "Competitor / Contact: " : "Manager: "}{t.manager?.name || t.manager?.email || "Fără contact"}
                             </span>
                           </div>
                         </div>
@@ -549,7 +559,7 @@ export function OrganizerTeamsPanel() {
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
                 <h3 className="text-base sm:text-lg font-bold font-headline uppercase text-slate-900 dark:text-white tracking-tight">
-                  Echipe Înscrise în Campionat ({teams.length})
+                  {isIndividual ? `Competitori Înscriși în Campionat (${teams.length})` : `Echipe Înscrise în Campionat (${teams.length})`}
                 </h3>
               </div>
 
@@ -563,21 +573,26 @@ export function OrganizerTeamsPanel() {
             </div>
 
             {loading ? (
-              <div className="py-12 text-center text-xs text-slate-500">Se încarcă lista echipelor...</div>
+              <div className="py-12 text-center text-xs text-slate-500">
+                {isIndividual ? "Se încarcă lista competitorilor..." : "Se încarcă lista echipelor..."}
+              </div>
             ) : teams.length === 0 ? (
               <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-center space-y-3">
-                <span className="text-4xl block">🛡️</span>
+                <span className="text-4xl block">{isIndividual ? "🎾" : "🛡️"}</span>
                 <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
-                  Nicio Echipă Înscrisă Încă
+                  {isIndividual ? "Niciun Competitor Înscris Încă" : "Nicio Echipă Înscrisă Încă"}
                 </h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto font-label">
-                  Utilizează formularul din stânga pentru a adăuga prima echipă prin invitație email sau selectare din sistem!
+                  {isIndividual
+                    ? "Utilizează formularul din stânga pentru a adăuga primul competitor prin invitație directă sau din sistem!"
+                    : "Utilizează formularul din stânga pentru a adăuga prima echipă prin invitație email sau selectare din sistem!"}
                 </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {teams.map((t, idx) => {
-                  const inviteUrl = `https://sp.tscquantum.ro/signup?role=team_leader&championshipId=${activeChampId}&teamId=${t.id}&email=${encodeURIComponent(t.managerEmail || "")}`;
+                  const roleParam = isIndividual ? "player" : "team_leader";
+                  const inviteUrl = `https://sp.tscquantum.ro/signup?role=${roleParam}&championshipId=${activeChampId}&teamId=${t.id}&email=${encodeURIComponent(t.managerEmail || "")}`;
 
                   return (
                     <div
@@ -597,7 +612,7 @@ export function OrganizerTeamsPanel() {
                               {t.name}
                             </span>
                             <span className="text-[10px] font-label text-slate-500 dark:text-slate-400">
-                              Seed #{idx + 1} • {t._count?.players || 0} Jucători
+                              {isIndividual ? `Seed #${idx + 1}` : `Seed #${idx + 1} • ${t._count?.players || 0} Jucători`}
                             </span>
                           </div>
                         </div>
@@ -606,7 +621,7 @@ export function OrganizerTeamsPanel() {
                           type="button"
                           onClick={() => handleDeleteTeam(t.id, t.name)}
                           className="p-1 text-slate-400 hover:text-red-500 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition"
-                          title="Elimină din campionat"
+                          title={isIndividual ? "Elimină din tablou" : "Elimină din campionat"}
                         >
                           <span className="material-symbols-outlined text-base">delete</span>
                         </button>
@@ -615,7 +630,7 @@ export function OrganizerTeamsPanel() {
                       {/* Manager Details */}
                       <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] space-y-1">
                         <div className="flex justify-between font-label">
-                          <span className="text-slate-400">Manager / Lider:</span>
+                          <span className="text-slate-400">{isIndividual ? "Competitor / Contact:" : "Manager / Lider:"}</span>
                           <span className="font-bold text-slate-800 dark:text-slate-200">
                             {t.manager?.name || "În așteptare invitație"}
                           </span>
@@ -632,7 +647,9 @@ export function OrganizerTeamsPanel() {
                       <div className="flex gap-2">
                         <a
                           href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                            `Salut! Echipa ta "${t.name}" este înscrisă în campionatul ${activeChamp?.name || ""}. Completează lotul aici: ${inviteUrl}`
+                            isIndividual
+                              ? `Salut! Te-am înscris ca jucător/competitor în turneul ${activeChamp?.name || ""}. Confirmă înscrierea aici: ${inviteUrl}`
+                              : `Salut! Echipa ta "${t.name}" este înscrisă în campionatul ${activeChamp?.name || ""}. Completează lotul aici: ${inviteUrl}`
                           )}`}
                           target="_blank"
                           rel="noreferrer"
@@ -645,7 +662,7 @@ export function OrganizerTeamsPanel() {
                           type="button"
                           onClick={() => {
                             navigator.clipboard.writeText(inviteUrl);
-                            alert(`Link invitație copiat pentru echipa "${t.name}"!`);
+                            alert(`Link invitație copiat pentru "${t.name}"!`);
                           }}
                           className="py-1.5 px-3 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl font-headline font-bold text-[10px] uppercase tracking-wider"
                           title="Copiază Link Invitație"

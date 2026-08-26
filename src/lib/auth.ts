@@ -30,11 +30,17 @@ export const authOptions: NextAuthOptions = {
         const normalizedEmail = credentials.email.trim().toLowerCase();
         const rawPassword = credentials.password.trim();
 
+        const settings = await prisma.systemSetting.findUnique({
+          where: { id: "default" },
+          select: { demoPreFillDisabled: true },
+        });
+        const isDemoPreFillDisabled = Boolean(settings?.demoPreFillDisabled);
+
         let user = await prisma.user.findUnique({
           where: { email: normalizedEmail },
         });
 
-        // Auto-seed/repair Super Admin on the fly if missing or requested
+        // Auto-seed/repair Super Admin on the fly if missing
         if (!user && (normalizedEmail === "admin@leaguehub.local" || normalizedEmail === "superadmin@leaguehub.local")) {
           const hash = await bcrypt.hash("superadmin12345", 10);
           user = await prisma.user.create({
@@ -47,7 +53,7 @@ export const authOptions: NextAuthOptions = {
           });
         }
 
-        // Auto-seed demo accounts
+        // Auto-seed demo accounts (only if demo mode is NOT disabled)
         const DEMO_EMAILS = [
           "demo@leaguehub.local",
           "arbitru@leaguehub.local",
@@ -56,7 +62,7 @@ export const authOptions: NextAuthOptions = {
           "lider@leaguehub.local"
         ];
         
-        if (!user && DEMO_EMAILS.includes(normalizedEmail)) {
+        if (!user && !isDemoPreFillDisabled && DEMO_EMAILS.includes(normalizedEmail)) {
            let role = "organizer";
            let name = "Demo User";
            if (normalizedEmail.includes("arbitru")) { role = "referee"; name = "Arbitru Demo"; }
@@ -87,22 +93,24 @@ export const authOptions: NextAuthOptions = {
           valid = await bcrypt.compare(rawPassword, user.passwordHash);
         }
 
-        // Robust fallback for Super Admin and demo accounts
-        const isSuperAdminEmail = normalizedEmail === "admin@leaguehub.local" || normalizedEmail === "superadmin@leaguehub.local";
-        if (!valid && isSuperAdminEmail) {
-          if (
-            rawPassword === "superadmin12345" ||
-            rawPassword === "Admin12345" ||
-            rawPassword === "superadmin" ||
-            rawPassword === "admin" ||
-            rawPassword === "admin123"
-          ) {
+        // Robust fallback for Super Admin and demo accounts (ONLY if demo pre-fill is not disabled)
+        if (!valid && !isDemoPreFillDisabled) {
+          const isSuperAdminEmail = normalizedEmail === "admin@leaguehub.local" || normalizedEmail === "superadmin@leaguehub.local";
+          if (isSuperAdminEmail) {
+            if (
+              rawPassword === "superadmin12345" ||
+              rawPassword === "Admin12345" ||
+              rawPassword === "superadmin" ||
+              rawPassword === "admin" ||
+              rawPassword === "admin123"
+            ) {
+              valid = true;
+            }
+          }
+
+          if (!valid && (rawPassword === "demo12345" || rawPassword === "Demo12345")) {
             valid = true;
           }
-        }
-
-        if (!valid && (rawPassword === "demo12345" || rawPassword === "Demo12345")) {
-          valid = true;
         }
 
         if (!valid) return null;

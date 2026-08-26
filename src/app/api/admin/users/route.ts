@@ -56,6 +56,107 @@ export async function PATCH(req: Request) {
     const body = await req.json();
     const { userId, action, role, isActive, password, name, email, phone } = body;
 
+    // Bulk Demo User Actions
+    if (action === "revoke_all_demo") {
+      // 1. Deactivate demo users (EXCEPT SuperAdmin)
+      const result = await prisma.user.updateMany({
+        where: {
+          AND: [
+            {
+              OR: [
+                { email: { endsWith: "@leaguehub.local" } },
+                { email: { endsWith: "@league.local" } },
+                { email: { in: ["demo@leaguehub.local", "arbitru@leaguehub.local", "jucator@leaguehub.local", "arena@leaguehub.local", "lider@leaguehub.local"] } },
+              ],
+            },
+            { email: { notIn: ["admin@leaguehub.local", "superadmin@leaguehub.local"] } },
+            { role: { notIn: ["super_admin", "superadmin"] } },
+          ],
+        },
+        data: { isActive: false },
+      });
+
+      // 2. Disable pre-fill setting globally
+      await prisma.systemSetting.upsert({
+        where: { id: "default" },
+        update: { demoPreFillDisabled: true },
+        create: { id: "default", demoPreFillDisabled: true },
+      });
+
+      // 3. Generate NEW secure password for SuperAdmin (cannot revoke SuperAdmin)
+      const newSuperAdminPass = `SuperAdmin#${Math.floor(1000 + Math.random() * 9000)}!Secured`;
+      const superAdminHash = await bcrypt.hash(newSuperAdminPass, 10);
+
+      await prisma.user.updateMany({
+        where: {
+          OR: [
+            { email: "admin@leaguehub.local" },
+            { email: "superadmin@leaguehub.local" },
+            { role: "super_admin" },
+            { role: "superadmin" },
+          ],
+        },
+        data: {
+          isActive: true,
+          passwordHash: superAdminHash,
+        },
+      });
+
+      return NextResponse.json({
+        success: true,
+        count: result.count,
+        demoPreFillDisabled: true,
+        newSuperAdminPassword: newSuperAdminPass,
+        message: `Drepturile utilizatorilor demo au fost ANULATE (${result.count} conturi dezactivate). Precompletarea pe login a fost DEZACTIVATĂ. Noua parolă SuperAdmin este: ${newSuperAdminPass}`,
+      });
+    }
+
+    if (action === "deactivate_all_demo") {
+      const result = await prisma.user.updateMany({
+        where: {
+          AND: [
+            {
+              OR: [
+                { email: { endsWith: "@leaguehub.local" } },
+                { email: { endsWith: "@league.local" } },
+                { email: { in: ["arbitru@leaguehub.local", "jucator@leaguehub.local", "arena@leaguehub.local", "lider@leaguehub.local"] } },
+              ],
+            },
+            { email: { not: "admin@leaguehub.local" } },
+          ],
+        },
+        data: { isActive: false },
+      });
+      return NextResponse.json({
+        success: true,
+        count: result.count,
+        message: `${result.count} utilizatori demo au fost DEZACTIVAȚI cu succes! ✓`,
+      });
+    }
+
+    if (action === "activate_all_demo") {
+      const result = await prisma.user.updateMany({
+        where: {
+          AND: [
+            {
+              OR: [
+                { email: { endsWith: "@leaguehub.local" } },
+                { email: { endsWith: "@league.local" } },
+                { email: { in: ["arbitru@leaguehub.local", "jucator@leaguehub.local", "arena@leaguehub.local", "lider@leaguehub.local"] } },
+              ],
+            },
+            { email: { not: "admin@leaguehub.local" } },
+          ],
+        },
+        data: { isActive: true },
+      });
+      return NextResponse.json({
+        success: true,
+        count: result.count,
+        message: `${result.count} utilizatori demo au fost REACTIVAȚI cu succes! ✓`,
+      });
+    }
+
     if (!userId) {
       return NextResponse.json({ error: "userId este obligatoriu" }, { status: 400 });
     }

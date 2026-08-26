@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { isIndividualSport } from "@/lib/constants";
 
 interface TeamItem {
   id: string;
@@ -11,6 +12,7 @@ interface TeamItem {
 
 interface AdminDiceConsoleProps {
   championshipId: string;
+  sport?: string;
   teams: TeamItem[];
   onDrawCompleted: () => void;
 }
@@ -19,9 +21,11 @@ const DICE_FACES = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 
 export function AdminDiceConsole({
   championshipId,
+  sport = "Fotbal",
   teams,
   onDrawCompleted,
 }: AdminDiceConsoleProps) {
+  const isIndividual = isIndividualSport(sport);
   const [selectedTeamIds, setSelectedTeamIds] = useState<string[]>(
     teams.map((t) => t.id)
   );
@@ -152,8 +156,8 @@ export function AdminDiceConsole({
 
           <div className="flex flex-wrap items-center gap-3">
             <div className="px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold font-label border border-slate-200 dark:border-slate-700 flex items-center gap-2">
-              <span>🛡️</span>
-              <span>{selectedTeamIds.length} / {teams.length} Echipe Selectate</span>
+              <span>{isIndividual ? "🎾" : "🛡️"}</span>
+              <span>{selectedTeamIds.length} / {teams.length} {isIndividual ? "Competitori Selectați" : "Echipe Selectate"}</span>
             </div>
 
             <div
@@ -227,12 +231,17 @@ export function AdminDiceConsole({
           <div className="absolute top-0 right-0 w-64 h-64 bg-lime-400/10 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
 
           <div className="flex justify-between items-start mb-8 relative z-10">
-            <div>
-              <h3 className="font-headline text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tight">
-                Dice-Based Qualifier Algorithm
-              </h3>
-              <p className="font-body text-slate-500 dark:text-slate-400 text-xs mt-1">
-                Motor stocastic de împerechere a echipelor în arborele de joc (Maxim 3 aruncări)
+            <div className="space-y-1">
+              <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
+                {isIndividual ? "🎲 TRAGERE LA SORȚI TABLOU TENIS" : "🎲 TRAGERE LA SORȚI CU ZARURI"}
+              </span>
+              <h2 className="text-xl sm:text-2xl font-black font-headline text-slate-900 dark:text-white uppercase tracking-tight">
+                {isIndividual ? "Consola Oficială de Tragere Tablou & Capi de Serie" : "Consola Oficială de Aruncare a Zarurilor"}
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
+                {isIndividual
+                  ? "Aruncarea zarurilor distribuie aleatoriu și imparțial jucătorii de tenis pe tablou (sferturi, semifinale și finală)."
+                  : "Aruncarea zarurilor stabilește împerecherile de meciuri și ordinea pe arbore pentru turneele eliminatorii."}
               </p>
             </div>
             <div className="flex items-center gap-2 px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-full border border-slate-200 dark:border-slate-700">
@@ -415,14 +424,14 @@ export function AdminDiceConsole({
       <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
         <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
           <span className="material-symbols-outlined text-lime-600 dark:text-lime-400">table_chart</span>
-          Seeding Telemetry (Live Echipe Alocate)
+          Seeding Telemetry ({isIndividual ? "Live Competitori Alocați" : "Live Echipe Alocate"})
         </h4>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
               <tr className="font-label text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-3">
-                <th className="pb-3 px-2">Club / Echipă</th>
+                <th className="pb-3 px-2">{isIndividual ? "Competitor / Jucător" : "Club / Echipă"}</th>
                 <th className="pb-3 px-2">Rang Pre-Zaruri</th>
                 <th className="pb-3 px-2">Seed Alocat</th>
                 <th className="pb-3 px-2">Variație (Shift)</th>

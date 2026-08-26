@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { isOrganizer } from "@/lib/permissions";
+import { isIndividualSport } from "@/lib/constants";
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
@@ -170,13 +171,17 @@ export async function POST(req: Request) {
       },
     });
 
-    const inviteLink = `https://sp.tscquantum.ro/signup?role=team_leader&championshipId=${championshipId}&teamId=${createdTeam.id}&email=${encodeURIComponent(cleanEmail || "")}`;
+    const isIndividual = isIndividualSport(champ.sport);
+    const inviteRole = isIndividual ? "player" : "team_leader";
+    const inviteLink = `https://sp.tscquantum.ro/signup?role=${inviteRole}&championshipId=${championshipId}&teamId=${createdTeam.id}&email=${encodeURIComponent(cleanEmail || "")}`;
 
     return NextResponse.json({
       ok: true,
       team: createdTeam,
       inviteLink,
-      message: `Echipa "${createdTeam.name}" a fost adăugată. Invitația este pregătită!`,
+      message: isIndividual
+        ? `Competitorul / Jucătorul "${createdTeam.name}" a fost adăugat. Invitația este pregătită!`
+        : `Echipa "${createdTeam.name}" a fost adăugată. Invitația este pregătită!`,
     });
   } catch (err: any) {
     console.error("Error in organizer teams API:", err);

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { isIndividualSport } from "@/lib/constants";
 
 type Player = { id: string; name: string; number: number | null; position: string | null };
 export type Team = {
@@ -49,45 +50,65 @@ const PRESET_ROMANIAN_CLUBS = [
   { name: "CSM Târgoviște (Volei)", shortName: "TRG", color: "#059669", category: "multisport" },
 ];
 
+const PRESET_TENNIS_PLAYERS = [
+  { name: "Simona Halep (Cap Serie #1)", shortName: "HAL", color: "#16a34a", category: "wta" },
+  { name: "Sorana Cîrstea (Cap Serie #2)", shortName: "CIR", color: "#2563eb", category: "wta" },
+  { name: "Ana Bogdan", shortName: "BOG", color: "#7c3aed", category: "wta" },
+  { name: "Jaqueline Cristian", shortName: "CRI", color: "#db2777", category: "wta" },
+  { name: "Horia Tecău (Cap Serie #1 Dublu)", shortName: "TEC", color: "#dc2626", category: "atp" },
+  { name: "Ilie Năstase (Legend)", shortName: "NAS", color: "#ca8a04", category: "atp" },
+  { name: "Carlos Alcaraz", shortName: "ALC", color: "#ea580c", category: "atp" },
+  { name: "Jannik Sinner", shortName: "SIN", color: "#0284c7", category: "atp" },
+  { name: "Novak Djokovic", shortName: "DJO", color: "#15803d", category: "atp" },
+  { name: "Rafael Nadal", shortName: "NAD", color: "#b91c1c", category: "atp" },
+  { name: "Andrei Pavel (CS Dinamo)", shortName: "PAV", color: "#4f46e5", category: "atp" },
+  { name: "Victor Hănescu (FRT)", shortName: "HAN", color: "#0891b2", category: "atp" },
+];
+
 export function TeamsTab({
   championshipId,
+  sport = "Fotbal",
   teams,
   onChanged,
 }: {
   championshipId: string;
+  sport?: string;
   teams: Team[];
   onChanged: () => void;
 }) {
+  const isIndividual = isIndividualSport(sport);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchFilter, setSearchFilter] = useState<string>("");
   const [customName, setCustomName] = useState("");
   const [customShortName, setCustomShortName] = useState("");
-  const [customColor, setCustomColor] = useState("#84cc16"); // neon lime default
+  const [customColor, setCustomColor] = useState(isIndividual ? "#16a34a" : "#84cc16");
   const [showCustomForm, setShowCustomForm] = useState(false);
   const [busy, setBusy] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  // Check if a club is already added
-  const isEnrolled = (clubName: string) => {
+  const presetList = isIndividual ? PRESET_TENNIS_PLAYERS : PRESET_ROMANIAN_CLUBS;
+
+  // Check if a participant is already added
+  const isEnrolled = (name: string) => {
     return teams.some(
-      (t) => t.name.toLowerCase() === clubName.toLowerCase() || (t.shortName && t.shortName.toLowerCase() === clubName.toLowerCase())
+      (t) => t.name.toLowerCase() === name.toLowerCase() || (t.shortName && t.shortName.toLowerCase() === name.toLowerCase())
     );
   };
 
-  // Filtered preset clubs
+  // Filtered presets
   const filteredPresets = useMemo(() => {
-    return PRESET_ROMANIAN_CLUBS.filter((club) => {
-      const matchesCat = activeCategory === "all" || club.category === activeCategory;
+    return presetList.filter((item) => {
+      const matchesCat = activeCategory === "all" || item.category === activeCategory;
       const q = searchFilter.toLowerCase();
       const matchesSearch =
         !q ||
-        club.name.toLowerCase().includes(q) ||
-        club.shortName.toLowerCase().includes(q);
+        item.name.toLowerCase().includes(q) ||
+        item.shortName.toLowerCase().includes(q);
       return matchesCat && matchesSearch;
     });
-  }, [activeCategory, searchFilter]);
+  }, [presetList, activeCategory, searchFilter]);
 
-  // Add a preset or custom team
+  // Add participant
   async function handleAddTeam(teamData: { name: string; shortName: string; color: string }) {
     setBusy(true);
     setStatusMessage(null);
@@ -103,14 +124,14 @@ export function TeamsTab({
       });
 
       if (res.ok) {
-        setStatusMessage(`✓ Clubul "${teamData.name}" a fost înscris cu succes!`);
+        setStatusMessage(`✓ ${isIndividual ? "Jucătorul" : "Clubul"} "${teamData.name}" a fost înscris cu succes!`);
         setCustomName("");
         setCustomShortName("");
         setShowCustomForm(false);
         onChanged();
       } else {
         const err = await res.json();
-        setStatusMessage(`⚠️ ${err.error || "Eroare la adăugarea echipei"}`);
+        setStatusMessage(`⚠️ ${err.error || "Eroare la adăugare"}`);
       }
     } catch {
       setStatusMessage("⚠️ Eroare de rețea.");
@@ -123,30 +144,30 @@ export function TeamsTab({
   // Quick Seed Top 4 or Top 8
   async function handleBulkSeed(count: number) {
     setBusy(true);
-    setStatusMessage(`Se înscriu primele ${count} cluburi...`);
-    const availableToSeed = PRESET_ROMANIAN_CLUBS.filter((c) => !isEnrolled(c.name)).slice(0, count);
+    setStatusMessage(`Se înscriu primii ${count} ${isIndividual ? "jucători" : "participanți"}...`);
+    const availableToSeed = presetList.filter((c) => !isEnrolled(c.name)).slice(0, count);
 
-    for (const club of availableToSeed) {
+    for (const item of availableToSeed) {
       await fetch(`/api/championships/${championshipId}/teams`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: club.name,
-          shortName: club.shortName,
-          color: club.color,
+          name: item.name,
+          shortName: item.shortName,
+          color: item.color,
         }),
       });
     }
 
     setBusy(false);
-    setStatusMessage(`✓ ${availableToSeed.length} cluburi au fost înscrise automat în competiție!`);
+    setStatusMessage(`✓ ${availableToSeed.length} ${isIndividual ? "jucători au fost adăugați pe tablou" : "cluburi au fost înscrise"}!`);
     onChanged();
-    setTimeout(() => setStatusMessage(null), 3500);
+    setTimeout(() => setStatusMessage(null), 3000);
   }
 
-  // Delete team
-  async function deleteTeam(teamId: string, teamName: string) {
-    if (!confirm(`Sigur dorești să elimini clubul "${teamName}" din acest campionat?`)) return;
+  // Delete participant
+  async function handleDeleteTeam(teamId: string, teamName: string) {
+    if (!confirm(`Sigur dorești să elimini ${isIndividual ? "jucătorul" : "echipa"} "${teamName}"?`)) return;
     setBusy(true);
     const res = await fetch(`/api/championships/${championshipId}/teams/${teamId}`, {
       method: "DELETE",
@@ -159,24 +180,25 @@ export function TeamsTab({
 
   return (
     <div className="space-y-8 font-body">
-      {/* SECTION 1: Header with Design Competition Aesthetics */}
+      {/* SECTION 1: Header */}
       <div className="card p-6 sm:p-8 bg-gradient-to-br from-slate-900 via-slate-900/95 to-slate-950 border border-lime-400/30 rounded-3xl shadow-xl space-y-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-                🛡️ GESTIUNE CLUBURI &amp; ECHIPE
+                {isIndividual ? "🎾 TABLOU JUCĂTORI TENIS" : "🛡️ GESTIUNE CLUBURI & ECHIPE"}
               </span>
               <span className="px-3 py-1 rounded-full bg-slate-800 text-lime-400 font-bold text-xs font-label">
-                {teams.length} Echipe Înscrise
+                {teams.length} {isIndividual ? "Jucători Înscriși" : "Echipe Înscrise"}
               </span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black font-headline text-white uppercase tracking-tight">
-              Echipe Înscrise în Competiție
+              {isIndividual ? "Tablou Jucători Tenis Înscriși" : "Echipe Înscrise în Competiție"}
             </h2>
             <p className="text-xs text-slate-300 font-body max-w-2xl leading-relaxed">
-              În calitate de organizator, selectezi cluburile participante din baza de date sau adaugi cluburi noi cu un singur click. 
-              <strong> Lotul și jucătorii sunt gestionați direct de căpitani și fotbaliști</strong> prin conturile lor.
+              {isIndividual
+                ? "Înscrie direct jucătorii de tenis pe tablou (capi de serie sau trageri libere) sau trimite-le link de WhatsApp pentru confirmarea prezenței."
+                : "În calitate de organizator, selectezi cluburile participante din baza de date sau adaugi cluburi noi cu un singur click."}
             </p>
           </div>
 
@@ -187,7 +209,7 @@ export function TeamsTab({
               onClick={() => handleBulkSeed(4)}
               className="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase tracking-wider transition border border-slate-700 flex items-center gap-1.5"
             >
-              <span>⚡</span> Înscrie Top 4 Echipe
+              <span>⚡</span> {isIndividual ? "Înscrie Top 4 Jucători" : "Înscrie Top 4 Echipe"}
             </button>
             <button
               type="button"
@@ -195,7 +217,7 @@ export function TeamsTab({
               onClick={() => handleBulkSeed(8)}
               className="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lime-400 font-label font-bold text-xs uppercase tracking-wider transition border border-lime-400/30 flex items-center gap-1.5"
             >
-              <span>🎲</span> Înscrie Top 8 (Brackets)
+              <span>🎲</span> {isIndividual ? "Înscrie Top 8 pe Tablou" : "Înscrie Top 8 (Brackets)"}
             </button>
             <button
               type="button"
@@ -203,7 +225,7 @@ export function TeamsTab({
               className="px-5 py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95"
             >
               <span className="material-symbols-outlined text-base">add_circle</span>
-              Club Personalizat Nou
+              {isIndividual ? "Adaugă Jucător Nou" : "Club Personalizat Nou"}
             </button>
           </div>
         </div>
@@ -215,7 +237,7 @@ export function TeamsTab({
         )}
       </div>
 
-      {/* SECTION 2: Custom Team Drawer / Modal */}
+      {/* SECTION 2: Custom Drawer */}
       {showCustomForm && (
         <form
           onSubmit={(e) => {
@@ -230,8 +252,8 @@ export function TeamsTab({
         >
           <div className="flex justify-between items-center pb-3 border-b border-slate-800">
             <h3 className="text-lg font-bold font-headline text-white uppercase tracking-tight flex items-center gap-2">
-              <span className="material-symbols-outlined text-lime-400">shield</span>
-              Adaugă un Club Nou în Competiție
+              <span className="material-symbols-outlined text-lime-400">{isIndividual ? "person" : "shield"}</span>
+              {isIndividual ? "Adaugă Jucător de Tenis pe Tablou" : "Adaugă un Club Nou în Competiție"}
             </h3>
             <button
               type="button"
@@ -243,279 +265,214 @@ export function TeamsTab({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center">
-            {/* Live Shield Preview */}
+            {/* Live Preview */}
             <div className="sm:col-span-3 flex flex-col items-center justify-center p-6 rounded-2xl bg-slate-950 border border-slate-800 text-center space-y-2">
               <div
                 className="w-20 h-20 rounded-2xl flex items-center justify-center font-black text-2xl text-white shadow-xl border-2 border-white/20 transition-all duration-300"
                 style={{ backgroundColor: customColor }}
               >
-                {customShortName || (customName ? customName.substring(0, 3).toUpperCase() : "FC")}
+                {customShortName || customName.substring(0, 3).toUpperCase() || (isIndividual ? "TEN" : "FC")}
               </div>
-              <span className="text-[10px] font-label font-bold text-slate-400 uppercase">
-                Previzualizare Siglă
+              <span className="text-xs font-bold text-white font-headline truncate max-w-full">
+                {customName || (isIndividual ? "Nume Jucător" : "Nume Club")}
               </span>
+              <span className="text-[10px] font-label text-slate-400">Previzualizare Tablou</span>
             </div>
 
             {/* Inputs */}
-            <div className="sm:col-span-9 grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="sm:col-span-2">
-                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
-                  Nume Oficial Club *
-                </label>
-                <input
-                  required
-                  placeholder="ex: FC Victoria Timișoara"
-                  value={customName}
-                  onChange={(e) => setCustomName(e.target.value)}
-                  className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-700 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-lime-400"
-                />
+            <div className="sm:col-span-9 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-label font-bold text-slate-300 uppercase tracking-wider block mb-1.5">
+                    {isIndividual ? "Nume Complet Jucător *" : "Nume Club / Echipă *"}
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={customName}
+                    onChange={(e) => setCustomName(e.target.value)}
+                    placeholder={isIndividual ? "ex: Andrei Popescu (CS Dinamo)" : "ex: AS Victoria Timișoara"}
+                    className="w-full bg-slate-950 border border-slate-700 focus:border-lime-400 rounded-xl px-3.5 py-2.5 text-xs text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-label font-bold text-slate-300 uppercase tracking-wider block mb-1.5">
+                    {isIndividual ? "Cod / Prescurtare Tabela (3-4 Litere) *" : "Prescurtare Tabela *"}
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={5}
+                    value={customShortName}
+                    onChange={(e) => setCustomShortName(e.target.value.toUpperCase())}
+                    placeholder="ex: POP sau HAL"
+                    className="w-full bg-slate-950 border border-slate-700 focus:border-lime-400 rounded-xl px-3.5 py-2.5 text-xs text-white font-mono uppercase"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
-                  Prescurtare (3-5 litere)
-                </label>
-                <input
-                  maxLength={5}
-                  placeholder="ex: VIC"
-                  value={customShortName}
-                  onChange={(e) => setCustomShortName(e.target.value.toUpperCase())}
-                  className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-700 text-xs text-white font-bold placeholder:text-slate-500 focus:outline-none focus:border-lime-400 uppercase"
-                />
-              </div>
-
-              <div className="sm:col-span-3">
-                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
-                  Culoare Reprezentativă Club
+                <label className="text-xs font-label font-bold text-slate-300 uppercase tracking-wider block mb-1.5">
+                  Culoare Reprezentativă Echipament
                 </label>
                 <div className="flex items-center gap-3">
                   <input
                     type="color"
                     value={customColor}
                     onChange={(e) => setCustomColor(e.target.value)}
-                    className="h-10 w-14 rounded-xl border border-slate-700 cursor-pointer bg-slate-950 p-1"
+                    className="w-10 h-10 rounded-xl bg-transparent border-0 cursor-pointer"
                   />
-                  <div className="flex flex-wrap gap-1.5">
-                    {["#84cc16", "#dc2626", "#2563eb", "#eab308", "#7c3aed", "#06b6d4", "#ea580c", "#1e293b"].map((c) => (
-                      <button
-                        key={c}
-                        type="button"
-                        onClick={() => setCustomColor(c)}
-                        className="w-7 h-7 rounded-lg border border-white/20 transition hover:scale-110"
-                        style={{ backgroundColor: c }}
-                      ></button>
-                    ))}
-                  </div>
+                  <input
+                    type="text"
+                    value={customColor}
+                    onChange={(e) => setCustomColor(e.target.value)}
+                    className="w-28 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                  />
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
-            <button
-              type="button"
-              onClick={() => setShowCustomForm(false)}
-              className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase"
-            >
-              Anulează
-            </button>
-            <button
-              type="submit"
-              disabled={busy || !customName.trim()}
-              className="px-6 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg"
-            >
-              {busy ? "Se înscrie..." : "Înscrie Clubul"}
-            </button>
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowCustomForm(false)}
+                  className="px-4 py-2 rounded-xl text-slate-400 hover:text-white text-xs font-bold uppercase"
+                >
+                  Anulează
+                </button>
+                <button
+                  type="submit"
+                  disabled={busy || !customName}
+                  className="px-6 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow-md active:scale-95"
+                >
+                  Salvează &amp; Înscrie 🚀
+                </button>
+              </div>
+            </div>
           </div>
         </form>
       )}
 
-      {/* SECTION 3: 1-Click Database & Preset Clubs Picker */}
-      <section className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-primary text-white flex items-center justify-center font-black text-xl shadow-md">
-              ⚡
-            </div>
-            <div>
-              <h3 className="text-lg sm:text-xl font-bold font-headline text-white uppercase tracking-tight">
-                Selecție Rapidă Cluburi din Baza de Date
-              </h3>
-              <p className="text-xs text-slate-400 font-label">
-                Apasă pe un club pentru a-l înscrie instantaneu cu siglă și culori oficiale
-              </p>
-            </div>
-          </div>
-
-          {/* Category Tabs */}
-          <div className="flex flex-wrap gap-1.5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
-            {[
-              { id: "all", label: "Toate Cluburile" },
-              { id: "superliga", label: "🏆 SuperLiga" },
-              { id: "regional", label: "⚽ Liga 2 / Regional" },
-              { id: "multisport", label: "🏀 Săli / Multisport" },
-            ].map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => setActiveCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${
-                  activeCategory === cat.id
-                    ? "bg-lime-400 text-slate-950 font-black shadow-md"
-                    : "text-slate-400 hover:text-white"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Live Search for Clubs */}
-        <div className="relative">
-          <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-lg">
-            search
-          </span>
-          <input
-            type="text"
-            placeholder="Caută club din baza de date (ex: Steaua, Craiova, Dinamo, Timișoara, Cluj, Blaj)..."
-            value={searchFilter}
-            onChange={(e) => setSearchFilter(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-slate-950 border border-slate-800 rounded-2xl text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-lime-400"
-          />
-        </div>
-
-        {/* Preset Clubs Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-          {filteredPresets.map((club) => {
-            const alreadyIn = isEnrolled(club.name);
-
-            return (
-              <button
-                key={club.name}
-                type="button"
-                disabled={busy || alreadyIn}
-                onClick={() => handleAddTeam(club)}
-                className={`p-3.5 rounded-2xl border text-left transition flex flex-col justify-between gap-3 group relative overflow-hidden ${
-                  alreadyIn
-                    ? "bg-slate-950/40 border-lime-400/40 opacity-70 cursor-not-allowed"
-                    : "bg-slate-950 hover:bg-slate-800 border-slate-800 hover:border-lime-400/60 shadow-sm hover:shadow-lg"
-                }`}
-              >
-                <div className="flex justify-between items-start">
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center font-headline font-black text-sm text-white shadow-md border border-white/20"
-                    style={{ backgroundColor: club.color }}
-                  >
-                    {club.shortName}
-                  </div>
-                  {alreadyIn ? (
-                    <span className="px-2 py-0.5 rounded-md bg-lime-400/20 text-lime-400 text-[10px] font-black font-label border border-lime-400/30">
-                      ✓ Înscris
-                    </span>
-                  ) : (
-                    <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 text-[10px] font-bold font-label group-hover:bg-lime-400 group-hover:text-slate-950 transition">
-                      + Înscrie
-                    </span>
-                  )}
-                </div>
-
-                <div>
-                  <h4 className="font-headline font-bold text-xs text-white leading-tight group-hover:text-lime-400 transition">
-                    {club.name}
-                  </h4>
-                  <span className="text-[10px] text-slate-500 font-label uppercase mt-0.5 block">
-                    {club.category}
-                  </span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* SECTION 4: Grid of Enrolled Teams in this Championship */}
-      <section className="space-y-4">
-        <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
-            <h3 className="text-xl font-bold font-headline text-white uppercase tracking-tight">
-              Cluburi Înscrise în acest Campionat ({teams.length})
-            </h3>
-          </div>
-          <span className="text-xs font-label font-bold text-slate-400 uppercase">
-            {teams.length >= 4 ? "✓ Condiții minime brackets îndeplinite" : "Necesită minim 4 echipe"}
+      {/* SECTION 3: Enrolled List Table */}
+      <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-bold font-headline text-slate-900 dark:text-white uppercase tracking-tight">
+            {isIndividual ? `Tablou Oficial (${teams.length} Jucători Înscriși)` : `Cluburi Înscrise (${teams.length})`}
+          </h3>
+          <span className="text-xs font-label text-slate-500">
+            {teams.length === 8 ? "✓ Tablou complet de 8 participanți" : `${teams.length} / 8 recomandați`}
           </span>
         </div>
 
         {teams.length === 0 ? (
-          <div className="card p-12 text-center text-slate-400 bg-slate-900 border border-slate-800 rounded-3xl space-y-3">
-            <span className="material-symbols-outlined text-4xl text-slate-500 block">
-              shield
-            </span>
-            <p className="font-bold text-white text-sm">
-              Niciun club nu este înscris încă în această competiție.
+          <div className="p-8 rounded-2xl bg-slate-50 dark:bg-slate-950 text-center space-y-2 border border-slate-200 dark:border-slate-800">
+            <span className="text-3xl">{isIndividual ? "🎾" : "🛡️"}</span>
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+              {isIndividual ? "Nu există jucători înscriși încă pe tablou." : "Nu există echipe înscrise încă în acest campionat."}
             </p>
-            <p className="text-xs text-slate-400 max-w-md mx-auto">
-              Folosește selecția rapidă de mai sus sau apasă pe &quot;Înscrie Top 4 / Top 8&quot; pentru a popula campionatul cu echipe oficiale.
+            <p className="text-xs text-slate-500">
+              Folosește butoanele de mai sus pentru înscriere rapidă sau trimite linkul de invitație.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {teams.map((t, idx) => (
               <div
                 key={t.id}
-                className="card p-5 bg-slate-900 border border-slate-800 hover:border-lime-400/50 rounded-3xl shadow-md space-y-4 transition flex flex-col justify-between group"
+                className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 group hover:border-lime-400/50 transition"
               >
-                <div>
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-12 h-12 rounded-2xl flex items-center justify-center font-headline font-black text-base text-white shadow-lg border border-white/20"
-                        style={{ backgroundColor: t.color || "#1e293b" }}
-                      >
-                        {t.shortName || t.name.substring(0, 3).toUpperCase()}
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-label font-bold text-lime-400 uppercase tracking-widest block">
-                          Slot #{idx + 1}
-                        </span>
-                        <h4 className="font-headline font-black text-white text-base leading-tight">
-                          {t.name}
-                        </h4>
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => deleteTeam(t.id, t.name)}
-                      title="Elimină clubul din campionat"
-                      className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-slate-800 rounded-xl transition"
-                    >
-                      <span className="material-symbols-outlined text-base">delete</span>
-                    </button>
+                <div className="flex items-center gap-3 min-w-0">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs text-white shadow shrink-0"
+                    style={{ backgroundColor: t.color || "#1e293b" }}
+                  >
+                    {t.shortName || `#${idx + 1}`}
                   </div>
-
-                  <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800/80 flex items-center justify-between text-xs font-label text-slate-300">
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-lime-400"></span>
-                      <span>Club Confirmat ✓</span>
-                    </div>
-                    <span className="text-[11px] text-slate-400 font-bold">
-                      {t.shortName || "OFICIAL"}
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                      {t.name}
+                    </p>
+                    <span className="text-[10px] font-mono text-slate-400">
+                      Cap Serie #{idx + 1}
                     </span>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-slate-800/80 flex justify-between items-center text-[11px] font-label text-slate-400">
-                  <span>Lot jucători: Gestionat de căpitan</span>
-                  <span className="text-lime-400 font-bold">Activ</span>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteTeam(t.id, t.name)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-slate-200 dark:hover:bg-slate-800 transition"
+                  title="Elimină din tablou"
+                >
+                  <span className="material-symbols-outlined text-base">close</span>
+                </button>
               </div>
             ))}
           </div>
         )}
-      </section>
+      </div>
+
+      {/* SECTION 4: Preset Selection Catalog */}
+      <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-5">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div>
+            <h3 className="text-base font-bold font-headline text-slate-900 dark:text-white uppercase tracking-tight">
+              {isIndividual ? "Catalog Jucători de Tenis & Vedete FRT" : "Catalog Cluburi Populare din România"}
+            </h3>
+            <p className="text-xs text-slate-500 font-label">
+              Apasă &quot;+ Înscrie&quot; pentru a adăuga instant un participant pe tablou.
+            </p>
+          </div>
+
+          <input
+            type="text"
+            placeholder={isIndividual ? "Caută jucător tenis..." : "Caută club..."}
+            value={searchFilter}
+            onChange={(e) => setSearchFilter(e.target.value)}
+            className="input text-xs w-full sm:w-60"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {filteredPresets.map((item) => {
+            const enrolled = isEnrolled(item.name);
+            return (
+              <div
+                key={item.name}
+                className={`p-3.5 rounded-2xl border flex items-center justify-between gap-2.5 transition ${
+                  enrolled
+                    ? "bg-slate-100 dark:bg-slate-800/40 border-slate-300 dark:border-slate-700 opacity-60"
+                    : "bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:border-lime-500 shadow-sm"
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div
+                    className="w-8 h-8 rounded-xl flex items-center justify-center font-black text-[11px] text-white shrink-0"
+                    style={{ backgroundColor: item.color }}
+                  >
+                    {item.shortName}
+                  </div>
+                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                    {item.name}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  disabled={enrolled || busy}
+                  onClick={() => handleAddTeam(item)}
+                  className={`px-3 py-1 rounded-xl text-xs font-bold font-label uppercase tracking-wider shrink-0 transition ${
+                    enrolled
+                      ? "bg-slate-200 dark:bg-slate-700 text-slate-500 cursor-not-allowed"
+                      : "bg-lime-400 hover:bg-lime-300 text-slate-950 shadow-sm active:scale-95"
+                  }`}
+                >
+                  {enrolled ? "✓ Înscris" : "+ Înscrie"}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
