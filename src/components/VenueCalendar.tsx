@@ -217,7 +217,6 @@ export function VenueCalendar({
                   </button>
                 )}
               </div>
-            </div>
           );
         })}
       </div>

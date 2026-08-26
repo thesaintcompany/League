@@ -16,6 +16,8 @@ interface TopHeaderProps {
 export function TopHeader({ title = "Championship Pro", subtitle, action, variant }: TopHeaderProps) {
   const { data: session } = useSession();
   const isDark = variant === "dark";
+  const isArenaOwner = (session?.user as any)?.role === "arena_owner";
+  const profileHref = isArenaOwner ? "/dashboard/arena?tab=config" : "/profile";
 
   function handleToggleSidebar() {
     window.dispatchEvent(new CustomEvent("toggle-dashboard-sidebar"));
@@ -91,9 +93,9 @@ export function TopHeader({ title = "Championship Pro", subtitle, action, varian
         {session?.user ? (
           <div className={`flex items-center gap-2 pl-2 sm:pl-3 border-l ${isDark ? "border-slate-800" : "border-slate-200 dark:border-slate-800"}`}>
             <Link
-              href="/profile"
+              href={profileHref}
               className="flex items-center gap-2 p-1 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition group"
-              title={`${session.user.name || session.user.email} (Profil)`}
+              title={`${session.user.name || session.user.email} (${isArenaOwner ? "Configurare arenă" : "Profil"})`}
             >
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-lime-400 text-slate-950 font-black flex items-center justify-center text-xs sm:text-sm shadow-md group-hover:scale-105 transition-transform">
                 {session.user.name ? session.user.name[0].toUpperCase() : (session.user.email ? session.user.email[0].toUpperCase() : "U")}
