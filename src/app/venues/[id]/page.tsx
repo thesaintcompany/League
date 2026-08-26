@@ -56,6 +56,19 @@ export default async function PublicVenueDetailPage({
   );
   const finishedMatches = allMatches.filter((m) => m.status === "finished");
 
+  const competitions = Array.from(
+    new Map(
+      allMatches
+        .filter((m) => m.championship)
+        .map((m) => [m.championship!.id, {
+          id: m.championship!.id,
+          name: m.championship!.name,
+          sport: m.championship!.sport,
+          season: m.championship!.season,
+        }])
+    ).values()
+  );
+
   const formattedUpcoming = upcomingMatches.map((m) => ({
     id: m.id,
     round: m.round,
@@ -149,6 +162,7 @@ export default async function PublicVenueDetailPage({
           }}
           upcomingMatches={formattedUpcoming}
           finishedMatches={formattedFinished}
+          competitions={competitions}
         />
       </main>
 

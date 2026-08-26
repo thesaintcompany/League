@@ -44,16 +44,25 @@ export interface VenueMatchItem {
   championship?: { id: string; name: string; sport: string; season?: string | null } | null;
 }
 
+export interface VenueCompetitionItem {
+  id: string;
+  name: string;
+  sport: string;
+  season?: string | null;
+}
+
 interface VenueDetailClientViewProps {
   venue: VenueData;
   upcomingMatches: VenueMatchItem[];
   finishedMatches: VenueMatchItem[];
+  competitions: VenueCompetitionItem[];
 }
 
 export function VenueDetailClientView({
   venue,
   upcomingMatches,
   finishedMatches,
+  competitions,
 }: VenueDetailClientViewProps) {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
   const [showClaimModal, setShowClaimModal] = useState(false);
@@ -244,6 +253,69 @@ export function VenueDetailClientView({
             Administrezi această arenă? <span className="underline underline-offset-2">Solicită acces oficial</span>
           </button>
         </div>
+
+        <section className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-lg">
+            <div className="flex items-center gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+              <span className="material-symbols-outlined text-lime-600 dark:text-lime-400">badge</span>
+              <div>
+                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-lime-600 dark:text-lime-400 block">
+                  Administrare arenă
+                </span>
+                <h2 className="text-xl font-black font-headline uppercase text-slate-900 dark:text-white">
+                  Date proprietar
+                </h2>
+              </div>
+            </div>
+            {venue.owner ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-5 text-sm">
+                <div>
+                  <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">Nume</span>
+                  <p className="font-bold text-slate-900 dark:text-white">{venue.owner.name || "Proprietar arenă"}</p>
+                </div>
+                {venue.owner.email && (
+                  <div>
+                    <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">Email</span>
+                    <a href={`mailto:${venue.owner.email}`} className="font-bold text-lime-700 dark:text-lime-400 break-all hover:underline">{venue.owner.email}</a>
+                  </div>
+                )}
+                {venue.owner.phone && (
+                  <div>
+                    <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">Telefon</span>
+                    <a href={`tel:${venue.owner.phone}`} className="font-bold text-lime-700 dark:text-lime-400 hover:underline">{venue.owner.phone}</a>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="pt-5 text-sm text-slate-500 dark:text-slate-400">Datele proprietarului nu sunt publicate pentru această arenă.</p>
+            )}
+          </div>
+
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-lg">
+            <div className="flex items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-3">
+                <span className="material-symbols-outlined text-blue-600 dark:text-blue-400">emoji_events</span>
+                <div>
+                  <span className="text-[10px] font-label font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 block">Locație confirmată</span>
+                  <h2 className="text-xl font-black font-headline uppercase text-slate-900 dark:text-white">Competiții pe arenă</h2>
+                </div>
+              </div>
+              <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400">{competitions.length}</span>
+            </div>
+            {competitions.length > 0 ? (
+              <div className="space-y-3 pt-5">
+                {competitions.map((competition) => (
+                  <div key={competition.id} className="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 dark:bg-slate-950 px-4 py-3">
+                    <span className="font-bold text-sm text-slate-900 dark:text-white">{competition.name}</span>
+                    {competition.season && <span className="text-xs text-slate-500 dark:text-slate-400 shrink-0">{competition.season}</span>}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="pt-5 text-sm text-slate-500 dark:text-slate-400">Nu există competiții programate pe această arenă.</p>
+            )}
+          </div>
+        </section>
 
         {/* Venue facts only: no match or goal telemetry on an arena profile. */}
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 relative z-20">
