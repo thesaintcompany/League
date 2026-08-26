@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 interface BrandLogoProps {
   href?: string;
   className?: string;
   imgClassName?: string;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl" | "sidebar";
   showSubtitle?: boolean;
   subtitleText?: string;
   variant?: "header" | "sidebar" | "footer" | "hero";
@@ -16,7 +15,7 @@ interface BrandLogoProps {
 }
 
 export function BrandLogo({
-  href = "/campionat",
+  href = "/harta-romaniei",
   className = "",
   imgClassName = "",
   size = "md",
@@ -57,10 +56,11 @@ export function BrandLogo({
   }, []);
 
   const sizeClasses = {
-    sm: "h-7 max-w-[150px]",
-    md: "h-9 sm:h-10 max-w-[190px] sm:max-w-[220px]",
-    lg: "h-11 sm:h-12 max-w-[240px] sm:max-w-[280px]",
-    xl: "h-14 sm:h-16 max-w-[320px] sm:max-w-[380px]",
+    sm: "h-9 sm:h-10 max-w-[180px] sm:max-w-[210px]",
+    md: "h-11 sm:h-12 max-w-[230px] sm:max-w-[270px]",
+    sidebar: "h-12 sm:h-14 max-w-[220px] w-auto",
+    lg: "h-14 sm:h-16 max-w-[280px] sm:max-w-[340px]",
+    xl: "h-18 sm:h-22 max-w-[360px] sm:max-w-[440px]",
   };
 
   const content = (
@@ -71,14 +71,14 @@ export function BrandLogo({
           <img
             src={logoUrl}
             alt="Pro Ligue România"
-            className={`${sizeClasses[size]} w-auto object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-200 ${imgClassName}`}
+            className={`${sizeClasses[size]} w-auto object-contain object-left drop-shadow-md group-hover:scale-105 transition-transform duration-200 ${imgClassName}`}
             onError={() => setImgError(true)}
           />
         </div>
       ) : (
         /* Fallback if image path fails */
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-lg shadow-md group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-md group-hover:scale-105 transition-transform">
             ⚡
           </div>
           <div>

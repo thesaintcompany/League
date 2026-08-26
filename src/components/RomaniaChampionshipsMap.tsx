@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { ROMANIAN_COUNTIES } from "@/lib/constants";
 import { InteractiveRomaniaSvgMap } from "@/components/InteractiveRomaniaSvgMap";
+import { useSportContext } from "@/context/SportContext";
 
 interface ChampionshipData {
   id: string;
@@ -51,33 +52,52 @@ const ROMANIAN_REGIONS: Record<string, string[]> = {
 };
 
 export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = [] }: RomaniaMapProps) {
+  const { selectedSport, currentSportMeta } = useSportContext();
   const [selectedCounty, setSelectedCounty] = useState<string>("Timiș");
   const [activeTab, setActiveTab] = useState<"championships" | "venues">("championships");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedSport, setSelectedSport] = useState<string>("all");
   const [selectedScope, setSelectedScope] = useState<string>("all"); // "all" | "national" | "judetean" | "oras"
 
-  // National championships appear across ALL counties
+  // 1. Strict filtering by chosen global sport
+  const sportChampionships = useMemo(() => {
+    return initialChampionships.filter((c) => {
+      const cSport = (c.sport || "").toLowerCase();
+      return (
+        cSport.includes(selectedSport) ||
+        (selectedSport === "fotbal" && (cSport.includes("minifotbal") || cSport.includes("futsal")))
+      );
+    });
+  }, [initialChampionships, selectedSport]);
+
+  const sportVenues = useMemo(() => {
+    return initialVenues.filter((v) => {
+      const vSport = (v.sport || "").toLowerCase();
+      return (
+        vSport.includes(selectedSport) ||
+        vSport.includes("multifunctional") ||
+        vSport.includes("mixt") ||
+        vSport.includes("sala")
+      );
+    });
+  }, [initialVenues, selectedSport]);
+
+  // National championships in current sport
   const nationalChampionships = useMemo(() => {
-    return initialChampionships.filter(
+    return sportChampionships.filter(
       (c) => c.scope === "national" || (!c.county && c.scope !== "oras" && c.scope !== "judetean")
     );
-  }, [initialChampionships]);
+  }, [sportChampionships]);
 
-  // County specific championships
+  // County specific championships in current sport
   const countyChampionships = useMemo(() => {
-    return initialChampionships.filter(
+    return sportChampionships.filter(
       (c) => (c.scope === "judetean" || c.scope === "oras") && c.county?.toLowerCase() === selectedCounty.toLowerCase()
     );
-  }, [initialChampionships, selectedCounty]);
+  }, [sportChampionships, selectedCounty]);
 
-  // Combined list for current view with filters applied
+  // Combined list for current view with search & scope applied
   const filteredChampionships = useMemo(() => {
     let list = [...nationalChampionships, ...countyChampionships];
-
-    if (selectedSport !== "all") {
-      list = list.filter((c) => c.sport.toLowerCase() === selectedSport.toLowerCase());
-    }
 
     if (selectedScope !== "all") {
       list = list.filter((c) => c.scope === selectedScope);
@@ -98,25 +118,25 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
     const map = new Map<string, ChampionshipData>();
     list.forEach((item) => map.set(item.id, item));
     return Array.from(map.values());
-  }, [nationalChampionships, countyChampionships, selectedSport, selectedScope, searchQuery]);
+  }, [nationalChampionships, countyChampionships, selectedScope, searchQuery]);
 
   // Filtered venues for selected county or nearby
   const countyVenues = useMemo(() => {
-    return initialVenues.filter((v) => {
+    return sportVenues.filter((v) => {
       const vCounty = v.county?.toLowerCase() || "";
       const vLoc = v.location.toLowerCase();
       const sCounty = selectedCounty.toLowerCase();
       return vCounty.includes(sCounty) || vLoc.includes(sCounty) || (sCounty === "bucurești" && (vLoc.includes("bucuresti") || vLoc.includes("ilfov")));
     });
-  }, [initialVenues, selectedCounty]);
+  }, [sportVenues, selectedCounty]);
 
-  // County statistics calculator for map tooltip & badges
+  // County statistics calculator for map tooltip & badges (strictly for selected sport)
   function getCountyStats(countyName: string) {
-    const champCount = initialChampionships.filter(
+    const champCount = sportChampionships.filter(
       (c) => (c.scope === "judetean" || c.scope === "oras") && c.county?.toLowerCase() === countyName.toLowerCase()
     ).length + nationalChampionships.length;
 
-    const venCount = initialVenues.filter((v) => {
+    const venCount = sportVenues.filter((v) => {
       const vCounty = v.county?.toLowerCase() || "";
       const vLoc = v.location.toLowerCase();
       const sCounty = countyName.toLowerCase();

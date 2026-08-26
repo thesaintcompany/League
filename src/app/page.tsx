@@ -20,22 +20,13 @@ function WelcomePortalForm() {
 
   const DEMO_ACCOUNTS = [
     {
-      id: "super_admin",
-      role: "Super Administrator",
-      email: "admin@leaguehub.local",
-      pass: "superadmin12345",
-      badge: "Full Admin & Logo",
-      icon: "admin_panel_settings",
-      color: "border-lime-400 bg-lime-500/10 text-lime-400",
-    },
-    {
       id: "organizer",
-      role: "Organizator",
+      role: "Organizator Pro",
       email: "demo@leaguehub.local",
       pass: "demo12345",
-      badge: "Turnee & Zaruri",
+      badge: "Turnee & Meciuri",
       icon: "emoji_events",
-      color: "border-blue-400 bg-blue-500/10 text-blue-400",
+      color: "border-lime-400 bg-lime-500/10 text-lime-400",
     },
     {
       id: "referee",
@@ -79,13 +70,34 @@ function WelcomePortalForm() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    const res = await signIn("credentials", { email, password, redirect: false });
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanPass = password.trim();
+
+    const res = await signIn("credentials", {
+      email: cleanEmail,
+      password: cleanPass,
+      redirect: false,
+    });
     setLoading(false);
     if (res?.error) {
       setError("Email sau parolă incorectă.");
       return;
     }
-    router.push(callbackUrl);
+
+    // Direct redirection based on user
+    if (cleanEmail === "admin@leaguehub.local" || cleanEmail === "superadmin@leaguehub.local") {
+      router.push("/dashboard/admin");
+    } else if (cleanEmail === "arbitru@leaguehub.local" || selectedRole === "referee") {
+      router.push("/dashboard/referee");
+    } else if (cleanEmail === "arena@leaguehub.local" || selectedRole === "arena_owner") {
+      router.push("/dashboard/arena");
+    } else if (cleanEmail === "lider@leaguehub.local" || selectedRole === "team_leader") {
+      router.push("/dashboard/team");
+    } else if (cleanEmail === "jucator@leaguehub.local" || selectedRole === "player") {
+      router.push("/profile");
+    } else {
+      router.push(callbackUrl || "/dashboard");
+    }
   }
 
   function pickAccount(acc: (typeof DEMO_ACCOUNTS)[0]) {
@@ -160,10 +172,10 @@ function WelcomePortalForm() {
               </div>
 
               <Link
-                href="/campionat"
+                href="/harta-romaniei"
                 className="px-6 py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-500 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-xl shadow-lime-500/20 flex items-center justify-center gap-2 transition active:scale-95 group/btn"
               >
-                <span>Explorează Pagina Publică</span>
+                <span>Vezi Campionate (Harta RO)</span>
                 <span className="material-symbols-outlined text-[18px] group-hover/btn:translate-x-1 transition-transform">
                   arrow_forward
                 </span>

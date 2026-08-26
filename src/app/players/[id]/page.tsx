@@ -113,11 +113,10 @@ export default async function PublicPlayerDetailPage({
 
           <div className="flex items-center gap-3">
             <Link
-              href="/profile"
-              className="px-5 py-3 rounded-2xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-400/20 transition active:scale-95 flex items-center gap-2"
+              href="/players"
+              className="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-headline font-bold text-xs uppercase tracking-wider transition border border-white/20 flex items-center gap-1.5"
             >
-              <span className="material-symbols-outlined text-lg">edit</span>
-              Editează Profilul &amp; Pozele
+              ← Înapoi la Golgheteri
             </Link>
           </div>
         </div>
@@ -206,20 +205,12 @@ export default async function PublicPlayerDetailPage({
                     <span className="text-[10px] font-bold text-slate-400 block">PHY</span>
                   </div>
                 </div>
-
-                <Link
-                  href="/profile"
-                  className="w-full py-3 rounded-2xl bg-surface-container-low hover:bg-amber-400 hover:text-slate-950 text-slate-300 font-headline font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 border border-slate-800"
-                >
-                  <span className="material-symbols-outlined text-base">photo_camera</span>
-                  Schimbă Pozele de Profil (Dublu-Click)
-                </Link>
               </div>
             </div>
 
             {/* Social Connectivity */}
-            <div className="card p-6 bg-slate-900/80 border-slate-800 rounded-3xl space-y-3">
-              <h4 className="font-headline font-bold text-xs text-white uppercase tracking-wider">
+            <div className="card p-6 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-3xl space-y-3 shadow-md">
+              <h4 className="font-headline font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider">
                 Rețele Sociale Oficiale
               </h4>
               <div className="flex gap-2">
@@ -227,7 +218,7 @@ export default async function PublicPlayerDetailPage({
                   href="https://instagram.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex-1 py-2.5 bg-pink-950/40 text-pink-400 hover:bg-pink-900/50 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition"
+                  className="flex-1 py-2.5 bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-400 hover:bg-pink-100 dark:hover:bg-pink-900/50 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition border border-pink-200/60 dark:border-pink-800/40"
                 >
                   <span>📷</span> Instagram
                 </a>
@@ -235,7 +226,7 @@ export default async function PublicPlayerDetailPage({
                   href="https://x.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition"
+                  className="flex-1 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition border border-slate-200 dark:border-slate-700"
                 >
                   <span>𝕏</span> Twitter / X
                 </a>
@@ -243,59 +234,59 @@ export default async function PublicPlayerDetailPage({
             </div>
           </div>
 
-          {/* Right Column:   Detailed Attributes & Match Statistics (7 cols) */}
+          {/* Right Column: Detailed Attributes & Match Statistics (7 cols) */}
           <div className="lg:col-span-7 space-y-8">
             {/* Bento Season Telemetry */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="card p-5 bg-slate-900/80 border-slate-800 rounded-2xl text-center">
-                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
+              <div className="card p-5 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-3xl text-center shadow-md dark:shadow-xl hover:shadow-lg transition">
+                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">
                   Goluri Înscrise
                 </span>
-                <span className="text-3xl font-black data-font text-amber-400 mt-1 block">
+                <span className="text-3xl sm:text-4xl font-black data-font text-amber-500 dark:text-amber-400 mt-1 block">
                   {player.goals || 0} ⚽
                 </span>
               </div>
 
-              <div className="card p-5 bg-slate-900/80 border-slate-800 rounded-2xl text-center">
-                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
+              <div className="card p-5 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-3xl text-center shadow-md dark:shadow-xl hover:shadow-lg transition">
+                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">
                   Pase de Gol
                 </span>
-                <span className="text-3xl font-black data-font text-lime-400 mt-1 block">
+                <span className="text-3xl sm:text-4xl font-black data-font text-lime-600 dark:text-lime-400 mt-1 block">
                   {player.assists || 6} 👟
                 </span>
               </div>
 
-              <div className="card p-5 bg-slate-900/80 border-slate-800 rounded-2xl text-center">
-                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
+              <div className="card p-5 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-3xl text-center shadow-md dark:shadow-xl hover:shadow-lg transition">
+                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">
                   Meciuri Jucate
                 </span>
-                <span className="text-3xl font-black data-font text-white mt-1 block">
+                <span className="text-3xl sm:text-4xl font-black data-font text-slate-900 dark:text-white mt-1 block">
                   {player.matchesCount || 18} 🏟️
                 </span>
               </div>
 
-              <div className="card p-5 bg-slate-900/80 border-slate-800 rounded-2xl text-center">
-                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
+              <div className="card p-5 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-3xl text-center shadow-md dark:shadow-xl hover:shadow-lg transition">
+                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">
                   Rating
                 </span>
-                <span className="text-3xl font-black data-font text-amber-400 mt-1 block">
+                <span className="text-3xl sm:text-4xl font-black data-font text-amber-500 dark:text-amber-400 mt-1 block">
                   {fut.futRating} ⭐
                 </span>
               </div>
             </div>
 
             {/* Detailed Attribute Breakdown Bars */}
-            <div className="card p-8 bg-slate-900/80 border-slate-800 rounded-3xl space-y-6 shadow-xl">
-              <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
-                <div className="w-10 h-10 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xl">
+            <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-[2rem] space-y-6 shadow-xl dark:shadow-2xl">
+              <div className="flex items-center gap-3.5 pb-4 border-b border-slate-200 dark:border-slate-800">
+                <div className="w-11 h-11 rounded-2xl bg-amber-400/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-2xl border border-amber-400/40 shadow-inner">
                   ⚡
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold font-headline text-white">
+                  <h3 className="text-lg sm:text-xl font-bold font-headline text-slate-900 dark:text-white">
                     Atribute Tehnice &amp; Parametri de Performanță
                   </h3>
-                  <p className="text-xs text-slate-400 font-label">
-                    Statistici calibrate conform standardelor   &amp; meciurilor oficiale
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
+                    Statistici calibrate conform standardelor oficiale de elită
                   </p>
                 </div>
               </div>
@@ -304,10 +295,10 @@ export default async function PublicPlayerDetailPage({
                 {/* Finishing */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs font-label">
-                    <span className="text-slate-300 font-bold">Finalizare &amp; Șut (Finishing)</span>
-                    <span className="text-amber-400 font-black">{fut.finishing} / 99</span>
+                    <span className="text-slate-700 dark:text-slate-300 font-bold">Finalizare &amp; Șut (Finishing)</span>
+                    <span className="text-amber-600 dark:text-amber-400 font-black">{fut.finishing} / 99</span>
                   </div>
-                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
                     <div className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full" style={{ width: `${fut.finishing}%` }}></div>
                   </div>
                 </div>
@@ -315,10 +306,10 @@ export default async function PublicPlayerDetailPage({
                 {/* Sprint Speed */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs font-label">
-                    <span className="text-slate-300 font-bold">Viteză Maximă (Sprint Speed)</span>
-                    <span className="text-lime-400 font-black">{fut.sprintSpeed} / 99</span>
+                    <span className="text-slate-700 dark:text-slate-300 font-bold">Viteză Maximă (Sprint Speed)</span>
+                    <span className="text-lime-600 dark:text-lime-400 font-black">{fut.sprintSpeed} / 99</span>
                   </div>
-                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
                     <div className="h-full bg-gradient-to-r from-lime-400 to-lime-500 rounded-full" style={{ width: `${fut.sprintSpeed}%` }}></div>
                   </div>
                 </div>
@@ -326,10 +317,10 @@ export default async function PublicPlayerDetailPage({
                 {/* Agility */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs font-label">
-                    <span className="text-slate-300 font-bold">Agilitate &amp; Dribling</span>
-                    <span className="text-blue-400 font-black">{fut.agility} / 99</span>
+                    <span className="text-slate-700 dark:text-slate-300 font-bold">Agilitate &amp; Dribling</span>
+                    <span className="text-blue-600 dark:text-blue-400 font-black">{fut.agility} / 99</span>
                   </div>
-                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
                     <div className="h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full" style={{ width: `${fut.agility}%` }}></div>
                   </div>
                 </div>
@@ -337,10 +328,10 @@ export default async function PublicPlayerDetailPage({
                 {/* Shot Power */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs font-label">
-                    <span className="text-slate-300 font-bold">Forță Șut (Shot Power)</span>
-                    <span className="text-amber-400 font-black">{fut.shotPower} / 99</span>
+                    <span className="text-slate-700 dark:text-slate-300 font-bold">Forță Șut (Shot Power)</span>
+                    <span className="text-amber-600 dark:text-amber-400 font-black">{fut.shotPower} / 99</span>
                   </div>
-                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
                     <div className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full" style={{ width: `${fut.shotPower}%` }}></div>
                   </div>
                 </div>
@@ -348,10 +339,10 @@ export default async function PublicPlayerDetailPage({
                 {/* Vision */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs font-label">
-                    <span className="text-slate-300 font-bold">Viziune &amp; Pase Decisive</span>
-                    <span className="text-purple-400 font-black">{fut.vision} / 99</span>
+                    <span className="text-slate-700 dark:text-slate-300 font-bold">Viziune &amp; Pase Decisive</span>
+                    <span className="text-purple-600 dark:text-purple-400 font-black">{fut.vision} / 99</span>
                   </div>
-                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
                     <div className="h-full bg-gradient-to-r from-purple-400 to-purple-500 rounded-full" style={{ width: `${fut.vision}%` }}></div>
                   </div>
                 </div>
@@ -359,10 +350,10 @@ export default async function PublicPlayerDetailPage({
                 {/* Stamina */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs font-label">
-                    <span className="text-slate-300 font-bold">Rezistență Fizică (Stamina)</span>
-                    <span className="text-lime-400 font-black">{fut.stamina} / 99</span>
+                    <span className="text-slate-700 dark:text-slate-300 font-bold">Rezistență Fizică (Stamina)</span>
+                    <span className="text-lime-600 dark:text-lime-400 font-black">{fut.stamina} / 99</span>
                   </div>
-                  <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                  <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
                     <div className="h-full bg-gradient-to-r from-lime-400 to-lime-500 rounded-full" style={{ width: `${fut.stamina}%` }}></div>
                   </div>
                 </div>
@@ -371,18 +362,18 @@ export default async function PublicPlayerDetailPage({
 
             {/* Recent Match Appearances */}
             <div className="space-y-4">
-              <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-                <h3 className="text-lg font-bold font-headline text-white flex items-center gap-2">
-                  <span className="material-symbols-outlined text-amber-400">sports_soccer</span>
+              <div className="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-slate-800">
+                <h3 className="text-lg font-bold font-headline text-slate-900 dark:text-white flex items-center gap-2">
+                  <span className="material-symbols-outlined text-amber-500 dark:text-amber-400">sports_soccer</span>
                   Meciuri Oficiale &amp; Rapoarte
                 </h3>
-                <span className="text-xs text-slate-400 font-label">
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-label font-bold">
                   {matches.length} Partide
                 </span>
               </div>
 
               {matches.length === 0 ? (
-                <div className="p-8 rounded-3xl bg-slate-900/60 text-center text-xs text-slate-500 font-label border border-slate-800">
+                <div className="p-8 rounded-3xl bg-white dark:bg-slate-900/60 text-center text-xs text-slate-500 font-label border border-slate-200 dark:border-slate-800 shadow-sm">
                   Momentan nu sunt meciuri înregistrate pentru acest jucător.
                 </div>
               ) : (
@@ -390,9 +381,9 @@ export default async function PublicPlayerDetailPage({
                   {matches.map((m) => (
                     <div
                       key={m.id}
-                      className="card p-5 bg-slate-900/80 border-slate-800 rounded-2xl space-y-3 hover:border-amber-400/50 transition"
+                      className="card p-5 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-2xl space-y-3 shadow-md hover:border-amber-400/60 hover:shadow-lg transition"
                     >
-                      <div className="flex justify-between items-center text-[10px] font-label font-bold text-slate-400 uppercase">
+                      <div className="flex justify-between items-center text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase">
                         <span>Etapa {m.round}</span>
                         <span>
                           {new Date(m.scheduledAt).toLocaleDateString("ro-RO", {
@@ -402,24 +393,25 @@ export default async function PublicPlayerDetailPage({
                         </span>
                       </div>
 
-                      <div className="flex justify-between items-center font-bold text-sm text-white font-headline">
+                      <div className="flex justify-between items-center font-bold text-sm text-slate-900 dark:text-white font-headline">
                         <span className="truncate">{m.homeTeam.name}</span>
-                        <span className="text-xs px-2.5 py-0.5 rounded bg-slate-800 font-black data-font text-amber-400">
+                        <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 font-black data-font text-amber-600 dark:text-amber-400 border border-slate-200 dark:border-slate-700">
                           {m.status === "finished" ? `${m.homeScore} - ${m.awayScore}` : "VS"}
                         </span>
                         <span className="truncate">{m.awayTeam.name}</span>
                       </div>
 
-                      <div className="pt-2 border-t border-slate-800 flex justify-between items-center text-xs">
-                        <span className="text-[11px] text-slate-400 font-label">
+                      <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
+                        <span className="text-[11px] text-slate-500 dark:text-slate-400 font-label">
                           🏟️ {m.venue || "Arena Oficială"}
                         </span>
                         <Link
                           href={`/matches/${m.id}/report`}
                           target="_blank"
-                          className="text-[11px] font-bold text-amber-400 hover:underline font-label"
+                          className="text-[11px] font-bold text-amber-600 dark:text-amber-400 hover:underline font-label flex items-center gap-0.5"
                         >
-                          Raport PDF ↗
+                          <span>Raport PDF</span>
+                          <span className="material-symbols-outlined text-[12px]">open_in_new</span>
                         </Link>
                       </div>
                     </div>

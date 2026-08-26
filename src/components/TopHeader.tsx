@@ -78,14 +78,14 @@ export function TopHeader({ title = "Championship Pro", subtitle, action, varian
         <ThemeToggle variant="compact" />
 
         <Link
-          href="/"
+          href="/harta-romaniei"
           className={`hidden sm:inline-flex text-xs font-label font-bold uppercase tracking-wider px-3 py-2 rounded-xl transition ${
             isDark
               ? "text-slate-200 hover:text-white hover:bg-slate-800"
               : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
           }`}
         >
-          Public ↗
+          Vezi Campionate ↗
         </Link>
 
         {session ? (

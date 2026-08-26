@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useSportContext } from "@/context/SportContext";
 
 interface PlayerItem {
   id: string;
@@ -21,7 +22,7 @@ interface PlayerItem {
   };
 }
 
-// Generate realistic   Ultimate Team attributes based on position & rating
+// Generate realistic attributes based on position & rating
 function getFUTAttributes(position: string | null | undefined, rating: number = 8.5, goals: number = 10) {
   const base = Math.min(96, Math.max(75, Math.round(rating * 10)));
   const isAttacker = !position || position.includes("Atacant") || position.includes("Extremă") || position.includes("Ofensiv");
@@ -41,6 +42,7 @@ function getFUTAttributes(position: string | null | undefined, rating: number = 
 }
 
 export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: PlayerItem[] }) {
+  const { selectedSport, currentSportMeta } = useSportContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedPosition, setSelectedPosition] = useState<string>("all");
 

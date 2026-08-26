@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import { useSportContext } from "@/context/SportContext";
 
 export interface VenueItem {
   id: string;
@@ -40,8 +41,8 @@ const ROMANIAN_COUNTIES_WITH_VENUES = [
 ];
 
 export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueItem[] }) {
+  const { selectedSport, currentSportMeta } = useSportContext();
   const [selectedCounty, setSelectedCounty] = useState<string>("all");
-  const [sportFilter, setSportFilter] = useState<string>("all");
   const [capacityFilter, setCapacityFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -54,14 +55,14 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
       const vCounty = v.county || (v.location.includes("Timiș") ? "Timiș" : "Altele");
       const matchesCounty = selectedCounty === "all" || vCounty.toLowerCase() === selectedCounty.toLowerCase();
 
-      // Sport match
+      // Sport match against global active sport
+      const vSport = (v.sport || "").toLowerCase();
       const matchesSport =
-        sportFilter === "all" ||
-        v.sport.toLowerCase() === sportFilter.toLowerCase() ||
-        (sportFilter === "multifunctional" &&
-          (v.sport === "multifunctional" ||
-            v.specs?.toLowerCase().includes("handbal") ||
-            v.specs?.toLowerCase().includes("baschet")));
+        vSport.includes(selectedSport) ||
+        vSport.includes("multifunctional") ||
+        vSport.includes("mixt") ||
+        vSport.includes("sala") ||
+        (v.specs && v.specs.toLowerCase().includes(selectedSport));
 
       // Capacity match
       let matchesCapacity = true;
@@ -85,7 +86,7 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
 
       return matchesCounty && matchesSport && matchesCapacity && matchesStatus && matchesSearch;
     });
-  }, [initialVenues, selectedCounty, sportFilter, capacityFilter, statusFilter, searchQuery]);
+  }, [initialVenues, selectedCounty, selectedSport, capacityFilter, statusFilter, searchQuery]);
 
   // Statistics
   const totalCapacity = useMemo(() => {
@@ -259,21 +260,17 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
             )}
           </div>
 
-          {/* Sport Filter */}
+          {/* Sport Indicator */}
           <div className="md:col-span-3">
-            <select
-              value={sportFilter}
-              onChange={(e) => setSportFilter(e.target.value)}
-              aria-label="Filtru Disciplină Sportivă"
-              className="w-full px-3.5 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-2xl text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition"
-            >
-              <option value="all">⚽ Toate Sporturile</option>
-              <option value="fotbal">⚽ Fotbal (Stadioane)</option>
-              <option value="baschet">🏀 Baschet (Săli &amp; Arene)</option>
-              <option value="handbal">🤾 Handbal (Săli)</option>
-              <option value="volei">🏐 Volei (Săli &amp; Plajă)</option>
-              <option value="multifunctional">🏟️ Multifuncțional / Polivalente</option>
-            </select>
+            <div className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-between gap-1.5 text-xs text-slate-900 dark:text-white font-bold">
+              <span className="flex items-center gap-1.5 truncate">
+                <span>{currentSportMeta.icon}</span>
+                <span className="truncate">{currentSportMeta.shortName}</span>
+              </span>
+              <span className="text-[9px] uppercase px-2 py-0.5 rounded-md bg-lime-400 text-slate-950 font-black shrink-0">
+                Activ
+              </span>
+            </div>
           </div>
 
           {/* Capacity Filter */}
@@ -337,7 +334,7 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
       </section>
 
       {/* SECTION 4: Spotlight Arene Internaționale */}
-      {selectedCounty === "all" && !searchQuery && sportFilter === "all" && (
+      {selectedCounty === "all" && !searchQuery && (
         <section className="space-y-4">
           <div className="flex items-center gap-2.5">
             <span className="w-2.5 h-6 bg-slate-950 dark:bg-lime-400 rounded-full"></span>

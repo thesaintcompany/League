@@ -153,10 +153,10 @@ export default async function StandaloneChampionshipMapPage({
               Organizatorul nu a făcut încă publică harta meciurilor pentru acest campionat. Te rugăm să revii mai târziu.
             </p>
             <Link
-              href="/campionat"
+              href="/harta-romaniei"
               className="inline-block px-5 py-2.5 rounded-2xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase shadow-md mt-2"
             >
-              Înapoi la Pagina Publică
+              Vezi Campionate (Harta RO)
             </Link>
           </div>
         ) : (

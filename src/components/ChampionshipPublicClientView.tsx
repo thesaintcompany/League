@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BracketVisualizer } from "./BracketVisualizer";
 import { MatchData } from "./MatchCard";
+import { useSportContext } from "@/context/SportContext";
 
 interface Standing {
   position: number;
@@ -29,12 +30,12 @@ interface MatchItem {
   scheduledAt: string;
   homeScore?: number | null;
   awayScore?: number | null;
-  status?: string;
-  venue: string;
+  status: string;
+  venue?: string;
   bracketIndex?: number | null;
   diceRoll?: string | null;
-  homeTeam: { id: string; name: string; shortName: string; color: string };
-  awayTeam: { id: string; name: string; shortName: string; color: string };
+  homeTeam: { id: string; name: string; shortName?: string; color?: string };
+  awayTeam: { id: string; name: string; shortName?: string; color?: string };
 }
 
 interface TopScorer {
@@ -42,7 +43,10 @@ interface TopScorer {
   name: string;
   goals: number;
   teamName: string;
-  image?: string | null;
+  assists?: number;
+  yellowCards?: number;
+  redCards?: number;
+  photoUrl?: string | null;
 }
 
 interface ChampionshipInfo {
@@ -84,9 +88,34 @@ export function ChampionshipPublicClientView({
   topScorers: TopScorer[];
 }) {
   const router = useRouter();
+  const { selectedSport, currentSportMeta } = useSportContext();
   const [activeView, setActiveView] = useState<"bracket" | "standings">("bracket");
   const [showShareModal, setShowShareModal] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+
+  // Filter championships for active selected sport
+  const sportChampionships = useMemo(() => {
+    return allChampionships.filter((c) => {
+      const cSport = (c.sport || "").toLowerCase();
+      return (
+        cSport.includes(selectedSport) ||
+        (selectedSport === "fotbal" && (cSport.includes("minifotbal") || cSport.includes("futsal")))
+      );
+    });
+  }, [allChampionships, selectedSport]);
+
+  // If current championship is not in active sport and we have matching championships, redirect to first match
+  useEffect(() => {
+    if (championship && sportChampionships.length > 0) {
+      const currentSport = (championship.sport || "").toLowerCase();
+      const matches =
+        currentSport.includes(selectedSport) ||
+        (selectedSport === "fotbal" && (currentSport.includes("minifotbal") || currentSport.includes("futsal")));
+      if (!matches) {
+        router.push(`/campionat?id=${sportChampionships[0].id}`);
+      }
+    }
+  }, [selectedSport, championship, sportChampionships, router]);
 
   // Switch championship via dropdown
   function onSelectChampionship(id: string) {
@@ -111,22 +140,44 @@ export function ChampionshipPublicClientView({
     status: (m.status as any) || (m.homeScore !== null && m.homeScore !== undefined ? "finished" : "scheduled"),
     homeScore: m.homeScore,
     awayScore: m.awayScore,
-    venue: m.venue,
+    venue: m.venue || "",
     homeTeam: m.homeTeam,
     awayTeam: m.awayTeam,
   }));
 
   // Fallback top scorers if empty
   const displayScorers =
-    topScorers.length > 0
+    topScorers && topScorers.length > 0
       ? topScorers
       : [
-        { id: "1", name: "Alexandru Mitriță", goals: 12, teamName: "Universitatea Craiova" },
-        { id: "2", name: "Florinel Coman", goals: 11, teamName: "FCSB București" },
-        { id: "3", name: "Daniel Bîrligea", goals: 9, teamName: "CFR Cluj" },
-        { id: "4", name: "Claudiu Petrila", goals: 8, teamName: "Rapid București" },
-        { id: "5", name: "Louis Munteanu", goals: 7, teamName: "Farul Constanța" },
-      ];
+          {
+            id: "1",
+            name: "Radu Drăgușin",
+            teamName: "FC Timișoara",
+            goals: 8,
+            assists: 3,
+            yellowCards: 1,
+            photoUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&auto=format&fit=crop&q=80",
+          },
+          {
+            id: "2",
+            name: "Florin Tănase",
+            teamName: "Politehnica",
+            goals: 6,
+            assists: 5,
+            yellowCards: 0,
+            photoUrl: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&auto=format&fit=crop&q=80",
+          },
+          {
+            id: "3",
+            name: "Denis Alibec",
+            teamName: "Ripensia",
+            goals: 5,
+            assists: 2,
+            yellowCards: 2,
+            photoUrl: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&auto=format&fit=crop&q=80",
+          },
+        ];
 
   return (
     <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 font-body text-slate-900 dark:text-white transition-colors duration-200">
@@ -134,12 +185,13 @@ export function ChampionshipPublicClientView({
       <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="px-3 py-1 bg-lime-400 text-slate-950 text-[10px] font-black font-label rounded-full uppercase tracking-widest shadow-md">
-              {championship?.season ? `Sezon ${championship.season}` : "Sezon 2026"}
+            <span className="px-3 py-1 bg-lime-400 text-slate-950 text-[10px] font-black font-label rounded-full uppercase tracking-widest shadow-md flex items-center gap-1">
+              <span>{currentSportMeta.icon}</span>
+              <span>{championship?.season ? `Sezon ${championship.season}` : "Sezon 2026"}</span>
             </span>
             <span className="text-slate-500 dark:text-slate-400 text-xs font-label uppercase tracking-widest font-bold">
               {championship?.scope === "national"
-                ? "🇷🇴 Divizia Națională de Elită"
+                ? `🇷🇴 Divizia Națională • ${currentSportMeta.name}`
                 : `📍 Campionat Regional • ${championship?.county || "Timiș"}`}
             </span>
             <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-lime-600 dark:text-lime-400 font-mono text-xs font-bold">
@@ -148,12 +200,12 @@ export function ChampionshipPublicClientView({
           </div>
 
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black italic tracking-tight font-headline uppercase leading-tight text-slate-900 dark:text-white drop-shadow-sm break-words">
-            {championship?.name || "Premier Elite Championship"}
+            {championship?.name || `${currentSportMeta.name} - Campionat Oficial`}
           </h1>
 
           <p className="text-xs text-slate-600 dark:text-slate-300 font-body max-w-2xl">
             {championship?.description ||
-              "Harta interactivă cu zaruri a campionatului, arbore eliminatoriu, clasamente oficiale și telemetria meciurilor."}
+              `Harta interactivă, arbore eliminatoriu, clasamente oficiale și telemetria meciurilor de ${currentSportMeta.name}.`}
           </p>
         </div>
 
@@ -165,11 +217,15 @@ export function ChampionshipPublicClientView({
               onChange={(e) => onSelectChampionship(e.target.value)}
               className="w-full appearance-none bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 pl-3.5 sm:pl-4 pr-10 py-2.5 sm:py-3 rounded-2xl shadow-md text-xs font-bold font-headline text-slate-900 dark:text-white focus:outline-none focus:border-lime-500 cursor-pointer"
             >
-              {allChampionships.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name} ({c.teamsCount} echipe)
-                </option>
-              ))}
+              {sportChampionships.length > 0 ? (
+                sportChampionships.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} ({c.teamsCount} echipe)
+                  </option>
+                ))
+              ) : (
+                <option value="">Niciun campionat de {currentSportMeta.shortName}</option>
+              )}
             </select>
             <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-lime-500 text-lg">
               expand_more

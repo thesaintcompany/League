@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { BrandLogo } from "./BrandLogo";
+import { SportSubHeader } from "./SportSubHeader";
 
 interface PublicHeaderProps {
   currentTab?: "campionat" | "romania-map" | "brackets" | "venues" | "players" | "referees" | "teams";
@@ -25,22 +26,22 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
   const isTeams = currentTab === "teams" || pathname.startsWith("/teams") || pathname.startsWith("/echipe");
 
   const navLinks = [
-    { href: "/campionat", label: "Campionat", active: isCampionat, icon: "emoji_events" },
-    { href: "/harta-romaniei", label: "Harta Județe", active: isRomaniaMap, icon: "map" },
+    { href: "/harta-romaniei", label: "Campionate (Harta RO)", active: isRomaniaMap, icon: "map" },
+    { href: "/campionat", label: "Clasament", active: isCampionat, icon: "emoji_events" },
     { href: "/brackets", label: "Harta Meciuri", active: isBrackets, icon: "account_tree" },
     { href: "/teams", label: "Echipe", active: isTeams, icon: "groups" },
     { href: "/venues", label: "Arene & Stadioane", active: isVenues, icon: "stadium" },
     { href: "/players", label: "Golgheteri", active: isPlayers, icon: "directions_run" },
-    { href: "/referees", label: "Corp Arbitri", active: useReferees, icon: "sports" },
   ];
 
   return (
     <>
       <header
-        className={`sticky top-0 z-50 backdrop-blur-xl border-b h-16 sm:h-20 px-4 sm:px-6 lg:px-12 flex justify-between items-center font-body transition-colors duration-200 shadow-md ${isDark
+        className={`sticky top-0 z-50 backdrop-blur-xl border-b h-16 sm:h-20 px-4 sm:px-6 lg:px-12 flex justify-between items-center font-body transition-colors duration-200 shadow-md ${
+          isDark
             ? "bg-slate-950/95 text-white border-slate-800/90"
             : "bg-white/95 dark:bg-slate-950/95 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800/80"
-          }`}
+        }`}
       >
         {/* Left: Brand & Mobile Hamburger Toggle */}
         <div className="flex items-center gap-3 sm:gap-6">
@@ -55,14 +56,15 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
           </button>
 
           {/* Brand Logo with Dynamic Active Logo from DB */}
-          <BrandLogo size="md" href="/campionat" />
+          <BrandLogo size="md" href="/harta-romaniei" />
 
           {/* Live Season Pulsing Pill */}
           <div
-            className={`hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold font-label ${isDark
+            className={`hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold font-label ${
+              isDark
                 ? "bg-slate-900 text-lime-400 border border-lime-400/30"
                 : "bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-lime-400 border border-slate-200 dark:border-lime-400/30"
-              }`}
+            }`}
           >
             <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
             <span className="tracking-wide uppercase text-[10px]">Ediția Oficială 2026</span>
@@ -75,10 +77,11 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`px-4 py-2 rounded-xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-1.5 ${tab.active
+              className={`px-4 py-2 rounded-xl font-headline text-xs uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                tab.active
                   ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm scale-100"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
-                }`}
+              }`}
             >
               <span className="material-symbols-outlined text-[15px]">{tab.icon}</span>
               <span>{tab.label}</span>
@@ -100,6 +103,9 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
           </Link>
         </div>
       </header>
+
+      {/* Sub Header for Sport Selection & Context Filter */}
+      <SportSubHeader variant={variant} />
 
       {/* Mobile Slide-Out Navigation Drawer */}
       {mobileMenuOpen && (

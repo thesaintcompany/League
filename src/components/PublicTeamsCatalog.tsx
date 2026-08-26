@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import { useSportContext } from "@/context/SportContext";
 
 interface TeamPlayer {
   id: string;
@@ -27,25 +28,23 @@ interface TeamItem {
 
 // Preset database of popular Romanian clubs for fallback/enrichment
 const PRESET_ROMANIAN_CLUBS = [
-  { name: "FCSB București", shortName: "FCSB", color: "#dc2626", category: "SuperLiga", city: "București" },
-  { name: "CFR 1907 Cluj", shortName: "CFR", color: "#831843", category: "SuperLiga", city: "Cluj-Napoca" },
-  { name: "Universitatea Craiova", shortName: "UCV", color: "#1d4ed8", category: "SuperLiga", city: "Craiova" },
-  { name: "FC Rapid 1923", shortName: "RAP", color: "#7f1d1d", category: "SuperLiga", city: "București" },
-  { name: "Dinamo București", shortName: "DIN", color: "#b91c1c", category: "SuperLiga", city: "București" },
-  { name: "Farul Constanța", shortName: "FAR", color: "#0369a1", category: "SuperLiga", city: "Constanța" },
-  { name: "Sepsi OSK Sf. Gheorghe", shortName: "SEP", color: "#be123c", category: "SuperLiga", city: "Sf. Gheorghe" },
-  { name: "Universitatea Cluj", shortName: "UCL", color: "#0f172a", category: "SuperLiga", city: "Cluj-Napoca" },
-  { name: "UTA Arad", shortName: "UTA", color: "#e11d48", category: "SuperLiga", city: "Arad" },
-  { name: "FC Hermannstadt", shortName: "FCH", color: "#475569", category: "SuperLiga", city: "Sibiu" },
-  { name: "Petrolul Ploiești", shortName: "PET", color: "#eab308", category: "SuperLiga", city: "Ploiești" },
-  { name: "FC Oțelul Galați", shortName: "OTE", color: "#1e3a8a", category: "SuperLiga", city: "Galați" },
-  { name: "Politehnica Timișoara", shortName: "POL", color: "#581c87", category: "Liga 2", city: "Timișoara" },
-  { name: "Corvinul Hunedoara", shortName: "COR", color: "#1d4ed8", category: "Liga 2", city: "Hunedoara" },
-  { name: "CSM Reșița", shortName: "RES", color: "#991b1b", category: "Liga 2", city: "Reșița" },
-  { name: "FC Argeș Pitești", shortName: "ARG", color: "#6b21a8", category: "Liga 2", city: "Pitești" },
+  { name: "FCSB București", shortName: "FCSB", color: "#dc2626", category: "SuperLiga", city: "București", sport: "fotbal" },
+  { name: "CFR 1907 Cluj", shortName: "CFR", color: "#831843", category: "SuperLiga", city: "Cluj-Napoca", sport: "fotbal" },
+  { name: "Universitatea Craiova", shortName: "UCV", color: "#1d4ed8", category: "SuperLiga", city: "Craiova", sport: "fotbal" },
+  { name: "FC Rapid 1923", shortName: "RAP", color: "#7f1d1d", category: "SuperLiga", city: "București", sport: "fotbal" },
+  { name: "Dinamo București", shortName: "DIN", color: "#b91c1c", category: "SuperLiga", city: "București", sport: "fotbal" },
+  { name: "Farul Constanța", shortName: "FAR", color: "#0369a1", category: "SuperLiga", city: "Constanța", sport: "fotbal" },
+  { name: "CSM Volei Timișoara", shortName: "TIM", color: "#0284c7", category: "Divizia A1", city: "Timișoara", sport: "volei" },
+  { name: "CS Dinamo Volei", shortName: "DIN-V", color: "#dc2626", category: "Divizia A1", city: "București", sport: "volei" },
+  { name: "CSM Corona Brașov (Volei)", shortName: "COR-V", color: "#eab308", category: "Divizia A1", city: "Brașov", sport: "volei" },
+  { name: "U-BT Cluj-Napoca (Baschet)", shortName: "UBT", color: "#000000", category: "Liga Națională", city: "Cluj-Napoca", sport: "baschet" },
+  { name: "CSM Oradea (Baschet)", shortName: "CSM-O", color: "#dc2626", category: "Liga Națională", city: "Oradea", sport: "baschet" },
+  { name: "Dinamo București (Handbal)", shortName: "DIN-H", color: "#b91c1c", category: "Liga Zimbrilor", city: "București", sport: "handbal" },
+  { name: "CSM București (Handbal)", shortName: "CSM-B", color: "#2563eb", category: "Liga Florilor", city: "București", sport: "handbal" },
 ];
 
 export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] }) {
+  const { selectedSport, currentSportMeta } = useSportContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
@@ -61,15 +60,26 @@ export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] 
       color: c.color,
       players: [],
       championship: {
-        id: "c1",
-        name: c.category === "SuperLiga" ? "SuperLiga România" : "Liga 2 Pro",
-        sport: "Fotbal",
+        id: `champ-${c.sport}`,
+        name: `${c.category} - ${c.sport.toUpperCase()}`,
+        sport: c.sport,
       },
     }));
   }, [initialTeams]);
 
+  // Filter strictly by active selected sport
+  const sportFilteredTeams = useMemo(() => {
+    return allTeams.filter((t) => {
+      const s = (t.championship?.sport || "fotbal").toLowerCase();
+      return (
+        s.includes(selectedSport) ||
+        (selectedSport === "fotbal" && (s.includes("minifotbal") || s.includes("futsal")))
+      );
+    });
+  }, [allTeams, selectedSport]);
+
   const filteredTeams = useMemo(() => {
-    return allTeams.filter((team) => {
+    return sportFilteredTeams.filter((team) => {
       const q = searchQuery.toLowerCase();
       const matchesSearch =
         !q ||
@@ -77,14 +87,9 @@ export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] 
         (team.shortName && team.shortName.toLowerCase().includes(q)) ||
         (team.championship?.name && team.championship.name.toLowerCase().includes(q));
 
-      const matchesCat =
-        selectedCategory === "all" ||
-        (selectedCategory === "superliga" && (team.name.includes("FCSB") || team.name.includes("CFR") || team.name.includes("Craiova") || team.name.includes("Rapid") || team.name.includes("Dinamo") || team.name.includes("Farul"))) ||
-        (selectedCategory === "regional" && !team.name.includes("FCSB") && !team.name.includes("CFR"));
-
-      return matchesSearch && matchesCat;
+      return matchesSearch;
     });
-  }, [allTeams, searchQuery, selectedCategory]);
+  }, [sportFilteredTeams, searchQuery]);
 
   return (
     <div className="space-y-10 font-body text-slate-900 dark:text-white transition-colors duration-200">
