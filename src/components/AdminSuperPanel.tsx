@@ -34,12 +34,25 @@ interface UserItem {
 }
 
 export function AdminSuperPanel() {
-  const [activeTab, setActiveTab] = useState<"venues" | "users" | "tickets">("venues");
+  const [activeTab, setActiveTab] = useState<"venues" | "users" | "tickets" | "data_export">("venues");
   const [venues, setVenues] = useState<VenueItem[]>([]);
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [sportFilter, setSportFilter] = useState("all");
+
+  // Demo Data & Export State
+  const [demoStats, setDemoStats] = useState<{
+    isDemoActive: boolean;
+    demoChampionshipsCount: number;
+    totalChampionshipsCount: number;
+    totalVenuesCount: number;
+    realUsersCount: number;
+    demoUsersCount: number;
+    totalMatchesCount: number;
+    totalPlayersCount: number;
+  } | null>(null);
+  const [togglingDemo, setTogglingDemo] = useState(false);
 
   // Ticketing & Platform Fee Settings State
   const [ticketSettings, setTicketSettings] = useState({
@@ -86,14 +99,16 @@ export function AdminSuperPanel() {
   async function loadData() {
     setLoading(true);
     try {
-      const [vRes, uRes, sRes] = await Promise.all([
+      const [vRes, uRes, sRes, dRes] = await Promise.all([
         fetch("/api/admin/venues"),
         fetch("/api/admin/users"),
         fetch("/api/admin/settings"),
+        fetch("/api/admin/demo-data"),
       ]);
       const vData = await vRes.json();
       const uData = await uRes.json();
       const sData = await sRes.json();
+      const dData = await dRes.json();
       if (vData.venues) setVenues(vData.venues);
       if (uData.users) setUsers(uData.users);
       if (sData.settings) {
@@ -101,11 +116,49 @@ export function AdminSuperPanel() {
         if (sData.stats) setTicketStats(sData.stats);
         if (sData.recentTransactions) setRecentTransactions(sData.recentTransactions);
       }
+      if (!dData.error) {
+        setDemoStats(dData);
+      }
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleToggleDemo(action: "activate" | "deactivate") {
+    if (action === "deactivate") {
+      const confirmed = confirm(
+        "⚠️ Sigur dorești să dezactivezi datele demo?\n\n" +
+          "Această acțiune va șterge campionatele, echipele și meciurile demonstrative.\n\n" +
+          "🛡️ GARANȚIE: Toate cele 59 de Arene Naționale și toți utilizatorii reali înregistrați sunt 100% PROTEJAȚI și NU vor fi șterși!"
+      );
+      if (!confirmed) return;
+    }
+    setTogglingDemo(true);
+    try {
+      const res = await fetch("/api/admin/demo-data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message || "Operațiunea a fost executată cu succes! ✓");
+        loadData();
+      } else {
+        alert(data.error || "Eroare la procesarea cererii.");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setTogglingDemo(false);
+    }
+  }
+
+  function handleExportUsers(format: "json" | "csv") {
+    window.open(`/api/admin/export-users?format=${format}&type=real`, "_blank");
+    showToast(`Fișierul de export utilizatori (${format.toUpperCase()}) a fost descărcat! ✓`);
   }
 
   async function handleSaveTicketSettings(e: React.FormEvent) {
@@ -277,6 +330,116 @@ export function AdminSuperPanel() {
         </div>
       )}
 
+      {/* SuperAdmin System Control Bar (Demo & Export Controls) */}
+      <div className="card p-6 bg-slate-950 text-white border-2 border-lime-400/40 rounded-3xl shadow-xl space-y-4">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 pb-4 border-b border-slate-800">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400">
+                SUPERADMIN CONSOLE • GESTIUNE DATE DEMO &amp; EXPORT
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black font-headline uppercase tracking-tight text-white">
+              Centru Control Date &amp; Export Producție
+            </h2>
+            <p className="text-xs text-slate-300 font-body max-w-2xl">
+              Arenele naționale (59) și utilizatorii reali înregistrați sunt <strong>100% permanenți și protejați</strong>. Doar campionatele, echipele și meciurile demonstrative sunt comutate de datele demo.
+            </p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+            {demoStats?.isDemoActive ? (
+              <button
+                type="button"
+                disabled={togglingDemo}
+                onClick={() => handleToggleDemo("deactivate")}
+                className="px-4 py-2.5 bg-red-600/90 hover:bg-red-600 text-white rounded-xl text-xs font-black font-headline uppercase tracking-wider transition-all active:scale-95 flex items-center gap-1.5 shadow-md"
+              >
+                <span className="material-symbols-outlined text-[18px]">delete_sweep</span>
+                <span>{togglingDemo ? "Se curăță..." : "Dezactivează Date Demo"}</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                disabled={togglingDemo}
+                onClick={() => handleToggleDemo("activate")}
+                className="px-4 py-2.5 bg-lime-400 hover:bg-lime-300 text-slate-950 rounded-xl text-xs font-black font-headline uppercase tracking-wider transition-all active:scale-95 flex items-center gap-1.5 shadow-md shadow-lime-400/20"
+              >
+                <span className="material-symbols-outlined text-[18px]">bolt</span>
+                <span>{togglingDemo ? "Se populează..." : "Activează Date Demo"}</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={() => handleExportUsers("json")}
+              className="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-xl text-xs font-bold font-label uppercase tracking-wider transition-all active:scale-95 flex items-center gap-1.5 border border-slate-700 shadow-sm"
+              title="Exportă datele utilizatorilor reali în format JSON"
+            >
+              <span className="material-symbols-outlined text-[16px] text-lime-400">download</span>
+              <span>Export JSON</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleExportUsers("csv")}
+              className="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-xl text-xs font-bold font-label uppercase tracking-wider transition-all active:scale-95 flex items-center gap-1.5 border border-slate-700 shadow-sm"
+              title="Exportă datele utilizatorilor reali în format Excel / CSV"
+            >
+              <span className="material-symbols-outlined text-[16px] text-lime-400">table_chart</span>
+              <span>Export CSV</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Protection & Telemetry Badges */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-lime-400/10 text-lime-400 flex items-center justify-center font-black text-lg">
+              🏟️
+            </div>
+            <div>
+              <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
+                Arene Naționale (Permanent)
+              </span>
+              <span className="font-bold text-white text-xs">
+                59 Arene Omologate • 100% Protejate
+              </span>
+            </div>
+          </div>
+
+          <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-black text-lg">
+              👥
+            </div>
+            <div>
+              <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
+                Utilizatori Reali (Date Principale)
+              </span>
+              <span className="font-bold text-white text-xs">
+                {demoStats?.realUsersCount ?? users.length} Conturi Reale Înregistrate
+              </span>
+            </div>
+          </div>
+
+          <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-black text-lg">
+              🎲
+            </div>
+            <div>
+              <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
+                Status Date Demo
+              </span>
+              <span className={`font-bold text-xs ${demoStats?.isDemoActive ? "text-lime-400" : "text-amber-400"}`}>
+                {demoStats?.isDemoActive ? "Active Live ✓ (Campionate & Zaruri)" : "Dezactivate (Fără meciuri demo)"}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Stats Bento */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
         <div className="card p-5 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm">
@@ -334,7 +497,7 @@ export function AdminSuperPanel() {
 
       {/* Main Tab Switcher & Action Bar */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-950 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800">
+        <div className="flex flex-wrap items-center gap-2 bg-slate-100 dark:bg-slate-950 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800">
           <button
             type="button"
             onClick={() => setActiveTab("venues")}
@@ -355,7 +518,7 @@ export function AdminSuperPanel() {
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
             }`}
           >
-            👥 Toți Utilizatorii ({users.length})
+            👥 Utilizatori &amp; Roluri ({users.length})
           </button>
           <button
             type="button"
@@ -367,6 +530,17 @@ export function AdminSuperPanel() {
             }`}
           >
             🎟️ Vânzări Bilete &amp; Comisioane
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("data_export")}
+            className={`px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition ${
+              activeTab === "data_export"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md font-black"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+            }`}
+          >
+            💾 Date Demo &amp; Export Sistem
           </button>
         </div>
 
@@ -899,6 +1073,209 @@ export function AdminSuperPanel() {
                 </table>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* 4. DATA & EXPORT TAB */}
+      {activeTab === "data_export" && (
+        <div className="space-y-6 animate-in fade-in">
+          {/* Architecture Card */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+              <div>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-600 dark:text-lime-400">
+                  ARHITECTURĂ &amp; GUVERNANȚĂ DATE • SUPERADMIN EXCLUSIV
+                </span>
+                <h3 className="text-xl font-black font-headline uppercase text-slate-900 dark:text-white mt-1">
+                  Separarea Datelor Principale vs. Date Demo
+                </h3>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleExportUsers("json")}
+                  className="px-4 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-100 rounded-2xl text-xs font-black font-headline uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2 shadow-md"
+                >
+                  <span className="material-symbols-outlined text-base">download</span>
+                  <span>Export JSON</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleExportUsers("csv")}
+                  className="px-4 py-2.5 bg-lime-400 hover:bg-lime-500 text-slate-950 rounded-2xl text-xs font-black font-headline uppercase tracking-wider transition-all active:scale-95 flex items-center gap-2 shadow-md shadow-lime-400/20"
+                >
+                  <span className="material-symbols-outlined text-base">table_chart</span>
+                  <span>Export CSV</span>
+                </button>
+              </div>
+            </div>
+
+            {/* 3-Column Architecture Matrix */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Box 1: Arenas */}
+              <div className="p-5 rounded-3xl bg-slate-50 dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-800 space-y-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-2xl">🏟️</span>
+                  <div>
+                    <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
+                      59 Arene &amp; Stadioane
+                    </h4>
+                    <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase">
+                      Infrastructură Permanentă
+                    </span>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-body">
+                  Toate cele 59 de arene, terenuri și baze sportive din Timiș și România sunt <strong>date de infrastructură permanentă</strong>.
+                </p>
+                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-bold text-emerald-700 dark:text-emerald-300">
+                  ✓ Nu sunt șterse niciodată la comutarea datelor demo.
+                </div>
+              </div>
+
+              {/* Box 2: Real Users */}
+              <div className="p-5 rounded-3xl bg-slate-50 dark:bg-slate-950 border-2 border-blue-500/40 space-y-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-2xl">👤</span>
+                  <div>
+                    <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
+                      Utilizatori Reali ({demoStats?.realUsersCount ?? 0})
+                    </h4>
+                    <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400 uppercase">
+                      Date Principale de Producție
+                    </span>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-body">
+                  Toate conturile create prin formularul de înregistrare, campionatele oficiale și biletele cumpărate de persoane reale.
+                </p>
+                <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/30 text-[11px] font-bold text-blue-700 dark:text-blue-300">
+                  ✓ Protejate 100% și disponibile pentru export securizat.
+                </div>
+              </div>
+
+              {/* Box 3: Demo Data */}
+              <div className="p-5 rounded-3xl bg-slate-50 dark:bg-slate-950 border-2 border-lime-400 space-y-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-2xl">🎲</span>
+                  <div>
+                    <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
+                      Date Demonstrative
+                    </h4>
+                    <span className="text-[10px] font-mono font-bold text-lime-600 dark:text-lime-400 uppercase">
+                      {demoStats?.isDemoActive ? "Active Live" : "Dezactivate"}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-body">
+                  Campionatele demonstrative cu zaruri, 8 echipe de probă și meciurile demonstrative pentru testarea platformei.
+                </p>
+                <div className="pt-2">
+                  {demoStats?.isDemoActive ? (
+                    <button
+                      type="button"
+                      disabled={togglingDemo}
+                      onClick={() => handleToggleDemo("deactivate")}
+                      className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-black font-headline uppercase tracking-wider transition active:scale-95 shadow-md flex items-center justify-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-sm">delete_sweep</span>
+                      <span>Dezactivează Date Demo</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={togglingDemo}
+                      onClick={() => handleToggleDemo("activate")}
+                      className="w-full py-2.5 bg-lime-400 hover:bg-lime-300 text-slate-950 rounded-xl text-xs font-black font-headline uppercase tracking-wider transition active:scale-95 shadow-md flex items-center justify-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-sm">bolt</span>
+                      <span>Activează Date Demo</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Real Users Export Preview Table */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div>
+                <h3 className="text-lg font-black font-headline uppercase text-slate-900 dark:text-white">
+                  👥 Utilizatori Principali Reali ({users.filter((u) => !u.email.endsWith("@leaguehub.local") && !u.email.endsWith("@league.local")).length})
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
+                  Conturile reale înregistrate în sistem ce vor fi incluse în fișierele de export
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleExportUsers("csv")}
+                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold font-label uppercase flex items-center gap-1.5 transition text-slate-900 dark:text-white"
+                >
+                  <span className="material-symbols-outlined text-sm">file_download</span>
+                  <span>Descarcă CSV</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleExportUsers("json")}
+                  className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-bold font-label uppercase flex items-center gap-1.5 transition text-slate-900 dark:text-white"
+                >
+                  <span className="material-symbols-outlined text-sm">data_object</span>
+                  <span>Descarcă JSON</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-200 dark:border-slate-800 text-[10px] uppercase font-label font-bold text-slate-400 bg-slate-50 dark:bg-slate-950">
+                    <th className="py-3 px-4">Utilizator</th>
+                    <th className="py-3 px-4">Email</th>
+                    <th className="py-3 px-4">Rol Cont</th>
+                    <th className="py-3 px-4">Telefon</th>
+                    <th className="py-3 px-4 text-center">Campionate</th>
+                    <th className="py-3 px-4 text-center">Arene</th>
+                    <th className="py-3 px-4 text-right">Data Înregistrării</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs">
+                  {users
+                    .filter((u) => !u.email.endsWith("@leaguehub.local") && !u.email.endsWith("@league.local"))
+                    .map((u) => (
+                      <tr key={u.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition">
+                        <td className="py-3.5 px-4 font-bold text-slate-900 dark:text-white">
+                          {u.name || "Nume nesetat"}
+                        </td>
+                        <td className="py-3.5 px-4 font-mono text-slate-600 dark:text-slate-300">
+                          {u.email}
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className="px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase font-mono border border-blue-500/20">
+                            {u.role}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-slate-500 font-mono">
+                          {u.phone || "—"}
+                        </td>
+                        <td className="py-3.5 px-4 text-center font-bold text-slate-900 dark:text-white font-mono">
+                          {u._count?.championships || 0}
+                        </td>
+                        <td className="py-3.5 px-4 text-center font-bold text-slate-900 dark:text-white font-mono">
+                          {u._count?.venues || 0}
+                        </td>
+                        <td className="py-3.5 px-4 text-right text-slate-500 font-mono text-[11px]">
+                          {new Date(u.createdAt).toLocaleDateString("ro-RO")}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

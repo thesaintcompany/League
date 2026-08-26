@@ -197,17 +197,27 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
               </span>
               <input
                 type="text"
-                placeholder="Caută arbitru după nume, ecuson   sau categorie..."
+                placeholder="Caută arbitru după nume, ecuson sau categorie..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-900/90 border border-slate-700/80 rounded-2xl text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-400 transition shadow-inner"
+                className="w-full pl-10 pr-10 py-3 bg-slate-900/90 border border-slate-700/80 rounded-2xl text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-400 transition shadow-inner"
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-slate-800 text-slate-300 text-xs flex items-center justify-center hover:bg-slate-700 transition"
+                  title="Șterge căutarea"
+                >
+                  ✕
+                </button>
+              )}
             </div>
 
             <div className="flex flex-wrap gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 shrink-0">
               {[
                 { id: "all", label: "Toți (30)" },
-                { id: " ", label: "⭐   Elite" },
+                { id: "fifa", label: "⭐ FIFA Elite" },
                 { id: "liga1", label: "🏆 Liga 1 Pro" },
                 { id: "var", label: "📺 VAR" },
                 { id: "asistent", label: "🚩 Asistenți" },
@@ -217,10 +227,11 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                   key={cat.id}
                   type="button"
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${selectedCategory === cat.id
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${
+                    selectedCategory === cat.id
                       ? "bg-lime-400 text-slate-950 font-black shadow-md"
                       : "text-slate-300 hover:text-white"
-                    }`}
+                  }`}
                 >
                   {cat.label}
                 </button>

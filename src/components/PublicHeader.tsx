@@ -45,58 +45,64 @@ export function PublicHeader({ currentTab }: PublicHeaderProps) {
         </div>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-5 text-xs font-label font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 ml-4">
+        <nav className="hidden lg:flex items-center gap-6 text-xs font-label font-bold uppercase tracking-wider ml-4">
           <Link
             href="/campionat"
-            className={`transition py-1 ${isCampionat
-                ? "text-lime-600 dark:text-lime-400 font-black border-b-2 border-lime-500 dark:border-lime-400"
-                : "hover:text-lime-600 dark:hover:text-lime-400"
-              }`}
+            className={`transition-all duration-200 py-1.5 border-b-2 ${
+              isCampionat
+                ? "text-slate-950 dark:text-lime-400 border-lime-500 dark:border-lime-400 font-black"
+                : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
+            }`}
           >
             Campionat
           </Link>
           <Link
             href="/harta-romaniei"
-            className={`transition py-1 flex items-center gap-1 ${isRomaniaMap
-                ? "text-lime-600 dark:text-lime-400 font-black border-b-2 border-lime-500 dark:border-lime-400"
-                : "hover:text-lime-600 dark:hover:text-lime-400"
-              }`}
+            className={`transition-all duration-200 py-1.5 flex items-center gap-1.5 border-b-2 ${
+              isRomaniaMap
+                ? "text-slate-950 dark:text-lime-400 border-lime-500 dark:border-lime-400 font-black"
+                : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
+            }`}
           >
-            <span>🇷🇴</span> Nationale
+            <span>🇷🇴</span> Naționale
           </Link>
           <Link
             href="/brackets"
-            className={`transition py-1 flex items-center gap-1 ${isBrackets
-                ? "text-lime-600 dark:text-lime-400 font-black border-b-2 border-lime-500 dark:border-lime-400"
-                : "hover:text-lime-600 dark:hover:text-lime-400"
-              }`}
+            className={`transition-all duration-200 py-1.5 flex items-center gap-1.5 border-b-2 ${
+              isBrackets
+                ? "text-slate-950 dark:text-lime-400 border-lime-500 dark:border-lime-400 font-black"
+                : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
+            }`}
           >
-            <span></span> CAMPIONAT
+            <span>🎲</span> Harta Zaruri
           </Link>
           <Link
             href="/venues"
-            className={`transition py-1 ${isVenues
-                ? "text-lime-600 dark:text-lime-400 font-black border-b-2 border-lime-500 dark:border-lime-400"
-                : "hover:text-lime-600 dark:hover:text-lime-400"
-              }`}
+            className={`transition-all duration-200 py-1.5 border-b-2 ${
+              isVenues
+                ? "text-slate-950 dark:text-lime-400 border-lime-500 dark:border-lime-400 font-black"
+                : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
+            }`}
           >
             Arene &amp; Stadioane
           </Link>
           <Link
             href="/players"
-            className={`transition py-1 ${isPlayers
-                ? "text-lime-600 dark:text-lime-400 font-black border-b-2 border-lime-500 dark:border-lime-400"
-                : "hover:text-lime-600 dark:hover:text-lime-400"
-              }`}
+            className={`transition-all duration-200 py-1.5 border-b-2 ${
+              isPlayers
+                ? "text-slate-950 dark:text-lime-400 border-lime-500 dark:border-lime-400 font-black"
+                : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
+            }`}
           >
             Golgheteri
           </Link>
           <Link
             href="/referees"
-            className={`transition py-1 ${useReferees
-                ? "text-lime-600 dark:text-lime-400 font-black border-b-2 border-lime-500 dark:border-lime-400"
-                : "hover:text-lime-600 dark:hover:text-lime-400"
-              }`}
+            className={`transition-all duration-200 py-1.5 border-b-2 ${
+              useReferees
+                ? "text-slate-950 dark:text-lime-400 border-lime-500 dark:border-lime-400 font-black"
+                : "text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white border-transparent"
+            }`}
           >
             Corp Arbitri
           </Link>

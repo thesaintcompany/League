@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Providers } from "@/components/Providers";
+import { MobileBottomBar } from "@/components/MobileBottomBar";
 
 export const metadata: Metadata = {
   title: "Ligue | Pro League Organizer",
@@ -29,7 +30,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased font-body min-h-screen transition-colors duration-200">
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <MobileBottomBar />
+        </Providers>
       </body>
     </html>
   );

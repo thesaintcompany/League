@@ -29,7 +29,7 @@ function WelcomePortalForm() {
     },
     {
       id: "referee",
-      role: "Arbitru  ",
+      role: "Arbitru Oficial",
       email: "arbitru@leaguehub.local",
       pass: "demo12345",
       badge: "Raport Meci",

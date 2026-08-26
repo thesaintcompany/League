@@ -81,6 +81,51 @@
   }
 
   .card {
-    @apply rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 dark:text-white;
+    @apply rounded-3xl border border-slate-200/90 bg-white p-6 shadow-sm dark:border-slate-800/90 dark:bg-slate-900/95 dark:text-white transition-colors duration-200;
+  }
+
+  /* Fluid Functionalism Micro-Interactions & Animation Utilities */
+  .fluid-transition {
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .fluid-press {
+    @apply active:scale-[0.98] active:translate-y-[0.5px] transition-transform duration-150;
+  }
+
+  .fluid-glow {
+    box-shadow: 0 0 25px -5px rgba(163, 230, 53, 0.25);
+  }
+
+  .focus-fluid {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-500 dark:focus-visible:ring-lime-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950;
   }
 }
+
+/* Fluid Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(51, 65, 85, 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(51, 65, 85, 0.8);
+}
+

@@ -109,26 +109,38 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                 placeholder="Caută fotbalist sau club sportiv..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-900/90 border border-slate-700/80 rounded-2xl text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-amber-400 transition shadow-inner"
+                className="w-full pl-10 pr-10 py-3 bg-slate-900/90 border border-slate-700/80 rounded-2xl text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-amber-400 transition shadow-inner"
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-slate-800 text-slate-300 text-xs flex items-center justify-center hover:bg-slate-700 transition"
+                  title="Șterge căutarea"
+                >
+                  ✕
+                </button>
+              )}
             </div>
 
             {/* Position filter */}
-            <div className="flex gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 shrink-0">
+            <div className="flex flex-wrap gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 shrink-0">
               {[
                 { id: "all", label: "Toate" },
                 { id: "Atacant", label: "Atacanți" },
                 { id: "Mijlocaș", label: "Mijlocași" },
                 { id: "Fundaș", label: "Fundași" },
+                { id: "Portar", label: "Portari" },
               ].map((pos) => (
                 <button
                   key={pos.id}
                   type="button"
                   onClick={() => setSelectedPosition(pos.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${selectedPosition === pos.id
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${
+                    selectedPosition === pos.id
                       ? "bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black shadow-md"
                       : "text-slate-300 hover:text-white"
-                    }`}
+                  }`}
                 >
                   {pos.label}
                 </button>

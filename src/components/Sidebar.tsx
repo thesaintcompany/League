@@ -123,12 +123,15 @@ export function Sidebar() {
             <Link
               key={item.name}
               href={item.href}
-              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium transition-all duration-200 ${isActive
-                  ? "bg-slate-100 dark:bg-slate-800 text-lime-600 dark:text-lime-400 font-bold border-l-4 border-lime-500 dark:border-lime-400 shadow-sm"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60"
-                }`}
+              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-medium transition-all duration-200 ${
+                isActive
+                  ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-bold shadow-md"
+                  : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70"
+              }`}
             >
-              <span className="material-symbols-outlined text-[22px]">{item.icon}</span>
+              <span className={`material-symbols-outlined text-[22px] ${isActive ? "text-lime-400 dark:text-slate-950" : "text-slate-500 dark:text-slate-400"}`}>
+                {item.icon}
+              </span>
               <span className="font-label text-sm">{item.name}</span>
             </Link>
           );
