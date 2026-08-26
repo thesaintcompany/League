@@ -10,6 +10,45 @@ export function PublicFooter() {
   return (
     <footer className="border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-950 pt-16 pb-28 lg:pb-14 px-4 sm:px-6 lg:px-12 text-slate-600 dark:text-slate-400 font-body transition-colors duration-200 mt-auto">
       <div className="max-w-7xl mx-auto space-y-12">
+        {/* PRO L4GUE Promotional Callout Banner */}
+        <div className="relative rounded-3xl overflow-hidden bg-slate-950 text-white p-6 sm:p-10 border border-slate-800 shadow-2xl group">
+          {/* Background image */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/hero-goal.jpg"
+            alt="PRO L4GUE • Și tu poți fi un profesionist în sport. Începe acum!"
+            className="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.4] group-hover:scale-105 transition-transform duration-700 pointer-events-none"
+          />
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-2 max-w-xl">
+              <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-400 border border-lime-400/40 text-[10px] font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+                PRO L4GUE ROMÂNIA
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-black italic font-headline uppercase leading-tight tracking-tight text-white drop-shadow-md">
+                Și tu poți fi un <span className="text-lime-400">profesionist în sport</span> — începe acum!
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 font-body drop-shadow-sm">
+                Creează propria ta ligă sau înscrie-te ca jucător, arbitru ori manager de echipă pe platforma oficială.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <Link
+                href="/signup"
+                className="px-6 py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg transition active:scale-95 flex items-center gap-2"
+              >
+                <span>Începe Acum 🚀</span>
+              </Link>
+              <Link
+                href="/harta-romaniei"
+                className="px-5 py-3.5 rounded-2xl bg-slate-900/80 hover:bg-slate-800 text-white font-headline font-bold text-xs uppercase tracking-wider border border-slate-700 transition"
+              >
+                <span>Vezi Ligi</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* Main 4-Column Structured Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           {/* Column 1: Brand & Operator Identity */}
