@@ -10,40 +10,44 @@ export interface SponsorItem {
   tagline?: string;
 }
 
-// Preset database matching the user's screenshot of 32 Romanian sponsors
+// Preset database with top Romanian companies and national brands across all key sectors
 const DEFAULT_ROMANIAN_SPONSORS: SponsorItem[] = [
-  { id: "sp-1", name: "2ME Solutions", category: "Tehnologie & Software", tagline: "2ME Solutions" },
-  { id: "sp-2", name: "Quick Lunch", category: "Catering & Horeca", tagline: "Quick Lunch" },
-  { id: "sp-3", name: "Acasă la Mama", category: "Cuisine & Fast-Food", tagline: "Acasă la Mama" },
-  { id: "sp-4", name: "ANIRI", category: "Garda România", tagline: "ANIRI" },
-  { id: "sp-5", name: "Astur Gastro-Bar", category: "Gastro & Bar", tagline: "Astur Gastro-Bar" },
-  { id: "sp-6", name: "Apa Plus 97", category: "Instalații & Utilități", tagline: "Apa Plus 97" },
-  { id: "sp-7", name: "Barracuda Guard Security", category: "Securitate & Protecție", tagline: "Barracuda Guard" },
-  { id: "sp-8", name: "Catena", category: "Farmacie & Sănătate", tagline: "Catena Farmacia Inimii" },
-  { id: "sp-9", name: "CEATTA", category: "Energie & Servicii", tagline: "CEATTA" },
-  { id: "sp-10", name: "AR Corporate Events", category: "Event Management", tagline: "AR Corporate Events" },
-  { id: "sp-11", name: "DAB", category: "Telecom & Electronics", tagline: "DAB" },
-  { id: "sp-12", name: "Decebal Security", category: "Protecție Națională", tagline: "Decebal Security" },
-  { id: "sp-13", name: "dm Drogerie Markt", category: "Retail & Beauty", tagline: "dm" },
-  { id: "sp-14", name: "Drimoland", category: "Divertisment Copii", tagline: "Drimoland" },
-  { id: "sp-15", name: "Energy Kids", category: "Parc de Distracții", tagline: "Energy Kids Family" },
-  { id: "sp-16", name: "Foodisiak", category: "Restaurante", tagline: "Foodisiak" },
-  { id: "sp-17", name: "Gym One", category: "Fitness & Sport", tagline: "Gym One Timișoara" },
-  { id: "sp-18", name: "Hotel Timișoara", category: "Horeca & Cazare", tagline: "Hotel Timișoara" },
-  { id: "sp-19", name: "ibis Hotels", category: "Hoteluri & Ospitalitate", tagline: "ibis" },
-  { id: "sp-20", name: "Individualizare Fotbal", category: "Academie Fotbal", tagline: "Individualizare Fotbal" },
-  { id: "sp-21", name: "Iulius Town", category: "Shopping & Lifestyle", tagline: "Iulius Town Timișoara" },
-  { id: "sp-22", name: "Kids Park", category: "Locuri de Joacă", tagline: "Kids Park" },
-  { id: "sp-23", name: "La Sârbu", category: "Restaurant Tradițional", tagline: "La Sârbu din 2014" },
-  { id: "sp-24", name: "Litens", category: "Automotive & Tehnologie", tagline: "Litens" },
-  { id: "sp-25", name: "Novum", category: "Travel & Rent a Car", tagline: "Novum" },
-  { id: "sp-26", name: "Perfect Burgers", category: "Street Food", tagline: "Perfect Burgers" },
-  { id: "sp-27", name: "Profi", category: "Supermarket Național", tagline: "Profi" },
-  { id: "sp-28", name: "Rami Medtrans", category: "Transport Medical", tagline: "Rami Medtrans" },
-  { id: "sp-29", name: "Rebeles", category: "Fashion & Apparel", tagline: "Rebeles" },
-  { id: "sp-30", name: "Roshen", category: "Dulciuri & Ciocolată", tagline: "Roshen Fine Chocolate" },
-  { id: "sp-31", name: "Shopping City Timișoara", category: "Mall & Shopping", tagline: "Shopping City Timișoara" },
-  { id: "sp-32", name: "Side Trading Cash&Carry", category: "Distribuție & Cash Carry", tagline: "Side Trading" },
+  { id: "sp-1", name: "Banca Transilvania", category: "Bănci & Servicii Financiare", tagline: "Banca Oamenilor Întreprinzători" },
+  { id: "sp-2", name: "Dedeman", category: "Bricolaj & Construcții", tagline: "Dedicat planurilor tale" },
+  { id: "sp-3", name: "eMAG", category: "E-Commerce & Tehnologie", tagline: "Căutarea nu se oprește niciodată" },
+  { id: "sp-4", name: "Bitdefender", category: "Securitate Cibernetică", tagline: "Global Cyber Security Leader" },
+  { id: "sp-5", name: "Dacia", category: "Automotive Național", tagline: "Performanță & Aventură" },
+  { id: "sp-6", name: "Hidroelectrica", category: "Energie 100% Verde", tagline: "Liderul Energiei Verzi" },
+  { id: "sp-7", name: "OMV Petrom", category: "Energie & Resurse", tagline: "Energie pentru o viață mai bună" },
+  { id: "sp-8", name: "Rompetrol", category: "Carburanți & Rafinărie", tagline: "Pasiune pentru Performanță" },
+  { id: "sp-9", name: "CEC Bank", category: "Bănci & Tradiție Românească", tagline: "Tradiție din 1864" },
+  { id: "sp-10", name: "BRD Groupe Société Générale", category: "Servicii Bancare", tagline: "Tu ești viitorul" },
+  { id: "sp-11", name: "Banca Comercială Română (BCR)", category: "Grup Financiar & Tech", tagline: "Școala de Bani" },
+  { id: "sp-12", name: "Digi | RCS & RDS", category: "Telecomunicații & Fibră", tagline: "Conectivitate Națională" },
+  { id: "sp-13", name: "Mobexpert", category: "Design Interior & Mobilier", tagline: "Fabricat în România" },
+  { id: "sp-14", name: "Altex România", category: "Electrocasnice & IT", tagline: "Cel mai mic preț din România" },
+  { id: "sp-15", name: "FAN Courier", category: "Curierat Rapid & Logistică", tagline: "Oriunde, cu plăcere" },
+  { id: "sp-16", name: "Aqua Carpatica", category: "Ape Minerale Premium", tagline: "Puritate din Munții Carpați" },
+  { id: "sp-17", name: "Borsec", category: "Ape Minerale Naturale", tagline: "Regina Apelor Minerale" },
+  { id: "sp-18", name: "Napolact", category: "Lactate Tradiționale", tagline: "Ca odinioară în Ardeal" },
+  { id: "sp-19", name: "Cris-Tim", category: "Industrie Alimentară", tagline: "Calitate & Familie" },
+  { id: "sp-20", name: "Transavia", category: "Producție Alimentară", tagline: "Well made in Romania" },
+  { id: "sp-21", name: "Farmec & Gerovital", category: "Cosmetice & Îngrijire", tagline: "Tradiție & Inovație" },
+  { id: "sp-22", name: "MedLife", category: "Sănătate & Servicii Medicale", tagline: "Medicină Privată Românească" },
+  { id: "sp-23", name: "Regina Maria", category: "Rețea Privată de Sănătate", tagline: "Pasiune pentru sănătate" },
+  { id: "sp-24", name: "Romgaz", category: "Energie & Gaze Naturale", tagline: "Performanță Românească" },
+  { id: "sp-25", name: "Electrica", category: "Distribuție Energie", tagline: "Tradiție în energie" },
+  { id: "sp-26", name: "Arabesque", category: "Materiale de Construcții", tagline: "Partenerul profesioniștilor" },
+  { id: "sp-27", name: "Timișoreana", category: "Berărie din 1718", tagline: "Povestea merge mai departe" },
+  { id: "sp-28", name: "Ursus Breweries", category: "Berării & Sponsor Sport", tagline: "Regele Berii în România" },
+  { id: "sp-29", name: "Covalact de Țară", category: "Lactate Tradiționale", tagline: "Prea bun, prea ca la țară" },
+  { id: "sp-30", name: "Autonom", category: "Mobilitate & Rent a Car", tagline: "Soluții de Mobilitate" },
+  { id: "sp-31", name: "Terapia Cluj", category: "Industrie Farmaceutică", tagline: "Sănătate pentru România" },
+  { id: "sp-32", name: "Betty Ice", category: "Înghețată Premium", tagline: "Pasiune din Bucovina" },
+  { id: "sp-33", name: "Kandia Dulce", category: "Dulciuri & Ciocolată", tagline: "Ciocolată cu tradiție din 1890" },
+  { id: "sp-34", name: "Cărturești", category: "Cultură & Carte", tagline: "Librării cu sens" },
+  { id: "sp-35", name: "Sameday Courier", category: "Curierat & Rețea Easybox", tagline: "Livrare rapidă la Easybox" },
+  { id: "sp-36", name: "UiPath", category: "Robotic Process Automation", tagline: "Inovație Tehnologică Globală" },
 ];
 
 export function MatchSponsorsSection({ matchId }: { matchId: string }) {
@@ -271,7 +275,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
             onClick={handleResetDefault}
             className="text-amber-400 hover:underline font-bold"
           >
-            ↻ Resetează la Sponsorii Impliciti (32 Branduri)
+            ↻ Resetează la Sponsorii Naționali Impliciti (36 Branduri Românești)
           </button>
         </div>
       )}
@@ -335,7 +339,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
                 <input
                   type="text"
                   required
-                  placeholder="ex: Catena, Superbet, Pepsi, Banca Transilvania..."
+                  placeholder="ex: Banca Transilvania, Dedeman, eMAG, Bitdefender, Aqua Carpatica..."
                   value={newSponsorName}
                   onChange={(e) => setNewSponsorName(e.target.value)}
                   className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-700 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-lime-400 font-bold"

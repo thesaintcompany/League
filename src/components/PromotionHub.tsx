@@ -16,9 +16,9 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
   const [template, setTemplate] = useState<"kinetic" | "hyper" | "minimal">("kinetic");
   const [ticketPrice, setTicketPrice] = useState<number>(25);
   const [ticketUrl, setTicketUrl] = useState<string>("https://sp.buu.ro/tickets");
-  const [sponsorName, setSponsorName] = useState<string>("Superbet Pro / Red Bull");
+  const [sponsorName, setSponsorName] = useState<string>("Banca Transilvania / Dedeman");
   const [sponsorTagline, setSponsorTagline] = useState<string>(
-    "Partener Oficial de Performanță"
+    "Partener Principal al Sportului Românesc"
   );
   const [copied, setCopied] = useState(false);
 
@@ -161,7 +161,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
                 value={sponsorName}
                 onChange={(e) => setSponsorName(e.target.value)}
                 className="input text-xs"
-                placeholder="ex: Red Bull / Superbet"
+                placeholder="ex: Banca Transilvania, Dedeman, eMAG, Bitdefender..."
               />
             </div>
 
@@ -172,7 +172,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
                 value={sponsorTagline}
                 onChange={(e) => setSponsorTagline(e.target.value)}
                 className="input text-xs"
-                placeholder="Partener Oficial de Performanță"
+                placeholder="Partener Principal al Sportului Românesc"
               />
             </div>
           </div>

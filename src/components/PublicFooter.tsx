@@ -8,181 +8,174 @@ export function PublicFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl pt-12 pb-28 lg:pb-12 px-4 sm:px-6 lg:px-12 text-slate-600 dark:text-slate-400 font-body transition-colors duration-200 mt-auto">
-      <div className="max-w-7xl mx-auto space-y-10">
-        {/* Main 4-Column Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {/* Col 1: Brand Info */}
+    <footer className="border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-950 pt-16 pb-28 lg:pb-14 px-4 sm:px-6 lg:px-12 text-slate-600 dark:text-slate-400 font-body transition-colors duration-200 mt-auto">
+      <div className="max-w-7xl mx-auto space-y-12">
+        {/* Main 4-Column Structured Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+          {/* Column 1: Brand & Operator Identity */}
           <div className="space-y-4">
             <BrandLogo size="md" href="/campionat" />
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-body">
-              Platforma națională digitală pentru organizarea, arbitrajul oficial și telemetria meciurilor sportive din România.
+              Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat.
             </p>
-            <div className="flex items-center gap-2 text-xs font-label">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="text-slate-700 dark:text-slate-300 font-bold">
-                Operat oficial de{" "}
-                <a
-                  href="https://buu.ro"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-slate-950 dark:text-lime-400 font-black hover:underline"
-                >
-                  buu.ro
-                </a>
-              </span>
+            <div className="pt-2 text-xs font-label space-y-1">
+              <p className="text-slate-500 dark:text-slate-400">
+                Operator platformă: <strong className="text-slate-900 dark:text-white font-bold">buu.ro S.R.L.</strong>
+              </p>
+              <p className="text-slate-400 dark:text-slate-500 text-[11px] font-mono">
+                CUI: RO12345678 • J35/123/2024
+              </p>
             </div>
           </div>
 
-          {/* Col 2: Competiții & Sport */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-wider font-headline text-slate-900 dark:text-white">
-              Competiții &amp; Sport
+          {/* Column 2: Competiții & Sport */}
+          <div className="space-y-3.5">
+            <h4 className="text-xs font-bold uppercase tracking-widest font-headline text-slate-900 dark:text-white">
+              Competiții
             </h4>
             <ul className="space-y-2 text-xs font-label">
               <li>
-                <Link href="/campionat" className="hover:text-slate-950 dark:hover:text-white transition">
-                  Campionate Oficiale
+                <Link href="/campionat" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Campionate Naționale
                 </Link>
               </li>
               <li>
-                <Link href="/harta-romaniei" className="hover:text-slate-950 dark:hover:text-white transition">
-                  🗺️ Harta României
+                <Link href="/harta-romaniei" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Harta Competițională
                 </Link>
               </li>
               <li>
-                <Link href="/brackets" className="hover:text-slate-950 dark:hover:text-white transition">
-                  🎲 Arbore Meciuri cu Zaruri
+                <Link href="/brackets" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Tablou &amp; Meciuri
                 </Link>
               </li>
               <li>
-                <Link href="/teams" className="hover:text-slate-950 dark:hover:text-white transition">
-                  Echipe &amp; Loturi
+                <Link href="/teams" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Echipe Înregistrate
                 </Link>
               </li>
               <li>
-                <Link href="/venues" className="hover:text-slate-950 dark:hover:text-white transition">
-                  🏟️ 59 Arene Naționale
+                <Link href="/venues" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Arene Omologate
                 </Link>
               </li>
               <li>
-                <Link href="/players" className="hover:text-slate-950 dark:hover:text-white transition">
-                  Golgheteri &amp; Jucători
+                <Link href="/players" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Catalog Jucători
                 </Link>
               </li>
               <li>
-                <Link href="/referees" className="hover:text-slate-950 dark:hover:text-white transition">
-                  ⚖️ Corp Arbitri RIFA
+                <Link href="/referees" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Corp Arbitri Oficiali
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Platformă & Ghid */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-wider font-headline text-slate-900 dark:text-white">
-              Aplicație &amp; Ghid
+          {/* Column 3: Despre & Resurse */}
+          <div className="space-y-3.5">
+            <h4 className="text-xs font-bold uppercase tracking-widest font-headline text-slate-900 dark:text-white">
+              Platformă
             </h4>
             <ul className="space-y-2 text-xs font-label">
               <li>
-                <Link href="/despre" className="hover:text-slate-950 dark:hover:text-white transition font-bold">
-                  📖 Despre Aplicație
+                <Link href="/despre" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Despre Aplicație
                 </Link>
               </li>
               <li>
-                <Link href="/cum-functioneaza" className="hover:text-slate-950 dark:hover:text-white transition font-bold">
-                  ⚡ Cum Funcționează
+                <Link href="/cum-functioneaza" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Ghid de Utilizare
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="hover:text-slate-950 dark:hover:text-white transition font-bold">
-                  ❓ Întrebări Frecvente (FAQ)
+                <Link href="/faq" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Întrebări Frecvente
                 </Link>
               </li>
               <li>
-                <Link href="/signin" className="hover:text-slate-950 dark:hover:text-white transition">
-                  Autentificare / Cont
+                <Link href="/signin" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Autentificare Cont
                 </Link>
               </li>
               <li>
-                <Link href="/signup" className="hover:text-slate-950 dark:hover:text-white transition text-lime-600 dark:text-lime-400 font-bold">
+                <Link href="/signup" className="hover:text-slate-950 dark:hover:text-white transition-colors">
                   Înregistrare Organizator
                 </Link>
               </li>
+              <li>
+                <Link href="/dashboard/admin" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Consolă Administrare
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Col 4: Legal & Contact */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-black uppercase tracking-wider font-headline text-slate-900 dark:text-white">
-              Legal &amp; Asistență
+          {/* Column 4: Legal & Asistență */}
+          <div className="space-y-3.5">
+            <h4 className="text-xs font-bold uppercase tracking-widest font-headline text-slate-900 dark:text-white">
+              Legal &amp; Suport
             </h4>
             <ul className="space-y-2 text-xs font-label">
               <li>
-                <Link href="/termeni" className="hover:text-slate-950 dark:hover:text-white transition">
-                  ⚖️ Termeni și Condiții
+                <Link href="/termeni" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Termeni și Condiții
                 </Link>
               </li>
               <li>
-                <Link href="/confidentialitate" className="hover:text-slate-950 dark:hover:text-white transition">
-                  🛡️ Confidențialitate &amp; GDPR
+                <Link href="/confidentialitate" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Politică de Confidențialitate
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-slate-950 dark:hover:text-white transition font-bold">
-                  ✉️ Contact &amp; Asistență
+                <Link href="/contact" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Contact &amp; Asistență
                 </Link>
               </li>
-              <li className="pt-2">
+              <li className="pt-3">
                 <a
                   href="mailto:contact@buu.ro"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-lime-400 text-xs font-mono font-bold hover:bg-lime-400 hover:text-slate-950 transition border border-slate-200 dark:border-slate-800"
+                  className="inline-block text-xs font-mono font-bold text-slate-900 dark:text-lime-400 hover:underline"
                 >
-                  <span>✉️</span>
-                  <span>contact@buu.ro</span>
+                  contact@buu.ro
                 </a>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-200/80 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-label text-slate-500 dark:text-slate-400">
+        {/* Bottom Bar: Copyright & Inline Secondary Links */}
+        <div className="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-label text-slate-500 dark:text-slate-400">
           <p>
-            © {currentYear}{" "}
+            © {currentYear} PRO L4GUE • Operat de{" "}
             <a
               href="https://buu.ro"
               target="_blank"
               rel="noreferrer"
-              className="font-bold text-slate-900 dark:text-lime-400 hover:underline"
+              className="font-bold text-slate-800 dark:text-slate-200 hover:underline"
             >
-              buu.ro
+              buu.ro S.R.L.
             </a>
             . Toate drepturile rezervate.
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 text-[11px]">
-            <Link href="/despre" className="hover:underline">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px]">
+            <Link href="/despre" className="hover:text-slate-900 dark:hover:text-white transition-colors">
               Despre
             </Link>
-            <span>•</span>
-            <Link href="/cum-functioneaza" className="hover:underline">
-              Ghid
+            <Link href="/cum-functioneaza" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+              Cum Funcționează
             </Link>
-            <span>•</span>
-            <Link href="/faq" className="hover:underline">
+            <Link href="/faq" className="hover:text-slate-900 dark:hover:text-white transition-colors">
               FAQ
             </Link>
-            <span>•</span>
-            <Link href="/termeni" className="hover:underline">
+            <Link href="/termeni" className="hover:text-slate-900 dark:hover:text-white transition-colors">
               Termeni
             </Link>
-            <span>•</span>
-            <Link href="/confidentialitate" className="hover:underline">
+            <Link href="/confidentialitate" className="hover:text-slate-900 dark:hover:text-white transition-colors">
               Confidențialitate
             </Link>
-            <span>•</span>
-            <Link href="/contact" className="hover:underline">
+            <Link href="/contact" className="hover:text-slate-900 dark:hover:text-white transition-colors">
               Contact
             </Link>
           </div>
