@@ -164,8 +164,17 @@ export async function POST(
     if (!homeId || !awayId) continue;
 
     const matchIdx = Math.floor(i / 2);
-    const assignedVenue = venuesList[matchIdx % venuesList.length];
-    const assignedReferee = shuffledReferees[matchIdx % shuffledReferees.length];
+    const effectiveVenue =
+      (body.singleVenueEnabled && body.defaultVenue)
+        ? body.defaultVenue.trim()
+        : (championship.singleVenueEnabled && championship.defaultVenue)
+          ? championship.defaultVenue.trim()
+          : (body.defaultVenue && body.defaultVenue.trim())
+            ? body.defaultVenue.trim()
+            : venuesList[matchIdx % venuesList.length];
+
+    const isRefereeActive = body.refereeEnabled !== undefined ? Boolean(body.refereeEnabled) : championship.refereeEnabled !== false;
+    const effectiveReferee = isRefereeActive ? shuffledReferees[matchIdx % shuffledReferees.length] : null;
 
     const match = await prisma.match.create({
       data: {
@@ -177,11 +186,11 @@ export async function POST(
         stage: "quarter_final",
         bracketIndex: matchIdx,
         status: "scheduled",
-        venue: assignedVenue,
-        referee: assignedReferee,
+        venue: effectiveVenue,
+        referee: effectiveReferee,
         notes: isInstant
-          ? `Generat prin Tragere la Sorți Instantă ⚡ (Anunțuri Zaruri Dezactivate • Seed #${matchIdx + 1})`
-          : `Generat prin Tragere la Sorți cu Zaruri 🎲 (Aruncarea #${currentRolls + 1}/3 - Seed #${matchIdx + 1})`,
+          ? `Generat prin Tragere la Sorți Instantă ⚡ (Anunțuri Zaruri Dezactivate • Seed #${matchIdx + 1}${effectiveVenue ? ` • Locație: ${effectiveVenue}` : ""})`
+          : `Generat prin Tragere la Sorți cu Zaruri 🎲 (Aruncarea #${currentRolls + 1}/3 - Seed #${matchIdx + 1}${effectiveVenue ? ` • Locație: ${effectiveVenue}` : ""})`,
       },
     });
     createdMatches.push(match);

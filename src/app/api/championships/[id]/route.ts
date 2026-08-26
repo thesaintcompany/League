@@ -41,7 +41,7 @@ export async function PATCH(req: Request, ctx: { params: { id: string } }) {
 
   try {
     const body = await req.json();
-    const { logoUrl, name, description, county, city, scope, isBracketPublished } = body;
+    const { logoUrl, name, description, county, city, scope, isBracketPublished, silentDice, refereeEnabled, singleVenueEnabled, defaultVenue } = body;
 
     const dataToUpdate: any = {};
     if (logoUrl !== undefined) dataToUpdate.logoUrl = logoUrl ? logoUrl.trim() : null;
@@ -51,6 +51,10 @@ export async function PATCH(req: Request, ctx: { params: { id: string } }) {
     if (city !== undefined) dataToUpdate.city = city;
     if (scope !== undefined) dataToUpdate.scope = scope;
     if (isBracketPublished !== undefined) dataToUpdate.isBracketPublished = Boolean(isBracketPublished);
+    if (silentDice !== undefined) dataToUpdate.silentDice = Boolean(silentDice);
+    if (refereeEnabled !== undefined) dataToUpdate.refereeEnabled = Boolean(refereeEnabled);
+    if (singleVenueEnabled !== undefined) dataToUpdate.singleVenueEnabled = Boolean(singleVenueEnabled);
+    if (defaultVenue !== undefined) dataToUpdate.defaultVenue = defaultVenue ? defaultVenue.trim() : null;
 
     const updated = await prisma.championship.update({
       where: { id: champ.id },

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { TeamsTab } from "./TeamsTab";
 import { MatchesTab } from "./MatchesTab";
 import { StandingsTable, StandingRow } from "./StandingsTable";
@@ -43,6 +44,9 @@ export function ChampionshipTabs({
   county,
   teams: initialTeams,
   matches: initialMatches,
+  refereeEnabled = true,
+  singleVenueEnabled = false,
+  defaultVenue = null,
 }: {
   championshipId: string;
   sport?: string;
@@ -50,6 +54,9 @@ export function ChampionshipTabs({
   county?: string | null;
   teams: Team[];
   matches: Match[];
+  refereeEnabled?: boolean;
+  singleVenueEnabled?: boolean;
+  defaultVenue?: string | null;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -57,7 +64,13 @@ export function ChampionshipTabs({
 
   const TABS = [
     { key: "standings", label: "Clasament General", icon: "leaderboard" },
-    { key: "matches", label: isIndividual ? "Meciuri & Arbitraj" : "Program & Arbitraj", icon: isIndividual ? "sports_tennis" : "sports_soccer" },
+    {
+      key: "matches",
+      label: !refereeEnabled
+        ? isIndividual ? "Meciuri & Program" : "Program Meciuri"
+        : isIndividual ? "Meciuri & Arbitraj" : "Program & Arbitraj",
+      icon: isIndividual ? "sports_tennis" : "sports_soccer",
+    },
     { key: "brackets", label: isIndividual ? "Tablou Concurs (Draw)" : "Arbore Eliminatoriu", icon: "account_tree" },
     { key: "teams", label: isIndividual ? "Competitori Înscriși" : "Echipe Înscrise", icon: isIndividual ? "person" : "shield" },
     { key: "tickets", label: "Bilete & Scanner Porți", icon: "confirmation_number" },
@@ -131,41 +144,45 @@ export function ChampionshipTabs({
     },
   }));
 
+  const { data: session } = useSession();
+  const user = session?.user as any;
+  const isOrganizer = user?.role === "organizer" || user?.role === "super_admin" || user?.role === "superadmin" || (!user?.role && !!session);
+
   return (
     <div className="space-y-8">
-      {/* Tab Navigation Bar & Organizer Tools */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-        <div className="bg-surface-container-lowest p-2 rounded-2xl border border-slate-200/60 dark:border-slate-800 shadow-sm inline-flex flex-wrap gap-2">
-          {TABS.map((t) => {
-            const isActive = tab === t.key;
-            return (
-              <button
-                key={t.key}
-                onClick={() => handleTabChange(t.key)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-label text-xs font-bold uppercase tracking-wider transition-all duration-150 ${
-                  isActive
-                    ? "bg-primary text-white shadow-sm font-black scale-100"
-                    : "text-slate-600 dark:text-slate-400 hover:text-blue-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
-                }`}
-              >
-                <span className="material-symbols-outlined text-[18px]">{t.icon}</span>
-                {t.label}
-              </button>
-            );
-          })}
-        </div>
+      {/* Organizer Action Bar: Clean, Large, High-Impact (No Duplicated Sidebar Tabs) */}
+      {isOrganizer && (
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 p-3.5 sm:p-4 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+          {/* 1. Bilete & Scanner Porți (Toggleable View) */}
+          <button
+            type="button"
+            onClick={() => handleTabChange(tab === "tickets" ? (isIndividual ? "brackets" : "standings") : "tickets")}
+            className={`flex-1 sm:flex-initial px-6 py-3.5 rounded-2xl font-headline font-black text-xs uppercase tracking-wider transition-all duration-150 flex items-center justify-center gap-2.5 shadow-sm active:scale-95 border ${
+              tab === "tickets"
+                ? "bg-slate-950 text-white dark:bg-slate-800 dark:text-lime-400 border-lime-400 shadow-md ring-2 ring-lime-400/30"
+                : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-950 dark:hover:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700"
+            }`}
+          >
+            <span className="material-symbols-outlined text-lg text-amber-500">confirmation_number</span>
+            <span>Bilete &amp; Scanner Porți</span>
+            {tab === "tickets" && (
+              <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+            )}
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setShowInviteModal(true)}
-          className="px-5 py-3 rounded-2xl bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95 border border-lime-300"
-        >
-          <span className="material-symbols-outlined text-lg">send</span>
-          <span>
-            {isIndividual ? "Invită Competitori (WhatsApp/Email)" : "Invită Lideri Echipă / Anunț Zaruri"}
-          </span>
-        </button>
-      </div>
+          {/* 2. Invită Competitori / Lideri Echipă (Modal Trigger) */}
+          <button
+            type="button"
+            onClick={() => setShowInviteModal(true)}
+            className="flex-1 sm:flex-initial px-7 py-3.5 rounded-2xl bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-lg transition active:scale-95 border border-lime-300"
+          >
+            <span className="material-symbols-outlined text-lg">send</span>
+            <span>
+              {isIndividual ? "Invită Competitori (WhatsApp / Email)" : "Invită Lideri Echipă / Anunț Zaruri"}
+            </span>
+          </button>
+        </div>
+      )}
 
       {/* Tab Content */}
       <div>
@@ -178,6 +195,9 @@ export function ChampionshipTabs({
             county={county}
             teams={initialTeams}
             matches={initialMatches}
+            refereeEnabled={refereeEnabled}
+            singleVenueEnabled={singleVenueEnabled}
+            defaultVenue={defaultVenue}
             onChanged={() => router.refresh()}
           />
         )}

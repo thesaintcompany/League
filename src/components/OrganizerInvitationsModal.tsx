@@ -500,22 +500,36 @@ export function OrganizerInvitationsModal({
         {/* TAB 3: DRAW ANNOUNCEMENT */}
         {activeTab === "dice_announcement" && (
           <div className="space-y-5">
-            {/* Toggle Disable Announcements for Instant Draw */}
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
-              <div>
-                <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white block">
-                  ⚡ Dezactivează Anunțurile cu Zaruri (Tragere Silent)
-                </span>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-label block">
-                  Activează dacă dorești ca tragerea la sorți să fie executată instant, fără notificări/comunicate către echipe.
+            {/* Toggle Disable Announcements for Instant Draw (ON/OFF Switch) */}
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">⚡</span>
+                  <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white">
+                    Dezactivează Anunțurile cu Zaruri (Tragere Silent)
+                  </span>
+                </div>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-label block mt-0.5">
+                  {disableAnnouncements
+                    ? "✓ Activ: Tragerea la sorți este executată instant, fără notificări/comunicate către echipe."
+                    : "📢 Inactiv: Echipele primesc notificări programate despre evenimentul tragerii la sorți."}
                 </span>
               </div>
-              <input
-                type="checkbox"
-                checked={disableAnnouncements}
-                onChange={(e) => setDisableAnnouncements(e.target.checked)}
-                className="w-5 h-5 rounded border-slate-300 text-lime-500 focus:ring-lime-400 shrink-0 cursor-pointer"
-              />
+              <button
+                type="button"
+                onClick={() => setDisableAnnouncements((v) => !v)}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  disableAnnouncements ? "bg-amber-500" : "bg-slate-300 dark:bg-slate-700"
+                }`}
+                role="switch"
+                aria-checked={disableAnnouncements}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    disableAnnouncements ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
             </div>
 
             {!disableAnnouncements ? (

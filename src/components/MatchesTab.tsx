@@ -26,6 +26,9 @@ export function MatchesTab({
   county,
   teams,
   matches,
+  refereeEnabled = true,
+  singleVenueEnabled = false,
+  defaultVenue = null,
   onChanged,
 }: {
   championshipId: string;
@@ -33,6 +36,9 @@ export function MatchesTab({
   county?: string | null;
   teams: Team[];
   matches: Match[];
+  refereeEnabled?: boolean;
+  singleVenueEnabled?: boolean;
+  defaultVenue?: string | null;
   onChanged: () => void;
 }) {
   const { data: session } = useSession();
@@ -126,11 +132,23 @@ export function MatchesTab({
     <div className="space-y-6">
       {/* Action Bar */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="w-2 h-5 bg-lime-500 rounded-full"></span>
           <h2 className="text-lg font-bold font-headline text-blue-950 dark:text-white">
-            Program Meciuri &amp; Arbitraj {isIndividual ? "Tenis 🎾" : ""} ({matches.length})
+            {refereeEnabled
+              ? `Program Meciuri & Arbitraj ${isIndividual ? "Individual 🎾" : ""} (${matches.length})`
+              : `Program Meciuri ${isIndividual ? "Individual 🎾" : ""} (${matches.length})`}
           </h2>
+          {!refereeEnabled && (
+            <span className="px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-label font-bold text-[10px] uppercase">
+              Fără Arbitru Delegat
+            </span>
+          )}
+          {singleVenueEnabled && defaultVenue && (
+            <span className="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-800 dark:text-teal-300 font-label font-bold text-[10px] uppercase border border-teal-500/30">
+              📍 {defaultVenue}
+            </span>
+          )}
         </div>
 
         {isOrganizer && (

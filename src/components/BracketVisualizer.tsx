@@ -10,6 +10,7 @@ interface BracketVisualizerProps {
   matches: MatchData[];
   championshipId?: string;
   championshipName?: string;
+  sport?: string;
   shareCode?: string;
   isPublished?: boolean;
   onEditMatch?: (match: MatchData) => void;
@@ -21,6 +22,7 @@ export function BracketVisualizer({
   matches,
   championshipId,
   championshipName,
+  sport,
   shareCode = "LP-OFFICIAL",
   isPublished = true,
   onEditMatch,
@@ -113,7 +115,7 @@ export function BracketVisualizer({
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-lg sm:text-2xl font-black italic font-headline text-slate-900 dark:text-white tracking-tight uppercase">
-                Harta Meciurilor
+                {championshipName || "Harta Meciurilor"}
               </h2>
               {published ? (
                 <span className="px-2.5 py-0.5 rounded-full bg-lime-400/20 text-lime-600 dark:text-lime-400 text-[10px] font-black font-label uppercase border border-lime-400/30 flex items-center gap-1">
@@ -130,7 +132,7 @@ export function BracketVisualizer({
               </span>
             </div>
             <p className="text-[11px] sm:text-xs font-label text-slate-500 dark:text-slate-400 mt-0.5">
-              Arbore eliminatoriu interactiv cu ramuri fine de conexiune tip Mindmap
+              Tablou eliminatoriu oficial {sport ? `• ${sport}` : ""} (Arbore Mindmap)
             </p>
           </div>
         </div>

@@ -126,6 +126,10 @@ model Championship {
   logoUrl     String?  // URL sau cale către sigla rotundă a campionatului
   isBracketPublished Boolean @default(true)
   diceRollCount      Int     @default(0) // Maximum 3 rolls allowed before publishing
+  silentDice         Boolean @default(false) // Dezactivează anunțurile cu zaruri (Tragere Silent)
+  refereeEnabled     Boolean @default(true)  // Activare modul arbitraj oficial
+  singleVenueEnabled Boolean @default(false) // Toate meciurile în aceeași locație/arenă
+  defaultVenue       String?                 // Numele locației unice
   shareCode   String?  @unique // unique public share code e.g. "LP-2026-A1"
   ownerId     String
   createdAt   DateTime @default(now())

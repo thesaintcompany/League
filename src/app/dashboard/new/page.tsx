@@ -35,6 +35,10 @@ export default function NewChampionshipPage() {
     description: "",
     logoUrl: "",
     isPublished: true,
+    silentDice: false,
+    refereeEnabled: true,
+    singleVenueEnabled: false,
+    defaultVenue: "",
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -690,6 +694,139 @@ export default function NewChampionshipPage() {
                 </div>
                 );
               })()}
+
+              {/* 3 Configurable ON/OFF Switches with Interactive State Refresh */}
+              <div className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-4">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-lime-500 text-lg">tune</span>
+                  <div>
+                    <h3 className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white">
+                      Opțiuni &amp; Automatizări Meciuri
+                    </h3>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label">
+                      Personalizează comportamentul tragerilor la sorți, arbitrajului și locațiilor de joc.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-3 pt-1">
+                  {/* 1. Toggle Silent Dice Announcements */}
+                  <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">⚡</span>
+                        <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white">
+                          Dezactivează Anunțurile cu Zaruri (Tragere Silent)
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label mt-0.5">
+                        {form.silentDice
+                          ? "✓ Tragere Silent: Rezultatul tragerii se generează discret, fără notificări pe WhatsApp/Email către cluburi."
+                          : "📢 Anunțuri Active: Echipele primesc notificare automată despre stabilirea meciurilor."}
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => update("silentDice", !form.silentDice)}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                        form.silentDice ? "bg-amber-500" : "bg-slate-300 dark:bg-slate-700"
+                      }`}
+                      role="switch"
+                      aria-checked={form.silentDice}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          form.silentDice ? "translate-x-5" : "translate-x-0"
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  {/* 2. Toggle Refereeing Module */}
+                  <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">⚖️</span>
+                        <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white">
+                          Activare Modul Arbitraj &amp; Delegare Arbitri
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label mt-0.5">
+                        {form.refereeEnabled
+                          ? "✓ Arbitraj Oficial Activ: Se pot delega arbitri oficiali, întocmi rapoarte de joc și cartonașe."
+                          : "✕ Fără Arbitraj Oficial: Turneu amical / meciuri autogestionate (fără delegare de arbitri)."}
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => update("refereeEnabled", !form.refereeEnabled)}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                        form.refereeEnabled ? "bg-lime-500" : "bg-slate-300 dark:bg-slate-700"
+                      }`}
+                      role="switch"
+                      aria-checked={form.refereeEnabled}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                          form.refereeEnabled ? "translate-x-5" : "translate-x-0"
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  {/* 3. Toggle Single Unified Venue */}
+                  <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-3">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">📍</span>
+                          <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white">
+                            Toate Meciurile se Dispută în Aceeași Locație / Arenă
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label mt-0.5">
+                          {form.singleVenueEnabled
+                            ? "✓ Locație Unică Activă: Toate meciurile vor fi programate automat pe arena aleasă."
+                            : "🏟️ Locații Multiple: Meciurile se joacă pe terenul fiecărei echipe sau arene atribuite individual."}
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => update("singleVenueEnabled", !form.singleVenueEnabled)}
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                          form.singleVenueEnabled ? "bg-teal-500" : "bg-slate-300 dark:bg-slate-700"
+                        }`}
+                        role="switch"
+                        aria-checked={form.singleVenueEnabled}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            form.singleVenueEnabled ? "translate-x-5" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    {form.singleVenueEnabled && (
+                      <div className="pt-2.5 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 animate-in fade-in">
+                        <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 shrink-0">
+                          Locație Centralizată:
+                        </label>
+                        <input
+                          type="text"
+                          value={form.defaultVenue}
+                          onChange={(e) => update("defaultVenue", e.target.value)}
+                          placeholder="ex: Baza Sportivă Sport Arena / Sala Polivalentă Timișoara"
+                          className="flex-1 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-teal-400"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>

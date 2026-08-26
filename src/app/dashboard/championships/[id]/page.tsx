@@ -130,6 +130,9 @@ export default async function ChampionshipDetailPage({
                 position: p.position,
               })),
             }))}
+            refereeEnabled={champ.refereeEnabled}
+            singleVenueEnabled={champ.singleVenueEnabled}
+            defaultVenue={champ.defaultVenue}
             matches={champ.matches.map((m) => ({
               id: m.id,
               scheduledAt: m.scheduledAt.toISOString(),
