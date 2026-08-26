@@ -31,6 +31,7 @@ export function OrganizerInvitationsModal({
       ? "Tragerea la sorți a tabloului de concurs (Seeds & Bracket Draw) va avea loc live!"
       : "Aruncarea zarurilor pentru dispunerea echipelor în brackets va avea loc live!"
   );
+  const [disableAnnouncements, setDisableAnnouncements] = useState(false);
 
   if (!isOpen) return null;
 
@@ -190,72 +191,104 @@ export function OrganizerInvitationsModal({
         {/* TAB 2: DRAW ANNOUNCEMENT */}
         {activeTab === "dice_announcement" && (
           <div className="space-y-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Toggle Disable Announcements for Instant Draw */}
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
               <div>
-                <label className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
-                  Data Tragerii la Sorți:
-                </label>
-                <input
-                  type="date"
-                  value={drawDate}
-                  onChange={(e) => setDrawDate(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white"
-                />
+                <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white block">
+                  ⚡ Dezactivează Anunțurile cu Zaruri (Tragere Silent)
+                </span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-label block">
+                  Activează dacă dorești ca tragerea la sorți să fie executată instant, fără notificări/comunicate către echipe.
+                </span>
               </div>
-
-              <div>
-                <label className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
-                  Ora Evenimentului:
-                </label>
-                <input
-                  type="time"
-                  value={drawTime}
-                  onChange={(e) => setDrawTime(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white"
-                />
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
-                  Mesaj Suplimentar Notificare:
-                </label>
-                <textarea
-                  rows={2}
-                  value={customNotes}
-                  onChange={(e) => setCustomNotes(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white"
-                />
-              </div>
+              <input
+                type="checkbox"
+                checked={disableAnnouncements}
+                onChange={(e) => setDisableAnnouncements(e.target.checked)}
+                className="w-5 h-5 rounded border-slate-300 text-lime-500 focus:ring-lime-400 shrink-0 cursor-pointer"
+              />
             </div>
 
-            {/* Preview Box */}
-            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-300 space-y-1">
-              <span className="text-[10px] font-label font-bold uppercase tracking-widest block text-amber-600 dark:text-amber-400">
-                Previzualizare Mesaj WhatsApp / Email:
-              </span>
-              <p className="text-xs font-mono leading-relaxed">{diceAnnouncementMessage}</p>
-            </div>
+            {!disableAnnouncements ? (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
+                      Data Tragerii la Sorți:
+                    </label>
+                    <input
+                      type="date"
+                      value={drawDate}
+                      onChange={(e) => setDrawDate(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white"
+                    />
+                  </div>
 
-            {/* Transmit Buttons */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-              <a
-                href={whatsappDiceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="p-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
-              >
-                <span className="text-lg">💬</span>
-                <span>Anunță pe WhatsApp</span>
-              </a>
+                  <div>
+                    <label className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
+                      Ora Evenimentului:
+                    </label>
+                    <input
+                      type="time"
+                      value={drawTime}
+                      onChange={(e) => setDrawTime(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white"
+                    />
+                  </div>
 
-              <a
-                href={emailDiceUrl}
-                className="p-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
-              >
-                <span className="material-symbols-outlined text-base">campaign</span>
-                <span>Anunță pe Email</span>
-              </a>
-            </div>
+                  <div className="sm:col-span-2">
+                    <label className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
+                      Mesaj Suplimentar Notificare:
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={customNotes}
+                      onChange={(e) => setCustomNotes(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white"
+                    />
+                  </div>
+                </div>
+
+                {/* Preview Box */}
+                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-300 space-y-1">
+                  <span className="text-[10px] font-label font-bold uppercase tracking-widest block text-amber-600 dark:text-amber-400">
+                    Previzualizare Mesaj WhatsApp / Email:
+                  </span>
+                  <p className="text-xs font-mono leading-relaxed">{diceAnnouncementMessage}</p>
+                </div>
+
+                {/* Transmit Buttons */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <a
+                    href={whatsappDiceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
+                  >
+                    <span className="text-lg">💬</span>
+                    <span>Anunță pe WhatsApp</span>
+                  </a>
+
+                  <a
+                    href={emailDiceUrl}
+                    className="p-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
+                  >
+                    <span className="material-symbols-outlined text-base">campaign</span>
+                    <span>Anunță pe Email</span>
+                  </a>
+                </div>
+              </>
+            ) : (
+              <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs space-y-2">
+                <div className="flex items-center gap-2 font-bold font-headline text-sm uppercase text-amber-600 dark:text-amber-400">
+                  <span className="material-symbols-outlined text-xl">bolt</span>
+                  <span>Tragere la Sorți Instantă Activă</span>
+                </div>
+                <p className="leading-relaxed">
+                  Anunțurile automate cu zaruri au fost dezactivate. Tragerea la sorți a echipelor / competitorilor se va executa instant direct în consolă, fără trimiterea de mesaje de notificare pe WhatsApp sau Email.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>

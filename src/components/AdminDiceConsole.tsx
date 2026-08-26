@@ -73,7 +73,9 @@ export function AdminDiceConsole({
     }
   }
 
-  async function handleDiceRoll() {
+  const [disableAnnouncements, setDisableAnnouncements] = useState(false);
+
+  async function handleDiceRoll(isInstant: boolean = false) {
     if (isLocked || isBracketPublished || diceRollCount >= 3) {
       setError("Aruncarea zarurilor este blocată pentru acest campionat!");
       return;
@@ -88,47 +90,92 @@ export function AdminDiceConsole({
     setResultMessage(null);
     setRolling(true);
 
-    // Animate dice for 1.2 seconds
-    const interval = setInterval(() => {
-      setDiceValues([
-        Math.floor(Math.random() * 6) + 1,
-        Math.floor(Math.random() * 6) + 1,
-      ]);
-    }, 90);
+    const shouldDisableAnnouncements = isInstant || disableAnnouncements;
 
-    try {
-      const res = await fetch(`/api/championships/${championshipId}/dice-draw`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          teamIds: selectedTeamIds,
-          venues: selectedVenues,
-          referees: selectedReferees,
-          clearExisting: true,
-        }),
-      });
+    // Fast roll values
+    const newDice1 = Math.floor(Math.random() * 6) + 1;
+    const newDice2 = Math.floor(Math.random() * 6) + 1;
+    setDiceValues([newDice1, newDice2]);
 
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Eroare la tragerea la sorți");
-      }
+    if (!isInstant) {
+      // Animate dice for 0.8 seconds if standard roll
+      const interval = setInterval(() => {
+        setDiceValues([
+          Math.floor(Math.random() * 6) + 1,
+          Math.floor(Math.random() * 6) + 1,
+        ]);
+      }, 90);
 
-      setTimeout(() => {
+      try {
+        const res = await fetch(`/api/championships/${championshipId}/dice-draw`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            teamIds: selectedTeamIds,
+            venues: selectedVenues,
+            referees: selectedReferees,
+            clearExisting: true,
+            instant: false,
+            disableAnnouncements: shouldDisableAnnouncements,
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Eroare la tragerea la sorți");
+        }
+
+        setTimeout(() => {
+          clearInterval(interval);
+          setRolling(false);
+          const newCount = data.diceRollCount ?? (diceRollCount + 1);
+          setDiceRollCount(newCount);
+          if (newCount >= 3 || data.isLocked) {
+            setIsLocked(true);
+            setLockReason("A fost atinsă limita maximă de 3 aruncări");
+          }
+          setResultMessage(data.message || "Tragerea la sorți cu zaruri a fost finalizată cu succes!");
+          onDrawCompleted();
+        }, 800);
+      } catch (e: any) {
         clearInterval(interval);
         setRolling(false);
+        setError(e.message);
+      }
+    } else {
+      // INSTANT ROLL (0 Delay - Skips animation & disables announcements)
+      try {
+        const res = await fetch(`/api/championships/${championshipId}/dice-draw`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            teamIds: selectedTeamIds,
+            venues: selectedVenues,
+            referees: selectedReferees,
+            clearExisting: true,
+            instant: true,
+            disableAnnouncements: true,
+          }),
+        });
+
+        const data = await res.json();
+        setRolling(false);
+        if (!res.ok) {
+          throw new Error(data.error || "Eroare la tragerea la sorți instantă");
+        }
+
         const newCount = data.diceRollCount ?? (diceRollCount + 1);
         setDiceRollCount(newCount);
         if (newCount >= 3 || data.isLocked) {
           setIsLocked(true);
           setLockReason("A fost atinsă limita maximă de 3 aruncări");
         }
-        setResultMessage(data.message || "Tragerea la sorți cu zaruri a fost finalizată cu succes!");
+        setResultMessage(data.message || "⚡ Tragere la sorți instantă efectuată! Anunțurile cu zaruri au fost dezactivate.");
         onDrawCompleted();
-      }, 1200);
-    } catch (e: any) {
-      clearInterval(interval);
-      setRolling(false);
-      setError(e.message);
+      } catch (e: any) {
+        setRolling(false);
+        setError(e.message);
+      }
     }
   }
 
@@ -285,27 +332,59 @@ export function AdminDiceConsole({
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={handleDiceRoll}
-                disabled={rolling || isLocked || isBracketPublished || diceRollCount >= 3}
-                className={`px-8 py-4 rounded-2xl font-headline font-black text-sm uppercase tracking-wider shadow-xl transition-all flex items-center gap-3 active:scale-95 ${
-                  isLocked || isBracketPublished || diceRollCount >= 3
-                    ? "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed shadow-none"
-                    : "bg-slate-950 text-white hover:bg-slate-800 dark:bg-lime-400 dark:text-slate-950 dark:hover:bg-lime-300"
-                }`}
-              >
-                <span className={`material-symbols-outlined ${rolling ? "animate-spin" : ""}`}>
-                  {isLocked ? "lock" : "casino"}
-                </span>
-                {rolling
-                  ? "Se aruncă zarurile..."
-                  : isBracketPublished
-                  ? "🔒 Zaruri Blocate (Harta Publică)"
-                  : diceRollCount >= 3
-                  ? "🔒 Limită 3/3 Atinsă"
-                  : `Aruncă Zarurile (${rollsLeft} Rămase) 🎲`}
-              </button>
+              {/* Toggle Disable Announcements */}
+              <label className="flex items-center gap-2 text-xs font-bold font-label text-slate-700 dark:text-slate-300 cursor-pointer pt-1">
+                <input
+                  type="checkbox"
+                  checked={disableAnnouncements}
+                  onChange={(e) => setDisableAnnouncements(e.target.checked)}
+                  className="rounded border-slate-300 text-lime-500 focus:ring-lime-400 w-4 h-4"
+                />
+                <span>⚡ Dezactivează Anunțurile cu Zaruri (Tragere Silent / Fără Notificări)</span>
+              </label>
+
+              <div className="flex flex-wrap items-center gap-3 pt-1">
+                {/* Standard Roll Button */}
+                <button
+                  type="button"
+                  onClick={() => handleDiceRoll(false)}
+                  disabled={rolling || isLocked || isBracketPublished || diceRollCount >= 3}
+                  className={`px-6 py-3.5 rounded-2xl font-headline font-black text-xs uppercase tracking-wider shadow-lg transition-all flex items-center gap-2 active:scale-95 ${
+                    isLocked || isBracketPublished || diceRollCount >= 3
+                      ? "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed shadow-none"
+                      : "bg-slate-950 text-white hover:bg-slate-800 dark:bg-lime-400 dark:text-slate-950 dark:hover:bg-lime-300"
+                  }`}
+                >
+                  <span className={`material-symbols-outlined text-base ${rolling ? "animate-spin" : ""}`}>
+                    {isLocked ? "lock" : "casino"}
+                  </span>
+                  <span>
+                    {rolling
+                      ? "Se aruncă..."
+                      : isBracketPublished
+                      ? "🔒 Zaruri Blocate"
+                      : diceRollCount >= 3
+                      ? "🔒 Limită 3/3 Atinsă"
+                      : `Aruncă Zarurile (${rollsLeft} Rămase)`}
+                  </span>
+                </button>
+
+                {/* Instant Roll Button (Skips animation and disables announcements) */}
+                <button
+                  type="button"
+                  onClick={() => handleDiceRoll(true)}
+                  disabled={rolling || isLocked || isBracketPublished || diceRollCount >= 3}
+                  className={`px-6 py-3.5 rounded-2xl font-headline font-black text-xs uppercase tracking-wider shadow-lg transition-all flex items-center gap-2 active:scale-95 ${
+                    isLocked || isBracketPublished || diceRollCount >= 3
+                      ? "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed shadow-none"
+                      : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black border border-amber-300"
+                  }`}
+                  title="Efectuează tragerea instantaneu și dezactivează anunțurile cu zaruri pe WhatsApp/Email"
+                >
+                  <span className="material-symbols-outlined text-base">bolt</span>
+                  <span>⚡ Aruncă Instant (Fără Anunțuri)</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -407,7 +486,7 @@ export function AdminDiceConsole({
 
           <button
             type="button"
-            onClick={handleDiceRoll}
+            onClick={() => handleDiceRoll(false)}
             disabled={rolling || isLocked || isBracketPublished || diceRollCount >= 3}
             className={`mt-6 w-full py-3.5 rounded-xl font-black font-label text-xs uppercase tracking-wider transition shadow-md ${
               isLocked || isBracketPublished || diceRollCount >= 3

@@ -152,6 +152,8 @@ export async function POST(
     });
   }
 
+  const isInstant = Boolean(body.instant || body.disableAnnouncements);
+
   // Generate Knockout pairing matches
   const createdMatches = [];
   const now = Date.now();
@@ -177,7 +179,9 @@ export async function POST(
         status: "scheduled",
         venue: assignedVenue,
         referee: assignedReferee,
-        notes: `Generat prin Tragere la Sorți cu Zaruri 🎲 (Aruncarea #${currentRolls + 1}/3 - Seed #${matchIdx + 1})`,
+        notes: isInstant
+          ? `Generat prin Tragere la Sorți Instantă ⚡ (Anunțuri Zaruri Dezactivate • Seed #${matchIdx + 1})`
+          : `Generat prin Tragere la Sorți cu Zaruri 🎲 (Aruncarea #${currentRolls + 1}/3 - Seed #${matchIdx + 1})`,
       },
     });
     createdMatches.push(match);
@@ -199,7 +203,11 @@ export async function POST(
     diceRollCount: nextRollCount,
     rollsLeft: rollsRemaining,
     isLocked: nextRollCount >= 3,
-    message: `Tragere la sorți cu zaruri efectuată cu succes! (${nextRollCount}/3 aruncări utilizate • Mai ai ${rollsRemaining} ${rollsRemaining === 1 ? "aruncare" : "aruncări"} disponibile).`,
+    isInstant,
+    announcementsDisabled: isInstant,
+    message: isInstant
+      ? `⚡ Tragere la sorți instantă efectuată cu succes! Anunțurile automate cu zaruri au fost DEZACTIVATE (${nextRollCount}/3 aruncări utilizate).`
+      : `Tragere la sorți cu zaruri efectuată cu succes! (${nextRollCount}/3 aruncări utilizate • Mai ai ${rollsRemaining} ${rollsRemaining === 1 ? "aruncare" : "aruncări"} disponibile).`,
     matches: createdMatches,
   });
 }
