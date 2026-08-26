@@ -41,11 +41,6 @@ export function AdminDiceConsole({
     "Ovidiu Hațegan - Arbitru Elite",
   ]);
 
-  const [disableAnnouncements, setDisableAnnouncements] = useState(false);
-  const [refereeEnabled, setRefereeEnabled] = useState(true);
-  const [singleVenueEnabled, setSingleVenueEnabled] = useState(false);
-  const [defaultVenue, setDefaultVenue] = useState("");
-
   const [rolling, setRolling] = useState(false);
   const [diceValues, setDiceValues] = useState<[number, number]>([6, 5]);
   const [diceRollCount, setDiceRollCount] = useState<number>(0);
@@ -84,8 +79,6 @@ export function AdminDiceConsole({
     setResultMessage(null);
     setRolling(true);
 
-    const isSilent = instant || disableAnnouncements;
-
     if (!instant) {
       // Animated Dice Rolling Simulation
       let ticks = 0;
@@ -108,10 +101,6 @@ export function AdminDiceConsole({
             referees: selectedReferees,
             clearExisting: true,
             instant: false,
-            disableAnnouncements: isSilent,
-            refereeEnabled,
-            singleVenueEnabled,
-            defaultVenue: singleVenueEnabled ? defaultVenue : undefined,
           }),
         });
 
@@ -149,10 +138,6 @@ export function AdminDiceConsole({
             referees: selectedReferees,
             clearExisting: true,
             instant: true,
-            disableAnnouncements: true,
-            refereeEnabled,
-            singleVenueEnabled,
-            defaultVenue: singleVenueEnabled ? defaultVenue : undefined,
           }),
         });
 
@@ -353,125 +338,6 @@ export function AdminDiceConsole({
                   <div className={`h-2 w-10 rounded-full transition-colors ${diceRollCount >= 1 ? "bg-lime-400" : "bg-slate-200 dark:bg-slate-700"}`}></div>
                   <div className={`h-2 w-10 rounded-full transition-colors ${diceRollCount >= 2 ? "bg-lime-400" : "bg-slate-200 dark:bg-slate-700"}`}></div>
                   <div className={`h-2 w-10 rounded-full transition-colors ${diceRollCount >= 3 ? "bg-lime-400" : "bg-slate-200 dark:bg-slate-700"}`}></div>
-                </div>
-              </div>
-
-              {/* 3 Configurable ON/OFF Toggles with Instant Refresh States */}
-              <div className="space-y-3 pt-2">
-                {/* 1. Toggle Silent Dice Announcements */}
-                <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">⚡</span>
-                      <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white">
-                        Dezactivează Anunțurile cu Zaruri (Tragere Silent)
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label mt-0.5">
-                      {disableAnnouncements
-                        ? "✓ Tragere Silent Activă: Nu se transmit notificări pe WhatsApp/Email către cluburi."
-                        : "📢 Notificări Active: Echipele primesc comunicat automat după tragerea cu zaruri."}
-                    </p>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setDisableAnnouncements((v) => !v)}
-                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                      disableAnnouncements ? "bg-amber-500" : "bg-slate-300 dark:bg-slate-700"
-                    }`}
-                    role="switch"
-                    aria-checked={disableAnnouncements}
-                  >
-                    <span
-                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                        disableAnnouncements ? "translate-x-5" : "translate-x-0"
-                      }`}
-                    />
-                  </button>
-                </div>
-
-                {/* 2. Toggle Refereeing Activation */}
-                <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">⚖️</span>
-                      <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white">
-                        Activare Modul Arbitraj &amp; Delegare Arbitri
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label mt-0.5">
-                      {refereeEnabled
-                        ? "✓ Arbitraj Oficial Activ: Se atribuie automat arbitri delegați pentru meciuri."
-                        : "✕ Fără Arbitraj Oficial: Competiție amicală / autogestionată de către competitori."}
-                    </p>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setRefereeEnabled((v) => !v)}
-                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                      refereeEnabled ? "bg-lime-500" : "bg-slate-300 dark:bg-slate-700"
-                    }`}
-                    role="switch"
-                    aria-checked={refereeEnabled}
-                  >
-                    <span
-                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                        refereeEnabled ? "translate-x-5" : "translate-x-0"
-                      }`}
-                    />
-                  </button>
-                </div>
-
-                {/* 3. Toggle Single Unified Venue */}
-                <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2.5">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm">📍</span>
-                        <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white">
-                          Toate Meciurile se Dispută în Aceeași Locație / Arenă
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label mt-0.5">
-                        {singleVenueEnabled
-                          ? "✓ Locație Centralizată Activă: Toate meciurile se vor juca pe aceeași arenă setată."
-                          : "🏟️ Locații Multiple: Meciurile se dispută pe terenul echipei gazdă sau arene atribuite separat."}
-                      </p>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setSingleVenueEnabled((v) => !v)}
-                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                        singleVenueEnabled ? "bg-teal-500" : "bg-slate-300 dark:bg-slate-700"
-                      }`}
-                      role="switch"
-                      aria-checked={singleVenueEnabled}
-                    >
-                      <span
-                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                          singleVenueEnabled ? "translate-x-5" : "translate-x-0"
-                        }`}
-                      />
-                    </button>
-                  </div>
-
-                  {singleVenueEnabled && (
-                    <div className="pt-2 border-t border-slate-200 dark:border-slate-700/80 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 animate-in fade-in">
-                      <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 shrink-0">
-                        Nume Arenă / Sală:
-                      </label>
-                      <input
-                        type="text"
-                        value={defaultVenue}
-                        onChange={(e) => setDefaultVenue(e.target.value)}
-                        placeholder="ex: Baza Sportivă Sport Arena / Sala Polivalentă"
-                        className="flex-1 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-teal-400"
-                      />
-                    </div>
-                  )}
                 </div>
               </div>
 

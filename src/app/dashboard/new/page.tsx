@@ -34,10 +34,10 @@ export default function NewChampionshipPage() {
     endDate: "",
     description: "",
     logoUrl: "",
-    isPublished: true,
-    silentDice: false,
-    refereeEnabled: true,
-    singleVenueEnabled: false,
+    isPublished: false,
+    silentDice: true,
+    refereeEnabled: false,
+    singleVenueEnabled: true,
     defaultVenue: "",
   });
   const [error, setError] = useState<string | null>(null);

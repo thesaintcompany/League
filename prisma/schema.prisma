@@ -124,7 +124,7 @@ model Championship {
   county      String?  // e.g. "Timiș", "București", "Cluj", "Iași", "Brașov"
   city        String?  // e.g. "Timișoara", "Cluj-Napoca", "București"
   logoUrl     String?  // URL sau cale către sigla rotundă a campionatului
-  isBracketPublished Boolean @default(true)
+  isBracketPublished Boolean @default(false)
   diceRollCount      Int     @default(0) // Maximum 3 rolls allowed before publishing
   silentDice         Boolean @default(false) // Dezactivează anunțurile cu zaruri (Tragere Silent)
   refereeEnabled     Boolean @default(true)  // Activare modul arbitraj oficial

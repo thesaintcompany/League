@@ -10,7 +10,11 @@ import { isOrganizer } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams?: { tab?: string };
+}) {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/signin");
 
@@ -39,6 +43,12 @@ export default async function DashboardPage() {
       },
     },
   });
+
+  // Dacă utilizatorul logat cere un tab pe /dashboard (ex: ?tab=brackets sau ?tab=standings)
+  // îl trimitem direct la campionatul său activ, fără să ajungă pe pagini publice sau rătăcite
+  if (searchParams?.tab && championships.length > 0) {
+    redirect(`/dashboard/championships/${championships[0].id}?tab=${searchParams.tab}`);
+  }
 
   const totalTeams = championships.reduce((sum, c) => sum + c._count.teams, 0);
   const totalMatches = championships.reduce((sum, c) => sum + c._count.matches, 0);

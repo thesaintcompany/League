@@ -67,14 +67,15 @@ export function OrganizerInvitationsModal({
   const isIndividual = isIndividualSport(sport);
   const ajfInfo = getAjfUrlForCounty(county);
 
-  // Load referees and competitors from database
+  // Load referees and competitors from database (excluding already enrolled competitors)
   useEffect(() => {
     if (!isOpen) return;
     async function loadData() {
       try {
-        const [refRes, compRes] = await Promise.all([
+        const [refRes, compRes, champRes] = await Promise.all([
           fetch("/api/referees"),
           fetch("/api/players"),
+          fetch(`/api/championships/${championshipId}`),
         ]);
         if (refRes.ok) {
           const data = await refRes.json();
@@ -83,11 +84,24 @@ export function OrganizerInvitationsModal({
             setSelectedRefereeId(data.referees[0].id);
           }
         }
+
+        const enrolledNames = new Set<string>();
+        if (champRes.ok) {
+          const champData = await champRes.json();
+          (champData.championship?.teams || []).forEach((t: any) => {
+            if (t.name) enrolledNames.add(t.name.toLowerCase().trim());
+          });
+        }
+
         if (compRes.ok) {
           const compData = await compRes.json();
-          setAvailableCompetitors(compData.competitors || []);
-          if (compData.competitors?.length > 0) {
-            setSelectedCompetitorId(compData.competitors[0].id);
+          const allComps: CompetitorOption[] = compData.competitors || [];
+          const filteredComps = allComps.filter((c) => !enrolledNames.has(c.name.toLowerCase().trim()));
+          setAvailableCompetitors(filteredComps);
+          if (filteredComps.length > 0) {
+            setSelectedCompetitorId(filteredComps[0].id);
+          } else {
+            setSelectedCompetitorId("");
           }
         }
       } catch (err) {
@@ -95,7 +109,7 @@ export function OrganizerInvitationsModal({
       }
     }
     loadData();
-  }, [isOpen]);
+  }, [isOpen, championshipId]);
 
   // Dice Draw Announcement State
   const [drawDate, setDrawDate] = useState("2026-09-01");
@@ -343,6 +357,11 @@ export function OrganizerInvitationsModal({
                                       });
                                       if (res.ok) {
                                         setCompetitorEnrolledSuccess(`✓ ${comp.name} a fost adăugat pe tablou!`);
+                                        // Elimină instant competitorul din lista disponibilă pentru a nu putea fi adăugat de două ori
+                                        setAvailableCompetitors((prev) => prev.filter((c) => c.id !== comp.id && c.name.toLowerCase() !== comp.name.toLowerCase()));
+                                        if (selectedCompetitorId === comp.id) {
+                                          setSelectedCompetitorId("");
+                                        }
                                         onParticipantAdded?.();
                                         setTimeout(() => setCompetitorEnrolledSuccess(null), 4000);
                                       } else {

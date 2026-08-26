@@ -16,9 +16,9 @@ const createSchema = z.object({
   county: z.string().optional().nullable(),
   city: z.string().optional().nullable(),
   logoUrl: z.string().optional().nullable(),
-  silentDice: z.boolean().optional().default(false),
-  refereeEnabled: z.boolean().optional().default(true),
-  singleVenueEnabled: z.boolean().optional().default(false),
+  silentDice: z.boolean().optional().default(true),
+  refereeEnabled: z.boolean().optional().default(false),
+  singleVenueEnabled: z.boolean().optional().default(true),
   defaultVenue: z.string().optional().nullable(),
 });
 
@@ -141,7 +141,7 @@ export async function POST(req: Request) {
         county: county || (scope === "national" ? null : "Timiș"),
         city: city || null,
         logoUrl: logoUrl?.trim() || null,
-        isBracketPublished: true,
+        isBracketPublished: false,
         silentDice: Boolean(silentDice),
         refereeEnabled: refereeEnabled !== undefined ? Boolean(refereeEnabled) : true,
         singleVenueEnabled: Boolean(singleVenueEnabled),

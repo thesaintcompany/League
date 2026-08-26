@@ -11,6 +11,8 @@ interface NavItem {
   name: string;
   href: string;
   icon: string;
+  disabled?: boolean;
+  disabledTooltip?: string;
 }
 
 interface SidebarProps {
@@ -25,6 +27,8 @@ export function Sidebar({ variant }: SidebarProps) {
   const role = (session?.user as any)?.role || "organizer";
   const isSuperAdminRole = role === "super_admin" || role === "superadmin";
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userChampionships, setUserChampionships] = useState<{ id: string; name: string; sport: string }[]>([]);
+  const [selectedChampId, setSelectedChampId] = useState<string | null>(null);
 
   useEffect(() => {
     function handleToggle() {
@@ -33,6 +37,25 @@ export function Sidebar({ variant }: SidebarProps) {
     window.addEventListener("toggle-dashboard-sidebar", handleToggle);
     return () => window.removeEventListener("toggle-dashboard-sidebar", handleToggle);
   }, []);
+
+  // Fetch organizer championships for direct navigation
+  useEffect(() => {
+    if (!session?.user) return;
+    fetch("/api/championships")
+      .then((r) => (r.ok ? r.json() : { championships: [] }))
+      .then((d) => {
+        const list = (d.championships || []).map((c: any) => ({
+          id: c.id,
+          name: c.name,
+          sport: c.sport,
+        }));
+        setUserChampionships(list);
+        if (list.length > 0 && !selectedChampId) {
+          setSelectedChampId(list[0].id);
+        }
+      })
+      .catch(() => setUserChampionships([]));
+  }, [session, selectedChampId]);
 
   // Build role-specific navigation menu
   let navItems: NavItem[] = [];
@@ -84,17 +107,58 @@ export function Sidebar({ variant }: SidebarProps) {
       { name: "Arene", href: "/venues", icon: "domain" },
     ];
   } else {
-    // Organizer Menu (Controale Panou Organizator din imagine)
+    // Organizer Menu
     const isChampDetail = pathname.startsWith("/dashboard/championships/");
-    const activeBase = isChampDetail ? pathname : "/dashboard";
+    const currentChampIdFromPath = isChampDetail ? pathname.split("/dashboard/championships/")[1]?.split("?")[0]?.split("/")[0] : null;
+    const targetChampId = currentChampIdFromPath || selectedChampId || (userChampionships.length > 0 ? userChampionships[0].id : null);
+    const hasChamp = Boolean(targetChampId);
+    const activeBase = hasChamp ? `/dashboard/championships/${targetChampId}` : "/dashboard";
 
     navItems = [
-      { name: "Clasament General", href: `${activeBase}?tab=standings`, icon: "leaderboard" },
-      { name: "Program & Arbitraj", href: `${activeBase}?tab=matches`, icon: "sports_soccer" },
-      { name: "Arbore Eliminatoriu", href: isChampDetail ? `${activeBase}?tab=brackets` : "/brackets", icon: "account_tree" },
-      { name: "Echipe Înscrise", href: isChampDetail ? `${activeBase}?tab=teams` : "/dashboard/organizer/teams", icon: "shield" },
-      ...(isChampDetail ? [{ name: "Bilete & Scanner Porți", href: `${activeBase}?tab=tickets`, icon: "confirmation_number" }] : []),
-      { name: "Promotion Hub", href: `${activeBase}?tab=promo`, icon: "campaign" },
+      {
+        name: "Clasament General",
+        href: hasChamp ? `${activeBase}?tab=standings` : "#",
+        icon: "leaderboard",
+        disabled: !hasChamp,
+        disabledTooltip: "Creează un campionat pentru a activa clasamentul",
+      },
+      {
+        name: "Program & Arbitraj",
+        href: hasChamp ? `${activeBase}?tab=matches` : "#",
+        icon: "sports_soccer",
+        disabled: !hasChamp,
+        disabledTooltip: "Creează un campionat pentru a programa meciuri",
+      },
+      {
+        name: "Arbore Eliminatoriu",
+        href: hasChamp ? `${activeBase}?tab=brackets` : "#",
+        icon: "account_tree",
+        disabled: !hasChamp,
+        disabledTooltip: "Nu ai niciun campionat activ. Creează un campionat pentru a genera tabloul.",
+      },
+      {
+        name: "Echipe Înscrise",
+        href: hasChamp ? `${activeBase}?tab=teams` : "/dashboard/organizer/teams",
+        icon: "shield",
+      },
+      ...(isChampDetail || hasChamp
+        ? [
+            {
+              name: "Bilete & Scanner Porți",
+              href: `${activeBase}?tab=tickets`,
+              icon: "confirmation_number",
+              disabled: !hasChamp,
+              disabledTooltip: "Creează un campionat pentru a vinde bilete",
+            },
+          ]
+        : []),
+      {
+        name: "Promotion Hub",
+        href: hasChamp ? `${activeBase}?tab=promo` : "#",
+        icon: "campaign",
+        disabled: !hasChamp,
+        disabledTooltip: "Creează un campionat pentru a accesa Promotion Hub",
+      },
       { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
       { name: "Campionate & Harta", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Arene", href: "/venues", icon: "domain" },
@@ -119,7 +183,7 @@ export function Sidebar({ variant }: SidebarProps) {
     <div className="flex flex-col h-full justify-between">
       {/* Brand Header */}
       <div>
-        <div className="px-5 mb-5 flex flex-col gap-2">
+        <div className="px-5 mb-4 flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <BrandLogo
               size="sidebar"
@@ -138,31 +202,89 @@ export function Sidebar({ variant }: SidebarProps) {
             </button>
           </div>
 
-          <div className="flex items-center gap-1.5">
-            <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[9px] font-label font-bold uppercase tracking-wider text-lime-600 dark:text-lime-400 border border-slate-200 dark:border-slate-800">
-              {role === "super_admin" || role === "superadmin"
-                ? "Super Administrator"
-                : role === "referee"
-                  ? "Oficial Arbitraj"
-                  : role === "arena_owner"
-                    ? "Panou Arenă"
-                    : role === "team_leader"
-                      ? "Manager Echipă"
-                      : role === "player"
-                        ? "Fișă Jucător"
-                        : "Pro Organizer"}
-            </span>
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-1.5">
+              <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[9px] font-label font-bold uppercase tracking-wider text-lime-600 dark:text-lime-400 border border-slate-200 dark:border-slate-800">
+                {role === "super_admin" || role === "superadmin"
+                  ? "Super Administrator"
+                  : role === "referee"
+                    ? "Oficial Arbitraj"
+                    : role === "arena_owner"
+                      ? "Panou Arenă"
+                      : role === "team_leader"
+                        ? "Manager Echipă"
+                        : role === "player"
+                          ? "Fișă Jucător"
+                          : "Pro Organizer"}
+              </span>
+            </div>
+
+            {/* Organizer Active Championship Selector Badge */}
+            {role === "organizer" && userChampionships.length > 0 && (
+              <div className="pt-1">
+                {userChampionships.length === 1 ? (
+                  <Link
+                    href={`/dashboard/championships/${userChampionships[0].id}`}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-lime-400/10 hover:bg-lime-400/20 text-lime-700 dark:text-lime-300 border border-lime-400/30 text-[10px] font-headline font-black truncate transition"
+                    title={userChampionships[0].name}
+                  >
+                    <span>🏆</span>
+                    <span className="truncate">{userChampionships[0].name}</span>
+                  </Link>
+                ) : (
+                  <select
+                    value={
+                      pathname.startsWith("/dashboard/championships/")
+                        ? pathname.split("/dashboard/championships/")[1]?.split("?")[0]?.split("/")[0]
+                        : selectedChampId || ""
+                    }
+                    onChange={(e) => {
+                      setSelectedChampId(e.target.value);
+                      window.location.href = `/dashboard/championships/${e.target.value}`;
+                    }}
+                    className="w-full px-2 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-[10px] font-headline font-bold text-slate-900 dark:text-white focus:outline-none focus:border-lime-400 truncate"
+                  >
+                    {userChampionships.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        🏆 {c.name} ({c.sport})
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
         {/* Navigation Links */}
-        <nav className="px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-260px)]">
+        <nav className="px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-270px)]">
           {navItems.map((item) => {
             const itemTab = item.href.includes("?tab=") ? item.href.split("?tab=")[1] : null;
             const isTabMatch = itemTab
               ? currentTab === itemTab || (!currentTab && itemTab === "standings" && pathname.startsWith("/dashboard/championships/"))
               : pathname === item.href;
             const isActive = isTabMatch;
+
+            if (item.disabled) {
+              return (
+                <div
+                  key={item.name}
+                  title={item.disabledTooltip || "Funcționalitate inactivă - Nu ai niciun campionat creat"}
+                  className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50 select-none"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[20px] sm:text-[22px]">
+                      {item.icon}
+                    </span>
+                    <span className="font-label text-xs sm:text-sm">{item.name}</span>
+                  </div>
+                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider bg-slate-200 dark:bg-slate-800 text-slate-500 px-1.5 py-0.5 rounded">
+                    Inactiv
+                  </span>
+                </div>
+              );
+            }
+
             return (
               <Link
                 key={item.name}
