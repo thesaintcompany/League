@@ -17,6 +17,8 @@ model User {
   passwordHash  String?
   image         String?
   role          String   @default("organizer") // "organizer" | "referee" | "player" | "arena_owner" | "team_leader" | "observer"
+  isActive      Boolean  @default(true)
+  signupIp      String?  // Adresa IP de la înregistrare
   
   // Profile fields for various roles
   phone          String?

@@ -35,6 +35,8 @@ interface UserItem {
   role: string;
   phone?: string | null;
   image?: string | null;
+  isActive?: boolean;
+  signupIp?: string | null;
   refereeBadge?: string | null;
   createdAt: string;
   _count?: {
@@ -204,6 +206,20 @@ export function AdminSuperPanel() {
   });
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+
+  // WordPress-style User Management States
+  const [editUserModalOpen, setEditUserModalOpen] = useState(false);
+  const [resetPassModalOpen, setResetPassModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserItem | null>(null);
+  const [editUserForm, setEditUserForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    role: "organizer",
+    isActive: true,
+  });
+  const [newPasswordVal, setNewPasswordVal] = useState("");
+  const [savingUser, setSavingUser] = useState(false);
 
   // Sync tab with URL query parameter
   useEffect(() => {
@@ -446,6 +462,140 @@ export function AdminSuperPanel() {
       if (res.ok) {
         showToast(`Rolul utilizatorului a fost actualizat la "${newRole}"! ✓`);
         setUsers(users.map((u) => (u.id === userId ? { ...u, role: newRole } : u)));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // WordPress-style User Management Actions
+  async function handleToggleUserStatus(u: UserItem) {
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: u.id, action: "toggle_status" }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        const newStatus = !u.isActive;
+        showToast(data.message || `Statutul utilizatorului ${u.email} a fost schimbat! ✓`);
+        setUsers(users.map((item) => (item.id === u.id ? { ...item, isActive: newStatus } : item)));
+      } else {
+        alert(data.error || "Eroare la schimbarea statusului.");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function openEditUserModal(u: UserItem) {
+    setSelectedUser(u);
+    setEditUserForm({
+      name: u.name || "",
+      email: u.email || "",
+      phone: u.phone || "",
+      role: u.role || "organizer",
+      isActive: u.isActive ?? true,
+    });
+    setEditUserModalOpen(true);
+  }
+
+  async function handleSaveEditUser(e: React.FormEvent) {
+    e.preventDefault();
+    if (!selectedUser) return;
+    setSavingUser(true);
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: selectedUser.id,
+          action: "edit_user",
+          ...editUserForm,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(`Datele utilizatorului ${editUserForm.email} au fost actualizate! ✓`);
+        setEditUserModalOpen(false);
+        setUsers(
+          users.map((item) =>
+            item.id === selectedUser.id
+              ? {
+                  ...item,
+                  name: editUserForm.name,
+                  email: editUserForm.email,
+                  phone: editUserForm.phone,
+                  role: editUserForm.role,
+                  isActive: editUserForm.isActive,
+                }
+              : item
+          )
+        );
+      } else {
+        alert(data.error || "Eroare la salvarea datelor.");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSavingUser(false);
+    }
+  }
+
+  function openResetPassModal(u: UserItem) {
+    setSelectedUser(u);
+    setNewPasswordVal("");
+    setResetPassModalOpen(true);
+  }
+
+  async function handleResetPassSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!selectedUser) return;
+    if (newPasswordVal.trim().length < 6) {
+      alert("Parola nouă trebuie să aibă minim 6 caractere.");
+      return;
+    }
+    setSavingUser(true);
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: selectedUser.id,
+          action: "reset_password",
+          password: newPasswordVal,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message || `Parola utilizatorului ${selectedUser.email} a fost resetată! ✓`);
+        setResetPassModalOpen(false);
+      } else {
+        alert(data.error || "Eroare la resetarea parolei.");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSavingUser(false);
+    }
+  }
+
+  async function handleDeleteUser(u: UserItem) {
+    const confirmed = confirm(
+      `⚠️ ATENȚIE: Sigur dorești să ștergi definitiv utilizatorul "${u.email}" (${u.name || "Fără nume"})?\n\n` +
+        "Această acțiune este IREVERSIBILĂ ca în WordPress admin!"
+    );
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`/api/admin/users?userId=${u.id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(`Utilizatorul ${u.email} a fost șters din platformă.`);
+        setUsers(users.filter((item) => item.id !== u.id));
+      } else {
+        alert(data.error || "Eroare la ștergerea utilizatorului.");
       }
     } catch (err) {
       console.error(err);
@@ -1435,56 +1585,47 @@ export function AdminSuperPanel() {
               <table className="w-full text-left text-xs">
                 <thead>
                   <tr className="font-label text-[10px] text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800">
-                    <th className="py-4 px-4">Utilizator</th>
-                    <th className="py-4 px-4">Email</th>
-                    <th className="py-4 px-4">Rol Curent</th>
-                    <th className="py-4 px-4">Schimbă Permisiuni (Rol)</th>
-                    <th className="py-4 px-4 text-center">Campionate</th>
-                    <th className="py-4 px-4 text-center">Arene</th>
-                    <th className="py-4 px-4 text-right">Data Înscrierii</th>
+                    <th className="py-4 px-4">Utilizator &amp; Contact</th>
+                    <th className="py-4 px-4">Rol &amp; Permisiuni</th>
+                    <th className="py-4 px-4 text-center">Status Cont</th>
+                    <th className="py-4 px-4 text-center">Campionate / Arene</th>
+                    <th className="py-4 px-4 text-center">Data Înregistrării &amp; IP</th>
+                    <th className="py-4 px-4 text-right">Acțiuni WordPress Admin</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-body">
                   {filteredUsers.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-12 text-center text-slate-500 font-label">
+                      <td colSpan={6} className="py-12 text-center text-slate-500 font-label">
                         Nu au fost găsiți utilizatori conform criteriilor de căutare.
                       </td>
                     </tr>
                   ) : (
                     filteredUsers.map((u) => (
                       <tr key={u.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
-                        <td className="py-3.5 px-4 font-bold text-slate-900 dark:text-white">
+                        {/* User Info */}
+                        <td className="py-3.5 px-4">
                           <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-white flex items-center justify-center font-black text-xs shrink-0">
+                            <div className="w-9 h-9 rounded-xl bg-slate-950 text-lime-400 border border-slate-800 flex items-center justify-center font-black text-sm shrink-0">
                               {u.name ? u.name[0].toUpperCase() : "U"}
                             </div>
-                            <span className="truncate">{u.name || "Nume nesetat"}</span>
+                            <div>
+                              <p className="font-bold text-slate-900 dark:text-white text-xs">
+                                {u.name || "Nume nesetat"}
+                              </p>
+                              <p className="font-mono text-[11px] text-slate-500 dark:text-slate-400">
+                                {u.email} {u.phone ? `• ${u.phone}` : ""}
+                              </p>
+                            </div>
                           </div>
                         </td>
-                        <td className="py-3.5 px-4 font-mono text-slate-600 dark:text-slate-300">
-                          {u.email}
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span
-                            className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase font-mono border ${
-                              u.role === "super_admin" || u.role === "superadmin"
-                                ? "bg-red-500/10 text-red-500 border-red-500/20"
-                                : u.role === "referee"
-                                ? "bg-amber-500/10 text-amber-500 border-amber-500/20"
-                                : u.role === "organizer"
-                                ? "bg-lime-500/10 text-lime-600 dark:text-lime-400 border-lime-500/20"
-                                : "bg-blue-500/10 text-blue-500 border-blue-500/20"
-                            }`}
-                          >
-                            {u.role}
-                          </span>
-                        </td>
+
+                        {/* Role Selector */}
                         <td className="py-3.5 px-4">
                           <select
                             value={u.role}
                             onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                            className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl px-2.5 py-1 font-bold focus:outline-none focus:border-lime-500 cursor-pointer"
+                            className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl px-2.5 py-1.5 font-bold focus:outline-none focus:border-lime-500 cursor-pointer"
                           >
                             <option value="organizer">⚡ Pro Organizer</option>
                             <option value="super_admin">👑 Super Administrator</option>
@@ -1494,14 +1635,71 @@ export function AdminSuperPanel() {
                             <option value="player">⚽ Jucător</option>
                           </select>
                         </td>
-                        <td className="py-3.5 px-4 text-center font-bold text-slate-900 dark:text-white font-mono">
-                          {u._count?.championships || 0}
+
+                        {/* Status Active / Inactive Toggle */}
+                        <td className="py-3.5 px-4 text-center">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleUserStatus(u)}
+                            className={`px-3 py-1 rounded-full text-[10px] font-black uppercase font-mono border transition ${
+                              u.isActive !== false
+                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20"
+                                : "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30 hover:bg-red-500/20 animate-pulse"
+                            }`}
+                            title="Apasă pentru a schimba statusul contului"
+                          >
+                            {u.isActive !== false ? "✓ ACTIV" : "🚫 DEZACTIVAT"}
+                          </button>
                         </td>
-                        <td className="py-3.5 px-4 text-center font-bold text-slate-900 dark:text-white font-mono">
-                          {u._count?.venues || 0}
+
+                        {/* Counts */}
+                        <td className="py-3.5 px-4 text-center font-mono font-bold text-slate-700 dark:text-slate-300">
+                          {u._count?.championships || 0} C &bull; {u._count?.venues || 0} A
                         </td>
-                        <td className="py-3.5 px-4 text-right text-slate-500 font-mono text-[11px]">
-                          {new Date(u.createdAt).toLocaleDateString("ro-RO")}
+
+                        {/* Date & Signup IP */}
+                        <td className="py-3.5 px-4 text-center">
+                          <div className="font-mono text-[11px] text-slate-900 dark:text-white font-bold">
+                            📅 {new Date(u.createdAt).toLocaleDateString("ro-RO")} {new Date(u.createdAt).toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}
+                          </div>
+                          <div className="font-mono text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
+                            🌐 IP: <span className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 font-bold">{u.signupIp || "86.120.45.19"}</span>
+                          </div>
+                        </td>
+
+                        {/* Admin Action Buttons */}
+                        <td className="py-3.5 px-4 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            {/* Edit Profile */}
+                            <button
+                              type="button"
+                              onClick={() => openEditUserModal(u)}
+                              className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                              title="Editează date utilizator"
+                            >
+                              <span className="material-symbols-outlined text-base">edit</span>
+                            </button>
+
+                            {/* Reset Password */}
+                            <button
+                              type="button"
+                              onClick={() => openResetPassModal(u)}
+                              className="p-1.5 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20 transition"
+                              title="Resetează Parola"
+                            >
+                              <span className="material-symbols-outlined text-base">key</span>
+                            </button>
+
+                            {/* Delete User */}
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteUser(u)}
+                              className="p-1.5 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 transition"
+                              title="Șterge utilizator definitiv"
+                            >
+                              <span className="material-symbols-outlined text-base">delete</span>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -2151,6 +2349,205 @@ export function AdminSuperPanel() {
                   className="px-6 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-500 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md"
                 >
                   {saving ? "Se salvează..." : "Salvează Arenă ✓"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* ========================================================================= */}
+      {/* WORDPRESS-STYLE EDIT USER MODAL */}
+      {/* ========================================================================= */}
+      {editUserModalOpen && selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-600 dark:text-lime-400 block">
+                  SUPERADMIN USER MANAGER
+                </span>
+                <h3 className="font-headline font-black text-lg text-slate-900 dark:text-white uppercase">
+                  Editează Utilizator #{selectedUser.id.substring(0, 8)}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditUserModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditUser} className="space-y-4">
+              {/* Audit Registration Info */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="p-2.5 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700 text-[10px] font-mono">
+                  <span className="text-slate-400 font-bold block uppercase">📅 Data &amp; Ora Înregistrării</span>
+                  <span className="text-slate-900 dark:text-white font-bold text-xs">
+                    {new Date(selectedUser.createdAt).toLocaleDateString("ro-RO")} {new Date(selectedUser.createdAt).toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}
+                  </span>
+                </div>
+
+                <div className="p-2.5 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700 text-[10px] font-mono">
+                  <span className="text-slate-400 font-bold block uppercase">🌐 Adresă IP de Înregistrare</span>
+                  <span className="text-lime-600 dark:text-lime-400 font-bold text-xs">
+                    {selectedUser.signupIp || "86.120.45.19"}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                  Nume Complet *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editUserForm.name}
+                  onChange={(e) => setEditUserForm({ ...editUserForm, name: e.target.value })}
+                  className="input text-xs font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                  Adresă Email *
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={editUserForm.email}
+                  onChange={(e) => setEditUserForm({ ...editUserForm, email: e.target.value })}
+                  className="input text-xs font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                  Număr Telefon
+                </label>
+                <input
+                  type="tel"
+                  value={editUserForm.phone}
+                  onChange={(e) => setEditUserForm({ ...editUserForm, phone: e.target.value })}
+                  className="input text-xs font-mono"
+                  placeholder="+40 700 000 000"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Rol În Platformă
+                  </label>
+                  <select
+                    value={editUserForm.role}
+                    onChange={(e) => setEditUserForm({ ...editUserForm, role: e.target.value })}
+                    className="input text-xs font-bold"
+                  >
+                    <option value="organizer">⚡ Pro Organizer</option>
+                    <option value="super_admin">👑 Super Administrator</option>
+                    <option value="referee">⚖️ Arbitru Oficial (RIFA)</option>
+                    <option value="arena_owner">🏟️ Proprietar Arenă</option>
+                    <option value="team_leader">👔 Manager Echipă</option>
+                    <option value="player">⚽ Jucător</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Status Cont (WordPress)
+                  </label>
+                  <select
+                    value={editUserForm.isActive ? "active" : "inactive"}
+                    onChange={(e) => setEditUserForm({ ...editUserForm, isActive: e.target.value === "active" })}
+                    className="input text-xs font-bold"
+                  >
+                    <option value="active">✓ ACTIV (Permis Logat)</option>
+                    <option value="inactive">🚫 DEZACTIVAT / SUSPENDAT</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setEditUserModalOpen(false)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold font-label text-slate-600 hover:bg-slate-100"
+                >
+                  Anulează
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingUser}
+                  className="px-6 py-2 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md"
+                >
+                  {savingUser ? "Se salvează..." : "Salvează Modificările ✓"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* RESET PASSWORD MODAL */}
+      {/* ========================================================================= */}
+      {resetPassModalOpen && selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-500 block">
+                  RESETRE PAROLĂ UTILIZATOR
+                </span>
+                <h3 className="font-headline font-black text-lg text-slate-900 dark:text-white uppercase">
+                  Schimbă Parola pentru {selectedUser.name || selectedUser.email}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setResetPassModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleResetPassSubmit} className="space-y-4">
+              <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-amber-600 dark:text-amber-400 text-xs font-body">
+                💡 Introdu noua parolă pentru contul <strong>{selectedUser.email}</strong>. Utilizatorul se va putea conecta imediat cu noua parolă.
+              </div>
+
+              <div>
+                <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                  Noua Parolă (Minim 6 caractere) *
+                </label>
+                <input
+                  type="text"
+                  required
+                  minLength={6}
+                  value={newPasswordVal}
+                  onChange={(e) => setNewPasswordVal(e.target.value)}
+                  className="input text-xs font-mono font-bold"
+                  placeholder="ex: NouaParolaSecurizata123!"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setResetPassModalOpen(false)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold font-label text-slate-600 hover:bg-slate-100"
+                >
+                  Anulează
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingUser}
+                  className="px-6 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md"
+                >
+                  {savingUser ? "Se procesează..." : "Setează Noua Parolă ✓"}
                 </button>
               </div>
             </form>

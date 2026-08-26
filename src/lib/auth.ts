@@ -71,6 +71,10 @@ export const authOptions: NextAuthOptions = {
 
         if (!user) return null;
 
+        if (user.isActive === false) {
+          throw new Error("Contul tău a fost dezactivat / suspendat de către un SuperAdmin.");
+        }
+
         // Verify password with bcrypt
         let valid = false;
         if (user.passwordHash) {

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -54,14 +55,9 @@ export default function SignUpPage() {
         {/* Left Branding Visual */}
         <div className="w-full md:w-5/12 bg-slate-950 p-8 lg:p-10 flex flex-col justify-between relative overflow-hidden text-white">
           <div className="relative z-10">
-            <Link href="/" className="flex items-center gap-2.5 mb-8 group">
-              <span className="text-lime-400 text-3xl material-symbols-outlined">
-                sports_soccer
-              </span>
-              <span className="text-2xl font-black italic tracking-tighter font-headline text-white">
-                Ligue
-              </span>
-            </Link>
+            <div className="mb-8">
+              <BrandLogo size="lg" href="/" />
+            </div>
 
             <h2 className="text-2xl sm:text-3xl font-headline font-extrabold leading-tight mb-4 text-white">
               Creează Contul <br /> Tău Pro.

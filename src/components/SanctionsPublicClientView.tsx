@@ -140,9 +140,9 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 font-body">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8 font-body">
       {/* Header Banner */}
-      <section className="relative rounded-3xl bg-slate-950 text-white p-6 sm:p-10 border border-slate-800 shadow-2xl overflow-hidden">
+      <section className="relative rounded-3xl bg-slate-950 text-white p-5 sm:p-10 border border-slate-800 shadow-2xl overflow-hidden">
         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-red-600/15 blur-3xl pointer-events-none rounded-full"></div>
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
@@ -150,7 +150,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
               <span className="material-symbols-outlined text-sm">gavel</span>
               COMISIA DE DISCIPLINĂ &amp; ARBITRAJ
             </span>
-            <h1 className="text-2xl sm:text-4xl font-black italic font-headline uppercase tracking-tight text-white">
+            <h1 className="text-xl sm:text-4xl font-black italic font-headline uppercase tracking-tight text-white">
               Sancțiuni &amp; <span className="text-red-500">Suspendări Oficiale</span>
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-body">
@@ -161,7 +161,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
           <button
             type="button"
             onClick={handlePrintReport}
-            className="px-5 py-3 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-headline font-black text-xs uppercase tracking-wider shadow-lg shadow-red-600/30 flex items-center justify-center gap-2 transition active:scale-95 shrink-0"
+            className="px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-headline font-black text-xs uppercase tracking-wider shadow-lg shadow-red-600/30 flex items-center justify-center gap-2 transition active:scale-95 shrink-0"
           >
             <span className="material-symbols-outlined text-base">picture_as_pdf</span>
             <span>Descarcă Raport PDF</span>
@@ -261,7 +261,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
       </section>
 
       {/* Filter Tray */}
-      <section className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+      <section className="p-4 sm:p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
           {/* Live Search */}
           <div className="md:col-span-4 relative">
@@ -273,7 +273,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
               placeholder="Caută jucător, echipă sau ligă..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition"
+              className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition"
             />
           </div>
 
@@ -282,7 +282,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
             <select
               value={selectedChampionship}
               onChange={(e) => setSelectedChampionship(e.target.value)}
-              className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition"
+              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition"
             >
               <option value="all">🏆 Toate Campionatele</option>
               {championships.map((c) => (
@@ -298,7 +298,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
             <button
               type="button"
               onClick={() => setCardFilter("all")}
-              className={`px-3 py-2 rounded-xl text-xs font-bold font-label transition shrink-0 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 ${
                 cardFilter === "all"
                   ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
                   : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
@@ -309,7 +309,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
             <button
               type="button"
               onClick={() => setCardFilter("suspended")}
-              className={`px-3 py-2 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${
                 cardFilter === "suspended"
                   ? "bg-red-600 text-white font-black shadow-sm"
                   : "bg-red-500/10 text-red-600 dark:text-red-400"
@@ -320,7 +320,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
             <button
               type="button"
               onClick={() => setCardFilter("red")}
-              className={`px-3 py-2 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${
                 cardFilter === "red"
                   ? "bg-red-600 text-white font-black shadow-sm"
                   : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
@@ -331,7 +331,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
             <button
               type="button"
               onClick={() => setCardFilter("yellow")}
-              className={`px-3 py-2 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${
                 cardFilter === "yellow"
                   ? "bg-amber-500 text-slate-950 font-black shadow-sm"
                   : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
@@ -343,15 +343,15 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
         </div>
       </section>
 
-      {/* Sanctions Table View */}
-      <section className="card overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm">
+      {/* Sanctions View Container */}
+      <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
         <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
-          <h2 className="text-sm font-bold font-headline uppercase text-slate-900 dark:text-white flex items-center gap-2">
-            <span className="w-2 h-5 bg-red-600 rounded-full"></span>
-            Tabel Evidență Sancțiuni ({filteredSanctions.length} înregistrări)
+          <h2 className="text-xs sm:text-sm font-bold font-headline uppercase text-slate-900 dark:text-white flex items-center gap-2">
+            <span className="w-2 h-4 bg-red-600 rounded-full"></span>
+            Evidență Sancțiuni ({filteredSanctions.length})
           </h2>
-          <span className="text-[11px] font-label text-slate-500 dark:text-slate-400">
-            Actualizat în timp real din rapoartele oficiale
+          <span className="text-[10px] font-label text-slate-500 dark:text-slate-400 hidden sm:inline">
+            1 Linie per înregistrare &bull; Actualizat live
           </span>
         </div>
 
@@ -362,113 +362,179 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
             <p className="text-xs">Toți jucătorii sunt eligibili și nu au avertismente active.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-body text-slate-700 dark:text-slate-300">
-              <thead className="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-400 uppercase font-label font-bold text-[10px] tracking-wider border-b border-slate-200 dark:border-slate-800">
-                <tr>
-                  <th className="p-4">Jucător Sancționat</th>
-                  <th className="p-4">Echipă &amp; Club</th>
-                  <th className="p-4">Campionat</th>
-                  <th className="p-4 text-center">Cartonașe</th>
-                  <th className="p-4">Status Suspendare</th>
-                  <th className="p-4">Motiv &amp; Notă Arbitru</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {filteredSanctions.map((s) => (
-                  <tr key={s.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
-                    {/* Player Info */}
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-slate-950 text-white font-black flex items-center justify-center shrink-0 border border-slate-800">
-                          {s.playerImage ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={s.playerImage} alt={s.playerName} className="w-full h-full object-cover rounded-xl" />
-                          ) : (
-                            s.playerName[0].toUpperCase()
+          <>
+            {/* ------------------------------------------------------------- */}
+            {/* DESKTOP TABLE VIEW (Single-Line 1-Line Row, No Text Wrap) */}
+            {/* ------------------------------------------------------------- */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs font-body text-slate-700 dark:text-slate-300 border-collapse">
+                <thead className="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-400 uppercase font-label font-bold text-[10px] tracking-wider border-b border-slate-200 dark:border-slate-800">
+                  <tr>
+                    <th className="py-3 px-4 whitespace-nowrap">Jucător Sancționat</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Echipă &amp; Club</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Campionat</th>
+                    <th className="py-3 px-4 text-center whitespace-nowrap">Cartonașe</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Status Suspendare</th>
+                    <th className="py-3 px-4 whitespace-nowrap">Motiv / Abatere</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
+                  {filteredSanctions.map((s) => (
+                    <tr key={s.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                      {/* Player */}
+                      <td className="py-3 px-4 whitespace-nowrap font-bold text-slate-900 dark:text-white">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-slate-950 text-lime-400 border border-slate-800 flex items-center justify-center text-xs font-black shrink-0">
+                            {s.playerName[0].toUpperCase()}
+                          </div>
+                          <span className="truncate max-w-[160px]" title={s.playerName}>
+                            {s.playerName} {s.number && <span className="text-[10px] font-mono text-slate-400">#{s.number}</span>}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Team */}
+                      <td className="py-3 px-4 whitespace-nowrap font-label">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="w-2.5 h-2.5 rounded-full shrink-0 border border-black/20"
+                            style={{ backgroundColor: s.teamColor || "#84cc16" }}
+                          ></span>
+                          <span className="font-bold text-slate-900 dark:text-white truncate max-w-[150px]" title={s.teamName}>
+                            {s.teamName}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Championship */}
+                      <td className="py-3 px-4 whitespace-nowrap font-label">
+                        <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold truncate max-w-[140px] inline-block" title={s.championshipName}>
+                          {s.championshipName}
+                        </span>
+                      </td>
+
+                      {/* Cards Chips */}
+                      <td className="py-3 px-4 text-center whitespace-nowrap">
+                        <div className="inline-flex items-center gap-1.5 font-mono font-bold text-[11px]">
+                          {s.yellowCards > 0 && (
+                            <span className="px-2 py-0.5 rounded bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40">
+                              🟨 {s.yellowCards}
+                            </span>
+                          )}
+                          {s.redCards > 0 && (
+                            <span className="px-2 py-0.5 rounded bg-red-600/20 text-red-700 dark:text-red-300 border border-red-500/40">
+                              🟥 {s.redCards}
+                            </span>
+                          )}
+                          {s.yellowCards === 0 && s.redCards === 0 && (
+                            <span className="text-slate-400 text-[10px]">-</span>
                           )}
                         </div>
-                        <div>
-                          <p className="font-headline font-bold text-slate-900 dark:text-white text-sm">
-                            {s.playerName} {s.number && <span className="text-xs font-mono text-slate-400">#{s.number}</span>}
-                          </p>
-                          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-label">
-                            {s.position || "Jucător"}
-                          </p>
+                      </td>
+
+                      {/* Status Badge */}
+                      <td className="py-3 px-4 whitespace-nowrap font-label">
+                        {s.isSuspended ? (
+                          <span className="px-2.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black uppercase tracking-wider shadow-xs inline-flex items-center gap-1 animate-pulse">
+                            <span>🚫</span> SUSPENDAT ({s.suspensionRounds || 1} ETAPĂ)
+                          </span>
+                        ) : s.yellowCards >= 3 ? (
+                          <span className="px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1">
+                            <span>⚠️</span> Risc Suspendare (3 🟨)
+                          </span>
+                        ) : (
+                          <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1">
+                            <span>✓</span> ELIGIBIL
+                          </span>
+                        )}
+                      </td>
+
+                      {/* Reason Single Line */}
+                      <td className="py-3 px-4 whitespace-nowrap text-xs">
+                        <span className="text-slate-800 dark:text-slate-200 font-medium truncate max-w-[220px] inline-block align-middle" title={s.suspensionReason || s.lastEventNote || "Avertisment oficial"}>
+                          {s.suspensionReason || s.lastEventNote || "Avertisment oficial"}
+                        </span>
+                        {s.lastMatchStage && (
+                          <span className="ml-2 text-[10px] font-mono text-slate-400 font-normal">
+                            ({s.lastMatchStage})
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* ------------------------------------------------------------- */}
+            {/* MOBILE COMPACT CARDS VIEW (Elevated UI/UX 1-Thumb Compact) */}
+            {/* ------------------------------------------------------------- */}
+            <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800/80">
+              {filteredSanctions.map((s) => (
+                <div key={s.id} className="p-3.5 space-y-2 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                  {/* Top Bar: Player & Team */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="w-7 h-7 rounded-lg bg-slate-950 text-lime-400 border border-slate-800 flex items-center justify-center text-xs font-black shrink-0">
+                        {s.playerName[0].toUpperCase()}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-headline font-bold text-slate-900 dark:text-white text-xs truncate">
+                          {s.playerName} {s.number && <span className="text-[10px] font-mono text-slate-400">#{s.number}</span>}
+                        </p>
+                        <div className="flex items-center gap-1.5">
+                          <span
+                            className="w-2 h-2 rounded-full shrink-0 border border-black/20"
+                            style={{ backgroundColor: s.teamColor || "#84cc16" }}
+                          ></span>
+                          <span className="text-[10px] font-label font-bold text-slate-600 dark:text-slate-300 truncate">
+                            {s.teamName}
+                          </span>
                         </div>
                       </div>
-                    </td>
-
-                    {/* Team */}
-                    <td className="p-4 font-label">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="w-3 h-3 rounded-full shrink-0 border border-black/20"
-                          style={{ backgroundColor: s.teamColor || "#84cc16" }}
-                        ></span>
-                        <span className="font-bold text-slate-900 dark:text-white">{s.teamName}</span>
-                      </div>
-                    </td>
-
-                    {/* Championship */}
-                    <td className="p-4 font-label">
-                      <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold">
-                        {s.championshipName}
-                      </span>
-                    </td>
-
-                    {/* Cards Chips */}
-                    <td className="p-4 text-center">
-                      <div className="inline-flex items-center gap-2 font-mono font-bold text-xs">
-                        {s.yellowCards > 0 && (
-                          <span className="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-700 dark:text-amber-300 border border-amber-400/40">
-                            🟨 {s.yellowCards}
-                          </span>
-                        )}
-                        {s.redCards > 0 && (
-                          <span className="px-2 py-0.5 rounded-md bg-red-600/20 text-red-700 dark:text-red-300 border border-red-500/40">
-                            🟥 {s.redCards}
-                          </span>
-                        )}
-                        {s.yellowCards === 0 && s.redCards === 0 && (
-                          <span className="text-slate-400 text-[10px]">-</span>
-                        )}
-                      </div>
-                    </td>
+                    </div>
 
                     {/* Suspension Badge */}
-                    <td className="p-4 font-label">
+                    <div className="shrink-0">
                       {s.isSuspended ? (
-                        <span className="px-3 py-1 rounded-full bg-red-600 text-white text-[10px] font-black uppercase tracking-wider shadow-sm flex items-center gap-1 w-fit animate-pulse">
-                          <span>🚫</span> SUSPENDAT ({s.suspensionRounds || 1} ETAPĂ)
+                        <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[9px] font-black uppercase tracking-wider shadow-xs flex items-center gap-0.5 animate-pulse">
+                          <span>🚫</span> SUSPENDAT ({s.suspensionRounds || 1}E)
                         </span>
                       ) : s.yellowCards >= 3 ? (
-                        <span className="px-3 py-1 rounded-full bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 w-fit">
-                          <span>⚠️</span> Risc Suspendare (3 🟨)
+                        <span className="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40 text-[9px] font-bold uppercase tracking-wider flex items-center gap-0.5">
+                          <span>⚠️</span> RISC (3 🟨)
                         </span>
                       ) : (
-                        <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 w-fit">
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 text-[9px] font-bold uppercase tracking-wider flex items-center gap-0.5">
                           <span>✓</span> ELIGIBIL
                         </span>
                       )}
-                    </td>
+                    </div>
+                  </div>
 
-                    {/* Reason / Match note */}
-                    <td className="p-4 text-xs">
-                      <p className="text-slate-800 dark:text-slate-200 font-medium">
-                        {s.suspensionReason || s.lastEventNote || "Conform raportului oficial de meci"}
-                      </p>
-                      {s.lastMatchStage && (
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 font-label block mt-0.5">
-                          📍 {s.lastMatchStage} {s.lastEventMinute ? `• Min. ${s.lastEventMinute}'` : ""}
+                  {/* Bottom Bar: Cards & Reason */}
+                  <div className="flex items-center justify-between text-[10px] font-label text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-800/60 gap-2">
+                    <div className="inline-flex items-center gap-1 font-mono font-bold shrink-0">
+                      {s.yellowCards > 0 && (
+                        <span className="px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40">
+                          🟨 {s.yellowCards}
                         </span>
                       )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      {s.redCards > 0 && (
+                        <span className="px-1.5 py-0.2 rounded bg-red-600/20 text-red-700 dark:text-red-300 border border-red-500/40">
+                          🟥 {s.redCards}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="truncate text-right font-medium text-slate-700 dark:text-slate-300">
+                      {s.suspensionReason || s.lastEventNote || "Avertisment comisie"} {s.lastMatchStage ? `• ${s.lastMatchStage}` : ""}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </section>
     </div>
