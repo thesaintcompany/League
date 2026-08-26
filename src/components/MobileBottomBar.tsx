@@ -26,8 +26,7 @@ export function MobileBottomBar() {
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
-            (item.match && pathname?.startsWith(item.match)) ||
-            (item.href === "/brackets" && pathname?.startsWith("/harta-campionat"));
+            (item.match && pathname?.startsWith(item.match));
 
           return (
             <Link

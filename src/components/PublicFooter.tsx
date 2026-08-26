@@ -8,7 +8,7 @@ export function PublicFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl pt-12 pb-24 md:pb-12 px-4 sm:px-6 lg:px-12 text-slate-600 dark:text-slate-400 font-body transition-colors duration-200 mt-auto">
+    <footer className="border-t border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl pt-12 pb-28 lg:pb-12 px-4 sm:px-6 lg:px-12 text-slate-600 dark:text-slate-400 font-body transition-colors duration-200 mt-auto">
       <div className="max-w-7xl mx-auto space-y-10">
         {/* Main 4-Column Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">

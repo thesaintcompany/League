@@ -125,8 +125,11 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
               )}
             </div>
 
-            {/* Position filter */}
-            <div className="flex flex-wrap gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 shrink-0">
+            {/* Position filter - Smooth Touch Carousel on Mobile */}
+            <div
+              className="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 overflow-x-auto no-scrollbar scroll-smooth overscroll-x-contain shrink-0"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
               {[
                 { id: "all", label: "Toate" },
                 { id: "Atacant", label: "Atacanți" },
@@ -138,10 +141,10 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                   key={pos.id}
                   type="button"
                   onClick={() => setSelectedPosition(pos.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 whitespace-nowrap active:scale-95 ${
                     selectedPosition === pos.id
-                      ? "bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black shadow-md"
-                      : "text-slate-300 hover:text-white"
+                      ? "bg-amber-400 text-slate-950 font-black shadow-md scale-105"
+                      : "text-slate-400 hover:text-white hover:bg-slate-800"
                   }`}
                 >
                   {pos.label}

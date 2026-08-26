@@ -6,7 +6,7 @@ import { isSuperAdmin } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
-// GET system settings (platform commission %, payment gateways, activeLogoUrl)
+// GET system settings (platform commission %, payment gateways, activeLogoUrl, company legal data)
 export async function GET() {
   const session = await getServerSession(authOptions);
   const user = session?.user as any;
@@ -20,8 +20,18 @@ export async function GET() {
       data: {
         id: "default",
         activeLogoUrl: "/images/logos/logo-1.png",
+        companyName: "buu.ro S.R.L.",
+        companyCui: "RO12345678",
+        companyRegCom: "J35/123/2024",
+        companyAddress: "Timișoara, Județul Timiș, România",
+        companyEmail: "contact@buu.ro",
+        companyPhone: "+40 700 000 000",
         platformFeePercent: 10.0,
+        applePayMerchantId: "merchant.ro.buu.league",
+        applePayDomainVerified: true,
         applePayEnabled: true,
+        googlePayMerchantId: "buu-ro-league-pay",
+        googlePayEnvironment: "PRODUCTION",
         googlePayEnabled: true,
         payoutMinThreshold: 100,
       },
@@ -32,6 +42,9 @@ export async function GET() {
   if (!isSuperAdmin(user)) {
     return NextResponse.json({
       activeLogoUrl: settings.activeLogoUrl || "/images/logos/logo-1.png",
+      companyName: settings.companyName,
+      companyCui: settings.companyCui,
+      companyEmail: settings.companyEmail,
       platformFeePercent: settings.platformFeePercent,
       applePayEnabled: settings.applePayEnabled,
       googlePayEnabled: settings.googlePayEnabled,
@@ -77,11 +90,22 @@ export async function PUT(req: Request) {
     const body = await req.json();
     const {
       activeLogoUrl,
+      companyName,
+      companyCui,
+      companyRegCom,
+      companyAddress,
+      companyEmail,
+      companyPhone,
       platformFeePercent,
       stripePublishableKey,
       stripeSecretKey,
+      stripeWebhookSecret,
       paypalClientId,
+      applePayMerchantId,
+      applePayDomainVerified,
       applePayEnabled,
+      googlePayMerchantId,
+      googlePayEnvironment,
       googlePayEnabled,
       payoutMinThreshold,
     } = body;
@@ -90,22 +114,44 @@ export async function PUT(req: Request) {
       where: { id: "default" },
       update: {
         activeLogoUrl: activeLogoUrl || undefined,
+        companyName: companyName !== undefined ? companyName : undefined,
+        companyCui: companyCui !== undefined ? companyCui : undefined,
+        companyRegCom: companyRegCom !== undefined ? companyRegCom : undefined,
+        companyAddress: companyAddress !== undefined ? companyAddress : undefined,
+        companyEmail: companyEmail !== undefined ? companyEmail : undefined,
+        companyPhone: companyPhone !== undefined ? companyPhone : undefined,
         platformFeePercent: typeof platformFeePercent === "number" ? platformFeePercent : undefined,
         stripePublishableKey: stripePublishableKey !== undefined ? stripePublishableKey : undefined,
         stripeSecretKey: stripeSecretKey !== undefined ? stripeSecretKey : undefined,
+        stripeWebhookSecret: stripeWebhookSecret !== undefined ? stripeWebhookSecret : undefined,
         paypalClientId: paypalClientId !== undefined ? paypalClientId : undefined,
+        applePayMerchantId: applePayMerchantId !== undefined ? applePayMerchantId : undefined,
+        applePayDomainVerified: applePayDomainVerified !== undefined ? Boolean(applePayDomainVerified) : undefined,
         applePayEnabled: applePayEnabled !== undefined ? Boolean(applePayEnabled) : undefined,
+        googlePayMerchantId: googlePayMerchantId !== undefined ? googlePayMerchantId : undefined,
+        googlePayEnvironment: googlePayEnvironment !== undefined ? googlePayEnvironment : undefined,
         googlePayEnabled: googlePayEnabled !== undefined ? Boolean(googlePayEnabled) : undefined,
         payoutMinThreshold: typeof payoutMinThreshold === "number" ? payoutMinThreshold : undefined,
       },
       create: {
         id: "default",
         activeLogoUrl: activeLogoUrl || "/images/logos/logo-1.png",
+        companyName: companyName || "buu.ro S.R.L.",
+        companyCui: companyCui || "RO12345678",
+        companyRegCom: companyRegCom || "J35/123/2024",
+        companyAddress: companyAddress || "Timișoara, Județul Timiș, România",
+        companyEmail: companyEmail || "contact@buu.ro",
+        companyPhone: companyPhone || "+40 700 000 000",
         platformFeePercent: typeof platformFeePercent === "number" ? platformFeePercent : 10.0,
         stripePublishableKey: stripePublishableKey || null,
         stripeSecretKey: stripeSecretKey || null,
+        stripeWebhookSecret: stripeWebhookSecret || null,
         paypalClientId: paypalClientId || null,
+        applePayMerchantId: applePayMerchantId || "merchant.ro.buu.league",
+        applePayDomainVerified: Boolean(applePayDomainVerified),
         applePayEnabled: Boolean(applePayEnabled),
+        googlePayMerchantId: googlePayMerchantId || "buu-ro-league-pay",
+        googlePayEnvironment: googlePayEnvironment || "PRODUCTION",
         googlePayEnabled: Boolean(googlePayEnabled),
         payoutMinThreshold: typeof payoutMinThreshold === "number" ? payoutMinThreshold : 100,
       },

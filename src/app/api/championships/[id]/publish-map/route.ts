@@ -45,10 +45,10 @@ export async function POST(
     ok: true,
     isBracketPublished: updated.isBracketPublished,
     shareCode: updated.shareCode,
-    shareUrl: `/harta-campionat?id=${updated.id}`,
-    codeUrl: `/harta-campionat?code=${updated.shareCode}`,
+    shareUrl: `/brackets?id=${updated.id}`,
+    codeUrl: `/brackets?code=${updated.shareCode}`,
     message: updated.isBracketPublished
-      ? `Harta campionatului "${updated.name}" este acum PUBLICĂ (Cod: ${updated.shareCode})!`
-      : `Harta campionatului a fost trecută pe mod PRIVAT.`,
+      ? `Tabloul campionatului "${updated.name}" este acum PUBLIC (Cod: ${updated.shareCode})!`
+      : `Tabloul campionatului a fost trecut pe mod PRIVAT.`,
   });
 }

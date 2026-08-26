@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { appSignOut } from "@/lib/logout";
 import { Trophy, LogOut, User, LayoutDashboard } from "lucide-react";
 
 export function Navbar() {
@@ -24,7 +25,7 @@ export function Navbar() {
               <Link href="/profile" className="btn-ghost gap-1">
                 <User className="h-4 w-4" /> {session.user.name || session.user.email}
               </Link>
-              <button onClick={() => signOut({ callbackUrl: "/" })} className="btn-secondary gap-1">
+              <button onClick={() => appSignOut("/")} className="btn-secondary gap-1">
                 <LogOut className="h-4 w-4" /> Ieșire
               </button>
             </>

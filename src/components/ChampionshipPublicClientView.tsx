@@ -271,15 +271,6 @@ export function ChampionshipPublicClientView({
             <span className="truncate">Clasament</span>
           </button>
         </div>
-
-        <Link
-          href={`/harta-campionat/${championship?.shareCode || "LP-2026"}`}
-          target="_blank"
-          className="px-4 py-2 sm:py-2.5 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-lime-400 text-xs font-bold font-label uppercase flex items-center justify-center gap-1.5 transition border border-slate-300 dark:border-slate-700 shadow-sm"
-        >
-          <span>Pagină Dedicată</span>
-          <span className="material-symbols-outlined text-sm">open_in_new</span>
-        </Link>
       </div>
 
       {/* 3. View Render */}
@@ -656,26 +647,17 @@ export function ChampionshipPublicClientView({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 pt-2">
+            <div className="pt-2">
               <a
                 href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
                   `Vezi Campionatul Oficial ${championship?.name || "Ligue Pro"}: ${shareUrl}`
                 )}`}
                 target="_blank"
                 rel="noreferrer"
-                className="py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-headline font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow"
+                className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-headline font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow"
               >
-                <span>💬</span> WhatsApp
+                <span>💬</span> Trimite pe WhatsApp
               </a>
-
-              <Link
-                href={`/harta-campionat/${championship?.shareCode || "LP-2026"}`}
-                target="_blank"
-                className="py-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-2xl text-xs font-headline font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition border border-slate-300 dark:border-slate-700"
-              >
-                <span>Harta Separată</span>
-                <span className="material-symbols-outlined text-sm">open_in_new</span>
-              </Link>
             </div>
           </div>
         </div>

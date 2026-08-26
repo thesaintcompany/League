@@ -95,6 +95,20 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs without prepending hardcoded localhost:3000
+      if (url.startsWith("/")) return url;
+      // If URL is on same domain, allow it
+      try {
+        const urlObj = new URL(url);
+        if (typeof window !== "undefined" && urlObj.origin === window.location.origin) {
+          return url;
+        }
+        return urlObj.pathname + urlObj.search + urlObj.hash;
+      } catch {
+        return "/";
+      }
+    },
     async session({ session, token }) {
       if (token && session.user) {
         (session.user as any).id = token.id;

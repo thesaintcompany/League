@@ -196,8 +196,11 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
           </div>
         </div>
 
-        {/* Interactive Counties Grid / Chips */}
-        <div className="flex flex-wrap gap-2">
+        {/* Interactive Counties Grid / Smooth Touch Carousel */}
+        <div
+          className="flex items-center sm:flex-wrap gap-2 overflow-x-auto no-scrollbar scroll-smooth overscroll-x-contain py-1"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
           {ROMANIAN_COUNTIES_WITH_VENUES.map((c) => {
             const count =
               c.id === "all"
@@ -211,9 +214,9 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                 key={c.id}
                 type="button"
                 onClick={() => setSelectedCounty(c.id)}
-                className={`px-3.5 py-2 rounded-2xl text-xs font-label font-bold transition flex items-center gap-2 border fluid-press ${
+                className={`px-3.5 py-2 rounded-2xl text-xs font-label font-bold transition flex items-center gap-2 border shrink-0 whitespace-nowrap active:scale-95 ${
                   isSelected
-                    ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-950 dark:border-lime-400 font-black shadow-md"
+                    ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-950 dark:border-lime-400 font-black shadow-md scale-105"
                     : "bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700"
                 }`}
               >

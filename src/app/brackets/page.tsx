@@ -200,7 +200,7 @@ export default async function PublicBracketsPage({
               href="/harta-romaniei"
               className="inline-block px-5 py-2.5 rounded-2xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase shadow-md mt-2"
             >
-              Vezi Campionate (Harta RO)
+              Campionate
             </Link>
           </div>
         ) : (

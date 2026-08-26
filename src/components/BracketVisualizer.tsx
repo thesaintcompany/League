@@ -77,9 +77,9 @@ export function BracketVisualizer({
     }
   }
 
-  // Get clean standalone public URLs
+  // Get clean direct public URL
   const origin = typeof window !== "undefined" ? window.location.origin : "https://sp.buu.ro";
-  const publicShareUrl = `${origin}/harta-campionat/${currentShareCode}`;
+  const publicShareUrl = `${origin}/brackets?code=${currentShareCode}`;
 
   function copyToClipboard(text: string, type: "link" | "code") {
     navigator.clipboard.writeText(text);
@@ -139,15 +139,6 @@ export function BracketVisualizer({
             <span className="material-symbols-outlined text-base">share</span>
             <span>Distribuie</span>
           </button>
-
-          <Link
-            href={`/harta-campionat/${currentShareCode}`}
-            target="_blank"
-            className="flex-1 sm:flex-initial px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-800 dark:text-lime-400 border border-slate-200 dark:border-slate-700 font-label font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition"
-          >
-            <span>Pagină Separată</span>
-            <span className="material-symbols-outlined text-sm">open_in_new</span>
-          </Link>
 
           {isAdmin && championshipId && (
             <button
@@ -550,26 +541,17 @@ export function BracketVisualizer({
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-2 gap-3 pt-2">
+            <div className="pt-2">
               <a
                 href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
                   `Urmărește Harta Campionatului ${championshipName || "Ligue Pro"}: ${publicShareUrl}`
                 )}`}
                 target="_blank"
                 rel="noreferrer"
-                className="py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-headline font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow"
+                className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-headline font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow"
               >
-                <span>💬</span> WhatsApp
+                <span>💬</span> Trimite pe WhatsApp
               </a>
-
-              <Link
-                href={`/harta-campionat/${currentShareCode}`}
-                target="_blank"
-                className="py-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-2xl text-xs font-headline font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition border border-slate-300 dark:border-slate-700"
-              >
-                <span>Deschide Pagina</span>
-                <span className="material-symbols-outlined text-sm">open_in_new</span>
-              </Link>
             </div>
           </div>
         </div>

@@ -175,7 +175,7 @@ function WelcomePortalForm() {
                 href="/harta-romaniei"
                 className="px-6 py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-500 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-xl shadow-lime-500/20 flex items-center justify-center gap-2 transition active:scale-95 group/btn"
               >
-                <span>Vezi Campionate (Harta RO)</span>
+                <span>Campionate</span>
                 <span className="material-symbols-outlined text-[18px] group-hover/btn:translate-x-1 transition-transform">
                   arrow_forward
                 </span>
@@ -238,11 +238,10 @@ function WelcomePortalForm() {
                       key={acc.id}
                       type="button"
                       onClick={() => pickAccount(acc)}
-                      className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between ${
-                        isSelected
+                      className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between ${isSelected
                           ? "border-lime-500 bg-lime-500/10 text-slate-950 dark:text-white shadow-md ring-1 ring-lime-400"
                           : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
-                      }`}
+                        }`}
                     >
                       <div className="flex justify-between items-center w-full mb-1">
                         <span className="material-symbols-outlined text-[18px] text-lime-600 dark:text-lime-400">

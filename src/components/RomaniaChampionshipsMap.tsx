@@ -51,6 +51,14 @@ const ROMANIAN_REGIONS: Record<string, string[]> = {
   "Dobrogea & Maramureș": ["Constanța", "Tulcea", "Maramureș", "Satu Mare"],
 };
 
+const ALL_COUNTIES = [
+  "Timiș", "București", "Cluj", "Iași", "Brașov", "Constanța", "Dolj", "Bihor", "Argeș", "Prahova",
+  "Alba", "Arad", "Bacău", "Bistrița-Năsăud", "Botoșani", "Brăila", "Buzău", "Caraș-Severin",
+  "Călărași", "Covasna", "Dâmbovița", "Galați", "Giurgiu", "Gorj", "Harghita", "Hunedoara",
+  "Ialomița", "Ilfov", "Maramureș", "Mehedinți", "Mureș", "Neamț", "Olt", "Satu Mare",
+  "Sălaj", "Sibiu", "Suceava", "Teleorman", "Tulcea", "Vaslui", "Vâlcea", "Vrancea"
+];
+
 export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = [] }: RomaniaMapProps) {
   const { selectedSport, selectedCategory, currentSportMeta, matchesCategoryFilter } = useSportContext();
   const [selectedCounty, setSelectedCounty] = useState<string>("Timiș");
@@ -108,9 +116,9 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
       list = list.filter(
         (c) =>
           c.name.toLowerCase().includes(q) ||
-          c.sport.toLowerCase().includes(q) ||
+          (c.description && c.description.toLowerCase().includes(q)) ||
           (c.city && c.city.toLowerCase().includes(q)) ||
-          (c.county && c.county.toLowerCase().includes(q))
+          (c.sport && c.sport.toLowerCase().includes(q))
       );
     }
 
@@ -123,10 +131,10 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
   // Filtered venues for selected county or nearby
   const countyVenues = useMemo(() => {
     return sportVenues.filter((v) => {
-      const vCounty = v.county?.toLowerCase() || "";
+      const vCounty = (v.county || "").toLowerCase();
       const vLoc = v.location.toLowerCase();
       const sCounty = selectedCounty.toLowerCase();
-      return vCounty.includes(sCounty) || vLoc.includes(sCounty) || (sCounty === "bucurești" && (vLoc.includes("bucuresti") || vLoc.includes("ilfov")));
+      return vCounty.includes(sCounty) || vLoc.includes(sCounty);
     });
   }, [sportVenues, selectedCounty]);
 
@@ -157,9 +165,9 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
   }, [selectedCounty]);
 
   return (
-    <div className="space-y-6 sm:space-y-10 font-body">
+    <div className="space-y-6 sm:space-y-8 font-body">
       {/* Hero Header */}
-      <section className="bg-white dark:bg-slate-950 text-slate-900 dark:text-white rounded-3xl p-6 sm:p-10 lg:p-12 relative overflow-hidden shadow-sm border border-slate-200 dark:border-lime-400/30 transition-colors duration-200">
+      <section className="bg-white dark:bg-slate-950 text-slate-900 dark:text-white rounded-3xl p-5 sm:p-8 lg:p-10 relative overflow-hidden shadow-sm border border-slate-200 dark:border-lime-400/30 transition-colors duration-200">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-lime-400/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -181,12 +189,12 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
           </h1>
 
           <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm lg:text-base leading-relaxed max-w-3xl font-body">
-            Fiecare județ are propriul său selector dedicat. Apasă pe oricare dintre cele <strong>42 de regiuni administrative</strong> de pe desenul vectorial al României pentru a deschide instant ligile, turneele și bazele sportive arondate.
+            Fiecare județ are propriul său selector dedicat. Alege oricare dintre cele <strong>42 de regiuni administrative</strong> din carusel sau direct pe hartă pentru a vedea ligile și arenele locale.
           </p>
 
-          {/* Quick Scope Filter Bar with Mobile Scroll */}
-          <div className="pt-2 flex flex-wrap gap-1.5 sm:gap-2 items-center">
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 font-label mr-1">Filtru Tip:</span>
+          {/* Quick Scope Filter Bar with Smooth Mobile Touch Scroll */}
+          <div className="pt-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth overscroll-x-contain py-1" style={{ scrollbarWidth: "none" }}>
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 font-label mr-1 whitespace-nowrap shrink-0">Filtru:</span>
             {[
               { id: "all", label: "Toate" },
               { id: "national", label: `🇷🇴 Naționale (${nationalChampionships.length})` },
@@ -197,7 +205,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                 key={sc.id}
                 type="button"
                 onClick={() => setSelectedScope(sc.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition fluid-press ${selectedScope === sc.id
+                className={`px-3 py-1.5 rounded-xl text-xs font-headline font-bold uppercase tracking-wider transition-all whitespace-nowrap shrink-0 active:scale-95 ${selectedScope === sc.id
                   ? "bg-lime-400 text-slate-950 font-black shadow-md scale-105"
                   : "bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800"
                   }`}
@@ -208,6 +216,50 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
           </div>
         </div>
       </section>
+
+      {/* Smooth Horizontal Touch Carousel of all 42 Counties */}
+      <div className="card p-3 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-2">
+        <div className="flex items-center justify-between px-1">
+          <div className="flex items-center gap-1.5 text-xs font-headline font-black uppercase text-slate-900 dark:text-white">
+            <span>📍</span>
+            <span>Selector Rapid Județe (42 Regiuni)</span>
+          </div>
+          <span className="text-[10px] text-slate-400 font-label">Glisează orizontal ➔</span>
+        </div>
+
+        <div
+          className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth overscroll-x-contain py-1"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {ALL_COUNTIES.map((cName) => {
+            const isSel = selectedCounty.toLowerCase() === cName.toLowerCase();
+            const stats = getCountyStats(cName);
+            return (
+              <button
+                key={cName}
+                type="button"
+                onClick={() => setSelectedCounty(cName)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-headline font-bold uppercase tracking-wider transition-all shrink-0 whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
+                  isSel
+                    ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md ring-2 ring-lime-400/50 scale-105"
+                    : "bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 border border-slate-200 dark:border-slate-700/60"
+                }`}
+              >
+                <span>{cName}</span>
+                <span
+                  className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
+                    isSel
+                      ? "bg-lime-400 text-slate-950 dark:bg-slate-900 dark:text-lime-400"
+                      : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
+                  }`}
+                >
+                  {stats.championshipsCount}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Main Two-Column Layout: Left SVG Interactive Map (6 cols) + Right County Hub (6 cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
@@ -235,10 +287,10 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
               getCountyStats={getCountyStats}
             />
 
-            {/* Fast Region Jump Buttons */}
+            {/* Fast Top Counties Jump Bar */}
             <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
               <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400 block">
-                Săritură Rapidă pe Județe Mari:
+                Spotlight Județe Mari:
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {["Timiș", "Cluj", "București", "Iași", "Brașov", "Dolj", "Constanța", "Bihor", "Argeș", "Prahova"].map((cName) => {

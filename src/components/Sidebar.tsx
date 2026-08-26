@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { appSignOut } from "@/lib/logout";
 import { ThemeToggle } from "./ThemeToggle";
 import { BrandLogo } from "./BrandLogo";
 
@@ -51,7 +52,7 @@ export function Sidebar({ variant }: SidebarProps) {
     navItems = [
       { name: "Meciuri & Panou Arbitraj", href: "/dashboard/referee", icon: "sports" },
       { name: "Profil & Setări Oficiale", href: "/profile", icon: "account_circle" },
-      { name: "Vezi Campionate", href: "/harta-romaniei", icon: "emoji_events" },
+      { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Corp Arbitri", href: "/referees", icon: "badge" },
@@ -61,7 +62,7 @@ export function Sidebar({ variant }: SidebarProps) {
     navItems = [
       { name: "Panou Manager Echipă", href: "/dashboard/team", icon: "badge" },
       { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
-      { name: "Vezi Campionate", href: "/harta-romaniei", icon: "emoji_events" },
+      { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Arene", href: "/venues", icon: "domain" },
@@ -72,14 +73,14 @@ export function Sidebar({ variant }: SidebarProps) {
       { name: "Panou Arenă & Reclame", href: "/dashboard/arena", icon: "stadium" },
       { name: "Profil Bază Sportivă", href: "/profile", icon: "account_circle" },
       { name: "Arene", href: "/venues", icon: "domain" },
-      { name: "Vezi Campionate", href: "/harta-romaniei", icon: "emoji_events" },
+      { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
     ];
   } else if (role === "player") {
     navItems = [
       { name: "Fișă Jucător & Carieră", href: "/profile", icon: "account_circle" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
-      { name: "Vezi Campionate", href: "/harta-romaniei", icon: "emoji_events" },
+      { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
       { name: "Arene", href: "/venues", icon: "domain" },
     ];
@@ -87,7 +88,7 @@ export function Sidebar({ variant }: SidebarProps) {
     // Organizer Menu
     navItems = [
       { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
-      { name: "Vezi Campionate", href: "/harta-romaniei", icon: "emoji_events" },
+      { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
       { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
       { name: "Arene", href: "/venues", icon: "domain" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
@@ -102,12 +103,12 @@ export function Sidebar({ variant }: SidebarProps) {
     role === "referee"
       ? "/dashboard/referee"
       : role === "arena_owner"
-      ? "/dashboard/arena"
-      : role === "team_leader"
-      ? "/dashboard/team"
-      : isSuperAdminRole
-      ? "/dashboard/admin"
-      : "/dashboard";
+        ? "/dashboard/arena"
+        : role === "team_leader"
+          ? "/dashboard/team"
+          : isSuperAdminRole
+            ? "/dashboard/admin"
+            : "/dashboard";
 
   const sidebarContent = (
     <div className="flex flex-col h-full justify-between">
@@ -137,14 +138,14 @@ export function Sidebar({ variant }: SidebarProps) {
               {role === "super_admin" || role === "superadmin"
                 ? "👑 Super Administrator"
                 : role === "referee"
-                ? "⚖️ Oficial Arbitraj"
-                : role === "arena_owner"
-                ? "🏟️ Panou Arenă"
-                : role === "team_leader"
-                ? "👔 Manager Echipă"
-                : role === "player"
-                ? "⚽ Fișă Jucător"
-                : "⚡ Pro Organizer"}
+                  ? "⚖️ Oficial Arbitraj"
+                  : role === "arena_owner"
+                    ? "🏟️ Panou Arenă"
+                    : role === "team_leader"
+                      ? "👔 Manager Echipă"
+                      : role === "player"
+                        ? "⚽ Fișă Jucător"
+                        : "⚡ Pro Organizer"}
             </span>
           </div>
         </div>
@@ -154,8 +155,8 @@ export function Sidebar({ variant }: SidebarProps) {
           {navItems.map((item) => {
             const isTabMatch = item.href.includes("?tab=")
               ? pathname === "/dashboard/admin" &&
-                (item.href.includes(`tab=${currentTab}`) ||
-                  (item.href.includes("tab=branding") && (!currentTab || currentTab === "branding")))
+              (item.href.includes(`tab=${currentTab}`) ||
+                (item.href.includes("tab=branding") && (!currentTab || currentTab === "branding")))
               : pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
             const isActive = isTabMatch;
             return (
@@ -163,21 +164,19 @@ export function Sidebar({ variant }: SidebarProps) {
                 key={item.name}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-medium transition-all duration-200 ${
-                  isActive
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-medium transition-all duration-200 ${isActive
                     ? isDarkTheme
                       ? "bg-lime-400 text-slate-950 font-black shadow-lg shadow-lime-400/20"
                       : "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-bold shadow-md"
                     : isDarkTheme
-                    ? "text-slate-300 hover:text-white hover:bg-slate-800/90"
-                    : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70"
-                }`}
+                      ? "text-slate-300 hover:text-white hover:bg-slate-800/90"
+                      : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70"
+                  }`}
               >
-                <span className={`material-symbols-outlined text-[20px] sm:text-[22px] ${
-                  isActive
+                <span className={`material-symbols-outlined text-[20px] sm:text-[22px] ${isActive
                     ? isDarkTheme ? "text-slate-950" : "text-lime-400 dark:text-slate-950"
                     : isDarkTheme ? "text-slate-400" : "text-slate-500 dark:text-slate-400"
-                }`}>
+                  }`}>
                   {item.icon}
                 </span>
                 <span className="font-label text-xs sm:text-sm">{item.name}</span>
@@ -224,7 +223,7 @@ export function Sidebar({ variant }: SidebarProps) {
               </div>
               <button
                 type="button"
-                onClick={() => signOut({ callbackUrl: "/" })}
+                onClick={() => appSignOut("/")}
                 title="Deconectare"
                 className="p-1.5 text-slate-400 hover:text-red-500 transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
               >
@@ -241,11 +240,10 @@ export function Sidebar({ variant }: SidebarProps) {
     <>
       {/* Desktop Sidebar (hidden on mobile, fixed on desktop) */}
       <aside
-        className={`hidden lg:flex h-screen w-64 fixed left-0 top-0 z-40 border-r flex-col py-6 transition-colors duration-200 ${
-          isDarkTheme
+        className={`hidden lg:flex h-screen w-64 fixed left-0 top-0 z-40 border-r flex-col py-6 transition-colors duration-200 ${isDarkTheme
             ? "bg-slate-900 border-slate-800 text-white shadow-xl"
             : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
-        }`}
+          }`}
       >
         {sidebarContent}
       </aside>
@@ -258,11 +256,10 @@ export function Sidebar({ variant }: SidebarProps) {
             className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in"
           />
           <div
-            className={`relative w-4/5 max-w-xs h-full py-6 shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200 border-r ${
-              isDarkTheme
+            className={`relative w-4/5 max-w-xs h-full py-6 shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200 border-r ${isDarkTheme
                 ? "bg-slate-900 border-slate-800 text-white"
                 : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
-            }`}
+              }`}
           >
             {sidebarContent}
           </div>

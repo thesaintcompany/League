@@ -24,8 +24,8 @@ export default function CumFunctioneazaPage() {
     },
     {
       num: "03",
-      title: "Harta Interactivă & Arborele de Meciuri",
-      desc: "Fiecare campionat primește un link public dedicat (ex: /harta-campionat/LP-2026) și un arbore tip Mindmap cu linii fine de conexiune între Sferturi, Semifinale și Marea Finală.",
+      title: "Tabloul Interactiv & Arborele de Meciuri",
+      desc: "Fiecare campionat primește un cod public (ex: LP-2026) și un arbore eliminatoriu tip Mindmap cu linii fine de conexiune între Sferturi, Semifinale și Marea Finală direct în secțiunea Meciuri.",
       icon: "account_tree",
     },
     {

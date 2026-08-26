@@ -90,13 +90,24 @@ export function AdminSuperPanel() {
   } | null>(null);
   const [togglingDemo, setTogglingDemo] = useState(false);
 
-  // Ticketing & API Settings State
+  // Ticketing, Legal & Payment Settings State
   const [ticketSettings, setTicketSettings] = useState({
+    companyName: "buu.ro S.R.L.",
+    companyCui: "RO12345678",
+    companyRegCom: "J35/123/2024",
+    companyAddress: "Timișoara, Județul Timiș, România",
+    companyEmail: "contact@buu.ro",
+    companyPhone: "+40 700 000 000",
     platformFeePercent: 10.0,
     stripePublishableKey: "",
     stripeSecretKey: "",
+    stripeWebhookSecret: "",
     paypalClientId: "",
+    applePayMerchantId: "merchant.ro.buu.league",
+    applePayDomainVerified: true,
     applePayEnabled: true,
+    googlePayMerchantId: "buu-ro-league-pay",
+    googlePayEnvironment: "PRODUCTION",
     googlePayEnabled: true,
     payoutMinThreshold: 100,
   });
@@ -853,6 +864,122 @@ export function AdminSuperPanel() {
               </div>
             </div>
           </div>
+
+          {/* Date Legale & Identitate Fiscală Operator (buu.ro) */}
+          <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-blue-500 text-white flex items-center justify-center font-black text-lg shadow-sm">
+                  🏢
+                </div>
+                <div>
+                  <h3 className="font-headline font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase">
+                    Date Legale &amp; Identitate Fiscală Operator (buu.ro)
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
+                    Informațiile oficiale ale entității juridice care operează platforma, facturile de ticketing și termenii legali.
+                  </p>
+                </div>
+              </div>
+
+              <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-mono font-bold uppercase border border-blue-500/20">
+                Operator Oficial: buu.ro
+              </span>
+            </div>
+
+            <form onSubmit={handleSaveTicketSettings} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Denumire Societate / Operator *
+                  </label>
+                  <input
+                    type="text"
+                    value={ticketSettings.companyName || "buu.ro S.R.L."}
+                    onChange={(e) => setTicketSettings({ ...ticketSettings, companyName: e.target.value })}
+                    className="input text-xs font-bold"
+                    placeholder="buu.ro S.R.L."
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Cod Unic Înregistrare (CUI / CIF) *
+                  </label>
+                  <input
+                    type="text"
+                    value={ticketSettings.companyCui || "RO12345678"}
+                    onChange={(e) => setTicketSettings({ ...ticketSettings, companyCui: e.target.value })}
+                    className="input text-xs font-mono font-bold"
+                    placeholder="RO12345678"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Nr. Înreg. Reg. Comerțului
+                  </label>
+                  <input
+                    type="text"
+                    value={ticketSettings.companyRegCom || "J35/123/2024"}
+                    onChange={(e) => setTicketSettings({ ...ticketSettings, companyRegCom: e.target.value })}
+                    className="input text-xs font-mono"
+                    placeholder="J35/123/2024"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Email Suport &amp; DPO *
+                  </label>
+                  <input
+                    type="email"
+                    value={ticketSettings.companyEmail || "contact@buu.ro"}
+                    onChange={(e) => setTicketSettings({ ...ticketSettings, companyEmail: e.target.value })}
+                    className="input text-xs font-mono"
+                    placeholder="contact@buu.ro"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Telefon Asistență Oficial
+                  </label>
+                  <input
+                    type="tel"
+                    value={ticketSettings.companyPhone || "+40 700 000 000"}
+                    onChange={(e) => setTicketSettings({ ...ticketSettings, companyPhone: e.target.value })}
+                    className="input text-xs font-mono"
+                    placeholder="+40 700 000 000"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Sediu Social / Adresă Juridică
+                  </label>
+                  <input
+                    type="text"
+                    value={ticketSettings.companyAddress || "Timișoara, Județul Timiș, România"}
+                    onChange={(e) => setTicketSettings({ ...ticketSettings, companyAddress: e.target.value })}
+                    className="input text-xs font-medium"
+                    placeholder="Timișoara, Județul Timiș, România"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-2">
+                <button
+                  type="submit"
+                  disabled={savingSettings}
+                  className="px-6 py-2.5 rounded-xl bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-sm transition active:scale-95 flex items-center gap-1.5"
+                >
+                  <span className="material-symbols-outlined text-sm">save</span>
+                  <span>{savingSettings ? "Se salvează..." : "Salvează Date Legale Operator ✓"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
@@ -872,17 +999,17 @@ export function AdminSuperPanel() {
                   </span>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-black font-headline uppercase tracking-tight text-white">
-                  Chei API, Gateways &amp; Comision Vânzări
+                  Module de Plată (Stripe, Apple Pay, Google Pay)
                 </h2>
                 <p className="text-xs text-slate-300 font-body max-w-2xl">
-                  Configurează conexiunile securizate cu procesatorii de plăți (Stripe, PayPal, Apple Pay, Google Pay) și stabilește comisionul platformei per bilet vândut.
+                  Configurează conexiunile securizate cu procesatorii de plăți și portofelele mobile integrate nativ în platformă.
                 </p>
               </div>
 
               <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 px-4 py-2.5 rounded-2xl">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
                 <span className="text-xs font-mono font-bold text-emerald-400">
-                  Webhook Live: 200 OK
+                  Gateways Active: Stripe &bull; Apple Pay &bull; Google Pay
                 </span>
               </div>
             </div>
@@ -927,13 +1054,18 @@ export function AdminSuperPanel() {
           {/* Settings Form */}
           <form onSubmit={handleSaveTicketSettings} className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Stripe API Credentials */}
+              {/* Modul 1: Stripe API Credentials */}
               <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">💳</span>
-                  <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
-                    Configurare Stripe API
-                  </h3>
+                <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">💳</span>
+                    <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
+                      Modul Stripe (Carduri 3D Secure)
+                    </h3>
+                  </div>
+                  <span className="px-2.5 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 text-[10px] font-bold font-mono">
+                    PSD2 Compliant
+                  </span>
                 </div>
 
                 <div className="space-y-3">
@@ -975,15 +1107,146 @@ export function AdminSuperPanel() {
                       className="input text-xs font-mono"
                     />
                   </div>
+
+                  <div>
+                    <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                      Stripe Webhook Secret (whsec_...)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="whsec_..."
+                      value={ticketSettings.stripeWebhookSecret || ""}
+                      onChange={(e) =>
+                        setTicketSettings({ ...ticketSettings, stripeWebhookSecret: e.target.value })
+                      }
+                      className="input text-xs font-mono"
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* PayPal & Mobile Pay */}
+              {/* Modul 2: Apple Pay Integration */}
               <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">🅿️</span>
+                <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">🍎</span>
+                    <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
+                      Modul Apple Pay (iOS &amp; Safari)
+                    </h3>
+                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={ticketSettings.applePayEnabled}
+                      onChange={(e) =>
+                        setTicketSettings({ ...ticketSettings, applePayEnabled: e.target.checked })
+                      }
+                      className="rounded text-lime-500 focus:ring-lime-400"
+                    />
+                    <span className="text-xs font-bold font-label">Activat</span>
+                  </label>
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                      Apple Merchant Identifier
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="merchant.ro.buu.league"
+                      value={ticketSettings.applePayMerchantId || "merchant.ro.buu.league"}
+                      onChange={(e) =>
+                        setTicketSettings({ ...ticketSettings, applePayMerchantId: e.target.value })
+                      }
+                      className="input text-xs font-mono"
+                    />
+                  </div>
+
+                  <div className="p-3.5 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-1.5 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="font-label font-bold text-slate-700 dark:text-slate-300">
+                        Domeniu Web Verificat:
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
+                        sp.buu.ro (Verificat ✓)
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-body">
+                      Fișierul <code>/.well-known/apple-developer-merchantid-domain-association</code> este configurat automat.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Modul 3: Google Pay Integration */}
+              <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">🟢</span>
+                    <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
+                      Modul Google Pay (Android &amp; Chrome)
+                    </h3>
+                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={ticketSettings.googlePayEnabled}
+                      onChange={(e) =>
+                        setTicketSettings({ ...ticketSettings, googlePayEnabled: e.target.checked })
+                      }
+                      className="rounded text-lime-500 focus:ring-lime-400"
+                    />
+                    <span className="text-xs font-bold font-label">Activat</span>
+                  </label>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                        Google Pay Merchant ID
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="buu-ro-league-pay"
+                        value={ticketSettings.googlePayMerchantId || "buu-ro-league-pay"}
+                        onChange={(e) =>
+                          setTicketSettings({ ...ticketSettings, googlePayMerchantId: e.target.value })
+                        }
+                        className="input text-xs font-mono"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                        Mediu Tranzacții
+                      </label>
+                      <select
+                        value={ticketSettings.googlePayEnvironment || "PRODUCTION"}
+                        onChange={(e) =>
+                          setTicketSettings({ ...ticketSettings, googlePayEnvironment: e.target.value })
+                        }
+                        className="input text-xs font-bold"
+                      >
+                        <option value="PRODUCTION">PRODUCTION (Live)</option>
+                        <option value="TEST">TEST (Sandbox)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <p className="text-[11px] text-slate-500 font-body">
+                    Plata cu 1 singur click este disponibilă pe toate telefoanele Android și browserul Chrome.
+                  </p>
+                </div>
+              </div>
+
+              {/* Modul 4: PayPal & Comisioane */}
+              <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+                <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <span className="text-2xl">🅿️</span>
                   <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
-                    PayPal &amp; Portofele Mobile
+                    PayPal &amp; Comisioane Platformă
                   </h3>
                 </div>
 
@@ -1003,80 +1266,44 @@ export function AdminSuperPanel() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 pt-2">
-                    <label className="flex items-center gap-2 p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 cursor-pointer">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div>
+                      <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                        Comision Platformă (%)
+                      </label>
                       <input
-                        type="checkbox"
-                        checked={ticketSettings.applePayEnabled}
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="50"
+                        value={ticketSettings.platformFeePercent}
                         onChange={(e) =>
-                          setTicketSettings({ ...ticketSettings, applePayEnabled: e.target.checked })
+                          setTicketSettings({
+                            ...ticketSettings,
+                            platformFeePercent: parseFloat(e.target.value) || 0,
+                          })
                         }
-                        className="rounded text-lime-500 focus:ring-lime-400"
+                        className="input text-xs font-bold"
                       />
-                      <span className="text-xs font-bold font-label">🍎 Apple Pay</span>
-                    </label>
+                    </div>
 
-                    <label className="flex items-center gap-2 p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 cursor-pointer">
+                    <div>
+                      <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                        Prag Minim Retragere (RON)
+                      </label>
                       <input
-                        type="checkbox"
-                        checked={ticketSettings.googlePayEnabled}
+                        type="number"
+                        min="10"
+                        value={ticketSettings.payoutMinThreshold}
                         onChange={(e) =>
-                          setTicketSettings({ ...ticketSettings, googlePayEnabled: e.target.checked })
+                          setTicketSettings({
+                            ...ticketSettings,
+                            payoutMinThreshold: parseInt(e.target.value) || 100,
+                          })
                         }
-                        className="rounded text-lime-500 focus:ring-lime-400"
+                        className="input text-xs font-bold"
                       />
-                      <span className="text-xs font-bold font-label">🟢 Google Pay</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              {/* Commission & Thresholds */}
-              <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">💰</span>
-                  <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
-                    Comision Platformă &amp; Praguri
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
-                      Comision Platformă (%)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      min="0"
-                      max="50"
-                      value={ticketSettings.platformFeePercent}
-                      onChange={(e) =>
-                        setTicketSettings({
-                          ...ticketSettings,
-                          platformFeePercent: parseFloat(e.target.value) || 0,
-                        })
-                      }
-                      className="input text-xs font-bold"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
-                      Prag Minim Retragere (RON)
-                    </label>
-                    <input
-                      type="number"
-                      min="10"
-                      value={ticketSettings.payoutMinThreshold}
-                      onChange={(e) =>
-                        setTicketSettings({
-                          ...ticketSettings,
-                          payoutMinThreshold: parseInt(e.target.value) || 100,
-                        })
-                      }
-                      className="input text-xs font-bold"
-                    />
+                    </div>
                   </div>
                 </div>
               </div>
