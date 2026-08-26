@@ -74,7 +74,10 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
       const cSport = (c.sport || "").toLowerCase();
       const matchesSport =
         cSport.includes(selectedSport) ||
-        (selectedSport === "fotbal" && (cSport.includes("minifotbal") || cSport.includes("futsal")));
+        (selectedSport === "fotbal" && (cSport.includes("minifotbal") || cSport.includes("futsal"))) ||
+        (selectedSport === "pingpong" && (cSport.includes("ping") || cSport.includes("pong") || cSport.includes("masa") || cSport.includes("masă"))) ||
+        (selectedSport === "padel" && cSport.includes("padel")) ||
+        (selectedSport === "tenis" && cSport.includes("tenis") && !cSport.includes("masă") && !cSport.includes("masa") && !cSport.includes("ping"));
       return matchesSport && matchesCategoryFilter(`${c.name} ${c.sport || ""}`);
     });
   }, [initialChampionships, selectedSport, selectedCategory, matchesCategoryFilter]);

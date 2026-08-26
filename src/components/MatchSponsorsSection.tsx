@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 export interface SponsorItem {
   id: string;
@@ -51,6 +52,12 @@ const DEFAULT_ROMANIAN_SPONSORS: SponsorItem[] = [
 ];
 
 export function MatchSponsorsSection({ matchId }: { matchId: string }) {
+  const { data: session } = useSession();
+  const userRole = (session?.user as any)?.role;
+  const isOrganizerOrAdmin = Boolean(
+    session?.user && (userRole === "organizer" || userRole === "super_admin" || userRole === "superadmin")
+  );
+
   const [sponsors, setSponsors] = useState<SponsorItem[]>(DEFAULT_ROMANIAN_SPONSORS);
   const [isOrganizerMode, setIsOrganizerMode] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -169,34 +176,36 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
           </p>
         </div>
 
-        {/* Organizer Exclusive Controls */}
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setIsOrganizerMode((v) => !v)}
-            className={`px-4 py-2.5 rounded-2xl text-xs font-label font-black uppercase tracking-wider transition border shadow-md flex items-center gap-2 ${
-              isOrganizerMode
-                ? "bg-amber-400 text-slate-950 border-amber-400 scale-105"
-                : "bg-slate-900 hover:bg-slate-800 text-slate-300 border-slate-700 hover:text-white"
-            }`}
-          >
-            <span className="material-symbols-outlined text-base">
-              {isOrganizerMode ? "admin_panel_settings" : "lock"}
-            </span>
-            {isOrganizerMode ? "Mod Organizator Activ ✓" : "Panou Exclusiv Organizator"}
-          </button>
-
-          {isOrganizerMode && (
+        {/* Organizer Exclusive Controls (Visible ONLY for Authenticated Organizers / Admins) */}
+        {isOrganizerOrAdmin && (
+          <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
-              onClick={() => setShowAddModal(true)}
-              className="px-5 py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95 animate-in fade-in"
+              onClick={() => setIsOrganizerMode((v) => !v)}
+              className={`px-4 py-2.5 rounded-2xl text-xs font-label font-black uppercase tracking-wider transition border shadow-md flex items-center gap-2 ${
+                isOrganizerMode
+                  ? "bg-amber-400 text-slate-950 border-amber-400 scale-105"
+                  : "bg-slate-900 hover:bg-slate-800 text-slate-300 border-slate-700 hover:text-white"
+              }`}
             >
-              <span className="material-symbols-outlined text-base">add_photo_alternate</span>
-              + Încarcă Logo Sponsor
+              <span className="material-symbols-outlined text-base">
+                {isOrganizerMode ? "admin_panel_settings" : "lock"}
+              </span>
+              {isOrganizerMode ? "Mod Organizator Activ ✓" : "Panou Exclusiv Organizator"}
             </button>
-          )}
-        </div>
+
+            {isOrganizerMode && (
+              <button
+                type="button"
+                onClick={() => setShowAddModal(true)}
+                className="px-5 py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95 animate-in fade-in"
+              >
+                <span className="material-symbols-outlined text-base">add_photo_alternate</span>
+                + Încarcă Logo Sponsor
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {statusMsg && (

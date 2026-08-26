@@ -66,6 +66,7 @@ export default async function TeamManagerDashboardPage() {
     }
   }
 
+  if (!team) {
     let dbUser = userId ? await prisma.user.findUnique({ where: { id: userId } }) : null;
     if (!dbUser && user.email) {
       dbUser = await prisma.user.findUnique({ where: { email: user.email.toLowerCase().trim() } });

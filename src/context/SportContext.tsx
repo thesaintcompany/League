@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export type SportType = "fotbal" | "baschet" | "volei" | "handbal" | "tenis";
+export type SportType = "fotbal" | "tenis" | "padel" | "pingpong" | "baschet" | "volei" | "handbal";
 export type FootballCategoryType = "all" | "masculin" | "feminin" | "futsal" | "juniori";
 
 export interface SportOption {
@@ -34,6 +34,33 @@ export const AVAILABLE_SPORTS: SportOption[] = [
     description: "Campionate județene și naționale: Masculin, Feminin, Futsal și Juniori.",
   },
   {
+    id: "tenis",
+    name: "Tenis de Câmp",
+    shortName: "Tenis",
+    icon: "🎾",
+    accentColor: "text-emerald-400 border-emerald-400 bg-emerald-400/10",
+    badgeBg: "bg-emerald-400 text-slate-950",
+    description: "Circuite de tenis simplu și dublu pe zgură, hard și iarbă.",
+  },
+  {
+    id: "padel",
+    name: "Padel Oficial",
+    shortName: "Padel",
+    icon: "🎾",
+    accentColor: "text-teal-400 border-teal-400 bg-teal-400/10",
+    badgeBg: "bg-teal-400 text-slate-950",
+    description: "Campionate și turnee de Padel pe terenuri panoramice și gazon sintetic.",
+  },
+  {
+    id: "pingpong",
+    name: "Ping-Pong (Tenis de Masă)",
+    shortName: "Ping-Pong",
+    icon: "🏓",
+    accentColor: "text-rose-400 border-rose-400 bg-rose-400/10",
+    badgeBg: "bg-rose-400 text-slate-950",
+    description: "Turnee de tenis de masă (ping-pong) simplu și dublu, pe categorii de nivel.",
+  },
+  {
     id: "baschet",
     name: "Baschet 5x5 & 3x3",
     shortName: "Baschet",
@@ -60,15 +87,6 @@ export const AVAILABLE_SPORTS: SportOption[] = [
     badgeBg: "bg-purple-400 text-slate-950",
     description: "Turnee de handbal masculin și feminin, etape eliminatorii și clasamente.",
   },
-  {
-    id: "tenis",
-    name: "Tenis & Padel",
-    shortName: "Tenis",
-    icon: "🎾",
-    accentColor: "text-emerald-400 border-emerald-400 bg-emerald-400/10",
-    badgeBg: "bg-emerald-400 text-slate-950",
-    description: "Circuite de tenis simplu/dublu și turnee de padel pe arene dedicate.",
-  },
 ];
 
 export const FOOTBALL_CATEGORIES: CategoryOption[] = [
@@ -79,12 +97,39 @@ export const FOOTBALL_CATEGORIES: CategoryOption[] = [
   { id: "juniori", name: "Juniori & Tineret", shortName: "Juniori", icon: "⭐" },
 ];
 
+export const TENNIS_CATEGORIES_OPTIONS: CategoryOption[] = [
+  { id: "all", name: "Toate Categoriile", shortName: "Toate", icon: "🌐" },
+  { id: "simplu_masculin", name: "Simplu Masculin", shortName: "Singles M", icon: "🎾" },
+  { id: "simplu_feminin", name: "Simplu Feminin", shortName: "Singles F", icon: "🎾" },
+  { id: "dublu_masculin", name: "Dublu Masculin", shortName: "Doubles M", icon: "👥" },
+  { id: "dublu_mixt", name: "Dublu Mixt", shortName: "Mixt", icon: "✨" },
+];
+
+export const PADEL_CATEGORIES_OPTIONS: CategoryOption[] = [
+  { id: "all", name: "Toate Categoriile", shortName: "Toate", icon: "🌐" },
+  { id: "padel_masculin", name: "Dublu Masculin", shortName: "Doubles M", icon: "👥" },
+  { id: "padel_feminin", name: "Dublu Feminin", shortName: "Doubles F", icon: "👥" },
+  { id: "padel_mixt", name: "Dublu Mixt", shortName: "Mixt", icon: "✨" },
+  { id: "padel_pro", name: "Nivel Pro", shortName: "Pro", icon: "🏆" },
+  { id: "padel_amatori", name: "Nivel Amatori", shortName: "Amatori", icon: "⭐" },
+];
+
+export const PINGPONG_CATEGORIES_OPTIONS: CategoryOption[] = [
+  { id: "all", name: "Toate Categoriile", shortName: "Toate", icon: "🌐" },
+  { id: "pingpong_simplu_masculin", name: "Simplu Masculin", shortName: "Singles M", icon: "🏓" },
+  { id: "pingpong_simplu_feminin", name: "Simplu Feminin", shortName: "Singles F", icon: "🏓" },
+  { id: "pingpong_dublu", name: "Dublu", shortName: "Dublu", icon: "👥" },
+  { id: "pingpong_open", name: "Open Amatur", shortName: "Amatur", icon: "⭐" },
+  { id: "pingpong_elite", name: "Elită / Avansați", shortName: "Elită", icon: "🏆" },
+];
+
 interface SportContextType {
   selectedSport: SportType;
   selectedCategory: string;
   currentSportMeta: SportOption;
   availableSports: SportOption[];
   footballCategories: CategoryOption[];
+  activeCategories: CategoryOption[];
   isSportLocked: boolean;
   selectSport: (sport: SportType) => void;
   selectCategory: (category: string) => void;
@@ -182,6 +227,15 @@ export function SportProvider({ children }: { children: ReactNode }) {
   const currentSportMeta =
     AVAILABLE_SPORTS.find((s) => s.id === selectedSport) || AVAILABLE_SPORTS[0];
 
+  const activeCategories =
+    selectedSport === "padel"
+      ? PADEL_CATEGORIES_OPTIONS
+      : selectedSport === "pingpong"
+        ? PINGPONG_CATEGORIES_OPTIONS
+        : selectedSport === "tenis"
+          ? TENNIS_CATEGORIES_OPTIONS
+          : FOOTBALL_CATEGORIES;
+
   return (
     <SportContext.Provider
       value={{
@@ -190,6 +244,7 @@ export function SportProvider({ children }: { children: ReactNode }) {
         currentSportMeta,
         availableSports: AVAILABLE_SPORTS,
         footballCategories: FOOTBALL_CATEGORIES,
+        activeCategories,
         isSportLocked: !isMapPage,
         selectSport,
         selectCategory,

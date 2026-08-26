@@ -1,16 +1,18 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import { getCurrentSeasonYear } from "@/lib/season";
+import { appSignOut } from "@/lib/logout";
 
 function WelcomePortalForm() {
   const router = useRouter();
   const search = useSearchParams();
   const callbackUrl = search.get("callbackUrl") || "/dashboard";
+  const { data: session } = useSession();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -278,6 +280,47 @@ function WelcomePortalForm() {
                 </Link>
               </div>
             </header>
+
+            {/* If user is already logged in, show active session banner */}
+            {session?.user && (
+              <div className="mb-6 p-4 rounded-2xl bg-lime-400/15 border-2 border-lime-400 text-slate-900 dark:text-white space-y-3 shadow-md animate-in fade-in">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-lime-400 text-slate-950 font-black flex items-center justify-center text-sm shadow shrink-0">
+                    {session.user.name ? session.user.name[0].toUpperCase() : (session.user.email ? session.user.email[0].toUpperCase() : "U")}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[9px] font-black uppercase font-label text-lime-700 dark:text-lime-400 tracking-wider">
+                      CONECTAT ACTIV
+                    </span>
+                    <p className="text-xs font-bold font-headline truncate leading-tight">
+                      {session.user.name || "Utilizator"}
+                    </p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate font-mono">
+                      {session.user.email}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <Link
+                    href="/dashboard"
+                    className="py-2.5 px-3 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 text-center"
+                  >
+                    <span className="material-symbols-outlined text-sm">dashboard</span>
+                    <span>Mergi la Panou</span>
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => appSignOut("/")}
+                    className="py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-red-500 hover:text-white text-slate-700 dark:text-slate-300 font-headline font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition active:scale-95 border border-slate-200 dark:border-slate-700 text-center"
+                  >
+                    <span className="material-symbols-outlined text-sm">logout</span>
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Fast 1-Click Demo Accounts Selector */}
             {!demoPreFillDisabled ? (

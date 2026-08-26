@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { appSignOut } from "@/lib/logout";
 import { ThemeToggle } from "./ThemeToggle";
 import { BrandLogo } from "./BrandLogo";
 import { SportSubHeader } from "./SportSubHeader";
@@ -15,6 +17,21 @@ interface PublicHeaderProps {
 
 export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const role = (session?.user as any)?.role || "";
+  const isSuperAdminRole = role === "super_admin" || role === "superadmin";
+
+  const targetDashboard =
+    role === "referee"
+      ? "/dashboard/referee"
+      : role === "arena_owner"
+        ? "/dashboard/arena"
+        : role === "team_leader"
+          ? "/dashboard/team"
+          : isSuperAdminRole
+            ? "/dashboard/admin"
+            : "/dashboard";
+
   const isDark = variant === "dark";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -32,6 +49,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
   const isTeams = currentTab === "teams" || pathname.startsWith("/teams") || pathname.startsWith("/echipe");
   const isSanctiuni = pathname.startsWith("/sanctiuni");
   const isSignIn = pathname === "/signin" || pathname === "/signup";
+  const isDashboardOrProfile = pathname.startsWith("/dashboard") || pathname === "/profile";
 
   const navLinks = [
     { href: "/harta-romaniei", label: "Campionate", active: isRomaniaMap, icon: "map" },
@@ -48,7 +66,12 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
     { href: "/campionat", label: "Clasament", active: isCampionat, icon: "emoji_events" },
     { href: "/brackets", label: "Meciuri", active: isBrackets, icon: "account_tree" },
     { href: "/sanctiuni", label: "Sancțiuni", active: isSanctiuni, icon: "gavel" },
-    { href: "/signin", label: "Cont", active: isSignIn, icon: "account_circle" },
+    {
+      href: session?.user ? targetDashboard : "/signin",
+      label: session?.user ? "Panou" : "Cont",
+      active: session?.user ? isDashboardOrProfile : isSignIn,
+      icon: "account_circle",
+    },
   ];
 
   // Dynamic overlap collision detection: collapses to hamburger when elements would touch
@@ -137,17 +160,56 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
           ))}
         </nav>
 
-        {/* Right: Theme Toggle & Login Link */}
+        {/* Right: Theme Toggle & Login / User Profile Controls */}
         <div ref={rightRef} className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           <ThemeToggle />
 
-          <Link
-            href="/signin"
-            className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-lime-400 text-slate-950 hover:bg-lime-300 text-xs font-headline font-black uppercase tracking-wider shadow-md transition active:scale-95 flex items-center gap-1 whitespace-nowrap"
-          >
-            <span className="material-symbols-outlined text-[16px] sm:text-[18px]">login</span>
-            <span>Login</span>
-          </Link>
+          {session?.user ? (
+            <div className="flex items-center gap-2">
+              <Link
+                href={targetDashboard}
+                className="hidden sm:inline-flex px-3 py-1.5 rounded-xl bg-lime-400/20 text-lime-700 dark:text-lime-400 font-headline font-bold text-xs uppercase tracking-wider hover:bg-lime-400/30 transition border border-lime-400/30"
+              >
+                Panou ↗
+              </Link>
+
+              <Link
+                href="/profile"
+                className="flex items-center gap-2 p-1 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition group"
+                title={`${session.user.name || session.user.email} (Profil)`}
+              >
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-lime-400 text-slate-950 font-black flex items-center justify-center text-xs sm:text-sm shadow-md group-hover:scale-105 transition-transform">
+                  {session.user.name ? session.user.name[0].toUpperCase() : (session.user.email ? session.user.email[0].toUpperCase() : "U")}
+                </div>
+                <div className="hidden xl:block text-left pr-1 max-w-[120px]">
+                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate leading-tight">
+                    {session.user.name || "Utilizator"}
+                  </p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                    {session.user.email}
+                  </p>
+                </div>
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => appSignOut("/")}
+                title="Deconectare / Logout"
+                className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-red-500 hover:text-white dark:hover:bg-red-600 text-slate-700 dark:text-slate-300 text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-1.5 shadow-sm active:scale-95 border border-slate-200/80 dark:border-slate-700/60 hover:border-red-500"
+              >
+                <span className="material-symbols-outlined text-[16px] sm:text-[18px]">logout</span>
+                <span className="hidden md:inline">Logout</span>
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/signin"
+              className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-lime-400 text-slate-950 hover:bg-lime-300 text-xs font-headline font-black uppercase tracking-wider shadow-md transition active:scale-95 flex items-center gap-1 whitespace-nowrap"
+            >
+              <span className="material-symbols-outlined text-[16px] sm:text-[18px]">login</span>
+              <span>Login</span>
+            </Link>
+          )}
         </div>
       </header>
 
@@ -200,23 +262,69 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
             </div>
 
             {/* Bottom Actions inside Drawer */}
-            <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2">
-              <Link
-                href="/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-label font-bold text-xs uppercase flex items-center justify-center gap-1.5"
-              >
-                <span>Panou</span>
-                <span className="material-symbols-outlined text-sm">open_in_new</span>
-              </Link>
-              <Link
-                href="/signin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow-md"
-              >
-                <span className="material-symbols-outlined text-base">login</span>
-                <span>Login</span>
-              </Link>
+            <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+              {session?.user ? (
+                <>
+                  <Link
+                    href="/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center gap-3"
+                  >
+                    <div className="w-10 h-10 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center text-sm font-black shadow shrink-0">
+                      {session.user.name ? session.user.name[0].toUpperCase() : (session.user.email ? session.user.email[0].toUpperCase() : "U")}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-headline font-bold text-slate-900 dark:text-white truncate">
+                        {session.user.name || "Utilizator"}
+                      </p>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate font-mono">
+                        {session.user.email}
+                      </p>
+                    </div>
+                  </Link>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      href={targetDashboard}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow-sm"
+                    >
+                      <span className="material-symbols-outlined text-sm">dashboard</span>
+                      <span>Panou</span>
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        appSignOut("/");
+                      }}
+                      className="py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-red-500 hover:text-white text-slate-700 dark:text-slate-300 font-headline font-bold text-xs uppercase flex items-center justify-center gap-1.5 transition"
+                    >
+                      <span className="material-symbols-outlined text-sm">logout</span>
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-label font-bold text-xs uppercase flex items-center justify-center gap-1.5"
+                  >
+                    <span>Panou</span>
+                    <span className="material-symbols-outlined text-sm">open_in_new</span>
+                  </Link>
+                  <Link
+                    href="/signin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow-md"
+                  >
+                    <span className="material-symbols-outlined text-base">login</span>
+                    <span>Login</span>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

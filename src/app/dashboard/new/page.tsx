@@ -12,6 +12,8 @@ import {
   ROMANIAN_COUNTIES,
   FOOTBALL_CATEGORIES,
   TENNIS_CATEGORIES,
+  PADEL_CATEGORIES,
+  PINGPONG_CATEGORIES,
   TENNIS_SURFACES,
   TENNIS_SETS_RULES,
   isIndividualSport,
@@ -32,6 +34,7 @@ export default function NewChampionshipPage() {
     endDate: "",
     description: "",
     logoUrl: "",
+    isPublished: true,
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -65,7 +68,9 @@ export default function NewChampionshipPage() {
   const SHORT_PRESET_NAMES = {
     friendly: ["Meciuri Amicale", "Turneu Demonstrativ", "Cupa Amicală", "Meciuri de Pregătire", "Liga Amatorilor"],
     tennis_singles: ["Tenis Simplu", "Turneu Tenis", "Cupa la Simplu", "Open Tenis", "Master Tenis"],
-    tennis_doubles: ["Tenis Dublu", "Turneu Padel", "Cupa la Dublu", "Padel & Dublu", "Open Dublu"],
+    padel_tour: ["Turneu Padel", "Cupa Padel Pro", "Open Padel Arena", "Padel League", "Padel Master"],
+    pingpong_singles: ["Turneu Ping-Pong", "Cupa Tenis de Masă", "Open Ping-Pong", "Amatur Ping-Pong", "Liga Tenis de Masă"],
+    tennis_doubles: ["Tenis Dublu", "Turneu Dublu", "Cupa la Dublu", "Tenis & Dublu", "Open Dublu"],
     national: ["SuperLiga Națională", "Cupa României", "Liga Națională", "Campionatul Național", "Liga Pro"],
     judetean: ["Liga Județeană", "Cupa Județeană", "Liga Locală", "Campionat Județean", "SuperLiga Locală"],
     knockout: ["Cupa Eliminatorie", "Turneu cu Zaruri", "Cupa Knockout", "Liga Eliminatorie", "Turneu Flash"],
@@ -81,7 +86,7 @@ export default function NewChampionshipPage() {
   }
 
   // Quick preset templates with shorter, random names
-  function applyPreset(type: "national" | "judetean" | "knockout" | "friendly" | "tennis_singles" | "tennis_doubles") {
+  function applyPreset(type: "national" | "judetean" | "knockout" | "friendly" | "tennis_singles" | "tennis_doubles" | "padel_tour" | "pingpong_singles") {
     const name = getRandomShortName(type);
     if (type === "tennis_singles") {
       setForm((f) => ({
@@ -94,12 +99,34 @@ export default function NewChampionshipPage() {
         season: "2026",
         description: "Turneu de tenis simplu cu tablou eliminatoriu direct între jucători.",
       }));
+    } else if (type === "padel_tour") {
+      setForm((f) => ({
+        ...f,
+        name,
+        sport: "Padel",
+        category: "padel_masculin",
+        format: "knockout",
+        scope: "national",
+        season: "2026",
+        description: "Campionat oficial de Padel pe terenuri panoramice.",
+      }));
+    } else if (type === "pingpong_singles") {
+      setForm((f) => ({
+        ...f,
+        name,
+        sport: "Tenis de Masă (Ping-Pong)",
+        category: "pingpong_open",
+        format: "knockout",
+        scope: "national",
+        season: "2026",
+        description: "Turneu de tenis de masă (ping-pong) pe categorii de nivel cu tablou eliminatoriu.",
+      }));
     } else if (type === "tennis_doubles") {
       setForm((f) => ({
         ...f,
         name,
         sport: "Padel",
-        category: "dublu_masculin",
+        category: "padel_masculin",
         format: "knockout",
         scope: "national",
         season: "2026",
@@ -251,11 +278,11 @@ export default function NewChampionshipPage() {
             <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
               ⚡ Șabloane Rapide (1-Click Fill)
             </span>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 w-full">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 sm:gap-3 w-full">
               <button
                 type="button"
                 onClick={() => applyPreset("tennis_singles")}
-                className="p-3.5 sm:p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
+                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
               >
                 <div className="text-base">🎾</div>
                 <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Tenis Simplu</div>
@@ -264,18 +291,28 @@ export default function NewChampionshipPage() {
 
               <button
                 type="button"
-                onClick={() => applyPreset("tennis_doubles")}
-                className="p-3.5 sm:p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
+                onClick={() => applyPreset("padel_tour")}
+                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-teal-500 dark:hover:border-teal-400 text-left transition w-full"
               >
-                <div className="text-base">🏸</div>
-                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Tenis / Padel Dublu</div>
-                <div className="text-[10px] text-slate-500 dark:text-slate-400">Turneu pe perechi</div>
+                <div className="text-base">🎾</div>
+                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Padel Oficial</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400">Terenuri & Perechi</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => applyPreset("pingpong_singles")}
+                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-rose-500 dark:hover:border-rose-400 text-left transition w-full"
+              >
+                <div className="text-base">🏓</div>
+                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Ping-Pong</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400">Tenis de Masă Amatur</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => applyPreset("national")}
-                className="p-3.5 sm:p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
+                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
               >
                 <div className="text-base">🏆</div>
                 <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Ligă Națională</div>
@@ -285,7 +322,7 @@ export default function NewChampionshipPage() {
               <button
                 type="button"
                 onClick={() => applyPreset("judetean")}
-                className="p-3.5 sm:p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
+                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
               >
                 <div className="text-base">📍</div>
                 <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Ligă Județeană</div>
@@ -295,17 +332,17 @@ export default function NewChampionshipPage() {
               <button
                 type="button"
                 onClick={() => applyPreset("knockout")}
-                className="p-3.5 sm:p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
+                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
               >
                 <div className="text-base">🎲</div>
-                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Turneu cu Zaruri</div>
+                <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Turneu Zaruri</div>
                 <div className="text-[10px] text-slate-500 dark:text-slate-400">Arbore eliminatoriu</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => applyPreset("friendly")}
-                className="p-3.5 sm:p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
+                className="p-3 rounded-2xl bg-slate-100 dark:bg-slate-950 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400 text-left transition w-full"
               >
                 <div className="text-base">🤝</div>
                 <div className="text-xs font-headline font-bold text-slate-900 dark:text-white mt-1">Meciuri Amicale</div>
@@ -574,41 +611,48 @@ export default function NewChampionshipPage() {
                 </div>
               )}
 
-              {/* Tennis & Padel Category & Surface Selector */}
-              {isIndividualSport(form.sport) && (
-                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-base">🎾</span>
-                    <div>
-                      <label className="text-xs font-bold font-headline text-emerald-900 dark:text-emerald-300 uppercase block">
-                        Configurare Specifică Tenis / Padel (Participanți Individuali)
-                      </label>
-                      <p className="text-[11px] text-emerald-700 dark:text-emerald-400 font-label">
-                        În această competiție poți înscrie și invita direct jucători pe tablou (fără a fi obligatorie o echipă de fotbal).
-                      </p>
-                    </div>
-                  </div>
+              {/* Tennis, Padel & Ping-Pong Category & Surface Selector */}
+              {isIndividualSport(form.sport) && (() => {
+                const isPadel = form.sport.toLowerCase().includes("padel");
+                const isPingPong = form.sport.toLowerCase().includes("ping") || form.sport.toLowerCase().includes("pong") || form.sport.toLowerCase().includes("masă") || form.sport.toLowerCase().includes("masa");
+                const activeCatList = isPadel ? PADEL_CATEGORIES : isPingPong ? PINGPONG_CATEGORIES : TENNIS_CATEGORIES;
+                const sportTitle = isPadel ? "Padel Oficial" : isPingPong ? "Ping-Pong (Tenis de Masă)" : "Tenis de Câmp";
+                const sportIcon = isPadel ? "🎾" : isPingPong ? "🏓" : "🎾";
 
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 block">
-                      Tablou &amp; Categorie de Concurs
-                    </label>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                      {TENNIS_CATEGORIES.map((cat) => (
-                        <button
-                          key={cat.value}
-                          type="button"
-                          onClick={() => update("category", cat.value)}
-                          className={`p-2.5 rounded-xl border text-xs font-headline font-bold text-center transition ${form.category === cat.value
-                              ? "bg-emerald-600 text-white border-emerald-600 shadow-sm font-black"
-                              : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400"
-                            }`}
-                        >
-                          <span>{cat.label}</span>
-                        </button>
-                      ))}
+                return (
+                  <div className={`p-4 rounded-2xl ${isPadel ? "bg-teal-500/10 border-teal-500/30" : isPingPong ? "bg-rose-500/10 border-rose-500/30" : "bg-emerald-500/10 border-emerald-500/30"} border space-y-4`}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">{sportIcon}</span>
+                      <div>
+                        <label className={`text-xs font-bold font-headline ${isPadel ? "text-teal-900 dark:text-teal-300" : isPingPong ? "text-rose-900 dark:text-rose-300" : "text-emerald-900 dark:text-emerald-300"} uppercase block`}>
+                          Configurare Specifică {sportTitle} (Competitori Individuali &amp; Perechi)
+                        </label>
+                        <p className={`text-[11px] ${isPadel ? "text-teal-700 dark:text-teal-400" : isPingPong ? "text-rose-700 dark:text-rose-400" : "text-emerald-700 dark:text-emerald-400"} font-label`}>
+                          În această competiție poți înscrie și invita direct competitori pe tablou (fără a fi obligatorie o echipă de fotbal).
+                        </p>
+                      </div>
                     </div>
-                  </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold font-label uppercase text-slate-500 dark:text-slate-400 block">
+                        Tablou &amp; Categorie de Concurs
+                      </label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {activeCatList.map((cat) => (
+                          <button
+                            key={cat.value}
+                            type="button"
+                            onClick={() => update("category", cat.value)}
+                            className={`p-2.5 rounded-xl border text-xs font-headline font-bold text-center transition ${form.category === cat.value
+                                ? isPadel ? "bg-teal-600 text-white border-teal-600 shadow-sm font-black" : isPingPong ? "bg-rose-600 text-white border-rose-600 shadow-sm font-black" : "bg-emerald-600 text-white border-emerald-600 shadow-sm font-black"
+                                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400"
+                              }`}
+                          >
+                            <span>{cat.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-emerald-500/20">
                     <div>
@@ -644,7 +688,8 @@ export default function NewChampionshipPage() {
                     </div>
                   </div>
                 </div>
-              )}
+                );
+              })()}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>

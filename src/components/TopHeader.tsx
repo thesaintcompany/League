@@ -88,38 +88,45 @@ export function TopHeader({ title = "Championship Pro", subtitle, action, varian
           Campionate ↗
         </Link>
 
-        {session ? (
+        {session?.user ? (
           <div className={`flex items-center gap-2 pl-2 sm:pl-3 border-l ${isDark ? "border-slate-800" : "border-slate-200 dark:border-slate-800"}`}>
             <Link
               href="/profile"
-              className="flex items-center gap-2 group"
-              title="Profil & Setări"
+              className="flex items-center gap-2 p-1 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition group"
+              title={`${session.user.name || session.user.email} (Profil)`}
             >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-lime-400 text-slate-950 font-black flex items-center justify-center text-sm shadow-md group-hover:scale-105 transition-transform">
-                {session.user?.name ? session.user.name[0].toUpperCase() : "A"}
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-lime-400 text-slate-950 font-black flex items-center justify-center text-xs sm:text-sm shadow-md group-hover:scale-105 transition-transform">
+                {session.user.name ? session.user.name[0].toUpperCase() : (session.user.email ? session.user.email[0].toUpperCase() : "U")}
+              </div>
+              <div className="hidden xl:block text-left pr-1 max-w-[130px]">
+                <p className="text-xs font-bold text-slate-900 dark:text-white truncate leading-tight">
+                  {session.user.name || "Utilizator"}
+                </p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate font-mono">
+                  {session.user.email}
+                </p>
               </div>
             </Link>
 
             <button
               type="button"
               onClick={() => appSignOut("/")}
-              title="Deconectare"
-              className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              title="Deconectare / Logout"
+              className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-red-500 hover:text-white dark:hover:bg-red-600 text-slate-700 dark:text-slate-300 text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-1.5 shadow-sm active:scale-95 border border-slate-200/80 dark:border-slate-700/60 hover:border-red-500"
               aria-label="Deconectare"
             >
-              <span className="material-symbols-outlined text-lg sm:text-xl">logout</span>
+              <span className="material-symbols-outlined text-[16px] sm:text-[18px]">logout</span>
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         ) : (
           <div className="flex items-center gap-2">
             <Link
               href="/signin"
-              className={`text-xs font-label font-bold uppercase px-3 py-2 rounded-xl ${isDark
-                  ? "text-slate-200 hover:bg-slate-800"
-                  : "text-slate-700 dark:text-slate-300 hover:bg-slate-100"
-                }`}
+              className={`text-xs font-headline font-bold uppercase px-3.5 py-2 rounded-xl bg-lime-400 text-slate-950 hover:bg-lime-300 shadow-md transition active:scale-95 flex items-center gap-1`}
             >
-              Autentificare
+              <span className="material-symbols-outlined text-base">login</span>
+              <span>Autentificare</span>
             </Link>
           </div>
         )}

@@ -203,28 +203,35 @@ export function Sidebar({ variant }: SidebarProps) {
         )}
 
         {session?.user && (
-          <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
-            <div className="flex items-center justify-between px-2">
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="w-7 h-7 rounded-full bg-lime-400 text-slate-950 flex items-center justify-center text-xs font-black shrink-0">
-                  {session.user.name ? session.user.name[0].toUpperCase() : "U"}
-                </div>
-                <div className="truncate">
-                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate leading-tight">
-                    {session.user.name || "Utilizator"}
-                  </p>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{session.user.email}</p>
-                </div>
+          <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+            {/* User Profile Card */}
+            <Link
+              href="/profile"
+              onClick={() => setMobileOpen(false)}
+              className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex items-center gap-3 hover:border-lime-400/60 transition group"
+            >
+              <div className="w-10 h-10 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center text-sm font-black shadow-md shrink-0 group-hover:scale-105 transition-transform">
+                {session.user.name ? session.user.name[0].toUpperCase() : (session.user.email ? session.user.email[0].toUpperCase() : "U")}
               </div>
-              <button
-                type="button"
-                onClick={() => appSignOut("/")}
-                title="Deconectare"
-                className="p-1.5 text-slate-400 hover:text-red-500 transition-colors rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-              >
-                <span className="material-symbols-outlined text-[18px]">logout</span>
-              </button>
-            </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-headline font-bold text-slate-900 dark:text-white truncate leading-tight group-hover:text-lime-600 dark:group-hover:text-lime-400 transition-colors">
+                  {session.user.name || "Utilizator"}
+                </p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5 font-mono">
+                  {session.user.email}
+                </p>
+              </div>
+            </Link>
+
+            {/* Prominent Dedicated Logout Button */}
+            <button
+              type="button"
+              onClick={() => appSignOut("/")}
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 hover:bg-red-500 hover:text-white dark:hover:bg-red-600 text-slate-700 dark:text-slate-300 text-xs font-headline font-bold uppercase tracking-wider transition-all shadow-sm active:scale-95 border border-slate-200/60 dark:border-slate-700/60 hover:border-red-500"
+            >
+              <span className="material-symbols-outlined text-[18px]">logout</span>
+              <span>Logout</span>
+            </button>
           </div>
         )}
       </div>

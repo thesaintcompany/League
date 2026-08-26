@@ -16,7 +16,7 @@ export function SportSubHeader({ variant }: SportSubHeaderProps) {
     selectedCategory,
     currentSportMeta,
     availableSports,
-    footballCategories,
+    activeCategories,
     selectSport,
     selectCategory,
   } = useSportContext();
@@ -101,8 +101,8 @@ export function SportSubHeader({ variant }: SportSubHeaderProps) {
           </div>
         )}
 
-        {/* Row 2: Football Sub-Categories (Smooth Touch Carousel) */}
-        {selectedSport === "fotbal" && (
+        {/* Row 2: Sub-Categories if available (Smooth Touch Carousel) */}
+        {activeCategories && activeCategories.length > 1 && (
           <div className="w-full pt-1 border-t border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between gap-2 min-w-0 animate-in fade-in">
             <div className="flex items-center gap-1 shrink-0">
               <span className="text-[10px] font-label font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 whitespace-nowrap">
@@ -117,7 +117,7 @@ export function SportSubHeader({ variant }: SportSubHeaderProps) {
                 className="flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth overscroll-x-contain py-0.5"
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
               >
-                {footballCategories.map((cat) => {
+                {activeCategories.map((cat) => {
                   const isCatActive = selectedCategory === cat.id;
                   return (
                     <button
