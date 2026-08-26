@@ -155,6 +155,7 @@ export default async function PublicVenueDetailPage({
             location: venue.location,
             address: venue.address,
             specs: venue.specs,
+            amenities: venue.amenities,
             sport: venue.sport,
             surface: venue.surface,
             capacity: venue.capacity,

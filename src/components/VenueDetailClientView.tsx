@@ -12,6 +12,7 @@ export interface VenueData {
   location: string;
   address?: string | null;
   specs?: string | null;
+  amenities?: string | null;
   sport: string;
   surface: string;
   capacity: number;
@@ -73,7 +74,7 @@ export function VenueDetailClientView({
   try {
     if (venue.ads) {
       const parsed = JSON.parse(venue.ads);
-      activeAds = parsed.filter((a: any) => a.isActive);
+      activeAds = Array.isArray(parsed) ? parsed.filter((a: any) => a.isActive) : [];
     }
   } catch {
     activeAds = [];
@@ -87,6 +88,16 @@ export function VenueDetailClientView({
     }
   } catch {
     activeAnnouncements = [];
+  }
+
+  let amenities: Array<{ key: string; label: string; detail?: string; icon: string }> = [];
+  try {
+    const parsedAmenities = venue.amenities ? JSON.parse(venue.amenities) : [];
+    if (Array.isArray(parsedAmenities)) {
+      amenities = parsedAmenities.filter((amenity) => amenity.enabled && amenity.label);
+    }
+  } catch {
+    amenities = [];
   }
 
   // Group finished matches by league
@@ -236,6 +247,16 @@ export function VenueDetailClientView({
                 className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-headline font-bold text-xs uppercase tracking-wider py-4 px-6 rounded-2xl border border-white/20 transition flex items-center gap-2 active:scale-95"
               >
                 <span>🎟️</span> Bilete Meciuri ({upcomingMatches.length})
+              </a>
+            )}
+
+            {activeAds.length > 0 && (
+              <a
+                href="#arena-sponsors"
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-headline font-bold text-xs uppercase tracking-wider py-4 px-6 rounded-2xl border border-white/20 transition flex items-center gap-2 active:scale-95"
+              >
+                <span className="material-symbols-outlined text-lg">campaign</span>
+                Reclame &amp; Sponsori ({activeAds.length})
               </a>
             )}
           </div>
@@ -417,55 +438,21 @@ export function VenueDetailClientView({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
-              <div className="w-10 h-10 rounded-xl bg-lime-100 dark:bg-lime-950/50 text-lime-700 dark:text-lime-400 flex items-center justify-center">
-                <span className="material-symbols-outlined text-xl">local_parking</span>
-              </div>
-              <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white">
-                Parcare Suporteri &amp; Autocare
-              </h4>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-body leading-relaxed">
-                Spații de parcare securizate și acces direct pentru autocarele echipelor oaspete.
-              </p>
+          {amenities.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {amenities.map((amenity) => (
+                <div key={amenity.key} className="bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+                  <div className="w-10 h-10 rounded-xl bg-lime-100 dark:bg-lime-950/50 text-lime-700 dark:text-lime-400 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-xl">{amenity.icon}</span>
+                  </div>
+                  <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white">{amenity.label}</h4>
+                  {amenity.detail && <p className="text-xs text-slate-600 dark:text-slate-400 font-body leading-relaxed">{amenity.detail}</p>}
+                </div>
+              ))}
             </div>
-
-            <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
-              <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400 flex items-center justify-center">
-                <span className="material-symbols-outlined text-xl">workspace_premium</span>
-              </div>
-              <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white">
-                Loje VIP &amp; Platinum Lounge
-              </h4>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-body leading-relaxed">
-                Saloane executive cu vizibilitate panoramică, catering dedicat și acces tunel jucători.
-              </p>
-            </div>
-
-            <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
-              <div className="w-10 h-10 rounded-xl bg-cyan-100 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-400 flex items-center justify-center">
-                <span className="material-symbols-outlined text-xl">wifi</span>
-              </div>
-              <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white">
-                Hyper-Wifi &amp; Transmisie 4K
-              </h4>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-body leading-relaxed">
-                Infrastructură de streaming de mare viteză și poziții pentru camerele TV de meci.
-              </p>
-            </div>
-
-            <div className="bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
-              <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-400 flex items-center justify-center">
-                <span className="material-symbols-outlined text-xl">meeting_room</span>
-              </div>
-              <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white">
-                Vestiare Profesionale &amp; Sală Masaj
-              </h4>
-              <p className="text-xs text-slate-600 dark:text-slate-400 font-body leading-relaxed">
-                Vestiare încăpătoare pentru ambele echipe și cabinet dedicat brigăzii de arbitri.
-              </p>
-            </div>
-          </div>
+          ) : (
+            <p className="text-sm text-slate-500 dark:text-slate-400">Facilitățile acestei arene nu au fost configurate încă.</p>
+          )}
         </section>
 
         {/* SECTION: Next on the Turf / Upcoming Matches with DIRECT TICKET LINK */}
@@ -593,7 +580,7 @@ export function VenueDetailClientView({
 
         {/* Written Announcements from Arena Owner */}
         {activeAnnouncements.length > 0 && (
-          <section className="space-y-4">
+          <section id="arena-sponsors" className="space-y-4 scroll-mt-24">
             <div className="flex items-center gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
               <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
               <h2 className="text-xl font-bold font-headline uppercase text-slate-900 dark:text-white">

@@ -21,12 +21,21 @@ interface AnnouncementItem {
   isActive: boolean;
 }
 
+interface AmenityItem {
+  key: string;
+  label: string;
+  detail: string;
+  icon: string;
+  enabled: boolean;
+}
+
 interface VenueData {
   id: string;
   name: string;
   location: string;
   address?: string | null;
   specs?: string | null;
+  amenities?: string | null;
   sport: string;
   surface: string;
   capacity: number;
@@ -64,6 +73,34 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initial
   const [imageUrl, setImageUrl] = useState(
     initialVenue?.imageUrl || "/images/stadium-hero.jpg"
   );
+
+  const amenityDefaults: AmenityItem[] = [
+    { key: "parking", label: "Parcare", detail: "", icon: "local_parking", enabled: false },
+    { key: "vip", label: "Loje VIP / Lounge", detail: "", icon: "workspace_premium", enabled: false },
+    { key: "video", label: "Sistem video", detail: "Camere video pentru meciuri și securitate", icon: "videocam", enabled: false },
+    { key: "wifi", label: "Wi-Fi pentru spectatori", detail: "", icon: "wifi", enabled: false },
+    { key: "changing_rooms", label: "Vestiare și dușuri", detail: "", icon: "meeting_room", enabled: false },
+    { key: "medical", label: "Punct medical / Ambulanță", detail: "", icon: "medical_services", enabled: false },
+    { key: "accessibility", label: "Accesibilitate persoane cu dizabilități", detail: "", icon: "accessible", enabled: false },
+    { key: "catering", label: "Catering și puncte de alimentație", detail: "", icon: "restaurant", enabled: false },
+    { key: "press", label: "Zonă presă și transmisie", detail: "", icon: "podcasts", enabled: false },
+    { key: "heating", label: "Încălzire / climatizare", detail: "", icon: "thermostat", enabled: false },
+  ];
+  let savedAmenities: AmenityItem[] = amenityDefaults;
+  try {
+    const parsedAmenities = initialVenue?.amenities ? JSON.parse(initialVenue.amenities) : [];
+    if (Array.isArray(parsedAmenities)) {
+      savedAmenities = amenityDefaults.map((defaultAmenity) => {
+        const saved = parsedAmenities.find((amenity: AmenityItem) => amenity.key === defaultAmenity.key);
+        return saved ? { ...defaultAmenity, ...saved } : defaultAmenity;
+      });
+      parsedAmenities.filter((amenity: AmenityItem) => !amenityDefaults.some((item) => item.key === amenity.key)).forEach((amenity: AmenityItem) => savedAmenities.push(amenity));
+    }
+  } catch {
+    savedAmenities = amenityDefaults;
+  }
+  const [amenities, setAmenities] = useState<AmenityItem[]>(savedAmenities);
+  const [parkingSpaces, setParkingSpaces] = useState("");
 
   // Advertising / Sponsor Banners State
   let parsedAds: AdItem[] = [];
@@ -203,6 +240,7 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initial
           floodlights,
           pricePerHour,
           imageUrl,
+          amenities,
           ads,
           announcements,
           tickerText,
@@ -677,6 +715,37 @@ export function ArenaOwnerPanel({ initialVenue, initialMatches = [] }: { initial
                 >
                   {floodlights ? "Activată ✓" : "Dezactivată"}
                 </button>
+              </div>
+
+              <div className="sm:col-span-2 p-5 rounded-2xl bg-surface-container-low space-y-4">
+                <div>
+                  <h4 className="font-headline font-bold text-sm text-blue-950 dark:text-white">Dotări &amp; Facilități Publice</h4>
+                  <p className="text-[11px] text-slate-500 font-label mt-1">Bifează doar facilitățile disponibile la această arenă. Ele vor apărea pe pagina publică.</p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {amenities.map((amenity, index) => (
+                    <label key={amenity.key} className="flex items-start gap-3 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={amenity.enabled}
+                        onChange={(event) => setAmenities(amenities.map((item, itemIndex) => itemIndex === index ? { ...item, enabled: event.target.checked } : item))}
+                        className="mt-1 h-4 w-4 accent-lime-400"
+                      />
+                      <span className="flex-1">
+                        <span className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-white">
+                          <span className="material-symbols-outlined text-base text-lime-600 dark:text-lime-400">{amenity.icon}</span>
+                          {amenity.label}
+                        </span>
+                        {amenity.key === "parking" && amenity.enabled && (
+                          <input type="number" min={0} value={parkingSpaces} onChange={(event) => { setParkingSpaces(event.target.value); setAmenities(amenities.map((item, itemIndex) => itemIndex === index ? { ...item, detail: event.target.value ? `${event.target.value} locuri disponibile` : "" } : item)); }} placeholder="Număr locuri" className="input mt-2 text-xs" />
+                        )}
+                        {amenity.key !== "parking" && amenity.enabled && (
+                          <input type="text" value={amenity.detail} onChange={(event) => setAmenities(amenities.map((item, itemIndex) => itemIndex === index ? { ...item, detail: event.target.value } : item))} placeholder="Detalii afișate public (opțional)" className="input mt-2 text-xs" />
+                        )}
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

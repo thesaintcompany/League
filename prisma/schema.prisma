@@ -6,6 +6,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -91,6 +92,7 @@ model Venue {
   status        String   @default("activ") // "activ", "constructie", "proiect"
   address       String?
   specs         String?
+  amenities     String?  // JSON string: configurable arena facilities
   sport         String   @default("fotbal") // fotbal, baschet, volei, handbal, multifunctional
   surface       String   @default("Sintetic") // Sintetic, Gazon Natural, Parchet, Mixt, Nisip, Indoor
   capacity      Int      @default(100)
