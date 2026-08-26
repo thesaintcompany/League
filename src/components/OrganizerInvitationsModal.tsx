@@ -29,6 +29,7 @@ interface OrganizerInvitationsModalProps {
   county?: string | null;
   isOpen: boolean;
   onClose: () => void;
+  onParticipantAdded?: () => void;
 }
 
 export function OrganizerInvitationsModal({
@@ -38,6 +39,7 @@ export function OrganizerInvitationsModal({
   county,
   isOpen,
   onClose,
+  onParticipantAdded,
 }: OrganizerInvitationsModalProps) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [activeTab, setActiveTab] = useState<"invite" | "referees" | "dice_announcement">("invite");
@@ -341,6 +343,7 @@ export function OrganizerInvitationsModal({
                                       });
                                       if (res.ok) {
                                         setCompetitorEnrolledSuccess(`✓ ${comp.name} a fost adăugat pe tablou!`);
+                                        onParticipantAdded?.();
                                         setTimeout(() => setCompetitorEnrolledSuccess(null), 4000);
                                       } else {
                                         const err = await res.json().catch(() => ({}));

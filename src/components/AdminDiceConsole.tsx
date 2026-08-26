@@ -276,20 +276,46 @@ export function AdminDiceConsole({
           <div className="absolute top-0 right-0 w-64 h-64 bg-lime-400/10 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none"></div>
 
           <div className="flex justify-between items-start mb-8 relative z-10">
-            <div className="space-y-1">
-              <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-                {isIndividual ? "🎲 TRAGERE LA SORȚI TABLOU TENIS" : "🎲 TRAGERE LA SORȚI CU ZARURI"}
+            <div className="space-y-2">
+              <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md inline-block">
+                {isIndividual ? `🎲 TRAGERE LA SORȚI TABLOU ${sport.toUpperCase()}` : "🎲 TRAGERE LA SORȚI CU ZARURI"}
               </span>
-              <h2 className="text-xl sm:text-2xl font-black font-headline text-slate-900 dark:text-white uppercase tracking-tight">
-                {isIndividual ? "Consola Oficială de Tragere Tablou & Capi de Serie" : "Consola Oficială de Aruncare a Zarurilor"}
+              <h2 className="text-xl sm:text-2xl font-black font-headline text-slate-900 dark:text-white uppercase tracking-tight leading-snug">
+                {isIndividual ? (
+                  <>
+                    <span className="block">Consola Oficială de Tragere</span>
+                    <span className="block text-lime-600 dark:text-lime-400">Tablou &amp; Capi de Serie</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="block">Consola Oficială de Aruncare</span>
+                    <span className="block text-lime-600 dark:text-lime-400">Tragere la Sorți &amp; Zaruri</span>
+                  </>
+                )}
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                {isIndividual
-                  ? "Aruncarea zarurilor distribuie aleatoriu și imparțial jucătorii de tenis pe tablou (sferturi, semifinale și finală)."
-                  : "Aruncarea zarurilor stabilește împerecherile de meciuri și ordinea pe arbore pentru turneele eliminatorii."}
-              </p>
+              <div className="text-xs font-label space-y-0.5 pt-0.5">
+                {isIndividual ? (
+                  <>
+                    <p className="font-semibold text-slate-700 dark:text-slate-200">
+                      Algoritmul de zaruri distribuie aleatoriu și imparțial toți competitorii pe tablou.
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400">
+                      Stabilește automat tabloul complet de concurs (sferturi, semifinale și finală).
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="font-semibold text-slate-700 dark:text-slate-200">
+                      Aruncarea zarurilor generează o tragere 100% transparentă, imparțială și echitabilă.
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400">
+                      Stabilește împerecherile de meciuri și ordinea oficială pe arborele eliminatoriu.
+                    </p>
+                  </>
+                )}
+              </div>
             </div>
-            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-full border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center gap-2 px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-full border border-slate-200 dark:border-slate-700 shrink-0">
               <span className={`w-2 h-2 rounded-full ${isLocked ? "bg-red-500" : "bg-emerald-500 animate-pulse"}`}></span>
               <span className="font-label text-[10px] font-black uppercase tracking-tight">
                 {isLocked ? "Engine Locked" : "Engine Ready"}

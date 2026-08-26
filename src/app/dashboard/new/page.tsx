@@ -90,6 +90,7 @@ export default function NewChampionshipPage() {
   }
 
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
+  const [brandingScopeSlide, setBrandingScopeSlide] = useState<0 | 1>(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
@@ -121,6 +122,7 @@ export default function NewChampionshipPage() {
   const [venueOwnerEmail, setVenueOwnerEmail] = useState("");
   const [venueOwnerPhone, setVenueOwnerPhone] = useState("");
   const [venueInviteSent, setVenueInviteSent] = useState(false);
+  const [showVenueOwnerInvite, setShowVenueOwnerInvite] = useState(false);
 
   function handleSendVenueInviteEmail() {
     if (!venueOwnerEmail || !venueOwnerEmail.includes("@")) {
@@ -307,51 +309,60 @@ export default function NewChampionshipPage() {
           subtitle="Configurează o competiție nouă, un turneu eliminatoriu sau o cupă de jocuri amicale"
         />
 
-        <main className="w-full max-w-4xl space-y-5 sm:space-y-8 p-3 sm:p-6 lg:p-10 mx-auto">
+        <main className="w-full max-w-5xl space-y-6 sm:space-y-8 p-3 sm:p-6 lg:p-10 mx-auto">
           {/* Quota & Pricing Status Banner */}
           {existingCount === 0 ? (
-            <div className="w-full p-3.5 sm:p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs font-label flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
-              <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-emerald-500 text-xl shrink-0">card_giftcard</span>
+            <div className="w-full p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs font-label flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-2xl">card_giftcard</span>
+                </div>
                 <div>
-                  <p className="font-headline font-black uppercase text-xs">Plan Gratuit Activ • 1 Campionat Inclus</p>
-                  <p className="opacity-90 text-[11px]">Primul tău campionat pe platformă este 100% GRATUIT fără niciun cost ascuns.</p>
+                  <p className="font-headline font-black uppercase text-xs sm:text-sm">Plan Gratuit Activ • 1 Campionat Inclus</p>
+                  <p className="opacity-90 text-[11px] sm:text-xs">Primul tău campionat pe platformă este 100% GRATUIT fără niciun cost ascuns.</p>
                 </div>
               </div>
-              <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-bold text-[10px] uppercase font-mono border border-emerald-500/30 shrink-0 self-start sm:self-auto">
+              <span className="px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-bold text-xs uppercase font-mono border border-emerald-500/30 shrink-0 self-start sm:self-auto">
                 0 € (GRATUIT)
               </span>
             </div>
           ) : (
-            <div className="w-full p-3.5 sm:p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-label flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
-              <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-amber-500 text-xl shrink-0">workspace_premium</span>
+            <div className="w-full p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-label flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-2xl">workspace_premium</span>
+                </div>
                 <div>
-                  <p className="font-headline font-black uppercase text-xs">Cota Gratuită Atinsă ({existingCount}/1 Campionat)</p>
-                  <p className="opacity-90 text-[11px]">Ai un campionat activ. Campionatul suplimentar se achită cu <strong>280 € / competiție</strong> (~1.395 RON).</p>
+                  <p className="font-headline font-black uppercase text-xs sm:text-sm">Cota Gratuită Atinsă ({existingCount}/1 Campionat)</p>
+                  <p className="opacity-90 text-[11px] sm:text-xs">Ai un campionat activ. Campionatul suplimentar se achită cu <strong>280 € / competiție</strong> (~1.395 RON).</p>
                 </div>
               </div>
-              <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-300 font-bold text-[10px] uppercase font-mono border border-amber-500/30 shrink-0 self-start sm:self-auto">
+              <span className="px-3.5 py-1.5 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-300 font-bold text-xs uppercase font-mono border border-amber-500/30 shrink-0 self-start sm:self-auto">
                 280 € / Campionat
               </span>
             </div>
           )}
 
           {/* Quick Presets Tray */}
-          <div className="w-full p-4 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-sm space-y-3">
+          <div className="w-full p-5 sm:p-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
-                ⚡ Șabloane Rapide (1-Click Fill)
-              </span>
+              <div>
+                <span className="text-xs sm:text-sm font-label font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
+                  ⚡ Șabloane Rapide (1-Click Fill)
+                </span>
+                <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-label">
+                  Alege un tip de competiție pentru a pre-completa automat setările optime
+                </p>
+              </div>
               {selectedPreset && (
-                <span className="px-2.5 py-0.5 rounded-full bg-lime-400/20 text-lime-600 dark:text-lime-400 text-[10px] font-black font-label uppercase border border-lime-400/30 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-lime-500 animate-pulse"></span>
+                <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-600 dark:text-lime-400 text-xs font-black font-label uppercase border border-lime-400/30 flex items-center gap-1.5 shrink-0">
+                  <span className="w-2 h-2 rounded-full bg-lime-500 animate-pulse"></span>
                   Șablon Activ
                 </span>
               )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2.5 sm:gap-3 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 w-full">
               {[
                 {
                   id: "tennis_singles" as const,
@@ -402,16 +413,18 @@ export default function NewChampionshipPage() {
                     key={preset.id}
                     type="button"
                     onClick={() => applyPreset(preset.id)}
-                    className={`p-3.5 rounded-2xl border text-left transition-all duration-150 flex flex-col justify-between gap-2 relative w-full active:scale-[0.98] ${isSelected
-                        ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md ring-2 ring-lime-400/30 scale-[1.01]"
-                        : "bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800 hover:border-lime-500/60 dark:hover:border-lime-400/60"
+                    className={`p-4 sm:p-4.5 rounded-2xl sm:rounded-3xl border text-left transition-all duration-150 flex flex-col justify-between gap-3 relative w-full active:scale-[0.98] ${isSelected
+                        ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md ring-2 ring-lime-400/40 scale-[1.01]"
+                        : "bg-slate-50 dark:bg-slate-950/70 hover:bg-slate-100 dark:hover:bg-slate-850 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800 hover:border-lime-500/60 dark:hover:border-lime-400/60"
                       }`}
                   >
                     <div className="flex items-center justify-between w-full">
-                      <span className="text-xl sm:text-lg">{preset.icon}</span>
+                      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-xl sm:text-2xl shadow-sm shrink-0">
+                        {preset.icon}
+                      </div>
                       {/* Checkmark indicator */}
                       <div
-                        className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-black transition-all ${isSelected
+                        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black transition-all ${isSelected
                             ? "bg-slate-950 text-lime-400 shadow-sm"
                             : "border-2 border-slate-300 dark:border-slate-700 text-transparent"
                           }`}
@@ -420,10 +433,10 @@ export default function NewChampionshipPage() {
                       </div>
                     </div>
                     <div>
-                      <div className={`text-xs font-headline font-bold uppercase tracking-tight ${isSelected ? "text-slate-950 font-black" : "text-slate-900 dark:text-white"}`}>
+                      <div className={`text-xs sm:text-sm font-headline font-black uppercase tracking-tight ${isSelected ? "text-slate-950 font-black" : "text-slate-900 dark:text-white"}`}>
                         {preset.title}
                       </div>
-                      <div className={`text-[10px] font-label line-clamp-1 ${isSelected ? "text-slate-900/90 font-medium" : "text-slate-500 dark:text-slate-400"}`}>
+                      <div className={`text-[11px] sm:text-xs font-label mt-0.5 ${isSelected ? "text-slate-900/90 font-semibold" : "text-slate-500 dark:text-slate-400"}`}>
                         {preset.desc}
                       </div>
                     </div>
@@ -484,160 +497,242 @@ export default function NewChampionshipPage() {
                 </div>
               </div>
 
-              {/* Siglă Oficială Campionat (Rotundă) & Upload Foto */}
-              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block">
-                    Siglă Oficială Campionat (Rotundă)
-                  </label>
-                  <span className="text-[10px] text-slate-400 font-label uppercase">Opțional</span>
-                </div>
-
-                {/* Hidden File Input */}
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleLogoFileUpload}
-                  accept="image/png,image/jpeg,image/webp,image/svg+xml"
-                  className="hidden"
-                />
-
-                <div className="flex flex-col sm:flex-row items-center gap-5">
-                  {/* Live Round Badge Preview (Clickable to trigger upload) */}
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    className="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group"
-                    title="Click pentru a încărca o fotografie/siglă din telefon sau calculator"
-                  >
-                    <div className="relative">
-                      <ChampionshipLogoBadge
-                        name={form.name || "Campionat Pro"}
-                        logoUrl={form.logoUrl}
-                        size="xl"
-                      />
-                      <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity">
-                        <span className="material-symbols-outlined text-lg text-lime-400">photo_camera</span>
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-label font-bold text-slate-400 uppercase group-hover:text-lime-600 dark:group-hover:text-lime-400 transition">
-                      {form.logoUrl?.trim() ? "Siglă Imagine" : "Inițiale pe Fond Colorat"}
-                    </span>
+              {/* Carousel Container for Siglă Oficială & Arie Teritorială */}
+              <div className="p-4 sm:p-6 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm overflow-hidden">
+                {/* Carousel Header with Slide Tabs & Next/Prev Controls */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-200 dark:border-slate-800">
+                  <div className="flex items-center gap-1.5 p-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+                    <button
+                      type="button"
+                      onClick={() => setBrandingScopeSlide(0)}
+                      className={`px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all ${
+                        brandingScopeSlide === 0
+                          ? "bg-lime-400 text-slate-950 shadow-sm font-black"
+                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                      }`}
+                    >
+                      <span>1. 🖼️ Siglă Oficială</span>
+                      {form.logoUrl && <span className="text-[10px]">✓</span>}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setBrandingScopeSlide(1)}
+                      className={`px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all ${
+                        brandingScopeSlide === 1
+                          ? "bg-lime-400 text-slate-950 shadow-sm font-black"
+                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                      }`}
+                    >
+                      <span>2. 🗺️ Arie Teritorială</span>
+                      <span className="text-[10px] uppercase font-mono">({form.scope})</span>
+                    </button>
                   </div>
 
-                  {/* Upload Controls & Actions */}
-                  <div className="flex-1 space-y-3 w-full">
-                    <div className="flex flex-wrap items-center gap-2.5">
+                  <div className="flex items-center justify-between sm:justify-end gap-2">
+                    <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                      Pasul {brandingScopeSlide + 1} din 2
+                    </span>
+                    <div className="flex items-center gap-1">
                       <button
                         type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={isUploadingLogo}
-                        className="px-4 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition active:scale-95 border border-lime-300 disabled:opacity-50"
+                        onClick={() => setBrandingScopeSlide(0)}
+                        disabled={brandingScopeSlide === 0}
+                        className="w-8 h-8 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold disabled:opacity-30 hover:border-slate-400 transition shadow-sm"
+                        title="Pasul Anterior"
                       >
-                        <span className="material-symbols-outlined text-base">
-                          {isUploadingLogo ? "progress_activity" : "upload"}
-                        </span>
-                        <span>
-                          {isUploadingLogo
-                            ? "Se procesează..."
-                            : form.logoUrl
-                              ? "Schimbă Fotografia / Sigla"
-                              : "Încarcă Foto din Dispozitiv"}
-                        </span>
+                        ‹
                       </button>
-
-                      {form.logoUrl && (
-                        <button
-                          type="button"
-                          onClick={() => update("logoUrl", "")}
-                          className="px-3.5 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/30 dark:hover:bg-rose-900/40 text-rose-600 dark:text-rose-400 font-label font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 border border-rose-200 dark:border-rose-800 transition active:scale-95"
-                        >
-                          <span className="material-symbols-outlined text-base">delete</span>
-                          <span>Șterge Sigla</span>
-                        </button>
-                      )}
-                    </div>
-
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label">
-                      Formate acceptate: PNG, JPG, WebP sau SVG (max. 5 MB). Va fi decupată automat în formă rotundă.
-                    </p>
-
-                    {/* Optional URL input toggle */}
-                    <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
-                      <input
-                        type="url"
-                        className="w-full p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-500"
-                        value={form.logoUrl?.startsWith("data:") ? "" : form.logoUrl}
-                        onChange={(e) => update("logoUrl", e.target.value)}
-                        placeholder="Sau introdu direct un link web (URL) către imagine..."
-                      />
+                      <button
+                        type="button"
+                        onClick={() => setBrandingScopeSlide(1)}
+                        disabled={brandingScopeSlide === 1}
+                        className="w-8 h-8 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold disabled:opacity-30 hover:border-slate-400 transition shadow-sm"
+                        title="Pasul Următor"
+                      >
+                        ›
+                      </button>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Scope Selection: Național vs Județean vs Local */}
-              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4">
-                <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block">
-                  Arie de Acoperire Teritorială (Amploare) *
-                </label>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  {CHAMPIONSHIP_SCOPES.map((sc) => (
-                    <button
-                      key={sc.value}
-                      type="button"
-                      onClick={() => update("scope", sc.value as any)}
-                      className={`p-3.5 rounded-2xl border text-left transition flex flex-col justify-between gap-1.5 ${form.scope === sc.value
-                        ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md scale-[1.01]"
-                        : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400"
-                        }`}
-                    >
-                      <span className="text-sm font-headline font-bold uppercase">{sc.label}</span>
-                      <span className="text-[11px] font-label font-normal opacity-80">
-                        {sc.value === "national"
-                          ? "Vizibil la nivel național (toate județele)"
-                          : sc.value === "judetean"
-                            ? "Asociat unui județ specific"
-                            : "Asociat unui municipiu / oraș"}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Conditional County & City Selectors */}
-                {form.scope !== "national" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200 dark:border-slate-800">
-                    <div>
-                      <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1.5" htmlFor="county">
-                        Județ Arondat *
+                {/* SLIDE 0: Siglă Oficială Campionat (Rotundă) & Upload Foto */}
+                {brandingScopeSlide === 0 && (
+                  <div className="space-y-4 animate-in fade-in slide-in-from-right-2 duration-200">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block">
+                        Siglă Oficială Campionat (Rotundă)
                       </label>
-                      <select
-                        id="county"
-                        className="w-full p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-500 dark:focus:border-lime-400"
-                        value={form.county}
-                        onChange={(e) => update("county", e.target.value)}
-                      >
-                        {ROMANIAN_COUNTIES.map((c) => (
-                          <option key={c} value={c}>
-                            Județul {c}
-                          </option>
-                        ))}
-                      </select>
+                      <span className="text-[10px] text-slate-400 font-label uppercase">Opțional</span>
                     </div>
 
-                    {form.scope === "oras" && (
-                      <div>
-                        <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1.5" htmlFor="city">
-                          Oraș / Municipiu *
-                        </label>
-                        <input
-                          id="city"
-                          required
-                          className="w-full p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-500 dark:focus:border-lime-400"
-                          value={form.city}
-                          onChange={(e) => update("city", e.target.value)}
-                          placeholder="ex: Timișoara"
-                        />
+                    {/* Hidden File Input */}
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleLogoFileUpload}
+                      accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                      className="hidden"
+                    />
+
+                    <div className="flex flex-col sm:flex-row items-center gap-5">
+                      {/* Live Round Badge Preview */}
+                      <div
+                        onClick={() => fileInputRef.current?.click()}
+                        className="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group"
+                        title="Click pentru a încărca o fotografie/siglă din telefon sau calculator"
+                      >
+                        <div className="relative">
+                          <ChampionshipLogoBadge
+                            name={form.name || "Campionat Pro"}
+                            logoUrl={form.logoUrl}
+                            size="xl"
+                          />
+                          <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity">
+                            <span className="material-symbols-outlined text-lg text-lime-400">photo_camera</span>
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-label font-bold text-slate-400 uppercase group-hover:text-lime-600 dark:group-hover:text-lime-400 transition">
+                          {form.logoUrl?.trim() ? "Siglă Imagine" : "Inițiale pe Fond Colorat"}
+                        </span>
+                      </div>
+
+                      {/* Upload Controls & Actions */}
+                      <div className="flex-1 space-y-3 w-full">
+                        <div className="flex flex-wrap items-center gap-2.5">
+                          <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isUploadingLogo}
+                            className="px-4 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition active:scale-95 border border-lime-300 disabled:opacity-50"
+                          >
+                            <span className="material-symbols-outlined text-base">
+                              {isUploadingLogo ? "progress_activity" : "upload"}
+                            </span>
+                            <span>
+                              {isUploadingLogo
+                                ? "Se procesează..."
+                                : form.logoUrl
+                                  ? "Schimbă Fotografia / Sigla"
+                                  : "Încarcă Foto din Dispozitiv"}
+                            </span>
+                          </button>
+
+                          {form.logoUrl && (
+                            <button
+                              type="button"
+                              onClick={() => update("logoUrl", "")}
+                              className="px-3.5 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/30 dark:hover:bg-rose-900/40 text-rose-600 dark:text-rose-400 font-label font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 border border-rose-200 dark:border-rose-800 transition active:scale-95"
+                            >
+                              <span className="material-symbols-outlined text-base">delete</span>
+                              <span>Șterge Sigla</span>
+                            </button>
+                          )}
+                        </div>
+
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label">
+                          Formate acceptate: PNG, JPG, WebP sau SVG (max. 5 MB). Va fi decupată automat în formă rotundă.
+                        </p>
+
+                        <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2">
+                          <input
+                            type="url"
+                            className="flex-1 p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-500"
+                            value={form.logoUrl?.startsWith("data:") ? "" : form.logoUrl}
+                            onChange={(e) => update("logoUrl", e.target.value)}
+                            placeholder="Sau introdu direct un link web (URL) către imagine..."
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setBrandingScopeSlide(1)}
+                            className="px-3.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-950 font-headline font-bold text-xs uppercase tracking-wider shrink-0 flex items-center gap-1 shadow-sm transition active:scale-95"
+                          >
+                            <span>Pasul 2 (Arie)</span>
+                            <span>→</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* SLIDE 1: Scope Selection: Național vs Județean vs Local */}
+                {brandingScopeSlide === 1 && (
+                  <div className="space-y-4 animate-in fade-in slide-in-from-left-2 duration-200">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block">
+                        Arie de Acoperire Teritorială (Amploare) *
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setBrandingScopeSlide(0)}
+                        className="text-[11px] font-label font-bold text-lime-600 dark:text-lime-400 hover:underline flex items-center gap-0.5"
+                      >
+                        <span>← Înapoi la Siglă</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                      {CHAMPIONSHIP_SCOPES.map((sc) => (
+                        <button
+                          key={sc.value}
+                          type="button"
+                          onClick={() => update("scope", sc.value as any)}
+                          className={`p-3.5 rounded-2xl border text-left transition flex flex-col justify-between gap-1.5 ${form.scope === sc.value
+                            ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md scale-[1.01]"
+                            : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-lime-500 dark:hover:border-lime-400"
+                            }`}
+                        >
+                          <div className="flex items-center justify-between w-full">
+                            <span className="text-sm font-headline font-bold uppercase">{sc.label}</span>
+                            <span className="text-xs font-bold">{form.scope === sc.value ? "✓" : ""}</span>
+                          </div>
+                          <span className="text-[11px] font-label font-normal opacity-80">
+                            {sc.value === "national"
+                              ? "Vizibil la nivel național (toate județele)"
+                              : sc.value === "judetean"
+                                ? "Asociat unui județ specific"
+                                : "Asociat unui municipiu / oraș"}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Conditional County & City Selectors */}
+                    {form.scope !== "national" && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200 dark:border-slate-800">
+                        <div>
+                          <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1.5" htmlFor="county">
+                            Județ Arondat *
+                          </label>
+                          <select
+                            id="county"
+                            className="w-full p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-500 dark:focus:border-lime-400 font-bold"
+                            value={form.county}
+                            onChange={(e) => update("county", e.target.value)}
+                          >
+                            {ROMANIAN_COUNTIES.map((c) => (
+                              <option key={c} value={c}>
+                                Județul {c}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {form.scope === "oras" && (
+                          <div>
+                            <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block mb-1.5" htmlFor="city">
+                              Oraș / Municipiu *
+                            </label>
+                            <input
+                              id="city"
+                              required
+                              className="w-full p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-500 dark:focus:border-lime-400 font-bold"
+                              value={form.city}
+                              onChange={(e) => update("city", e.target.value)}
+                              placeholder="ex: Timișoara"
+                            />
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -943,9 +1038,22 @@ export default function NewChampionshipPage() {
                           />
                         </div>
 
-                        {/* Invitation Module for Arena Owner */}
-                        {form.defaultVenue.trim().length > 0 && (
-                          <div className="p-3.5 rounded-2xl bg-teal-500/10 border border-teal-500/30 space-y-2.5">
+                        {/* Compact Trigger Button to Invite Venue Owner */}
+                        <div className="flex items-center justify-between pt-1">
+                          <button
+                            type="button"
+                            onClick={() => setShowVenueOwnerInvite((prev) => !prev)}
+                            className="text-xs font-headline font-bold text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 hover:underline flex items-center gap-1.5 transition"
+                          >
+                            <span className="text-sm">🏟️</span>
+                            <span>{showVenueOwnerInvite ? "Ascunde formularul de invitație" : "Invită Proprietarul Arenei în platformă"}</span>
+                            <span className="text-[10px] font-mono">{showVenueOwnerInvite ? "▲" : "▼"}</span>
+                          </button>
+                        </div>
+
+                        {/* Expandable Invitation Module for Arena Owner */}
+                        {showVenueOwnerInvite && (
+                          <div className="p-3.5 rounded-2xl bg-teal-500/10 border border-teal-500/30 space-y-2.5 animate-in fade-in duration-150">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
                                 <span className="text-sm">🏟️</span>
@@ -953,13 +1061,17 @@ export default function NewChampionshipPage() {
                                   Invită Proprietarul Arenei să se Listeze pe Platformă
                                 </span>
                               </div>
-                              <span className="text-[10px] font-mono font-bold text-teal-700 dark:text-teal-400 uppercase">
-                                Opțional
-                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setShowVenueOwnerInvite(false)}
+                                className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                              >
+                                ✕
+                              </button>
                             </div>
 
                             <p className="text-[11px] text-teal-800 dark:text-teal-300 font-label">
-                              Dacă ai adresa de email sau contactul administratorului bazei sportive <strong>{form.defaultVenue}</strong>, îi poți trimite o invitație pentru a-și revendica sau lista arena oficial în catalog.
+                              Dacă ai adresa de email sau contactul administratorului bazei sportive {form.defaultVenue ? <strong>&ldquo;{form.defaultVenue}&rdquo;</strong> : ""}, îi poți trimite o invitație pentru a-și revendica sau lista arena oficial în catalog.
                             </p>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -979,7 +1091,7 @@ export default function NewChampionshipPage() {
                               />
                             </div>
 
-                            <div className="flex flex-wrap items-center gap-2 pt-1">
+                            <div className="flex items-center gap-2 pt-1">
                               <button
                                 type="button"
                                 onClick={handleSendVenueInviteEmail}
@@ -989,18 +1101,19 @@ export default function NewChampionshipPage() {
                                 <span>Trimite Invitație pe Email</span>
                               </button>
 
+                              {/* Icon-only WhatsApp button placed right next to email button */}
                               <button
                                 type="button"
                                 onClick={handleSendVenueInviteWhatsApp}
-                                className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition active:scale-95"
+                                title="Trimite Invitație pe WhatsApp"
+                                className="w-9 h-9 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center text-lg shadow-sm transition active:scale-95 shrink-0"
                               >
-                                <span className="material-symbols-outlined text-base">chat</span>
-                                <span>Invită pe WhatsApp</span>
+                                <span>💬</span>
                               </button>
 
                               {venueInviteSent && (
                                 <span className="text-[11px] font-bold text-teal-700 dark:text-teal-300 font-label flex items-center gap-1">
-                                  ✓ Invitație pregătită cu succes!
+                                  ✓ Invitație pregătită!
                                 </span>
                               )}
                             </div>
