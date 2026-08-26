@@ -89,6 +89,11 @@ export function PublicFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/sanctiuni" className="hover:text-slate-950 dark:hover:text-white transition-colors text-red-600 dark:text-red-400 font-bold">
+                  ⚖️ Sancțiuni &amp; Disciplină
+                </Link>
+              </li>
+              <li>
                 <Link href="/teams" className="hover:text-slate-950 dark:hover:text-white transition-colors">
                   Echipe Înregistrate
                 </Link>

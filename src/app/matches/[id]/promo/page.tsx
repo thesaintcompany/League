@@ -42,6 +42,9 @@ export default async function PublicMatchPromoPage({
             id: fallbackMatch.id,
             round: fallbackMatch.round,
             stage: fallbackMatch.stage,
+            status: fallbackMatch.status,
+            homeScore: fallbackMatch.homeScore,
+            awayScore: fallbackMatch.awayScore,
             scheduledAt: fallbackMatch.scheduledAt ? fallbackMatch.scheduledAt.toISOString() : null,
             venue: fallbackMatch.venue,
             ticketPrice: fallbackMatch.ticketPrice,
@@ -58,12 +61,14 @@ export default async function PublicMatchPromoPage({
               name: fallbackMatch.homeTeam.name,
               shortName: fallbackMatch.homeTeam.shortName,
               color: fallbackMatch.homeTeam.color,
+              logoUrl: fallbackMatch.homeTeam.logoUrl,
             },
             awayTeam: {
               id: fallbackMatch.awayTeam.id,
               name: fallbackMatch.awayTeam.name,
               shortName: fallbackMatch.awayTeam.shortName,
               color: fallbackMatch.awayTeam.color,
+              logoUrl: fallbackMatch.awayTeam.logoUrl,
             },
           }}
         />
@@ -80,6 +85,9 @@ export default async function PublicMatchPromoPage({
           id: match.id,
           round: match.round,
           stage: match.stage,
+          status: match.status,
+          homeScore: match.homeScore,
+          awayScore: match.awayScore,
           scheduledAt: match.scheduledAt ? match.scheduledAt.toISOString() : null,
           venue: match.venue,
           ticketPrice: match.ticketPrice,
@@ -96,12 +104,14 @@ export default async function PublicMatchPromoPage({
             name: match.homeTeam.name,
             shortName: match.homeTeam.shortName,
             color: match.homeTeam.color,
+            logoUrl: match.homeTeam.logoUrl,
           },
           awayTeam: {
             id: match.awayTeam.id,
             name: match.awayTeam.name,
             shortName: match.awayTeam.shortName,
             color: match.awayTeam.color,
+            logoUrl: match.awayTeam.logoUrl,
           },
         }}
       />

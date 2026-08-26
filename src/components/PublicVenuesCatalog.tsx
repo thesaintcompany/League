@@ -111,56 +111,98 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
 
   return (
     <div className="space-y-10 font-body">
-      {/* SECTION 1: Strategic Stats Cards - Crisp Light & Dark Mode */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl text-slate-900 dark:text-white space-y-1 shadow-sm transition-colors">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-lime-400">
+      {/* SECTION 1: Strategic Stats Cards - Elevated Compact Design */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        {/* Card 1 */}
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:border-lime-500/40 dark:hover:border-lime-400/40 transition-all flex flex-col justify-between group">
+          <div className="flex items-center justify-between gap-1.5 mb-2">
+            <span className="text-[10px] font-label font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">
               Total Arene &amp; Săli
             </span>
-            <span className="text-xl">🏟️</span>
+            <div className="w-7 h-7 rounded-xl bg-lime-400/15 text-lime-600 dark:text-lime-400 flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-base">stadium</span>
+            </div>
           </div>
-          <p className="text-3xl font-black font-headline text-slate-950 dark:text-white">{initialVenues.length}</p>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-label">Baze sportive &amp; arene omologate</p>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-xl sm:text-2xl font-black font-headline tracking-tight text-slate-950 dark:text-white">
+              {initialVenues.length}
+            </span>
+            <span className="text-[10px] font-label font-bold text-lime-600 dark:text-lime-400">
+              Omologate
+            </span>
+          </div>
+          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-label mt-1 truncate">
+            Baze sportive naționale
+          </p>
         </div>
 
-        <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl text-slate-900 dark:text-white space-y-1 shadow-sm transition-colors">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-lime-400">
+        {/* Card 2 */}
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:border-emerald-500/40 dark:hover:border-emerald-400/40 transition-all flex flex-col justify-between group">
+          <div className="flex items-center justify-between gap-1.5 mb-2">
+            <span className="text-[10px] font-label font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">
               Capacitate Cumulată
             </span>
-            <span className="text-xl">👥</span>
+            <div className="w-7 h-7 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-base">groups</span>
+            </div>
           </div>
-          <p className="text-3xl font-black font-headline text-emerald-700 dark:text-lime-400">
-            {totalCapacity.toLocaleString("ro-RO")}
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-xl sm:text-2xl font-black font-headline tracking-tight text-emerald-700 dark:text-lime-400">
+              {totalCapacity.toLocaleString("ro-RO")}
+            </span>
+            <span className="text-[10px] font-label font-bold text-emerald-600 dark:text-emerald-400">
+              Locuri
+            </span>
+          </div>
+          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-label mt-1 truncate">
+            Tribune pe teritoriul RO
           </p>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-label">Locuri în tribune pe teritoriul României</p>
         </div>
 
-        <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl text-slate-900 dark:text-white space-y-1 shadow-sm transition-colors">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-amber-400">
+        {/* Card 3 */}
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:border-amber-500/40 dark:hover:border-amber-400/40 transition-all flex flex-col justify-between group">
+          <div className="flex items-center justify-between gap-1.5 mb-2">
+            <span className="text-[10px] font-label font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">
               Arene Majore &gt;10k
             </span>
-            <span className="text-xl">⭐</span>
+            <div className="w-7 h-7 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-base">verified</span>
+            </div>
           </div>
-          <p className="text-3xl font-black font-headline text-amber-600 dark:text-amber-400">
-            {stadiumsOver10k} Arene
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-xl sm:text-2xl font-black font-headline tracking-tight text-amber-600 dark:text-amber-400">
+              {stadiumsOver10k}
+            </span>
+            <span className="text-[10px] font-label font-bold text-amber-600 dark:text-amber-400">
+              Arene
+            </span>
+          </div>
+          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-label mt-1 truncate">
+            Top UEFA &amp; Săli 10k+
           </p>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-label">Arene de top UEFA &amp; Săli 10.000+</p>
         </div>
 
-        <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl text-slate-900 dark:text-white space-y-1 shadow-sm transition-colors">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-cyan-400">
-              Săli Polivalente Moderne
+        {/* Card 4 */}
+        <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:border-cyan-500/40 dark:hover:border-cyan-400/40 transition-all flex flex-col justify-between group">
+          <div className="flex items-center justify-between gap-1.5 mb-2">
+            <span className="text-[10px] font-label font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 truncate">
+              Polivalente Moderne
             </span>
-            <span className="text-xl">🎪</span>
+            <div className="w-7 h-7 rounded-xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-base">domain</span>
+            </div>
           </div>
-          <p className="text-3xl font-black font-headline text-blue-700 dark:text-cyan-400">
-            {polyvalentHalls} Săli
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-xl sm:text-2xl font-black font-headline tracking-tight text-blue-700 dark:text-cyan-400">
+              {polyvalentHalls}
+            </span>
+            <span className="text-[10px] font-label font-bold text-cyan-600 dark:text-cyan-400">
+              Săli
+            </span>
+          </div>
+          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-label mt-1 truncate">
+            Multi-sport &amp; concerte
           </p>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-label">Baschet, Handbal, Volei &amp; Concerte</p>
         </div>
       </section>
 

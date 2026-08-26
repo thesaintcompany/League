@@ -23,6 +23,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
   const isVenues = currentTab === "venues" || pathname.startsWith("/venues");
   const isPlayers = currentTab === "players" || pathname.startsWith("/players");
   const isTeams = currentTab === "teams" || pathname.startsWith("/teams") || pathname.startsWith("/echipe");
+  const isSanctiuni = pathname.startsWith("/sanctiuni");
   const isSignIn = pathname === "/signin" || pathname === "/signup";
 
   const navLinks = [
@@ -30,6 +31,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
     { href: "/campionat", label: "Clasament", active: isCampionat, icon: "emoji_events" },
     { href: "/brackets", label: "Meciuri", active: isBrackets, icon: "account_tree" },
     { href: "/teams", label: "Echipe", active: isTeams, icon: "groups" },
+    { href: "/sanctiuni", label: "Sancțiuni", active: isSanctiuni, icon: "gavel" },
     { href: "/venues", label: "Arene", active: isVenues, icon: "stadium" },
     { href: "/players", label: "Golgheteri", active: isPlayers, icon: "directions_run" },
   ];
@@ -38,7 +40,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
     { href: "/harta-romaniei", label: "Harta", active: isRomaniaMap, icon: "map" },
     { href: "/campionat", label: "Clasament", active: isCampionat, icon: "emoji_events" },
     { href: "/brackets", label: "Meciuri", active: isBrackets, icon: "account_tree" },
-    { href: "/venues", label: "Arene", active: isVenues, icon: "stadium" },
+    { href: "/sanctiuni", label: "Sancțiuni", active: isSanctiuni, icon: "gavel" },
     { href: "/signin", label: "Cont", active: isSignIn, icon: "account_circle" },
   ];
 

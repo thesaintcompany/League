@@ -10,6 +10,7 @@ interface TeamData {
   name: string;
   shortName?: string | null;
   color?: string | null;
+  logoUrl?: string | null;
   city?: string | null;
 }
 
@@ -18,6 +19,9 @@ interface MatchPromoProps {
     id: string;
     round: number;
     stage?: string | null;
+    status?: string | null; // "scheduled" | "live" | "finished"
+    homeScore?: number | null;
+    awayScore?: number | null;
     scheduledAt?: string | null;
     venue?: string | null;
     ticketPrice?: number | null;
@@ -25,6 +29,31 @@ interface MatchPromoProps {
     homeTeam: TeamData;
     awayTeam: TeamData;
   };
+}
+
+function TeamLogoCrest({ team, fallbackShort }: { team: TeamData; fallbackShort: string }) {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <div
+      className="w-24 h-24 sm:w-36 sm:h-36 rounded-3xl flex items-center justify-center font-black text-3xl sm:text-4xl text-white shadow-2xl border-4 border-white/20 transform group-hover:scale-105 transition-all overflow-hidden bg-slate-900/90 relative backdrop-blur-md"
+      style={{ backgroundColor: team.color || "#1e293b" }}
+    >
+      {team.logoUrl && !imgError ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={team.logoUrl}
+          alt={team.name}
+          onError={() => setImgError(true)}
+          className="w-full h-full object-contain p-2.5 transition-transform duration-300 group-hover:scale-110 drop-shadow-md"
+        />
+      ) : (
+        <span className="font-headline font-black uppercase tracking-tight drop-shadow-md text-white">
+          {fallbackShort}
+        </span>
+      )}
+    </div>
+  );
 }
 
 export function MatchPromoClientView({ match }: MatchPromoProps) {
@@ -122,34 +151,53 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
   const homeShort = match.homeTeam.shortName || match.homeTeam.name.substring(0, 3).toUpperCase();
   const awayShort = match.awayTeam.shortName || match.awayTeam.name.substring(0, 3).toUpperCase();
 
+  const isLive = match.status === "live" || match.status === "in_progress";
+  const isFinished = match.status === "finished";
+  const hasScore = (match.homeScore !== null && match.homeScore !== undefined) && (match.awayScore !== null && match.awayScore !== undefined);
+
   return (
     <div className="flex-1 w-full font-body text-white">
-      {/* Hero Match Promo Banner */}
+      {/* Hero Match Promo Banner — Major Champions League Style */}
       <section className="relative overflow-hidden bg-slate-950 py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-b border-lime-400/30 shadow-2xl">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-lime-400/15 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        {/* Dynamic Dual Split Team Color Glows */}
+        <div
+          className="absolute top-0 left-0 w-1/2 h-full opacity-25 blur-3xl pointer-events-none"
+          style={{ background: `radial-gradient(circle, ${match.homeTeam.color || "#dc2626"} 0%, transparent 70%)` }}
+        ></div>
+        <div
+          className="absolute top-0 right-0 w-1/2 h-full opacity-25 blur-3xl pointer-events-none"
+          style={{ background: `radial-gradient(circle, ${match.awayTeam.color || "#1e3a8a"} 0%, transparent 70%)` }}
+        ></div>
         <div
           className="absolute inset-0 bg-cover bg-center opacity-10 mix-blend-luminosity pointer-events-none"
           style={{ backgroundImage: "url('/images/stadium-hero.jpg')" }}
         ></div>
 
         <div className="max-w-5xl mx-auto text-center relative z-10 space-y-8">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label shadow-lg">
-            <span>🔥</span> MECIUL ETAPEI • {champName}
+          {/* Status Badge: LIVE / REZULTAT FINAL / MECIUL ETAPEI */}
+          <div>
+            {isLive ? (
+              <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-red-600 text-white font-black text-xs uppercase tracking-wider font-label shadow-xl shadow-red-600/50 border border-red-400 animate-pulse">
+                <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
+                <span>🔴 LIVE MECH • {champName}</span>
+              </div>
+            ) : isFinished ? (
+              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-500 text-slate-950 font-black text-xs uppercase tracking-wider font-label shadow-lg border border-emerald-300">
+                <span>✓</span> REZULTAT FINAL • {champName}
+              </div>
+            ) : (
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label shadow-lg">
+                <span>🔥</span> MECIUL ETAPEI • {champName}
+              </div>
+            )}
           </div>
 
-          {/* Versus Header */}
+          {/* Versus Header with Team Logos & Score Overlay */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16 py-4">
             {/* Home Team */}
-            <div className="flex flex-col items-center space-y-3 group">
-              <div
-                className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center font-black text-3xl sm:text-4xl text-white shadow-2xl border-4 border-white/20 transform group-hover:scale-105 transition"
-                style={{ backgroundColor: match.homeTeam.color || "#dc2626" }}
-              >
-                {homeShort}
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-black font-headline uppercase tracking-tight text-white drop-shadow">
+            <div className="flex flex-col items-center space-y-3 group max-w-[200px] text-center">
+              <TeamLogoCrest team={match.homeTeam} fallbackShort={homeShort} />
+              <h2 className="text-2xl sm:text-3xl font-black font-headline uppercase tracking-tight text-white drop-shadow leading-tight">
                 {match.homeTeam.name}
               </h2>
               <span className="text-xs font-label uppercase font-bold text-lime-400">
@@ -157,25 +205,32 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
               </span>
             </div>
 
-            {/* VS Divider */}
-            <div className="flex flex-col items-center">
-              <span className="text-4xl sm:text-6xl font-black italic font-headline text-lime-400 animate-pulse">
-                VS
-              </span>
-              <span className="text-[10px] font-label uppercase tracking-widest text-slate-400 font-bold mt-1">
+            {/* Score or VS Divider */}
+            <div className="flex flex-col items-center my-2 sm:my-0">
+              {isLive || isFinished || hasScore ? (
+                <div className="flex items-center gap-3 sm:gap-6 bg-slate-900/90 border-2 border-white/20 px-6 sm:px-8 py-3.5 rounded-3xl shadow-2xl backdrop-blur-md">
+                  <span className={`text-4xl sm:text-6xl font-black font-mono tracking-tight ${isLive ? "text-red-400" : "text-white"}`}>
+                    {match.homeScore ?? 0}
+                  </span>
+                  <span className="text-2xl sm:text-4xl font-black font-headline text-slate-500">-</span>
+                  <span className={`text-4xl sm:text-6xl font-black font-mono tracking-tight ${isLive ? "text-red-400" : "text-white"}`}>
+                    {match.awayScore ?? 0}
+                  </span>
+                </div>
+              ) : (
+                <span className="text-4xl sm:text-6xl font-black italic font-headline text-lime-400 animate-pulse">
+                  VS
+                </span>
+              )}
+              <span className="text-[10px] font-label uppercase tracking-widest text-slate-400 font-bold mt-2">
                 {match.stage ? match.stage.toUpperCase() : `Etapa ${match.round}`}
               </span>
             </div>
 
             {/* Away Team */}
-            <div className="flex flex-col items-center space-y-3 group">
-              <div
-                className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl flex items-center justify-center font-black text-3xl sm:text-4xl text-white shadow-2xl border-4 border-white/20 transform group-hover:scale-105 transition"
-                style={{ backgroundColor: match.awayTeam.color || "#1e3a8a" }}
-              >
-                {awayShort}
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-black font-headline uppercase tracking-tight text-white drop-shadow">
+            <div className="flex flex-col items-center space-y-3 group max-w-[200px] text-center">
+              <TeamLogoCrest team={match.awayTeam} fallbackShort={awayShort} />
+              <h2 className="text-2xl sm:text-3xl font-black font-headline uppercase tracking-tight text-white drop-shadow leading-tight">
                 {match.awayTeam.name}
               </h2>
               <span className="text-xs font-label uppercase font-bold text-lime-400">
@@ -205,33 +260,35 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
             </div>
           </div>
 
-          {/* Countdown Clock */}
-          <div className="grid grid-cols-4 gap-3 max-w-sm mx-auto">
-            <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl">
-              <span className="text-2xl sm:text-3xl font-black font-mono text-lime-400 block">
-                {timeLeft.days}
-              </span>
-              <span className="text-[9px] uppercase font-label font-bold text-slate-400">Zile</span>
+          {/* Countdown Clock (only if match is upcoming) */}
+          {!isFinished && (
+            <div className="grid grid-cols-4 gap-3 max-w-sm mx-auto">
+              <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl">
+                <span className="text-2xl sm:text-3xl font-black font-mono text-lime-400 block">
+                  {timeLeft.days}
+                </span>
+                <span className="text-[9px] uppercase font-label font-bold text-slate-400">Zile</span>
+              </div>
+              <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl">
+                <span className="text-2xl sm:text-3xl font-black font-mono text-white block">
+                  {timeLeft.hours}
+                </span>
+                <span className="text-[9px] uppercase font-label font-bold text-slate-400">Ore</span>
+              </div>
+              <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl">
+                <span className="text-2xl sm:text-3xl font-black font-mono text-white block">
+                  {timeLeft.minutes}
+                </span>
+                <span className="text-[9px] uppercase font-label font-bold text-slate-400">Min</span>
+              </div>
+              <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl">
+                <span className="text-2xl sm:text-3xl font-black font-mono text-lime-400 block">
+                  {timeLeft.seconds}
+                </span>
+                <span className="text-[9px] uppercase font-label font-bold text-slate-400">Sec</span>
+              </div>
             </div>
-            <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl">
-              <span className="text-2xl sm:text-3xl font-black font-mono text-white block">
-                {timeLeft.hours}
-              </span>
-              <span className="text-[9px] uppercase font-label font-bold text-slate-400">Ore</span>
-            </div>
-            <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl">
-              <span className="text-2xl sm:text-3xl font-black font-mono text-white block">
-                {timeLeft.minutes}
-              </span>
-              <span className="text-[9px] uppercase font-label font-bold text-slate-400">Min</span>
-            </div>
-            <div className="bg-slate-900/90 border border-slate-800 p-3 rounded-2xl">
-              <span className="text-2xl sm:text-3xl font-black font-mono text-lime-400 block">
-                {timeLeft.seconds}
-              </span>
-              <span className="text-[9px] uppercase font-label font-bold text-slate-400">Sec</span>
-            </div>
-          </div>
+          )}
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap justify-center gap-4 pt-4 max-w-md mx-auto">
