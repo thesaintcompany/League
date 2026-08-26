@@ -440,7 +440,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                           </span>
                         ) : s.yellowCards >= 3 ? (
                           <span className="px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1">
-                            <span>⚠️</span> Risc Suspendare (3 🟨)
+                            <span>⚠️</span> Risc (3 🟨)
                           </span>
                         ) : (
                           <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1">
