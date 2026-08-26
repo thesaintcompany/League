@@ -11,7 +11,11 @@ interface NavItem {
   icon: string;
 }
 
-export function Sidebar() {
+interface SidebarProps {
+  variant?: "default" | "dark";
+}
+
+export function Sidebar({ variant }: SidebarProps) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const role = (session?.user as any)?.role || "organizer";
@@ -89,8 +93,14 @@ export function Sidebar() {
     ];
   }
 
+  const isDarkTheme = variant === "dark";
+
   return (
-    <aside className="h-screen w-64 fixed left-0 top-0 z-40 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col py-6 transition-colors duration-200">
+    <aside className={`h-screen w-64 fixed left-0 top-0 z-40 border-r flex flex-col py-6 transition-colors duration-200 ${
+      isDarkTheme
+        ? "bg-slate-900 border-slate-800 text-white shadow-xl"
+        : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
+    }`}>
       {/* Brand Header */}
       <div className="px-6 mb-6">
         <Link
@@ -110,10 +120,10 @@ export function Sidebar() {
               ⚡
             </div>
             <div>
-              <span className="text-xl font-extrabold tracking-tighter text-slate-900 dark:text-white block leading-none">
+              <span className={`text-xl font-extrabold tracking-tighter block leading-none ${isDarkTheme ? "text-white" : "text-slate-900 dark:text-white"}`}>
                 Ligue
               </span>
-              <span className="text-[10px] font-label text-lime-600 dark:text-lime-400 uppercase tracking-widest block mt-0.5 font-bold">
+              <span className={`text-[10px] font-label uppercase tracking-widest block mt-0.5 font-bold ${isDarkTheme ? "text-lime-400" : "text-lime-600 dark:text-lime-400"}`}>
                 {role === "referee"
                   ? "Oficial Arbitraj"
                   : role === "arena_owner"
@@ -139,11 +149,19 @@ export function Sidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-medium transition-all duration-200 ${
                 isActive
-                  ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-bold shadow-md"
-                  : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70"
+                  ? isDarkTheme
+                    ? "bg-lime-400 text-slate-950 font-black shadow-lg shadow-lime-400/20"
+                    : "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-bold shadow-md"
+                  : isDarkTheme
+                    ? "text-slate-300 hover:text-white hover:bg-slate-800/90"
+                    : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70"
               }`}
             >
-              <span className={`material-symbols-outlined text-[22px] ${isActive ? "text-lime-400 dark:text-slate-950" : "text-slate-500 dark:text-slate-400"}`}>
+              <span className={`material-symbols-outlined text-[22px] ${
+                isActive
+                  ? isDarkTheme ? "text-slate-950" : "text-lime-400 dark:text-slate-950"
+                  : isDarkTheme ? "text-slate-400" : "text-slate-500 dark:text-slate-400"
+              }`}>
                 {item.icon}
               </span>
               <span className="font-label text-sm">{item.name}</span>

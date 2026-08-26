@@ -120,7 +120,7 @@ export default async function PublicBracketsPage({
   const shareCode = championship?.shareCode || (championship?.id ? `LP-${championship.id.slice(-6).toUpperCase()}` : "LP-PUBLIC");
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col font-body text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200">
       {/* Top Navbar */}
       <PublicHeader currentTab="brackets" />
 

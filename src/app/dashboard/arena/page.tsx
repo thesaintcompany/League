@@ -36,7 +36,7 @@ export default async function ArenaOwnerDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface flex font-body">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
       <Sidebar />
 
       <div className="flex-1 ml-64 flex flex-col min-w-0">

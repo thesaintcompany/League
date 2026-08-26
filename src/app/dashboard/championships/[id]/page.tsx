@@ -34,7 +34,7 @@ export default async function ChampionshipDetailPage({
   if (!champ) notFound();
 
   return (
-    <div className="min-h-screen bg-surface flex">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
       {/* Sidebar */}
       <Sidebar />
 

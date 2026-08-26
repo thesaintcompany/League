@@ -66,7 +66,7 @@ export default async function PublicPlayerDetailPage({
     "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80";
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col font-body text-white relative">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white relative transition-colors duration-200">
       {/* Top Navbar */}
       <PublicHeader currentTab="players" />
 
