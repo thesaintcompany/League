@@ -3,12 +3,14 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+import { isSuperAdmin } from "@/lib/permissions";
+
 export const dynamic = "force-dynamic";
 
 // GET system settings (platform commission %, payment gateways)
 export async function GET() {
   const session = await getServerSession(authOptions);
-  const userRole = (session?.user as any)?.role;
+  const user = session?.user as any;
 
   let settings = await prisma.systemSetting.findUnique({
     where: { id: "default" },
@@ -27,7 +29,7 @@ export async function GET() {
   }
 
   // If not admin, return only public config
-  if (userRole !== "organizer" && userRole !== "admin") {
+  if (!isSuperAdmin(user)) {
     return NextResponse.json({
       platformFeePercent: settings.platformFeePercent,
       applePayEnabled: settings.applePayEnabled,
@@ -61,9 +63,9 @@ export async function GET() {
 // PUT update system settings (SuperAdmin only)
 export async function PUT(req: Request) {
   const session = await getServerSession(authOptions);
-  const userRole = (session?.user as any)?.role;
+  const user = session?.user as any;
 
-  if (userRole !== "organizer" && userRole !== "admin") {
+  if (!isSuperAdmin(user)) {
     return NextResponse.json({ error: "Neautorizat. Doar SuperAdmin poate modifica setările de ticketing." }, { status: 403 });
   }
 

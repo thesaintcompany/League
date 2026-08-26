@@ -8,14 +8,23 @@ import { PlayerProfileForm } from "@/components/PlayerProfileForm";
 import { RefereeProfileForm } from "@/components/RefereeProfileForm";
 import Link from "next/link";
 
+import { canEditPlayerProfile, isTeamLeader } from "@/lib/permissions";
+
 export const dynamic = "force-dynamic";
 
-export default async function ProfilePage() {
+export default async function ProfilePage({
+  searchParams,
+}: {
+  searchParams?: { userId?: string };
+}) {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/signin");
 
+  const sessionUser = session.user as any;
+  const targetUserId = searchParams?.userId || sessionUser.id;
+
   const user = await prisma.user.findUnique({
-    where: { id: (session.user as any).id },
+    where: { id: targetUserId },
     include: {
       championships: true,
       venues: true,
@@ -25,15 +34,34 @@ export default async function ProfilePage() {
   if (!user) redirect("/signin");
 
   const roleLabels: Record<string, string> = {
+    super_admin: "Super Admin",
+    superadmin: "Super Admin",
     organizer: "Organizator Oficial",
     referee: "Arbitru Licențiat",
     player: "Fotbalist / Jucător",
     arena_owner: "Proprietar Arenă / Bază Sportivă",
-    team_leader: "Lider Club / Echipă",
+    team_leader: "Manager Echipă",
     observer: "Observator Oficial",
   };
 
   const currentRole = user.role || "organizer";
+
+  // Determine if logged-in user can edit target user profile
+  let isEditable = canEditPlayerProfile(sessionUser, user.id);
+  if (!isEditable && isTeamLeader(sessionUser)) {
+    const managedTeam = await prisma.team.findFirst({
+      where: { managerId: sessionUser.id },
+      include: { players: true },
+    });
+    if (managedTeam) {
+      const isPlayerInTeam = managedTeam.players.some(
+        (p) => p.email === user.email || (user.name && p.name.toLowerCase() === user.name.toLowerCase())
+      );
+      if (isPlayerInTeam) {
+        isEditable = true;
+      }
+    }
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
@@ -94,7 +122,7 @@ export default async function ProfilePage() {
           {currentRole === "referee" ? (
             <RefereeProfileForm initialUser={user} />
           ) : (
-            <PlayerProfileForm initialUser={user} />
+            <PlayerProfileForm initialUser={user} isEditable={isEditable} />
           )}
         </main>
       </div>

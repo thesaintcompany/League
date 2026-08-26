@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
 import { TopHeader } from "@/components/TopHeader";
 
+import { isOrganizer } from "@/lib/permissions";
+
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
@@ -15,17 +17,12 @@ export default async function DashboardPage() {
   const userId = (session.user as any).id;
   const userRole = (session.user as any).role;
 
-  if (userRole === "arena_owner") {
-    redirect("/dashboard/arena");
-  }
-  if (userRole === "player") {
+  if (!isOrganizer(session.user)) {
+    if (userRole === "arena_owner") redirect("/dashboard/arena");
+    if (userRole === "player") redirect("/profile");
+    if (userRole === "referee") redirect("/dashboard/referee");
+    if (userRole === "team_leader") redirect("/dashboard/team");
     redirect("/profile");
-  }
-  if (userRole === "referee") {
-    redirect("/dashboard/referee");
-  }
-  if (userRole === "team_leader") {
-    redirect("/dashboard/team");
   }
 
   const championships = await prisma.championship.findMany({

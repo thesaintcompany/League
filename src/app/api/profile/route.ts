@@ -4,7 +4,10 @@ import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+import { canEditPlayerProfile, isTeamLeader } from "@/lib/permissions";
+
 const profileSchema = z.object({
+  targetUserId: z.string().optional(),
   name: z.string().min(2).max(80).optional(),
   phone: z.string().max(30).optional().nullable(),
   bio: z.string().max(500).optional().nullable(),
@@ -57,10 +60,11 @@ export async function GET() {
 
 export async function PATCH(req: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session?.user) {
+    return NextResponse.json({ error: "Neautorizat" }, { status: 401 });
   }
 
+  const sessionUser = session.user as any;
   const body = await req.json();
   const parsed = profileSchema.safeParse(body);
   if (!parsed.success) {
@@ -70,9 +74,42 @@ export async function PATCH(req: Request) {
     );
   }
 
+  const targetUserId = parsed.data.targetUserId || sessionUser.id;
+  const targetUser = await prisma.user.findUnique({
+    where: { id: targetUserId },
+  });
+
+  if (!targetUser) {
+    return NextResponse.json({ error: "Utilizatorul nu a fost găsit" }, { status: 404 });
+  }
+
+  // Permission check
+  let isEditable = canEditPlayerProfile(sessionUser, targetUser.id);
+  if (!isEditable && isTeamLeader(sessionUser)) {
+    const managedTeam = await prisma.team.findFirst({
+      where: { managerId: sessionUser.id },
+      include: { players: true },
+    });
+    if (managedTeam) {
+      const isPlayerInTeam = managedTeam.players.some(
+        (p) => p.email === targetUser.email || (targetUser.name && p.name.toLowerCase() === targetUser.name.toLowerCase())
+      );
+      if (isPlayerInTeam) isEditable = true;
+    }
+  }
+
+  if (!isEditable) {
+    return NextResponse.json(
+      { error: "Acces interzis: Doar jucătorul însuși și managerul de echipă pot edita acest profil." },
+      { status: 403 }
+    );
+  }
+
+  const { targetUserId: _, ...updateData } = parsed.data;
+
   const updatedUser = await prisma.user.update({
-    where: { email: session.user.email },
-    data: parsed.data,
+    where: { id: targetUser.id },
+    data: updateData,
   });
 
   return NextResponse.json({ user: updatedUser });

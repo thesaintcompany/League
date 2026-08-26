@@ -4,9 +4,11 @@ import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+import { isSuperAdmin } from "@/lib/permissions";
+
 const updateUserRoleSchema = z.object({
   userId: z.string(),
-  role: z.enum(["organizer", "referee", "player", "arena_owner", "team_leader", "observer"]),
+  role: z.enum(["super_admin", "superadmin", "organizer", "referee", "player", "arena_owner", "team_leader", "observer"]),
 });
 
 export async function GET() {
@@ -16,9 +18,8 @@ export async function GET() {
   }
 
   const user = session.user as any;
-  const isOrganizer = user.role === "organizer" || !user.role;
-  if (!isOrganizer) {
-    return NextResponse.json({ error: "Acces interzis" }, { status: 403 });
+  if (!isSuperAdmin(user)) {
+    return NextResponse.json({ error: "Acces interzis: Doar SuperAdmin." }, { status: 403 });
   }
 
   const users = await prisma.user.findMany({
@@ -51,9 +52,8 @@ export async function PATCH(req: Request) {
   }
 
   const user = session.user as any;
-  const isOrganizer = user.role === "organizer" || !user.role;
-  if (!isOrganizer) {
-    return NextResponse.json({ error: "Acces interzis" }, { status: 403 });
+  if (!isSuperAdmin(user)) {
+    return NextResponse.json({ error: "Acces interzis: Doar SuperAdmin." }, { status: 403 });
   }
 
   const body = await req.json();

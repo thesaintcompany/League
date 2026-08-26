@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+import { isSuperAdmin } from "@/lib/permissions";
+
 export const dynamic = "force-dynamic";
 
 const DEMO_CHAMPIONSHIP_NAMES = [
@@ -26,8 +28,7 @@ export async function GET() {
   }
 
   const user = session.user as any;
-  const isOrganizer = user.role === "organizer" || !user.role;
-  if (!isOrganizer) {
+  if (!isSuperAdmin(user)) {
     return NextResponse.json({ error: "Acces interzis. Doar SuperAdmin are acces." }, { status: 403 });
   }
 
@@ -74,8 +75,7 @@ export async function POST(req: Request) {
   }
 
   const user = session.user as any;
-  const isOrganizer = user.role === "organizer" || !user.role;
-  if (!isOrganizer) {
+  if (!isSuperAdmin(user)) {
     return NextResponse.json({ error: "Acces interzis. Doar SuperAdmin are acces." }, { status: 403 });
   }
 

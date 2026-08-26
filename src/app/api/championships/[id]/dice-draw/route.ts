@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+import { isOrganizer } from "@/lib/permissions";
+
 export async function GET(
   req: Request,
   ctx: { params: { id: string } }
@@ -60,9 +62,9 @@ export async function POST(
     return NextResponse.json({ error: "Campionatul nu a fost găsit" }, { status: 404 });
   }
 
-  // Only organizer or championship owner can roll dice
-  const isOrganizer = user.role === "organizer" || user.role === "superadmin" || championship.ownerId === user.id;
-  if (!isOrganizer) {
+  // Only organizer, super_admin, or championship owner can roll dice
+  const canRoll = isOrganizer(user) || championship.ownerId === user.id;
+  if (!canRoll) {
     return NextResponse.json(
       { error: "Acces interzis: Doar organizatorul poate declanșa tragerea la sorți cu zaruri." },
       { status: 403 }

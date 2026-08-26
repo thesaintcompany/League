@@ -6,13 +6,20 @@ import { Sidebar } from "@/components/Sidebar";
 import { TopHeader } from "@/components/TopHeader";
 import { TeamManagerPanel } from "@/components/TeamManagerPanel";
 
+import { isTeamLeader } from "@/lib/permissions";
+
 export const dynamic = "force-dynamic";
 
 export default async function TeamManagerDashboardPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/signin");
 
-  const userId = (session.user as any).id;
+  const user = session.user as any;
+  if (!isTeamLeader(user)) {
+    redirect("/dashboard");
+  }
+
+  const userId = user.id;
 
   // Find team managed by this user or fallback to first available team in DB
   let team = await prisma.team.findFirst({

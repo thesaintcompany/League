@@ -6,6 +6,8 @@ import { TopHeader } from "@/components/TopHeader";
 import { AdminSuperPanel } from "@/components/AdminSuperPanel";
 import Link from "next/link";
 
+import { isSuperAdmin } from "@/lib/permissions";
+
 export const dynamic = "force-dynamic";
 
 export default async function AdminMasterPage() {
@@ -13,8 +15,7 @@ export default async function AdminMasterPage() {
   if (!session?.user) redirect("/signin");
 
   const user = session.user as any;
-  const isOrganizer = user.role === "organizer" || !user.role;
-  if (!isOrganizer) {
+  if (!isSuperAdmin(user)) {
     redirect("/dashboard");
   }
 

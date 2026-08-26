@@ -18,6 +18,8 @@ const updateVenueSchema = z.object({
   imageUrl: z.string().optional().nullable(),
 });
 
+import { isArenaAdmin, isSuperAdmin } from "@/lib/permissions";
+
 export async function GET(
   _req: Request,
   ctx: { params: { id: string } }
@@ -44,10 +46,9 @@ export async function PATCH(
   }
 
   const user = session.user as any;
-  const isOrganizer = user.role === "organizer" || user.role === "arena_owner" || !user.role;
-  if (!isOrganizer) {
+  if (!isArenaAdmin(user)) {
     return NextResponse.json(
-      { error: "Acces interzis: Doar administratorul principal sau proprietarul arenei pot edita arena." },
+      { error: "Acces interzis: Doar administratorul de arenă sau SuperAdmin pot edita arena." },
       { status: 403 }
     );
   }
@@ -79,10 +80,9 @@ export async function DELETE(
   }
 
   const user = session.user as any;
-  const isOrganizer = user.role === "organizer" || !user.role;
-  if (!isOrganizer) {
+  if (!isSuperAdmin(user) && !isArenaAdmin(user)) {
     return NextResponse.json(
-      { error: "Acces interzis: Doar administratorul principal poate șterge arene." },
+      { error: "Acces interzis: Doar SuperAdmin sau Admin Arenă pot șterge arene." },
       { status: 403 }
     );
   }

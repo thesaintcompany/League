@@ -18,6 +18,8 @@ const venueSchema = z.object({
   imageUrl: z.string().optional().nullable(),
 });
 
+import { isArenaAdmin } from "@/lib/permissions";
+
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
@@ -55,9 +57,8 @@ export async function POST(req: Request) {
   }
 
   const user = session.user as any;
-  const isOrganizer = user.role === "organizer" || user.role === "arena_owner" || !user.role;
-  if (!isOrganizer) {
-    return NextResponse.json({ error: "Acces interzis" }, { status: 403 });
+  if (!isArenaAdmin(user)) {
+    return NextResponse.json({ error: "Acces interzis: Doar Admin Arenă sau SuperAdmin." }, { status: 403 });
   }
 
   const body = await req.json();

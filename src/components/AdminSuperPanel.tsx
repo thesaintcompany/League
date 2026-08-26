@@ -775,11 +775,12 @@ export function AdminSuperPanel() {
                         onChange={(e) => handleRoleChange(u.id, e.target.value)}
                         className="input text-xs font-bold font-label py-1.5 px-3 rounded-xl bg-surface-container-low"
                       >
+                        <option value="super_admin">⚡ Super Admin</option>
                         <option value="organizer">👑 Organizator Oficial</option>
                         <option value="referee">⚖️ Arbitru Licențiat</option>
                         <option value="player">🏃 Fotbalist / Jucător</option>
                         <option value="arena_owner">🏟️ Proprietar Arenă</option>
-                        <option value="team_leader">🛡️ Lider Club / Echipă</option>
+                        <option value="team_leader">🛡️ Manager Echipă</option>
                       </select>
                     </td>
 

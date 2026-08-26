@@ -24,9 +24,10 @@ interface UserProfile {
 
 interface PlayerProfileFormProps {
   initialUser: UserProfile;
+  isEditable?: boolean;
 }
 
-export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
+export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProfileFormProps) {
   // Split name into first and last name if possible
   const nameParts = (initialUser.name || "").split(" ");
   const [firstName, setFirstName] = useState<string>(nameParts[0] || "");
@@ -190,6 +191,15 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+      {!isEditable && (
+        <div className="lg:col-span-12 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold font-label flex items-center gap-2 shadow-sm">
+          <span className="material-symbols-outlined text-lg text-amber-400">lock</span>
+          <span>
+            🔒 <strong>Mod Vizualizare Profil:</strong> Acest profil poate fi editat doar de către jucătorul însuși sau de către managerul săi de echipă.
+          </span>
+        </div>
+      )}
+
       {/* Hidden File Inputs for Direct File Selection */}
       <input
         type="file"
@@ -215,14 +225,14 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
               Card de Prezentare Jucător
             </span>
             <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
-              PRO ATLET
+              {isEditable ? "PRO ATLET" : "MOD VIZUALIZARE"}
             </span>
           </div>
 
           {/* 9:16 Full-Body Cover Photo (Interactive Double-Click) */}
           <div
-            onDoubleClick={() => setActivePhotoModal("cover")}
-            title="Dublu-click pentru a schimba poza în picioare (9:16)"
+            onDoubleClick={() => isEditable && setActivePhotoModal("cover")}
+            title={isEditable ? "Dublu-click pentru a schimba poza în picioare (9:16)" : "Profil în mod vizualizare"}
             className="aspect-[9/14] w-full rounded-2xl overflow-hidden relative mb-4 bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-md cursor-pointer group/cover"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -398,6 +408,7 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
               <input
                 type="text"
                 required
+                disabled={!isEditable}
                 className="input text-xs"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
@@ -410,6 +421,7 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
               <input
                 type="text"
                 required
+                disabled={!isEditable}
                 className="input text-xs"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
@@ -431,6 +443,7 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
               <label className="label">Număr Telefon Mobil</label>
               <input
                 type="tel"
+                disabled={!isEditable}
                 className="input text-xs"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -460,6 +473,7 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
             <div>
               <label className="label">Poziție în Teren</label>
               <select
+                disabled={!isEditable}
                 className="input text-xs"
                 value={position}
                 onChange={(e) => setPosition(e.target.value)}
@@ -481,6 +495,7 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
                 type="number"
                 min={1}
                 max={99}
+                disabled={!isEditable}
                 className="input text-xs font-bold"
                 value={jerseyNumber}
                 onChange={(e) => setJerseyNumber(parseInt(e.target.value) || 10)}
@@ -490,6 +505,7 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
             <div>
               <label className="label">Picior Preferat</label>
               <select
+                disabled={!isEditable}
                 className="input text-xs"
                 value={preferredFoot}
                 onChange={(e) => setPreferredFoot(e.target.value)}
@@ -506,6 +522,7 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
                 type="number"
                 min={140}
                 max={220}
+                disabled={!isEditable}
                 className="input text-xs"
                 value={heightCm}
                 onChange={(e) => setHeightCm(parseInt(e.target.value) || 180)}
@@ -518,6 +535,7 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
                 type="number"
                 min={40}
                 max={140}
+                disabled={!isEditable}
                 className="input text-xs"
                 value={weightKg}
                 onChange={(e) => setWeightKg(parseInt(e.target.value) || 75)}
@@ -547,6 +565,7 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
               <label className="label">Instagram</label>
               <input
                 type="text"
+                disabled={!isEditable}
                 className="input text-xs"
                 value={instagramUrl}
                 onChange={(e) => setInstagramUrl(e.target.value)}
@@ -558,6 +577,7 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
               <label className="label">X / Twitter</label>
               <input
                 type="text"
+                disabled={!isEditable}
                 className="input text-xs"
                 value={twitterUrl}
                 onChange={(e) => setTwitterUrl(e.target.value)}
@@ -569,6 +589,7 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
               <label className="label">Facebook</label>
               <input
                 type="text"
+                disabled={!isEditable}
                 className="input text-xs"
                 value={facebookUrl}
                 onChange={(e) => setFacebookUrl(e.target.value)}
@@ -587,15 +608,22 @@ export function PlayerProfileForm({ initialUser }: PlayerProfileFormProps) {
             ← Înapoi la Campionat
           </Link>
 
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={saving}
-            className="px-8 py-4 rounded-2xl bg-lime-400 hover:bg-lime-500 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-xl shadow-lime-400/20 active:scale-95 transition-all flex items-center gap-2"
-          >
-            <span className="material-symbols-outlined text-lg">save</span>
-            {saving ? "Se salvează..." : "Salvează Profilul de Jucător ✓"}
-          </button>
+          {!isEditable ? (
+            <span className="px-5 py-3 rounded-2xl bg-slate-800 text-slate-400 font-label font-bold text-xs uppercase border border-slate-700 flex items-center gap-2">
+              <span className="material-symbols-outlined text-sm">lock</span>
+              Mod Vizualizare Profil (Fără permisiune de editare)
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={saving}
+              className="px-8 py-4 rounded-2xl bg-lime-400 hover:bg-lime-500 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-xl shadow-lime-400/20 active:scale-95 transition-all flex items-center gap-2"
+            >
+              <span className="material-symbols-outlined text-lg">save</span>
+              {saving ? "Se salvează..." : "Salvează Profilul de Jucător ✓"}
+            </button>
+          )}
         </div>
       </div>
 

@@ -3,10 +3,12 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+import { isArenaAdmin } from "@/lib/permissions";
+
 export async function GET() {
   const session = await getServerSession(authOptions);
-  if (!session?.user || (session.user as any).role !== "superadmin") {
-    return NextResponse.json({ error: "Acces interzis: Doar SuperAdmin." }, { status: 403 });
+  if (!session?.user || !isArenaAdmin(session.user as any)) {
+    return NextResponse.json({ error: "Acces interzis: Doar Admin Arenă sau SuperAdmin." }, { status: 403 });
   }
 
   const claims = await prisma.venueClaim.findMany({

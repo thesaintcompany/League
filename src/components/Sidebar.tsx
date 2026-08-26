@@ -15,11 +15,27 @@ export function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const role = (session?.user as any)?.role || "organizer";
+  const isSuperAdminRole = role === "super_admin" || role === "superadmin";
 
   // Build role-specific navigation menu
   let navItems: NavItem[] = [];
 
-  if (role === "referee") {
+  if (isSuperAdminRole) {
+    navItems = [
+      { name: "Consolă SuperAdmin", href: "/dashboard/admin", icon: "admin_panel_settings" },
+      { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
+      { name: "Gestiune Arenă & Reclame", href: "/dashboard/arena", icon: "stadium" },
+      { name: "Panou Manager Echipă", href: "/dashboard/team", icon: "badge" },
+      { name: "Meciuri & Panou Arbitraj", href: "/dashboard/referee", icon: "sports" },
+      { name: "Nationale (Județe)", href: "/harta-romaniei", icon: "map" },
+      { name: "Harta Campionat", href: "/brackets", icon: "account_tree" },
+      { name: "Arene & Stadioane", href: "/venues", icon: "domain" },
+      { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
+      { name: "Corp Arbitri", href: "/referees", icon: "sports" },
+      { name: "Pagina Publică", href: "/campionat", icon: "public" },
+      { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
+    ];
+  } else if (role === "referee") {
     navItems = [
       { name: "Meciuri & Panou Arbitraj", href: "/dashboard/referee", icon: "sports" },
       { name: "Profil & Setări Oficiale", href: "/profile", icon: "account_circle" },
@@ -60,11 +76,9 @@ export function Sidebar() {
       { name: "Pagina Publică", href: "/campionat", icon: "public" },
     ];
   } else {
-    // Organizer / SuperAdmin Menu
+    // Organizer Menu (Standard Organizer - No SuperAdmin Console, No Arena Management)
     navItems = [
       { name: "Panou Turnee", href: "/dashboard", icon: "dashboard" },
-      { name: "Consolă SuperAdmin", href: "/dashboard/admin", icon: "admin_panel_settings" },
-      { name: "Gestiune Arenă & Reclame", href: "/dashboard/arena", icon: "stadium" },
       { name: "Nationale (Județe)", href: "/harta-romaniei", icon: "map" },
       { name: "Harta Campionat", href: "/brackets", icon: "account_tree" },
       { name: "Arene & Stadioane", href: "/venues", icon: "domain" },

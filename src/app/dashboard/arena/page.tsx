@@ -6,6 +6,8 @@ import { Sidebar } from "@/components/Sidebar";
 import { TopHeader } from "@/components/TopHeader";
 import { ArenaOwnerPanel } from "@/components/ArenaOwnerPanel";
 
+import { isArenaAdmin } from "@/lib/permissions";
+
 export const dynamic = "force-dynamic";
 
 export default async function ArenaOwnerDashboardPage() {
@@ -14,7 +16,12 @@ export default async function ArenaOwnerDashboardPage() {
     redirect("/signin?callbackUrl=/dashboard/arena");
   }
 
-  const userId = (session.user as any).id;
+  const user = session.user as any;
+  if (!isArenaAdmin(user)) {
+    redirect("/dashboard");
+  }
+
+  const userId = user.id;
 
   // Find arena for this user
   let venue = await prisma.venue.findFirst({
