@@ -320,10 +320,10 @@ function WelcomePortalForm() {
 
           <footer className="pt-6 mt-6 border-t border-slate-200 dark:border-slate-800 text-center space-y-1">
             <p className="text-[11px] font-label text-slate-600 dark:text-slate-400">
-              © {new Date().getFullYear()} <a href="https://buu.ro" target="_blank" rel="noreferrer" className="font-bold text-slate-900 dark:text-lime-400 hover:underline">buu.ro</a>. Toate drepturile aparțin <strong>buu.ro</strong>.
+              © {new Date().getFullYear()} <a href="https://tscquantum.ro" target="_blank" rel="noreferrer" className="font-bold text-slate-900 dark:text-lime-400 hover:underline">tscquantum.ro</a>. Toate drepturile aparțin <strong>tscquantum.ro</strong>.
             </p>
             <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
-              Contact oficial: <a href="mailto:contact@buu.ro" className="text-lime-600 dark:text-lime-400 hover:underline font-bold">contact@buu.ro</a>
+              Contact oficial: <a href="mailto:contact@tscquantum.ro" className="text-lime-600 dark:text-lime-400 hover:underline font-bold">contact@tscquantum.ro</a>
             </p>
           </footer>
         </div>

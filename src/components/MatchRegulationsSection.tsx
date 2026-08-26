@@ -51,7 +51,7 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
           </div>
         </div>
 
-        <div class="badge">✓ VERSIUNE OMOLOGATĂ DE FRF &amp; COMISIA DE ARBITRI</div>
+        <div class="badge">✓ VERSIUNE PRO LIGUE &amp; COMISIA DE ARBITRI</div>
 
         <div class="title">${isRo ? "REGULAMENTUL OFICIAL AL COMPETIȚIEI" : "OFFICIAL COMPETITION REGULATIONS"}</div>
         <p style="font-size: 13px; color: #475569; margin-bottom: 25px;">
@@ -107,7 +107,7 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
         </div>
 
         <div class="footer">
-          © Ligue Pro România • Document generat automat pentru <strong>${championshipName}</strong> • Powered by buu.ro
+          © Ligue Pro România • Document generat automat pentru <strong>${championshipName}</strong> • Powered by tscquantum.ro
         </div>
       </body>
       </html>

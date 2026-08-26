@@ -205,7 +205,7 @@ export function VenueClaimModal({
                   <input
                     type="text"
                     required
-                    placeholder="RO12345678"
+                    placeholder="53063735"
                     value={formData.companyCui}
                     onChange={(e) => setFormData({ ...formData, companyCui: e.target.value })}
                     className="w-full px-3 py-2 rounded-xl text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-body focus:border-lime-400 outline-none"

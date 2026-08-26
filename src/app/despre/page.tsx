@@ -23,7 +23,7 @@ export default function DesprePage() {
             PRO L4GUE • ROMÂNIA
           </h1>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Platforma digitală integrată pentru organizarea, arbitrajul oficial și telemetria în timp real a competițiilor sportive din România, operată de <strong>buu.ro</strong>.
+            Platforma digitală integrată pentru organizarea, arbitrajul oficial și telemetria în timp real a competițiilor sportive din România, operată de <strong>tscquantum.ro</strong>.
           </p>
         </div>
       </section>

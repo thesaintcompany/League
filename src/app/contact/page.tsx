@@ -5,7 +5,7 @@ import { PublicFooter } from "@/components/PublicFooter";
 
 export const metadata = {
   title: "Contact & Asistență Tehnică • PRO L4GUE ROMÂNIA",
-  description: "Contactează echipa PRO L4GUE și buu.ro pentru asistență tehnică, parteneriate, înscriere arene sau organizare campionate.",
+  description: "Contactează echipa PRO L4GUE și tscquantum.ro pentru asistență tehnică, parteneriate, înscriere arene sau organizare campionate.",
 };
 
 export default function ContactPage() {
@@ -40,10 +40,10 @@ export default function ContactPage() {
             </h3>
             <p className="text-xs text-slate-500 font-label">Răspundem în maxim 24h</p>
             <a
-              href="mailto:contact@buu.ro"
+              href="mailto:contact@tscquantum.ro"
               className="text-xs font-black font-mono text-lime-600 dark:text-lime-400 hover:underline block pt-1"
             >
-              contact@buu.ro
+              contact@tscquantum.ro
             </a>
           </div>
 
@@ -56,12 +56,12 @@ export default function ContactPage() {
             </h3>
             <p className="text-xs text-slate-500 font-label">Găzduit și administrat de</p>
             <a
-              href="https://buu.ro"
+              href="https://tscquantum.ro"
               target="_blank"
               rel="noreferrer"
               className="text-xs font-black font-headline text-blue-600 dark:text-blue-400 hover:underline block pt-1"
             >
-              buu.ro
+              tscquantum.ro
             </a>
           </div>
 

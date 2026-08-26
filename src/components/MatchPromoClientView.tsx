@@ -73,7 +73,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
     return () => clearInterval(interval);
   }, [scheduledDate]);
 
-  const shareUrl = typeof window !== "undefined" ? window.location.href : `https://sp.buu.ro/matches/${match.id}/promo`;
+  const shareUrl = typeof window !== "undefined" ? window.location.href : `https://sp.tscquantum.ro/matches/${match.id}/promo`;
 
   function copyPromoLink() {
     navigator.clipboard.writeText(shareUrl);
@@ -396,7 +396,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                   </Link>
 
                   <a
-                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`🎟️ Iată biletul meu la meciul ${match.homeTeam.name} vs ${match.awayTeam.name}: https://sp.buu.ro/tickets/${purchasedTicket.id}/print`)}`}
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`🎟️ Iată biletul meu la meciul ${match.homeTeam.name} vs ${match.awayTeam.name}: https://sp.tscquantum.ro/tickets/${purchasedTicket.id}/print`)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold font-label text-xs uppercase rounded-2xl flex items-center justify-center gap-2 transition"

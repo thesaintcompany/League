@@ -41,6 +41,34 @@ export const authOptions: NextAuthOptions = {
           });
         }
 
+        // Auto-seed demo accounts
+        const DEMO_EMAILS = [
+          "demo@leaguehub.local",
+          "arbitru@leaguehub.local",
+          "jucator@leaguehub.local",
+          "arena@leaguehub.local",
+          "lider@leaguehub.local"
+        ];
+        
+        if (!user && DEMO_EMAILS.includes(normalizedEmail)) {
+           let role = "organizer";
+           let name = "Demo User";
+           if (normalizedEmail.includes("arbitru")) { role = "referee"; name = "Arbitru Demo"; }
+           else if (normalizedEmail.includes("jucator")) { role = "player"; name = "Jucător Demo"; }
+           else if (normalizedEmail.includes("arena")) { role = "arena_owner"; name = "Arenă Demo"; }
+           else if (normalizedEmail.includes("lider")) { role = "team_leader"; name = "Lider Demo"; }
+
+           const hash = await bcrypt.hash("demo12345", 10);
+           user = await prisma.user.create({
+             data: {
+               email: normalizedEmail,
+               name: name,
+               role: role,
+               passwordHash: hash,
+             }
+           });
+        }
+
         if (!user) return null;
 
         // Verify password with bcrypt

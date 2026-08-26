@@ -78,7 +78,7 @@ export function BracketVisualizer({
   }
 
   // Get clean direct public URL
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://sp.buu.ro";
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://sp.tscquantum.ro";
   const publicShareUrl = `${origin}/brackets?code=${currentShareCode}`;
 
   function copyToClipboard(text: string, type: "link" | "code") {

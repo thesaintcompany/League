@@ -15,7 +15,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
   const [format, setFormat] = useState<"story" | "post">("story");
   const [template, setTemplate] = useState<"kinetic" | "hyper" | "minimal">("kinetic");
   const [ticketPrice, setTicketPrice] = useState<number>(25);
-  const [ticketUrl, setTicketUrl] = useState<string>("https://sp.buu.ro/tickets");
+  const [ticketUrl, setTicketUrl] = useState<string>("https://sp.tscquantum.ro/tickets");
   const [sponsorName, setSponsorName] = useState<string>("Banca Transilvania / Dedeman");
   const [sponsorTagline, setSponsorTagline] = useState<string>(
     "Partener Principal al Sportului Românesc"
@@ -34,7 +34,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
 
   const promoUrl = typeof window !== "undefined"
     ? `${window.location.origin}/matches/${selectedMatch.id}/promo`
-    : `https://sp.buu.ro/matches/${selectedMatch.id}/promo`;
+    : `https://sp.tscquantum.ro/matches/${selectedMatch.id}/promo`;
 
   const shareText = `🔥 MECIUL ETAPEI în ${championshipName}!\n⚽ ${selectedMatch.homeTeam.name} vs ${selectedMatch.awayTeam.name}\n📍 Stadion: ${selectedMatch.venue || "Arena Oficială"}\n📅 Data: ${new Date(selectedMatch.scheduledAt || Date.now()).toLocaleDateString("ro-RO", { weekday: "long", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}\n🎟️ Bilete (${ticketPrice} RON): ${promoUrl}`;
 
@@ -150,7 +150,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
                 value={ticketUrl}
                 onChange={(e) => setTicketUrl(e.target.value)}
                 className="input text-xs"
-                placeholder="https://sp.buu.ro/tickets"
+                placeholder="https://sp.tscquantum.ro/tickets"
               />
             </div>
 

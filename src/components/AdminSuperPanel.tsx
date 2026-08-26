@@ -92,11 +92,11 @@ export function AdminSuperPanel() {
 
   // Ticketing, Legal & Payment Settings State
   const [ticketSettings, setTicketSettings] = useState({
-    companyName: "buu.ro S.R.L.",
-    companyCui: "RO12345678",
-    companyRegCom: "J35/123/2024",
+    companyName: "TSC QUANTUM S.R.L.",
+    companyCui: "53063735",
+    companyRegCom: "J2025095153006",
     companyAddress: "Timișoara, Județul Timiș, România",
-    companyEmail: "contact@buu.ro",
+    companyEmail: "contact@tscquantum.ro",
     companyPhone: "+40 700 000 000",
     platformFeePercent: 10.0,
     stripePublishableKey: "",
@@ -865,7 +865,7 @@ export function AdminSuperPanel() {
             </div>
           </div>
 
-          {/* Date Legale & Identitate Fiscală Operator (buu.ro) */}
+          {/* Date Legale & Identitate Fiscală Operator (tscquantum.ro) */}
           <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-3">
@@ -874,7 +874,7 @@ export function AdminSuperPanel() {
                 </div>
                 <div>
                   <h3 className="font-headline font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase">
-                    Date Legale &amp; Identitate Fiscală Operator (buu.ro)
+                    Date Legale &amp; Identitate Fiscală Operator (tscquantum.ro)
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
                     Informațiile oficiale ale entității juridice care operează platforma, facturile de ticketing și termenii legali.
@@ -883,7 +883,7 @@ export function AdminSuperPanel() {
               </div>
 
               <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-mono font-bold uppercase border border-blue-500/20">
-                Operator Oficial: buu.ro
+                Operator Oficial: tscquantum.ro
               </span>
             </div>
 
@@ -895,10 +895,10 @@ export function AdminSuperPanel() {
                   </label>
                   <input
                     type="text"
-                    value={ticketSettings.companyName || "buu.ro S.R.L."}
+                    value={ticketSettings.companyName || "TSC QUANTUM S.R.L."}
                     onChange={(e) => setTicketSettings({ ...ticketSettings, companyName: e.target.value })}
                     className="input text-xs font-bold"
-                    placeholder="buu.ro S.R.L."
+                    placeholder="TSC QUANTUM S.R.L."
                   />
                 </div>
 
@@ -908,10 +908,10 @@ export function AdminSuperPanel() {
                   </label>
                   <input
                     type="text"
-                    value={ticketSettings.companyCui || "RO12345678"}
+                    value={ticketSettings.companyCui || "53063735"}
                     onChange={(e) => setTicketSettings({ ...ticketSettings, companyCui: e.target.value })}
                     className="input text-xs font-mono font-bold"
-                    placeholder="RO12345678"
+                    placeholder="53063735"
                   />
                 </div>
 
@@ -921,10 +921,10 @@ export function AdminSuperPanel() {
                   </label>
                   <input
                     type="text"
-                    value={ticketSettings.companyRegCom || "J35/123/2024"}
+                    value={ticketSettings.companyRegCom || "J2025095153006"}
                     onChange={(e) => setTicketSettings({ ...ticketSettings, companyRegCom: e.target.value })}
                     className="input text-xs font-mono"
-                    placeholder="J35/123/2024"
+                    placeholder="J2025095153006"
                   />
                 </div>
 
@@ -934,10 +934,10 @@ export function AdminSuperPanel() {
                   </label>
                   <input
                     type="email"
-                    value={ticketSettings.companyEmail || "contact@buu.ro"}
+                    value={ticketSettings.companyEmail || "contact@tscquantum.ro"}
                     onChange={(e) => setTicketSettings({ ...ticketSettings, companyEmail: e.target.value })}
                     className="input text-xs font-mono"
-                    placeholder="contact@buu.ro"
+                    placeholder="contact@tscquantum.ro"
                   />
                 </div>
 
@@ -1169,7 +1169,7 @@ export function AdminSuperPanel() {
                         Domeniu Web Verificat:
                       </span>
                       <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
-                        sp.buu.ro (Verificat ✓)
+                        sp.tscquantum.ro (Verificat ✓)
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-500 font-body">
@@ -1319,13 +1319,13 @@ export function AdminSuperPanel() {
 
                 <div className="space-y-2 text-xs">
                   <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 font-mono text-[11px] flex justify-between items-center">
-                    <span className="truncate">https://sp.buu.ro/api/webhooks/stripe</span>
+                    <span className="truncate">https://sp.tscquantum.ro/api/webhooks/stripe</span>
                     <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
                       Stripe Live
                     </span>
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 font-mono text-[11px] flex justify-between items-center">
-                    <span className="truncate">https://sp.buu.ro/api/webhooks/paypal</span>
+                    <span className="truncate">https://sp.tscquantum.ro/api/webhooks/paypal</span>
                     <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-bold">
                       PayPal Live
                     </span>

@@ -20,10 +20,10 @@ export function PublicFooter() {
             </p>
             <div className="pt-2 text-xs font-label space-y-1">
               <p className="text-slate-500 dark:text-slate-400">
-                Operator platformă: <strong className="text-slate-900 dark:text-white font-bold">buu.ro S.R.L.</strong>
+                Operator platformă: <strong className="text-slate-900 dark:text-white font-bold">TSC QUANTUM S.R.L.</strong>
               </p>
               <p className="text-slate-400 dark:text-slate-500 text-[11px] font-mono">
-                CUI: RO12345678 • J35/123/2024
+                CUI: 53063735 • J2025095153006
               </p>
             </div>
           </div>
@@ -134,10 +134,10 @@ export function PublicFooter() {
               </li>
               <li className="pt-3">
                 <a
-                  href="mailto:contact@buu.ro"
+                  href="mailto:contact@tscquantum.ro"
                   className="inline-block text-xs font-mono font-bold text-slate-900 dark:text-lime-400 hover:underline"
                 >
-                  contact@buu.ro
+                  contact@tscquantum.ro
                 </a>
               </li>
             </ul>
@@ -149,12 +149,12 @@ export function PublicFooter() {
           <p>
             © {currentYear} PRO L4GUE • Operat de{" "}
             <a
-              href="https://buu.ro"
+              href="https://tscquantum.ro"
               target="_blank"
               rel="noreferrer"
               className="font-bold text-slate-800 dark:text-slate-200 hover:underline"
             >
-              buu.ro S.R.L.
+              TSC QUANTUM S.R.L.
             </a>
             . Toate drepturile rezervate.
           </p>

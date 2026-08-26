@@ -122,7 +122,7 @@ export function ChampionshipPublicClientView({
     router.push(`/campionat?id=${id}`);
   }
 
-  const shareUrl = typeof window !== "undefined" ? window.location.href : "https://sp.buu.ro/campionat";
+  const shareUrl = typeof window !== "undefined" ? window.location.href : "https://sp.tscquantum.ro/campionat";
 
   function copyShareLink() {
     navigator.clipboard.writeText(shareUrl);

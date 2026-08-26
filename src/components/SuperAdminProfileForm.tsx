@@ -21,11 +21,11 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
 
   // System Legal & Payment Settings State
   const [settings, setSettings] = useState({
-    companyName: initialSettings?.companyName || "buu.ro S.R.L.",
-    companyCui: initialSettings?.companyCui || "RO12345678",
-    companyRegCom: initialSettings?.companyRegCom || "J35/123/2024",
+    companyName: initialSettings?.companyName || "TSC QUANTUM S.R.L.",
+    companyCui: initialSettings?.companyCui || "53063735",
+    companyRegCom: initialSettings?.companyRegCom || "J2025095153006",
     companyAddress: initialSettings?.companyAddress || "Timișoara, Județul Timiș, România",
-    companyEmail: initialSettings?.companyEmail || "contact@buu.ro",
+    companyEmail: initialSettings?.companyEmail || "contact@tscquantum.ro",
     companyPhone: initialSettings?.companyPhone || "+40 700 000 000",
     platformFeePercent: initialSettings?.platformFeePercent ?? 10.0,
     stripePublishableKey: initialSettings?.stripePublishableKey || "",
@@ -159,7 +159,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
         </form>
       </div>
 
-      {/* 2. Date Legale & Identitate Fiscală Operator (buu.ro) */}
+      {/* 2. Date Legale & Identitate Fiscală Operator (tscquantum.ro) */}
       <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
         <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
@@ -168,7 +168,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
             </div>
             <div>
               <h3 className="font-headline font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase">
-                Date Legale &amp; Identitate Fiscală (buu.ro)
+                Date Legale &amp; Identitate Fiscală (tscquantum.ro)
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
                 Datele entității juridice care operează platforma, facturile de ticketing și termenii legali.
@@ -177,7 +177,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           </div>
 
           <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-mono font-bold uppercase border border-blue-500/20">
-            Operator: buu.ro
+            Operator: tscquantum.ro
           </span>
         </div>
 
@@ -191,7 +191,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
               value={settings.companyName}
               onChange={(e) => setSettings({ ...settings, companyName: e.target.value })}
               className="input text-xs font-bold"
-              placeholder="buu.ro S.R.L."
+              placeholder="TSC QUANTUM S.R.L."
             />
           </div>
 
@@ -204,7 +204,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
               value={settings.companyCui}
               onChange={(e) => setSettings({ ...settings, companyCui: e.target.value })}
               className="input text-xs font-mono font-bold"
-              placeholder="RO12345678"
+              placeholder="53063735"
             />
           </div>
 
@@ -217,7 +217,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
               value={settings.companyRegCom}
               onChange={(e) => setSettings({ ...settings, companyRegCom: e.target.value })}
               className="input text-xs font-mono"
-              placeholder="J35/123/2024"
+              placeholder="J2025095153006"
             />
           </div>
 
@@ -230,7 +230,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
               value={settings.companyEmail}
               onChange={(e) => setSettings({ ...settings, companyEmail: e.target.value })}
               className="input text-xs font-mono"
-              placeholder="contact@buu.ro"
+              placeholder="contact@tscquantum.ro"
             />
           </div>
 
@@ -377,7 +377,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
                     Domeniu Web Verificat:
                   </span>
                   <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
-                    sp.buu.ro (Verificat ✓)
+                    sp.tscquantum.ro (Verificat ✓)
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 font-body">
