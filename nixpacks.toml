@@ -5,7 +5,7 @@ providers = ["node"]
 nixPkgs = ["nodejs_20", "openssl"]
 
 [phases.install]
-cmds = ["npm ci || npm install"]
+cmds = ["npm ci --legacy-peer-deps || npm install --legacy-peer-deps"]
 
 [phases.build]
 cmds = [
