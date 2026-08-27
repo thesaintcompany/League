@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
 interface Player {
@@ -35,6 +35,7 @@ interface TeamData {
   name: string;
   shortName: string | null;
   color: string | null;
+  logoUrl?: string | null;
   headCoach: string | null;
   assistantCoach: string | null;
   medic: string | null;
@@ -52,6 +53,7 @@ interface ManagedTeamSummary {
   name: string;
   shortName: string | null;
   color: string | null;
+  logoUrl?: string | null;
   subscriptionActive: boolean;
   subscriptionExpiresAt: string | null;
 }
@@ -62,6 +64,7 @@ interface TeamManagerPanelProps {
   managedTeams?: ManagedTeamSummary[];
   teamSubscriptionPrice?: number;
   freeTeamLimit?: number;
+  invitations?: any[];
 }
 
 export function TeamManagerPanel({
@@ -70,6 +73,7 @@ export function TeamManagerPanel({
   managedTeams = [],
   teamSubscriptionPrice = 60.0,
   freeTeamLimit = 1,
+  invitations: initialInvitations = [],
 }: TeamManagerPanelProps) {
   const [team, setTeam] = useState<TeamData>(initialTeam);
   const [activeTab, setActiveTab] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar">("roster");
@@ -78,8 +82,13 @@ export function TeamManagerPanel({
   const [teamName, setTeamName] = useState(team.name);
   const [shortName, setShortName] = useState(team.shortName || "");
   const [color, setColor] = useState(team.color || "#84cc16");
+  const [logoUrl, setLogoUrl] = useState(team.logoUrl || "");
   const [formation, setFormation] = useState(team.formation || "4-3-3");
   const [homeArena, setHomeArena] = useState(team.homeArena || "Stadionul Dan Păltinișanu (Timișoara)");
+
+  // Invitations State
+  const [invitations, setInvitations] = useState<any[]>(initialInvitations);
+  const [invitationActionLoading, setInvitationActionLoading] = useState<string | null>(null);
 
   // Staff State
   const [headCoach, setHeadCoach] = useState(team.headCoach || "Dan Alexa (Licență UEFA Pro)");
@@ -119,6 +128,84 @@ export function TeamManagerPanel({
     setStatusMsg(msg);
     setTimeout(() => setStatusMsg(null), 3500);
   }
+
+  async function handleInvitationAction(invitationId: string, action: "accept" | "reject") {
+    setInvitationActionLoading(invitationId);
+    try {
+      const res = await fetch("/api/team/invitations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ invitationId, action }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        notify(data.error || "Eroare la procesarea invitației.");
+        return;
+      }
+
+      notify(data.message || "Invitația a fost procesată.");
+      setInvitations((prev) => prev.filter((inv) => inv.id !== invitationId));
+    } catch {
+      notify("Eroare de rețea. Te rugăm să reîncerci.");
+    } finally {
+      setInvitationActionLoading(null);
+    }
+  }
+
+  async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      notify("Selectează o imagine validă.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      notify("Imaginea este prea mare. Folosește un fișier sub 5MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const result = event.target?.result as string;
+      if (!result) return;
+      try {
+        const res = await fetch("/api/team", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ teamId: team.id, logoUrl: result }),
+        });
+        if (res.ok) {
+          const data = await res.json().catch(() => ({}));
+          setTeam((prev) => ({ ...prev, logoUrl: data.team?.logoUrl || result }));
+          setLogoUrl(result);
+          notify("✓ Logo-ul echipei a fost actualizat!");
+        } else {
+          notify("Eroare la actualizarea logo-ului.");
+        }
+      } catch {
+        notify("Eroare de rețea la încărcarea logo-ului.");
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  useEffect(() => {
+    async function loadInvitations() {
+      try {
+        const res = await fetch("/api/team/invitations");
+        if (res.ok) {
+          const data = await res.json();
+          setInvitations(data.invitations || []);
+        }
+      } catch {
+        // silent fail for invitations load
+      }
+    }
+
+    loadInvitations();
+  }, []);
 
   async function handleCreateTeam() {
     setBusy(true);
@@ -449,6 +536,62 @@ export function TeamManagerPanel({
           </div>
         )}
       </div>
+
+      {/* Invitations Section */}
+      {invitations.length > 0 && (
+        <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-5">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-lime-400 text-2xl">mail</span>
+            <div>
+              <h2 className="font-headline font-black text-lg sm:text-xl uppercase text-white tracking-tight">
+                Invitații Primite
+              </h2>
+              <p className="text-[11px] sm:text-xs text-slate-400 font-label mt-0.5">
+                Organizatorii te invita să participi la campionate. Acceptă sau refuză participarea.
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {invitations.map((inv) => (
+              <div
+                key={inv.id}
+                className="p-4 rounded-2xl border border-slate-700 bg-slate-800/60 text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+              >
+                <div className="min-w-0">
+                  <p className="font-headline font-bold text-sm text-white truncate">
+                    {inv.championship?.name || "Campionat"}
+                  </p>
+                  <p className="text-[11px] text-slate-400 font-label">
+                    {inv.championship?.sport || "Sport"} • Sezon {inv.championship?.season || "2026"} • {inv.championship?.county || ""}
+                  </p>
+                  <p className="text-[10px] text-slate-500 font-label mt-1">
+                    Invitat de {inv.inviter?.name || inv.inviter?.email || "Organizator"} • Echipa: {inv.team?.name || "N/A"}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handleInvitationAction(inv.id, "accept")}
+                    disabled={invitationActionLoading === inv.id}
+                    className="px-4 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase transition disabled:opacity-50"
+                  >
+                    Acceptă
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleInvitationAction(inv.id, "reject")}
+                    disabled={invitationActionLoading === inv.id}
+                    className="px-4 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-headline font-bold text-xs uppercase transition disabled:opacity-50"
+                  >
+                    Refuză
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Create Team Modal */}
       {showCreateTeamModal && (
@@ -901,6 +1044,28 @@ export function TeamManagerPanel({
                     </button>
                   ))}
                 </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
+                  Logo Echipa
+                </label>
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-2xl border border-slate-700 bg-slate-950 flex items-center justify-center overflow-hidden">
+                    {logoUrl ? (
+                      <img src={logoUrl} alt="Logo echipa" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="material-symbols-outlined text-slate-500 text-3xl">image</span>
+                    )}
+                  </div>
+                  <label className="px-4 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs font-bold text-white cursor-pointer hover:border-lime-400 transition">
+                    {logoUrl ? "Schimbă Logo" : "Încarcă Logo"}
+                    <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
+                  </label>
+                </div>
+                <p className="text-[11px] text-slate-500 font-label mt-1">
+                  Format recomandat: PNG sau JPG, dimensiune maximă 5MB.
+                </p>
               </div>
 
               <button

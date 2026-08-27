@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { Sidebar } from "@/components/Sidebar";
 import { TopHeader } from "@/components/TopHeader";
+import { CreateFirstChampionshipButton } from "@/components/CreateFirstChampionshipButton";
 
 import { isOrganizer } from "@/lib/permissions";
 
@@ -191,13 +192,7 @@ export default async function DashboardPage({
                   Pornește propria ligă sau turneu eliminatoriu în câteva secunde. Adaugă echipe,
                   programează etapele și transmite rezultate în timp real.
                 </p>
-                <Link
-                  href="/dashboard/new"
-                  className="btn btn-primary mt-6 inline-flex items-center gap-2 text-xs uppercase tracking-wider font-bold py-3 px-6 rounded-xl bg-slate-950 dark:bg-lime-400 text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-lime-300 shadow-md"
-                >
-                  <span className="material-symbols-outlined text-[18px]">add_circle</span>
-                  Creează Primul Campionat
-                </Link>
+                <CreateFirstChampionshipButton />
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

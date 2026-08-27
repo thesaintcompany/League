@@ -195,13 +195,30 @@ export default async function TeamManagerDashboardPage() {
   const teamCount = await prisma.team.count({ where: { managerId: userId } });
   const managedTeams = await prisma.team.findMany({
     where: { managerId: userId },
-    select: { id: true, name: true, shortName: true, color: true, subscriptionActive: true, subscriptionExpiresAt: true },
+    select: { id: true, name: true, shortName: true, color: true, logoUrl: true, subscriptionActive: true, subscriptionExpiresAt: true },
   });
 
   const formattedManagedTeams = managedTeams.map((t) => ({
     ...t,
+    logoUrl: t.logoUrl || null,
     subscriptionExpiresAt: t.subscriptionExpiresAt ? t.subscriptionExpiresAt.toISOString() : null,
   }));
+
+  const invitations = await prisma.teamInvitation.findMany({
+    where: { inviteeEmail: user.email, status: "pending" },
+    include: {
+      championship: {
+        select: { id: true, name: true, sport: true, season: true, scope: true, county: true, city: true },
+      },
+      team: {
+        select: { id: true, name: true, shortName: true, color: true },
+      },
+      inviter: {
+        select: { id: true, name: true, email: true },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
@@ -220,6 +237,7 @@ export default async function TeamManagerDashboardPage() {
             managedTeams={formattedManagedTeams}
             teamSubscriptionPrice={settings?.teamSubscriptionPrice ?? 60.0}
             freeTeamLimit={1}
+            invitations={invitations}
           />
         </main>
       </div>

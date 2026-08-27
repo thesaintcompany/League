@@ -45,6 +45,7 @@ model User {
   venues          Venue[]
   venueClaims     VenueClaim[]
   managedTeams    Team[]        @relation("ManagedTeams")
+  sentTeamInvitations TeamInvitation[] @relation("TeamInvitationInviter")
 }
 
 model Account {
@@ -156,6 +157,7 @@ model Championship {
   owner   User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   teams   Team[]
   matches Match[]
+  teamInvitations TeamInvitation[]
 
   @@index([ownerId])
 }
@@ -189,6 +191,7 @@ model Team {
   players       Player[]
   homeMatches    Match[] @relation("HomeTeam")
   awayMatches    Match[] @relation("AwayTeam")
+  invitations   TeamInvitation[]
 
   @@index([championshipId])
   @@index([managerId])
@@ -385,4 +388,25 @@ model VenueClaim {
   @@index([venueId])
   @@index([status])
   @@index([applicantEmail])
+}
+
+model TeamInvitation {
+  id              String   @id @default(cuid())
+  teamId          String
+  championshipId  String
+  inviterId       String
+  inviteeEmail    String
+  status          String   @default("pending") // "pending" | "accepted" | "rejected"
+  message         String?
+  respondedAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  team        Team         @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  championship Championship @relation(fields: [championshipId], references: [id], onDelete: Cascade)
+  inviter     User         @relation("TeamInvitationInviter", fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+  @@index([championshipId])
+  @@index([inviteeEmail])
 }
