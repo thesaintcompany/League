@@ -116,11 +116,11 @@ export const PADEL_CATEGORIES_OPTIONS: CategoryOption[] = [
 
 export const PINGPONG_CATEGORIES_OPTIONS: CategoryOption[] = [
   { id: "all", name: "Toate Categoriile", shortName: "Toate", icon: "🌐" },
-  { id: "pingpong_simplu_masculin", name: "Simplu Masculin", shortName: "Singles M", icon: "🏓" },
-  { id: "pingpong_simplu_feminin", name: "Simplu Feminin", shortName: "Singles F", icon: "🏓" },
-  { id: "pingpong_dublu", name: "Dublu", shortName: "Dublu", icon: "👥" },
-  { id: "pingpong_open", name: "Open Amatur", shortName: "Amatur", icon: "⭐" },
-  { id: "pingpong_elite", name: "Elită / Avansați", shortName: "Elită", icon: "🏆" },
+  { id: "pingpong_simplu_masculin", name: "Simplu Masculin", shortName: "Singles M", icon: "sports_tennis" },
+  { id: "pingpong_simplu_feminin", name: "Simplu Feminin", shortName: "Singles F", icon: "sports_tennis" },
+  { id: "pingpong_dublu", name: "Dublu", shortName: "Dublu", icon: "groups_2" },
+  { id: "pingpong_open", name: "Open Amatori", shortName: "Amatori", icon: "star" },
+  { id: "pingpong_elite", name: "Elită / Avansați", shortName: "Elită", icon: "emoji_events" },
 ];
 
 interface SportContextType {

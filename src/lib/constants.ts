@@ -54,28 +54,28 @@ export const FOOTBALL_CATEGORIES = [
 export const TENNIS_CATEGORIES = [
   { value: "simplu_masculin", label: "🎾 Simplu Masculin (Singles Men)" },
   { value: "simplu_feminin", label: "🎾 Simplu Feminin (Singles Women)" },
-  { value: "dublu_masculin", label: "👥 Dublu Masculin (Doubles Men)" },
-  { value: "dublu_feminin", label: "👥 Dublu Feminin (Doubles Women)" },
+  { value: "dublu_masculin", label: "Dublu Masculin (Doubles Men)" },
+  { value: "dublu_feminin", label: "Dublu Feminin (Doubles Women)" },
   { value: "dublu_mixt", label: "✨ Dublu Mixt (Mixed Doubles)" },
   { value: "juniori_tenis", label: "🌟 Juniori & Kids (U12, U14, U16)" },
 ] as const;
 
 export const PADEL_CATEGORIES = [
-  { value: "padel_masculin", label: "👥 Dublu Masculin (Men Doubles)" },
-  { value: "padel_feminin", label: "👥 Dublu Feminin (Women Doubles)" },
+  { value: "padel_masculin", label: "Dublu Masculin (Men Doubles)" },
+  { value: "padel_feminin", label: "Dublu Feminin (Women Doubles)" },
   { value: "padel_mixt", label: "✨ Dublu Mixt (Mixed Doubles)" },
-  { value: "padel_pro", label: "🏆 Nivel Pro / Avansați (Nivel 1-2)" },
-  { value: "padel_amatori", label: "⭐ Nivel Amatori / Intermediari (Nivel 3-5)" },
+  { value: "padel_pro", label: "Nivel Pro / Avansați (Nivel 1-2)" },
+  { value: "padel_amatori", label: "Nivel Amatori / Intermediari (Nivel 3-5)" },
   { value: "padel_open", label: "🎾 Open Padel (Toate Nivelurile)" },
 ] as const;
 
 export const PINGPONG_CATEGORIES = [
-  { value: "pingpong_simplu_masculin", label: "🏓 Simplu Masculin" },
-  { value: "pingpong_simplu_feminin", label: "🏓 Simplu Feminin" },
-  { value: "pingpong_dublu", label: "👥 Dublu (Doubles)" },
-  { value: "pingpong_open", label: "🏓 Open Amatur / Turneu Liber" },
-  { value: "pingpong_elite", label: "🏆 Categoria Elită / Avansați" },
-  { value: "pingpong_amatori", label: "⭐ Categoria Hobby / Amatori" },
+  { value: "pingpong_simplu_masculin", label: "Simplu Masculin" },
+  { value: "pingpong_simplu_feminin", label: "Simplu Feminin" },
+  { value: "pingpong_dublu", label: "Dublu (Doubles)" },
+  { value: "pingpong_open", label: "Open Amatori / Turneu Liber" },
+  { value: "pingpong_elite", label: "Categoria Elită / Avansați" },
+  { value: "pingpong_amatori", label: "Categoria Hobby / Amatori" },
 ] as const;
 
 export const TENNIS_SURFACES = [
@@ -84,14 +84,14 @@ export const TENNIS_SURFACES = [
   { value: "Iarbă (Grass)", label: "🟢 Iarbă (Grass • Wimbledon style)" },
   { value: "Sintetic Indoor", label: "🟡 Sintetic Indoor / Sală" },
   { value: "Sticlă Panoramică & Gazon Padel", label: "🎾 Teren Padel Panoramic cu Gazon Sintetic" },
-  { value: "Suprafață ITTF Lemn / Sintetic", label: "🏓 Masă Competițională Omologată ITTF" },
+  { value: "Suprafață ITTF Lemn / Sintetic", label: "Măsură Competițională Omologată ITTF" },
 ] as const;
 
 export const TENNIS_SETS_RULES = [
   { value: "best_of_3", label: "Cel mai bun din 3 Seturi (2 seturi câștigate)" },
   { value: "best_of_3_super_tb", label: "2 Seturi normale + Super Tiebreak la 10 în decisiv" },
-  { value: "best_of_5_pingpong", label: "🏓 Cel mai bun din 5 Seturi la 11 puncte (Ping-Pong)" },
-  { value: "best_of_7_pingpong", label: "🏓 Cel mai bun din 7 Seturi la 11 puncte (Finală Ping-Pong)" },
+  { value: "best_of_5_pingpong", label: "Cel mai bun din 5 Seturi la 11 puncte (Ping-Pong)" },
+  { value: "best_of_7_pingpong", label: "Cel mai bun din 7 Seturi la 11 puncte (Finală Ping-Pong)" },
   { value: "pro_set_9", label: "Pro-Set (primul la 9 game-uri)" },
   { value: "best_of_5", label: "Cel mai bun din 5 Seturi (Grand Slam)" },
 ] as const;

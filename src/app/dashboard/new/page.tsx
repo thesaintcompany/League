@@ -73,7 +73,7 @@ export default function NewChampionshipPage() {
     friendly: ["Meciuri Amicale", "Turneu Demonstrativ", "Cupa Amicală", "Meciuri de Pregătire", "Liga Amatorilor"],
     tennis_singles: ["Tenis Simplu", "Turneu Tenis", "Cupa la Simplu", "Open Tenis", "Master Tenis"],
     padel_tour: ["Turneu Padel", "Cupa Padel Pro", "Open Padel Arena", "Padel League", "Padel Master"],
-    pingpong_singles: ["Turneu Ping-Pong", "Cupa Tenis de Masă", "Open Ping-Pong", "Amatur Ping-Pong", "Liga Tenis de Masă"],
+    pingpong_singles: ["Turneu Ping-Pong", "Cupa Tenis de Masă", "Open Ping-Pong", "Amatori Ping-Pong", "Liga Tenis de Masă"],
     tennis_doubles: ["Tenis Dublu", "Turneu Dublu", "Cupa la Dublu", "Tenis & Dublu", "Open Dublu"],
     national: ["SuperLiga Națională", "Cupa României", "Liga Națională", "Campionatul Național", "Liga Pro"],
     judetean: ["Liga Județeană", "Cupa Județeană", "Liga Locală", "Campionat Județean", "SuperLiga Locală"],
@@ -380,7 +380,7 @@ export default function NewChampionshipPage() {
                   id: "pingpong_singles" as const,
                   icon: "🏓",
                   title: "Ping-Pong",
-                  desc: "Tenis de Masă Amatur",
+                  desc: "Tenis de Masă Amatori",
                 },
                 {
                   id: "national" as const,
