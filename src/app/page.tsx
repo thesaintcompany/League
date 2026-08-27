@@ -21,55 +21,6 @@ function WelcomePortalForm() {
   const [loading, setLoading] = useState(false);
   const [mobileView, setMobileView] = useState<"championships" | "auth">("championships");
 
-
-  const DEMO_ACCOUNTS = [
-    {
-      id: "organizer",
-      role: "Organizator Pro",
-      email: "demo@leaguehub.local",
-      pass: "demo12345",
-      badge: "Turnee & Meciuri",
-      icon: "emoji_events",
-      color: "border-lime-400 bg-lime-500/10 text-lime-400",
-    },
-    {
-      id: "referee",
-      role: "Arbitru Oficial",
-      email: "arbitru@leaguehub.local",
-      pass: "demo12345",
-      badge: "Raport Meci",
-      icon: "sports",
-      color: "border-cyan-400 bg-cyan-500/10 text-cyan-400",
-    },
-    {
-      id: "player",
-      role: "Fotbalist Pro",
-      email: "jucator@leaguehub.local",
-      pass: "demo12345",
-      badge: "Profil 9:16",
-      icon: "directions_run",
-      color: "border-amber-400 bg-amber-500/10 text-amber-400",
-    },
-    {
-      id: "arena_owner",
-      role: "Proprietar Arenă",
-      email: "arena@leaguehub.local",
-      pass: "demo12345",
-      badge: "59 Arene RO",
-      icon: "stadium",
-      color: "border-purple-400 bg-purple-500/10 text-purple-400",
-    },
-    {
-      id: "team_leader",
-      role: "Manager Echipă",
-      email: "lider@leaguehub.local",
-      pass: "demo12345",
-      badge: "Staff & Invitații",
-      icon: "badge",
-      color: "border-emerald-400 bg-emerald-500/10 text-emerald-400",
-    },
-  ];
-
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -104,10 +55,6 @@ function WelcomePortalForm() {
     }
   }
 
-  function pickAccount(acc: (typeof DEMO_ACCOUNTS)[0]) {
-    setEmail(acc.email);
-    setSelectedRole(acc.id);
-  }
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden bg-slate-50 dark:bg-slate-950 font-body text-slate-900 dark:text-white transition-colors duration-200">
@@ -310,39 +257,7 @@ function WelcomePortalForm() {
               </div>
             )}
 
-            {/* Demo Accounts Selector */}
-            <div className="mb-6 space-y-2">
-              <div className="grid grid-cols-2 gap-2">
-                {DEMO_ACCOUNTS.map((acc) => {
-                  const isSelected = email === acc.email;
-                  return (
-                    <button
-                      key={acc.id}
-                      type="button"
-                      onClick={() => pickAccount(acc)}
-                      className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between ${isSelected
-                          ? "border-lime-500 bg-lime-500/10 text-slate-950 dark:text-white shadow-md ring-1 ring-lime-400"
-                          : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
-                        }`}
-                    >
-                      <div className="flex justify-between items-center w-full mb-1">
-                        <span className="material-symbols-outlined text-[18px] text-lime-600 dark:text-lime-400">
-                          {acc.icon}
-                        </span>
-                        <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-label">
-                          {acc.badge}
-                        </span>
-                      </div>
-                      <span className="font-headline font-bold text-xs block leading-tight">
-                        {acc.role}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
 
-            {/* Login Form */}
             <form onSubmit={onSubmit} className="space-y-4">
               {error && (
                 <div className="p-3.5 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-semibold rounded-2xl flex items-center gap-2">
