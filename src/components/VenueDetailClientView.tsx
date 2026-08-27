@@ -334,7 +334,7 @@ export function VenueDetailClientView({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-5 text-sm">
                 <div>
                   <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">Nume</span>
-                  <p className="font-bold text-slate-900 dark:text-white">{venue.owner.name || "Proprietar arenă"}</p>
+                  <p className="font-bold text-slate-900 dark:text-white">{venue.owner.name || "Proprietar"}</p>
                 </div>
                 {venue.owner.email && (
                   <div>

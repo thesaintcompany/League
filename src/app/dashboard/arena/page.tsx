@@ -100,7 +100,7 @@ export default async function ArenaOwnerDashboardPage() {
 
       <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
-          title="Consolă Proprietar Arenă"
+          title="Consolă Proprietar"
           subtitle="Configurează baza ta sportivă, spațiul de reclame, anunțurile și ticker-ul defilant"
         />
 

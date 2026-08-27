@@ -1562,7 +1562,7 @@ export function AdminSuperPanel() {
                 { role: "super_admin", label: "SuperAdmin", desc: "Acces Total Platformă", color: "bg-red-500/20 text-red-400 border-red-500/30" },
                 { role: "organizer", label: "Organizator", desc: "Campionate & Meciuri", color: "bg-lime-500/20 text-lime-400 border-lime-500/30" },
                 { role: "referee", label: "Arbitru", desc: "VAR & Rapoarte Meci", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
-                { role: "arena_owner", label: "Proprietar Arenă", desc: "Disponibilitate Teren", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+                { role: "arena_owner", label: "Proprietar", desc: "Disponibilitate Teren", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
                 { role: "team_leader", label: "Manager Echipă", desc: "Lot & Înscrieri", color: "bg-purple-500/20 text-purple-400 border-purple-500/30" },
                 { role: "player", label: "Jucător", desc: "Profil & Statistici", color: "bg-slate-500/20 text-slate-300 border-slate-500/30" },
               ].map((r) => (
@@ -1697,7 +1697,7 @@ export function AdminSuperPanel() {
                             <option value="organizer">⚡ Pro Organizer</option>
                             <option value="super_admin">👑 Super Administrator</option>
                             <option value="referee">⚖️ Arbitru Oficial (RIFA)</option>
-                            <option value="arena_owner">🏟️ Proprietar Arenă</option>
+                            <option value="arena_owner">Proprietar</option>
                             <option value="team_leader">👔 Manager Echipă</option>
                             <option value="player">⚽ Jucător</option>
                           </select>
@@ -2539,7 +2539,7 @@ export function AdminSuperPanel() {
                     <option value="organizer">⚡ Pro Organizer</option>
                     <option value="super_admin">👑 Super Administrator</option>
                     <option value="referee">⚖️ Arbitru Oficial (RIFA)</option>
-                    <option value="arena_owner">🏟️ Proprietar Arenă</option>
+                    <option value="arena_owner">Proprietar</option>
                     <option value="team_leader">👔 Manager Echipă</option>
                     <option value="player">⚽ Jucător</option>
                   </select>

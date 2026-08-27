@@ -102,7 +102,7 @@ export default async function ArenaOwnerSectionPage({
       <Sidebar />
       <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
-          title="Consolă Proprietar Arenă"
+          title="Consolă Proprietar"
           subtitle="Gestionează secțiunea selectată a bazei tale sportive"
         />
         <main className="p-4 sm:p-6 lg:p-10 max-w-7xl">

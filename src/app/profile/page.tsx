@@ -39,7 +39,7 @@ export default async function ProfilePage({
     organizer: "Organizator Oficial",
     referee: "Arbitru Licențiat",
     player: "Fotbalist / Jucător",
-    arena_owner: "Proprietar Arenă / Bază Sportivă",
+    arena_owner: "Proprietar / Bază Sportivă",
     team_leader: "Manager Echipă",
     observer: "Observator Oficial",
   };

@@ -17,10 +17,10 @@ export default function SignUpPage() {
 
   const ROLES = [
     { id: "organizer", label: "Organizator", icon: "dashboard_customize" },
-    { id: "team_leader", label: "Lider Echipă", icon: "groups" },
+    { id: "team_leader", label: "Lider", icon: "groups" },
     { id: "referee", label: "Arbitru", icon: "sports" },
     { id: "player", label: "Jucător", icon: "directions_run" },
-    { id: "arena_owner", label: "Proprietar Arenă", icon: "stadium" },
+    { id: "arena_owner", label: "Proprietar", icon: "stadium" },
   ];
 
   async function onSubmit(e: React.FormEvent) {
@@ -117,10 +117,10 @@ export default function SignUpPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
                   {[
                     { id: "organizer", label: "Organizator", icon: "emoji_events" },
-                    { id: "team_leader", label: "Lider Echipă", icon: "groups" },
+                    { id: "team_leader", label: "Lider", icon: "groups" },
                     { id: "player", label: "Jucător", icon: "sports_soccer" },
                     { id: "referee", label: "Arbitru", icon: "sports" },
-                    { id: "arena_owner", label: "Proprietar Arenă", icon: "stadium" },
+                    { id: "arena_owner", label: "Proprietar", icon: "stadium" },
                   ].map((r) => (
                     <button
                       key={r.id}

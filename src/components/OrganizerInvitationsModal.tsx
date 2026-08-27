@@ -519,7 +519,7 @@ export function OrganizerInvitationsModal({
               <div className="space-y-4">
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 space-y-2">
                   <span className="text-xs font-headline font-bold uppercase text-slate-700 dark:text-slate-300 block">
-                    {isIndividual ? "Link Direct de Înscriere Jucător pe Tablou:" : "Link Direct de Înregistrare & Aderare Lider Echipă:"}
+                    {isIndividual ? "Link Direct de Înscriere Jucător pe Tablou:" : "Link Direct de Înregistrare & Aderare Lider:"}
                   </span>
                   <div className="flex items-center gap-2">
                     <input

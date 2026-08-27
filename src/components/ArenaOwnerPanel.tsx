@@ -390,7 +390,7 @@ export function ArenaOwnerPanel({
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-0.5">
               <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-semibold tracking-wider uppercase">
-                Proprietar Arenă
+                Proprietar
               </span>
               <span className="text-[11px] text-slate-400 dark:text-slate-500 font-normal">
                 Panou de gestiune
