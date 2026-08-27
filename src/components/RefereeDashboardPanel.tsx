@@ -63,6 +63,7 @@ export function RefereeDashboardPanel({
   refereeUser,
   upcomingMatch,
   matchHistory,
+  pendingMatches = [],
 }: {
   refereeUser: {
     id: string;
@@ -73,8 +74,9 @@ export function RefereeDashboardPanel({
     image?: string | null;
     coverPhotoUrl?: string | null;
   };
-  upcomingMatch: MatchOfficiatingItem | null;
+   upcomingMatch: MatchOfficiatingItem | null;
   matchHistory: MatchOfficiatingItem[];
+  pendingMatches?: MatchOfficiatingItem[];
 }) {
   const router = useRouter();
 
@@ -95,6 +97,7 @@ export function RefereeDashboardPanel({
   const [confirmingMatchId, setConfirmingMatchId] = useState<string | null>(null);
   const [confirmAction, setConfirmAction] = useState<"accept" | "decline" | null>(null);
   const [confirmError, setConfirmError] = useState<string | null>(null);
+  const [confirmSuccess, setConfirmSuccess] = useState<string | null>(null);
   const [crowdConduct, setCrowdConduct] = useState<string>("Sportivă / Fără incidente");
   const [refereeNotes, setRefereeNotes] = useState<string>("");
   const [signedBy, setSignedBy] = useState<string>(refereeUser.name || "Arbitru Oficial");
@@ -134,6 +137,9 @@ export function RefereeDashboardPanel({
         setConfirmError(data.error || "Eroare la confirmare.");
         return;
       }
+
+      setConfirmSuccess(data.message || "Ai confirmat prezența la meci.");
+      setTimeout(() => setConfirmSuccess(null), 3000);
 
       // Reîncărcăm datele pentru a reflecta starea nouă
       router.refresh();
@@ -257,9 +263,26 @@ export function RefereeDashboardPanel({
     <div className="space-y-10 font-body">
       {/* Referee Header Summary */}
       <section className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="flex items-center gap-5">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-3xl shadow-lg shrink-0">
-            ⚖️
+         <div className="flex items-center gap-5">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg shrink-0 overflow-hidden border-2 border-white dark:border-slate-950">
+            {refereeUser.image ? (
+              <img
+                src={refereeUser.image}
+                alt={refereeUser.name || "Arbitru"}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="font-headline font-black text-2xl">
+                {refereeUser.name
+                  ? refereeUser.name
+                      .split(" ")
+                      .slice(0, 2)
+                      .map((w: string) => w[0])
+                      .join("")
+                      .toUpperCase()
+                  : "AR"}
+              </span>
+            )}
           </div>
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -833,14 +856,19 @@ export function RefereeDashboardPanel({
           </h2>
           {confirmError && (
             <div className="p-2 rounded-xl bg-red-950/80 border border-red-500 text-red-300 text-xs font-bold">
-              ⚠️ {confirmError}
+              {confirmError}
+            </div>
+          )}
+          {confirmSuccess && (
+            <div className="p-2 rounded-xl bg-lime-950/80 border border-lime-400 text-lime-300 text-xs font-bold">
+              {confirmSuccess}
             </div>
           )}
         </div>
 
-        {matchHistory.length > 0 ? (
+        {pendingMatches && pendingMatches.length > 0 ? (
           <div className="space-y-3">
-            {matchHistory.map((m) => {
+            {pendingMatches.map((m) => {
               const isHome = m.homeTeam?.id === refereeUser?.id;
               const dateObj = new Date(m.scheduledAt);
               return (

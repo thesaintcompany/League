@@ -68,6 +68,9 @@ export default async function RefereeDashboardPage() {
   const upcomingMatchRaw = assignedMatches.find((m) => m.status !== "finished") || assignedMatches[0] || null;
   const matchHistoryRaw = assignedMatches.filter((m) => m.status === "finished" && m.id !== upcomingMatchRaw?.id);
 
+  // All pending/unconfirmed matches for the referee confirmation panel
+  const pendingMatchesRaw = assignedMatches.filter((m) => m.status !== "finished");
+
   // Convert Date objects to strings for serialization
   const upcomingMatch: MatchOfficiatingItem | null = upcomingMatchRaw
     ? {
@@ -83,6 +86,12 @@ export default async function RefereeDashboardPage() {
     signedAt: m.signedAt ? m.signedAt.toISOString() : null,
   }));
 
+  const pendingMatches: MatchOfficiatingItem[] = pendingMatchesRaw.map((m) => ({
+    ...m,
+    scheduledAt: m.scheduledAt.toISOString(),
+    signedAt: m.signedAt ? m.signedAt.toISOString() : null,
+  }));
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
       {/* Role-isolated Sidebar */}
@@ -92,7 +101,7 @@ export default async function RefereeDashboardPage() {
       <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
           title="Panou Oficial de Arbitraj"
-          subtitle={`Bine ai venit, ${user.name || "Arbitru Oficial"} (${user.refereeBadge || "  Pro"})!`}
+          subtitle={`Bine ai venit, ${user.name || "Arbitru Oficial"} (${user.refereeBadge || "RIFA"})!`}
         />
 
         <main className="p-4 sm:p-8 space-y-6 sm:space-y-8 flex-1 max-w-7xl">
@@ -108,6 +117,7 @@ export default async function RefereeDashboardPage() {
             }}
             upcomingMatch={upcomingMatch}
             matchHistory={matchHistory}
+            pendingMatches={pendingMatches}
           />
         </main>
       </div>
