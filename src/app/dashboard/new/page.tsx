@@ -378,7 +378,7 @@ export default function NewChampionshipPage() {
                 },
                 {
                   id: "pingpong_singles" as const,
-                  icon: "sports_table_tennis",
+                  icon: "sports_tennis",
                   title: "Ping-Pong",
                   desc: "Tenis de Masă Amatori",
                 },
@@ -808,7 +808,7 @@ export default function NewChampionshipPage() {
                 const isPingPong = form.sport.toLowerCase().includes("ping") || form.sport.toLowerCase().includes("pong") || form.sport.toLowerCase().includes("masă") || form.sport.toLowerCase().includes("masa");
                 const activeCatList = isPadel ? PADEL_CATEGORIES : isPingPong ? PINGPONG_CATEGORIES : TENNIS_CATEGORIES;
                 const sportTitle = isPadel ? "Padel  " : isPingPong ? "Ping-Pong (Tenis de Masă)" : "Tenis de Câmp";
-                const sportIcon = isPadel ? "sports_tennis" : isPingPong ? "sports_table_tennis" : "sports_tennis";
+                const sportIcon = isPadel ? "sports_tennis" : isPingPong ? "sports_tennis" : "sports_tennis";
 
                 // Default to amateur / entry level if none chosen or category does not match active sport
                 const defaultCategoryForSport = isPadel ? "padel_amatori" : isPingPong ? "pingpong_amatori" : "simplu_masculin";
