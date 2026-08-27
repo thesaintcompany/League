@@ -129,9 +129,9 @@ function SignUpForm() {
 
       <section className="w-full max-w-6xl bg-white dark:bg-slate-900/90 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_25px_70px_rgba(0,0,0,0.15)] dark:shadow-[0_25px_70px_rgba(0,0,0,0.6)] flex flex-col lg:flex-row overflow-hidden z-10 border border-slate-200 dark:border-slate-800/80">
         
-        {/* Panel 1 (Left / Mobile Step 1): Choose Account Type & Benefits */}
+        {/* Card 1 (Dark Side / Mobile Step 1): Branding on Desktop, Role Selection Carousel on Mobile */}
         <div
-          className={`w-full lg:w-7/12 relative min-h-[500px] lg:min-h-[700px] p-6 sm:p-10 lg:p-12 flex-col justify-between overflow-hidden text-white bg-slate-950 ${
+          className={`w-full lg:w-5/12 bg-slate-950 p-6 sm:p-10 lg:p-12 flex-col justify-between relative overflow-hidden text-white ${
             mobileView === "roles" ? "flex" : "hidden lg:flex"
           }`}
         >
@@ -140,10 +140,10 @@ function SignUpForm() {
           <img
             src="/images/hero-goal.jpg"
             alt="Dynamic Soccer Background"
-            className="absolute inset-0 w-full h-full object-cover object-center opacity-25 filter brightness-75 contrast-125"
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-25 filter brightness-75 contrast-125 pointer-events-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/85 to-slate-950/60"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/85 to-slate-950/60 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-transparent pointer-events-none"></div>
 
           {/* Top Brand Header */}
           <div className="relative z-10 flex items-center justify-between">
@@ -155,24 +155,58 @@ function SignUpForm() {
             </span>
           </div>
 
-          {/* Middle: Title & Role Selection Cards */}
-          <div className="relative z-10 my-4 sm:my-6 space-y-4">
+          {/* Center Content: Desktop Branding Visual */}
+          <div className="relative z-10 my-auto py-6 space-y-4 hidden lg:block">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-slate-200 text-xs font-label border border-white/15">
+              <span className="material-symbols-outlined text-sm text-lime-400">verified</span>
+              <span>Acces Gratuit &amp; Module Sportive Complete</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black italic font-headline uppercase leading-tight text-white drop-shadow-xl">
+              Creează Contul <br />
+              <span className="text-lime-400">Tău Pro.</span>
+            </h1>
+
+            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-body drop-shadow-md max-w-md">
+              Organizează campionate, gestionează meciuri live, clasamente, baze de date sportive,
+              bilete și statistici individuale pentru fiecare competiție.
+            </p>
+
+            <div className="pt-2">
+              <div className="flex items-center gap-3.5 p-3.5 bg-white/10 rounded-2xl border border-white/15 backdrop-blur-md">
+                <div className="w-10 h-10 rounded-full bg-lime-400 flex items-center justify-center text-slate-950 font-bold shrink-0">
+                  <span className="material-symbols-outlined text-xl">emoji_events</span>
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-300 font-label uppercase font-bold tracking-widest">
+                    Platformă Unificată
+                  </p>
+                  <p className="text-white text-xs font-bold font-headline">
+                    Turnee, Echipe, Jucători, Arbitri &amp; Arene
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Center Content: Mobile Exclusive Role Selection Cards */}
+          <div className="relative z-10 my-4 space-y-3.5 lg:hidden">
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-slate-200 text-[11px] font-label border border-white/15 mb-2">
                 <span className="material-symbols-outlined text-sm text-lime-400">person_add</span>
-                <span>Pasul 1: Alege tipul contului tău</span>
+                <span>Pasul 1: Alege rolul contului</span>
               </div>
-              <h1 className="text-2xl sm:text-4xl font-black italic font-headline uppercase leading-tight text-white drop-shadow-xl">
-                Creează Contul <br className="hidden sm:inline" />
+              <h2 className="text-2xl font-black italic font-headline uppercase leading-tight text-white drop-shadow-xl">
+                Creează Contul <br />
                 <span className="text-lime-400">Tău Pro.</span>
-              </h1>
-              <p className="text-slate-300 text-xs leading-relaxed font-body mt-1 max-w-md">
-                Selectează rolul principal pentru a-ți personaliza experiența în platformă.
+              </h2>
+              <p className="text-slate-300 text-xs leading-relaxed font-body mt-1">
+                Selectează tipul contului pentru a trece la datele de înregistrare:
               </p>
             </div>
 
-            {/* Interactive Role Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+            {/* Mobile Role Cards */}
+            <div className="space-y-2 pt-1">
               {ROLES.map((r) => {
                 const isSelected = selectedRole === r.id;
                 return (
@@ -180,20 +214,20 @@ function SignUpForm() {
                     key={r.id}
                     type="button"
                     onClick={() => setSelectedRole(r.id)}
-                    className={`p-3.5 rounded-2xl border text-left transition-all duration-200 flex items-start gap-3 relative overflow-hidden group ${
+                    className={`w-full p-3 rounded-2xl border text-left transition-all duration-200 flex items-start gap-3 relative overflow-hidden group ${
                       isSelected
-                        ? "bg-slate-900/90 border-lime-400 text-white shadow-xl shadow-lime-400/10 ring-2 ring-lime-400/50"
-                        : "bg-slate-900/60 border-slate-800 text-slate-300 hover:bg-slate-900/80 hover:border-slate-700"
+                        ? "bg-slate-900/95 border-lime-400 text-white shadow-lg shadow-lime-400/10 ring-2 ring-lime-400/50"
+                        : "bg-slate-900/60 border-slate-800 text-slate-300 hover:bg-slate-900/80"
                     }`}
                   >
                     <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ${
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
                         isSelected
                           ? "bg-lime-400 text-slate-950 font-bold"
                           : "bg-slate-800 text-slate-300"
                       }`}
                     >
-                      <span className="material-symbols-outlined text-xl">{r.icon}</span>
+                      <span className="material-symbols-outlined text-lg">{r.icon}</span>
                     </div>
 
                     <div className="flex-1 min-w-0">
@@ -217,21 +251,21 @@ function SignUpForm() {
             </div>
           </div>
 
-          {/* Bottom Action on Mobile & Highlights */}
+          {/* Bottom Area: Mobile Carousel Action Button to Right Card & Desktop Highlights */}
           <div className="relative z-10 space-y-3 pt-2">
-            {/* Quick highlight bar */}
-            <div className="hidden sm:flex items-center justify-between gap-2 p-3 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md text-[11px] text-slate-300 font-label">
+            {/* Desktop Highlights Bar */}
+            <div className="hidden lg:flex items-center justify-between gap-2 p-3 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md text-[11px] text-slate-300 font-label">
               <span className="flex items-center gap-1.5 text-lime-400 font-bold">
-                <span className="material-symbols-outlined text-sm">verified</span>
-                Acces Gratuit Inclus
+                <span className="material-symbols-outlined text-sm">bolt</span>
+                Înregistrare Rapidă
               </span>
               <span className="text-slate-500">•</span>
-              <span>Meciuri &amp; Clasamente Live</span>
+              <span>Clasamente Live</span>
               <span className="text-slate-500">•</span>
-              <span>Notificări Digitale</span>
+              <span>Bilete Online</span>
             </div>
 
-            {/* Mobile Button: Step 1 -> Step 2 Carousel transition */}
+            {/* Mobile Action Button: Goes to Card 2 (Right Card) */}
             <button
               type="button"
               onClick={() => setMobileView("form")}
@@ -241,7 +275,7 @@ function SignUpForm() {
               <span className="material-symbols-outlined text-base">arrow_forward</span>
             </button>
 
-            {/* Mobile link to SignIn */}
+            {/* Mobile Link to Signin */}
             <div className="lg:hidden text-center pt-1">
               <span className="text-[11px] text-slate-400 font-label">
                 Ai deja un cont?{" "}
@@ -253,9 +287,9 @@ function SignUpForm() {
           </div>
         </div>
 
-        {/* Panel 2 (Right / Mobile Step 2): Registration Form & Disabled Google Auth */}
+        {/* Card 2 (Right Side / Mobile Step 2): Registration Form & Disabled Google Auth */}
         <div
-          className={`w-full lg:w-5/12 p-6 sm:p-10 lg:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 relative overflow-hidden ${
+          className={`w-full lg:w-7/12 p-6 sm:p-10 lg:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 relative overflow-hidden ${
             mobileView === "form" ? "flex" : "hidden lg:flex"
           }`}
         >
@@ -278,7 +312,7 @@ function SignUpForm() {
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold font-label hover:bg-slate-200 dark:hover:bg-slate-700 transition"
               >
                 <span className="material-symbols-outlined text-base">arrow_back</span>
-                <span>Schimbă Rolul</span>
+                <span>Înapoi la Alegere Rol</span>
               </button>
               <span className="text-[10px] font-mono text-lime-600 dark:text-lime-400 font-bold uppercase">
                 Pasul 2 / 2
@@ -289,10 +323,10 @@ function SignUpForm() {
             <header className="mb-5 flex justify-between items-start">
               <div>
                 <h2 className="text-2xl font-headline font-black uppercase text-slate-900 dark:text-white tracking-tight">
-                  Date Înregistrare
+                  Înregistrare Ligue
                 </h2>
                 <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 font-label">
-                  Completează datele pentru a finaliza contul
+                  Completează datele pentru a începe
                 </p>
               </div>
               <div className="text-right hidden sm:block">
@@ -308,44 +342,68 @@ function SignUpForm() {
               </div>
             </header>
 
-            {/* Active Selected Role Banner */}
-            <div className="mb-4 p-3 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-bold">
-                  <span className="material-symbols-outlined text-base">{currentRole.icon}</span>
-                </div>
-                <div>
-                  <span className="text-[9px] font-black uppercase tracking-wider font-label text-slate-500 dark:text-slate-400 block">
-                    Rol Selectat
-                  </span>
-                  <span className="text-xs font-bold font-headline text-slate-900 dark:text-white">
-                    {currentRole.title}
-                  </span>
+            {/* Form */}
+            <form onSubmit={onSubmit} className="space-y-4">
+              {/* Role Selection on Desktop: Standard Grid */}
+              <div className="hidden lg:block">
+                <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+                  Rol Principal
+                </label>
+                <div className="grid grid-cols-5 gap-2">
+                  {ROLES.map((r) => (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onClick={() => setSelectedRole(r.id)}
+                      className={`p-2.5 rounded-xl border text-center transition flex flex-col items-center gap-1 ${
+                        selectedRole === r.id
+                          ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-transparent shadow-md font-bold"
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent hover:bg-slate-200 dark:hover:bg-slate-700"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-lg">{r.icon}</span>
+                      <span className="text-[10px] font-bold font-label">{r.label}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => setMobileView("roles")}
-                className="lg:hidden text-[10px] font-bold text-lime-600 dark:text-lime-400 underline font-label"
-              >
-                Schimbă
-              </button>
-            </div>
+              {/* Role Selected Banner on Mobile */}
+              <div className="lg:hidden p-3 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-bold">
+                    <span className="material-symbols-outlined text-base">{currentRole.icon}</span>
+                  </div>
+                  <div>
+                    <span className="text-[9px] font-black uppercase tracking-wider font-label text-slate-500 dark:text-slate-400 block">
+                      Rol Selectat
+                    </span>
+                    <span className="text-xs font-bold font-headline text-slate-900 dark:text-white">
+                      {currentRole.title}
+                    </span>
+                  </div>
+                </div>
 
-            {isInvite && (
-              <div className="mb-4 p-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl flex items-center gap-2">
-                <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-base">
-                  mail
-                </span>
-                <p className="text-xs font-label text-emerald-800 dark:text-emerald-300">
-                  Invitație detectată — contul tău este asociat echipei tale.
-                </p>
+                <button
+                  type="button"
+                  onClick={() => setMobileView("roles")}
+                  className="text-[10px] font-bold text-lime-600 dark:text-lime-400 underline font-label"
+                >
+                  Schimbă
+                </button>
               </div>
-            )}
 
-            {/* Main Form */}
-            <form onSubmit={onSubmit} className="space-y-3.5">
+              {isInvite && (
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl flex items-center gap-2">
+                  <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-base">
+                    mail
+                  </span>
+                  <p className="text-xs font-label text-emerald-800 dark:text-emerald-300">
+                    Cont creat din invitație — rolul tău este <span className="font-bold">Jucător</span>.
+                  </p>
+                </div>
+              )}
+
               {error && (
                 <div className="p-3.5 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-semibold rounded-2xl flex items-center gap-2">
                   <span className="material-symbols-outlined text-base">error</span>
