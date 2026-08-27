@@ -219,10 +219,10 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
               {[
                 { id: "all", label: "Toți (30)" },
                 { id: "rifa", label: "⭐ RIFA Elite" },
-                { id: "liga1", label: "🏆 Liga 1 Pro" },
-                { id: "var", label: "📺 VAR" },
-                { id: "asistent", label: "🚩 Asistenți" },
-                { id: "regional", label: "🏛️ Regionali" },
+                { id: "liga1", label: "Liga 1 Pro" },
+                { id: "var", label: "VAR" },
+                { id: "asistent", label: "Asistenți" },
+                { id: "regional", label: "Regionali" },
               ].map((cat) => (
                 <button
                   key={cat.id}

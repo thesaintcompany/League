@@ -202,9 +202,9 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
             <span className="text-xs font-bold text-slate-500 dark:text-slate-400 font-label mr-1 whitespace-nowrap shrink-0">Filtru:</span>
             {[
               { id: "all", label: "Toate" },
-              { id: "national", label: `🇷🇴 Naționale (${nationalChampionships.length})` },
-              { id: "judetean", label: "🏛️ Județene" },
-              { id: "oras", label: "🏙️ Municipale" },
+              { id: "national", label: `Naționale (${nationalChampionships.length})` },
+              { id: "judetean", label: "Județene" },
+              { id: "oras", label: "Municipale" },
             ].map((sc) => (
               <button
                 key={sc.id}
@@ -433,10 +433,10 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                                 }`}
                             >
                               {isNational
-                                ? "🇷🇴 NAȚIONAL"
+                                ? "NAȚIONAL"
                                 : isJudetean
-                                  ? `🏛️ JUDEȚEAN (${champ.county || selectedCounty})`
-                                  : `🏙️ MUNICIPAL (${champ.city || selectedCounty})`}
+                                  ? `JUDEȚEAN (${champ.county || selectedCounty})`
+                                  : `MUNICIPAL (${champ.city || selectedCounty})`}
                             </span>
                             <span className="px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-[9px] sm:text-[10px] font-bold font-label uppercase">
                               {champ.sport}
