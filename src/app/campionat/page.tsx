@@ -21,47 +21,82 @@ export default async function PublicChampionshipPage({
     orderBy: { createdAt: "desc" },
   });
 
-  // 2. Fetch targeted championship or fallback to the latest
-  let championship = null;
-  if (targetId) {
-    championship = await prisma.championship.findUnique({
-      where: { id: targetId },
-      include: {
-        teams: {
-          include: {
-            players: true,
-          },
-        },
-        matches: {
-          include: {
-            homeTeam: true,
-            awayTeam: true,
-          },
-          orderBy: [{ round: "asc" }, { scheduledAt: "asc" }],
-        },
-      },
-    });
+  if (!targetId) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex flex-col font-body transition-colors duration-200">
+        <PublicHeader currentTab="campionat" />
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full space-y-8">
+          <section className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-4xl font-black italic font-headline uppercase tracking-tight">
+                  Clasamente
+                </h1>
+                <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-1 max-w-2xl">
+                  Alege un campionat pentru a vizualiza clasamentul general oficial, rezultatele și statisticele live.
+                </p>
+              </div>
+              <span className="text-[10px] font-label font-bold uppercase text-slate-400">
+                {allChampionships.length} competiții
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {allChampionships.map((c) => (
+                <Link
+                  key={c.id}
+                  href={`/campionat?id=${c.id}`}
+                  className="group block p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-lime-500 dark:hover:border-lime-400 transition-all"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+                        {c.sport || "Fotbal"} • Sezon {c.season || "2026"}
+                      </p>
+                      <h2 className="font-headline font-bold text-base sm:text-lg leading-tight mt-1 break-words">
+                        {c.name}
+                      </h2>
+                    </div>
+                    <span className="material-symbols-outlined text-slate-400 group-hover:text-lime-500 transition-colors shrink-0">
+                      arrow_forward
+                    </span>
+                  </div>
+                  <div className="mt-4 flex items-center gap-3 text-[11px] font-label font-bold text-slate-600 dark:text-slate-400">
+                    <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                      {c._count.teams} echipe
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                      {c._count.matches} meciuri
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        </main>
+        <PublicFooter />
+      </div>
+    );
   }
 
-  if (!championship && allChampionships.length > 0) {
-    championship = await prisma.championship.findUnique({
-      where: { id: allChampionships[0].id },
-      include: {
-        teams: {
-          include: {
-            players: true,
-          },
-        },
-        matches: {
-          include: {
-            homeTeam: true,
-            awayTeam: true,
-          },
-          orderBy: [{ round: "asc" }, { scheduledAt: "asc" }],
+  // 2. Fetch targeted championship
+  const championship = await prisma.championship.findUnique({
+    where: { id: targetId },
+    include: {
+      teams: {
+        include: {
+          players: true,
         },
       },
-    });
-  }
+      matches: {
+        include: {
+          homeTeam: true,
+          awayTeam: true,
+        },
+        orderBy: [{ round: "asc" }, { scheduledAt: "asc" }],
+      },
+    },
+  });
 
   const teams = championship?.teams || [];
   const rawMatches = championship?.matches || [];
