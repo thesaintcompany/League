@@ -492,7 +492,7 @@ export default function NewChampionshipPage() {
                     className="px-3.5 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs shrink-0 flex items-center gap-1"
                     title="Generează alt nume scurt aleatoriu"
                   >
-                    <span class="material-symbols-outlined">gl<</span>
+                    <span className="material-symbols-outlined">flag</span>
                   </button>
                 </div>
               </div>

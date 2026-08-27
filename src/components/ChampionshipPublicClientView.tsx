@@ -193,8 +193,8 @@ export function ChampionshipPublicClientView({
             </span>
             <span className="text-slate-500 dark:text-slate-400 text-xs font-label uppercase tracking-widest font-bold">
               {championship?.scope === "national"
-                ? `<span className="material-symbols-outlined text-xs align-middle">flag</span> Divizia Națională • ${currentSportMeta.name}`
-                : `Campionat Regional • ${championship?.county || "Timiș"}`}
+                ? <><span className="material-symbols-outlined text-xs align-middle">flag</span> Divizia Națională • {currentSportMeta.name}</>
+                : <>Campionat Regional • {championship?.county || "Timiș"}</>}
             </span>
             <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-lime-600 dark:text-lime-400 font-mono text-xs font-bold">
               #{championship?.shareCode || "LP-2026"}

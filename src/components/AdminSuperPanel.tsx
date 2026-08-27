@@ -855,7 +855,7 @@ export function AdminSuperPanel() {
                 title: "Varianta 2 • Linii Drapel & Steel Chrome",
                 subtitle: "Ediția Tricolor & Finisaj Metalic",
                 url: "/images/logos/logo-2.png",
-                badge: "<span className="material-symbols-outlined text-xs align-middle">flag</span> Drapel Național",
+                badge: "Drapel Național (flag)",
                 badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
                 description:
                   "Linii dinamice în culorile drapelului României cu minge de meci lucioasă și contur metalic robust.",
@@ -2714,6 +2714,7 @@ export function AdminSuperPanel() {
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
               <span className="text-[10px] font-label font-bold uppercase text-slate-400 tracking-widest block">
                 <span className="text-[10px] font-label font-bold uppercase tracking-widest text-red-400 block">NOUA PAROLĂ PENTRU SUPERADMIN:
+                </span>
               </span>
               <div className="flex items-center justify-between bg-slate-900 px-3.5 py-2.5 rounded-xl border border-lime-500/40">
                 <code className="text-sm font-mono font-bold text-lime-400 select-all">

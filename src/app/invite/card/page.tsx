@@ -21,7 +21,7 @@ export default function InviteCardPage() {
   useEffect(() => {
     if (!photoFile) { setPreview(null); return; }
     const r = new FileReader();
-    r.onload = (e) => setPreview((e.target?.result as string) || null);
+    r.onload = (e) => setPreview(((e.currentTarget as FileReader).result as string) || null);
     r.readAsDataURL(photoFile);
   }, [photoFile]);
 
@@ -35,7 +35,7 @@ export default function InviteCardPage() {
       if (photoFile) {
         photoBase64 = await new Promise<string>((resolve, reject) => {
           const r = new FileReader();
-          r.onload = () => resolve((r.target?.result as string) || "");
+          r.onload = () => resolve((r.result as string) || "");
           r.onerror = reject;
           r.readAsDataURL(photoFile);
         });

@@ -747,7 +747,8 @@ export function RefereeDashboardPanel({
                               : ev.type === "red_card"
                                 ? <span className="material-symbols-outlined text-xs">cancel</span>
                                 : <span className="material-symbols-outlined text-xs">target</span>
-                        </span>
+                              }
+                            </span>
                         <span className="font-bold text-lime-400">Min. {ev.minute}&apos;</span>
                         <span className="text-white font-bold">{ev.playerName}</span>
                         <span className="text-[10px] text-slate-400 font-label">

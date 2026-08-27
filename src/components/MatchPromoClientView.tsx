@@ -195,7 +195,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
               </div>
             ) : (
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label shadow-lg">
-                <span class="material-symbols-outlined">gl<</span> MECIUL ETAPEI • {champName}
+                <span className="material-symbols-outlined">flag</span> MECIUL ETAPEI • {champName}
               </div>
             )}
           </div>

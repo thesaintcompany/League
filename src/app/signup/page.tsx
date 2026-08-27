@@ -148,11 +148,9 @@ export default function SignUpPage() {
                     ))}
                   </div>
                 </div>
-              )}
+            )}
 
-              </div>
-
-              {/* Name */}
+            {/* Name */}
               <div>
                 <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
                   Nume Complet
