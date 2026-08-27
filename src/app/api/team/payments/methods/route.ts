@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
       userId,
       type,
       provider,
+      providerId: body.providerId || null,
       cardBrand,
       cardLast4: cardLast4 || null,
       cardExpMonth: cardExpMonth ? Number(cardExpMonth) : null,
@@ -43,7 +44,22 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return NextResponse.json({ ok: true, paymentMethod });
+  // Do NOT echo sensitive card data back to the client.
+  return NextResponse.json({
+    ok: true,
+    paymentMethod: {
+      id: paymentMethod.id,
+      type: paymentMethod.type,
+      provider: paymentMethod.provider,
+      cardBrand: paymentMethod.cardBrand,
+      cardLast4: paymentMethod.cardLast4,
+      cardExpMonth: paymentMethod.cardExpMonth,
+      cardExpYear: paymentMethod.cardExpYear,
+      isDefault: paymentMethod.isDefault,
+      isActive: paymentMethod.isActive,
+      createdAt: paymentMethod.createdAt,
+    },
+  });
 }
 
 export async function DELETE(req: NextRequest) {
