@@ -94,7 +94,7 @@ export function Sidebar({ variant }: SidebarProps) {
       { name: "Panou Manager Echipă", href: "/dashboard/team", icon: "badge" },
       { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
       { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
-      { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
+      { name: "Meciuri Programate", href: "/matches", icon: "account_tree" },
       { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Arene", href: "/venues", icon: "domain" },
       { name: "Corp Arbitri", href: "/referees", icon: "sports" },

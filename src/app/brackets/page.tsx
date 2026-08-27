@@ -308,8 +308,14 @@ export default async function PublicBracketsPage({
               </Link>
             )}
             <Link
-              href="/harta-romaniei"
+              href="/matches"
               className="px-4 py-2.5 sm:py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md"
+            >
+              📋 Lista Meciuri
+            </Link>
+            <Link
+              href="/harta-romaniei"
+              className="px-4 py-2.5 sm:py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 text-slate-900 dark:text-white font-headline font-bold text-xs uppercase tracking-wider transition border border-slate-200 dark:border-white/20"
             >
               🗺️ Harta României
             </Link>

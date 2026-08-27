@@ -43,7 +43,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
 
   const isCampionat = currentTab === "campionat" || pathname === "/campionat" || pathname === "/liga";
   const isRomaniaMap = currentTab === "romania-map" || pathname === "/harta-romaniei";
-  const isBrackets = currentTab === "brackets" || pathname === "/brackets";
+  const isBrackets = currentTab === "brackets" || pathname === "/matches" || pathname === "/brackets";
   const isVenues = currentTab === "venues" || pathname.startsWith("/venues");
   const isPlayers = currentTab === "players" || pathname.startsWith("/players");
   const isTeams = currentTab === "teams" || pathname.startsWith("/teams") || pathname.startsWith("/echipe");
@@ -54,7 +54,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
   const navLinks = [
     { href: "/harta-romaniei", label: "Campionate", active: isRomaniaMap, icon: "map" },
     { href: "/campionat", label: "Clasament", active: isCampionat, icon: "emoji_events" },
-    { href: "/brackets", label: "Meciuri", active: isBrackets, icon: "account_tree" },
+    { href: "/matches", label: "Meciuri", active: isBrackets, icon: "account_tree" },
     { href: "/teams", label: "Echipe", active: isTeams, icon: "groups" },
     { href: "/sanctiuni", label: "Sancțiuni", active: isSanctiuni, icon: "gavel" },
     { href: "/venues", label: "Arene", active: isVenues, icon: "stadium" },
@@ -64,7 +64,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
   const mobileBottomNav = [
     { href: "/harta-romaniei", label: "Harta", active: isRomaniaMap, icon: "map" },
     { href: "/campionat", label: "Clasament", active: isCampionat, icon: "emoji_events" },
-    { href: "/brackets", label: "Meciuri", active: isBrackets, icon: "account_tree" },
+    { href: "/matches", label: "Meciuri", active: isBrackets, icon: "account_tree" },
     { href: "/sanctiuni", label: "Sancțiuni", active: isSanctiuni, icon: "gavel" },
     {
       href: session?.user ? targetDashboard : "/signin",
