@@ -39,13 +39,15 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  accounts        Account[]
-  sessions        Session[]
-  championships   Championship[]
-  venues          Venue[]
-  venueClaims     VenueClaim[]
-  managedTeams    Team[]        @relation("ManagedTeams")
-  sentTeamInvitations TeamInvitation[] @relation("TeamInvitationInviter")
+   accounts        Account[]
+   sessions        Session[]
+   championships   Championship[]
+   venues          Venue[]
+   venueClaims     VenueClaim[]
+   managedTeams    Team[]        @relation("ManagedTeams")
+   sentTeamInvitations TeamInvitation[] @relation("TeamInvitationInviter")
+   paymentMethods  PaymentMethod[]
+   invoices        Invoice[]
 }
 
 model Account {
@@ -187,14 +189,73 @@ model Team {
   subscriptionStartAt   DateTime?
   subscriptionExpiresAt DateTime?
 
-  championship Championship @relation(fields: [championshipId], references: [id], onDelete: Cascade)
-  players       Player[]
-  homeMatches    Match[] @relation("HomeTeam")
-  awayMatches    Match[] @relation("AwayTeam")
-  invitations   TeamInvitation[]
+   championship Championship @relation(fields: [championshipId], references: [id], onDelete: Cascade)
+   players       Player[]
+   homeMatches    Match[] @relation("HomeTeam")
+   awayMatches    Match[] @relation("AwayTeam")
+   invitations   TeamInvitation[]
+   invoices      Invoice[]
 
-  @@index([championshipId])
-  @@index([managerId])
+   @@index([championshipId])
+   @@index([managerId])
+}
+
+model PaymentMethod {
+   id              String   @id @default(cuid())
+   userId          String
+   type            String   // "stripe_card" | "paypal" | "apple_pay" | "google_pay"
+   provider        String   // "stripe" | "paypal" | "apple" | "google"
+   providerId      String?  // external customer id / setup intent id
+   cardBrand       String?  // visa, mastercard, etc (pentru carduri)
+   cardLast4       String?  // ultimele 4 cifre card
+   cardExpMonth    Int?
+   cardExpYear     Int?
+   cardHolder      String?  // numele titularului de pe card
+   isDefault       Boolean  @default(false)
+   isActive        Boolean  @default(true)
+   createdAt       DateTime @default(now())
+   updatedAt       DateTime @updatedAt
+
+   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+   @@index([userId])
+}
+
+model Invoice {
+   id              String   @id @default(cuid())
+   userId          String?
+   teamId          String?
+   amount          Float    // în EUR
+   currency        String   @default("EUR")
+   status          String   @default("pending") // "pending" | "paid" | "failed" | "refunded"
+   paymentMethod   String?  // "stripe_card" | "paypal" etc
+   paymentIntentId String?  // Stripe payment intent id
+   invoiceNumber   String   @unique // ex: INV-2026-001
+   series          String   @default("INV") // seria facturii
+   issueDate       DateTime @default(now())
+   dueDate         DateTime // data de plată
+   paidAt          DateTime?
+   lineItems       String?    // JSON string: [{ description, quantity, unitPrice, total }]
+   subtotal        Float
+   taxAmount       Float?   @default(0) // TVA
+   totalAmount     Float
+   companyName     String?
+   companyCui      String?
+   companyAddress  String?
+   companyPhone    String?
+   companyEmail    String?
+   customerName    String?
+   customerEmail   String?
+   notes           String?
+   createdAt       DateTime @default(now())
+   updatedAt       DateTime @updatedAt
+
+   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+   team Team? @relation(fields: [teamId], references: [id], onDelete: SetNull)
+
+   @@index([userId])
+   @@index([teamId])
+   @@index([invoiceNumber])
 }
 
 model Player {

@@ -100,14 +100,14 @@ export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] 
 
         <div className="relative z-10 max-w-4xl space-y-4">
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-lg flex items-center gap-1.5">
-              <span>🛡️</span> CATALOG OFICIAL CLUBURI &amp; ECHIPE
-            </span>
+                <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-lg">
+                  CATALOG OFICIAL CLUBURI &amp; ECHIPE
+                </span>
             <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-[10px] uppercase font-label">
               {allTeams.length} Cluburi Înregistrate
             </span>
             <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 font-bold text-[10px] uppercase font-label border border-blue-400/30">
-              🇷🇴 Sezonul 2025-2026
+               Sezonul 2025-2026
             </span>
           </div>
 
@@ -146,8 +146,8 @@ export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] 
             <div className="flex flex-wrap gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 shrink-0">
               {[
                 { id: "all", label: "Toate Echipele" },
-                { id: "superliga", label: "🏆 Top SuperLiga" },
-                { id: "regional", label: "⚽ Regionale & Liga 2" },
+                { id: "superliga", label: "Top SuperLiga" },
+                { id: "regional", label: "Regionale & Liga 2" },
               ].map((cat) => (
                 <button
                   key={cat.id}
@@ -233,14 +233,24 @@ export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] 
                   </div>
                 </div>
 
-                <Link
-                  href="/campionat"
-                  className="w-full py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-headline font-bold text-xs uppercase tracking-wider text-center transition flex items-center justify-center gap-1 active:scale-95"
-                >
-                  <span>Vezi Meciuri &amp; Lot</span>
-                  <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                </Link>
-              </div>
+                 {team.id.startsWith("preset-") ? (
+                   <Link
+                     href="/teams"
+                     className="w-full py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-headline font-bold text-xs uppercase tracking-wider text-center transition flex items-center justify-center gap-1 active:scale-95"
+                   >
+                     <span>Vezi Catalog Echipe</span>
+                     <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                   </Link>
+                 ) : (
+                   <Link
+                     href={`/teams/${team.id}`}
+                     className="w-full py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 dark:text-slate-950 font-headline font-bold text-xs uppercase tracking-wider text-center transition flex items-center justify-center gap-1 active:scale-95"
+                   >
+                     <span>Vezi Fanion &amp; Profil</span>
+                     <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                   </Link>
+                 )}
+                 </div>
             );
           })}
         </div>

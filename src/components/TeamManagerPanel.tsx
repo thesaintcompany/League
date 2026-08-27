@@ -66,6 +66,7 @@ interface TeamManagerPanelProps {
   teamSubscriptionPrice?: number;
   freeTeamLimit?: number;
   invitations?: any[];
+  currentUser?: { id: string; name?: string | null; email?: string | null; role?: string | null } | null;
 }
 
 export function TeamManagerPanel({
@@ -75,9 +76,10 @@ export function TeamManagerPanel({
   teamSubscriptionPrice = 60.0,
   freeTeamLimit = 1,
   invitations: initialInvitations = [],
+  currentUser = null,
 }: TeamManagerPanelProps) {
   const [team, setTeam] = useState<TeamData>(initialTeam);
-  const [activeTab, setActiveTab] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar" | "matches">("roster");
+  const [activeTab, setActiveTab] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "payments">("roster");
 
   // Edit Team State
   const [teamName, setTeamName] = useState(team.name);
@@ -86,17 +88,17 @@ export function TeamManagerPanel({
   const [logoUrl, setLogoUrl] = useState(team.logoUrl || "");
   const [description, setDescription] = useState(team.description || "");
   const [formation, setFormation] = useState(team.formation || "4-3-3");
-  const [homeArena, setHomeArena] = useState(team.homeArena || "Stadionul Dan Păltinișanu (Timișoara)");
+  const [homeArena, setHomeArena] = useState(team.homeArena || "Stadionul propriu");
 
   // Invitations State
   const [invitations, setInvitations] = useState<any[]>(initialInvitations);
   const [invitationActionLoading, setInvitationActionLoading] = useState<string | null>(null);
 
   // Staff State
-  const [headCoach, setHeadCoach] = useState(team.headCoach || "Dan Alexa (Licență UEFA Pro)");
-  const [assistantCoach, setAssistantCoach] = useState(team.assistantCoach || "Sorin Rădoi (Secund)");
-  const [medic, setMedic] = useState(team.medic || "Dr. Mihai Popescu (Medic Primar)");
-  const [fitnessCoach, setFitnessCoach] = useState(team.fitnessCoach || "Alexandru Radu (Preparator)");
+  const [headCoach, setHeadCoach] = useState(team.headCoach || "");
+  const [assistantCoach, setAssistantCoach] = useState(team.assistantCoach || "");
+  const [medic, setMedic] = useState(team.medic || "");
+  const [fitnessCoach, setFitnessCoach] = useState(team.fitnessCoach || "");
 
   // New Player Form State
   const [showAddPlayer, setShowAddPlayer] = useState(false);
@@ -127,10 +129,118 @@ export function TeamManagerPanel({
   const [paymentRequired, setPaymentRequired] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
+  // Payment methods & invoices state
+  const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const [showAddCard, setShowAddCard] = useState(false);
+  const [newCardNumber, setNewCardNumber] = useState("");
+  const [newCardExpiry, setNewCardExpiry] = useState("");
+  const [newCardCvc, setNewCardCvc] = useState("");
+  const [newCardHolder, setNewCardHolder] = useState("");
+  const [activePaymentTab, setActivePaymentTab] = useState<"cards" | "invoices">("cards");
+
   function notify(msg: string) {
     setStatusMsg(msg);
     setTimeout(() => setStatusMsg(null), 3500);
   }
+
+  async function loadPaymentData() {
+    try {
+      const res = await fetch("/api/team/payments");
+      if (res.ok) {
+        const data = await res.json();
+        setPaymentMethods(data.paymentMethods || []);
+        setInvoices(data.invoices || []);
+      }
+    } catch {
+      // silent fail
+    }
+  }
+
+  async function handleDeletePaymentMethod(id: string) {
+    const confirmDelete = confirm("Ești sigur că vrei să ștergi această metodă de plată?");
+    if (!confirmDelete) return;
+    try {
+      const res = await fetch(`/api/team/payments/methods/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setPaymentMethods((prev) => prev.filter((m) => m.id !== id));
+        notify("✓ Metoda de plată a fost ștearsă.");
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        notify(`⚠️ Eroare: ${errData.error || res.statusText}`);
+      }
+    } catch {
+      notify("⚠️ Eroare de rețea.");
+    }
+  }
+
+  async function handleSetDefaultPayment(id: string) {
+    try {
+      const res = await fetch(`/api/team/payments/methods/${id}/default`, { method: "POST" });
+      if (res.ok) {
+        setPaymentMethods((prev) =>
+          prev.map((m) => ({ ...m, isDefault: m.id === id }))
+        );
+        notify("✓ Metoda de plată implicită a fost actualizată.");
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        notify(`⚠️ Eroare: ${errData.error || res.statusText}`);
+      }
+    } catch {
+      notify("⚠️ Eroare de rețea.");
+    }
+  }
+
+  async function handleAddCard() {
+    if (!newCardNumber.trim() || !newCardHolder.trim()) {
+      notify("⚠️ Completează numărul cardului și numele titularului.");
+      return;
+    }
+    try {
+      const res = await fetch("/api/team/payments/methods", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "stripe_card",
+          provider: "stripe",
+          cardBrand: detectCardBrand(newCardNumber),
+          cardLast4: newCardNumber.replace(/\s/g, "").slice(-4),
+          cardExpMonth: Number(newCardExpiry.split("/")[0]),
+          cardExpYear: Number(newCardExpiry.split("/")[1]),
+          cardHolder: newCardHolder,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setPaymentMethods((prev) => [...prev, data.paymentMethod]);
+        setShowAddCard(false);
+        setNewCardNumber("");
+        setNewCardExpiry("");
+        setNewCardCvc("");
+        setNewCardHolder("");
+        notify("✓ Cardul a fost adăugat ca metodă de plată.");
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        notify(`⚠️ Eroare: ${errData.error || res.statusText}`);
+      }
+    } catch {
+      notify("⚠️ Eroare de rețea.");
+    }
+  }
+
+  function detectCardBrand(number: string): string {
+    const n = number.replace(/\s/g, "");
+    if (/^4/.test(n)) return "Visa";
+    if (/^5[1-5]/.test(n) || /^2[2-7]/.test(n)) return "Mastercard";
+    if (/^3[47]/.test(n)) return "Amex";
+    if (/^6/.test(n)) return "Discover";
+    return "Card";
+  }
+
+  // Load payment data on mount
+  useEffect(() => {
+    loadPaymentData();
+  }, []);
 
   async function handleInvitationAction(invitationId: string, action: "accept" | "reject") {
     setInvitationActionLoading(invitationId);
@@ -232,8 +342,13 @@ export function TeamManagerPanel({
 
       if (!res.ok) {
         if (data.error === "payment_required") {
+          const hasPaymentMethod = paymentMethods.some((m) => m.isActive);
+          if (!hasPaymentMethod) {
+            setPaymentError("💳 Nu ai o metodă de plată activă. Adaugă un card înainte de a crea o echipă plătită.");
+          } else {
+            setPaymentError(data.message || "Plată necesară pentru echipă suplimentară.");
+          }
           setPaymentRequired(true);
-          setPaymentError(data.message || "Plată necesară pentru echipă suplimentară.");
           setBusy(false);
           return;
         }
@@ -292,6 +407,9 @@ export function TeamManagerPanel({
         const data = await res.json();
         setTeam((prev) => ({ ...prev, ...data.team }));
         notify("✓ Configurația clubului și staff-ul au fost salvate cu succes!");
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        notify(`⚠️ Eroare la salvare: ${errData.error || res.statusText}`);
       }
     } catch {
       notify("⚠️ Eroare la salvare.");
@@ -354,6 +472,9 @@ export function TeamManagerPanel({
         setNewPlayerNumber("");
         setShowAddPlayer(false);
         notify("✓ Jucător adăugat în lot!");
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        notify(`⚠️ Eroare la adăugare: ${errData.error || res.statusText}`);
       }
     } catch {
       notify("⚠️ Eroare la adăugare.");
@@ -411,6 +532,9 @@ export function TeamManagerPanel({
         setInviteName("");
         setInviteNumber("");
         notify("✓ Invitația pe email a fost generată și trimisă!");
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        notify(`⚠️ Eroare: ${errData.error || res.statusText}`);
       }
     } catch {
       notify("⚠️ Eroare la trimiterea invitației.");
@@ -743,6 +867,7 @@ export function TeamManagerPanel({
           { id: "staff", label: "Staff Tehnic & Antrenori 📋", icon: "badge" },
           { id: "calendar", label: `Calendar & Traseu Meciuri (${allMatches.length}) 🗺️`, icon: "calendar_month" },
           { id: "matches", label: "Meciuri & Invitații 📅", icon: "sports_soccer" },
+          { id: "payments", label: "Metode de Plată & Facturi 💳", icon: "payments" },
         ].map((t) => (
           <button
             key={t.id}
@@ -1626,6 +1751,265 @@ export function TeamManagerPanel({
                 })}
               </div>
             )}
+          </div>
+         </div>
+       )}
+
+      {/* 8. TAB 7: Metode de Plată & Facturi */}
+      {activeTab === "payments" && (
+        <div className="space-y-8">
+          <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-6">
+            <div className="flex flex-wrap gap-2 border-b border-slate-800 pb-3 mb-4">
+              <button
+                type="button"
+                onClick={() => setActivePaymentTab("cards")}
+                className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 border ${activePaymentTab === "cards"
+                    ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
+                    : "bg-slate-800 text-slate-400 border-slate-700 hover:border-slate-600 hover:text-white"
+                  }`}
+              >
+                <span className="material-symbols-outlined text-base">credit_card</span>
+                <span>Metode de Plată</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActivePaymentTab("invoices")}
+                className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 border ${activePaymentTab === "invoices"
+                    ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
+                    : "bg-slate-800 text-slate-400 border-slate-700 hover:border-slate-600 hover:text-white"
+                  }`}
+              >
+                <span className="material-symbols-outlined text-base">receipt_long</span>
+                <span>Facturi</span>
+              </button>
+            </div>
+
+            {/* Payment Methods Tab */}
+            {activePaymentTab === "cards" && (
+              <div className="space-y-5">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-bold font-headline uppercase text-white">Cardurile de Plată Salonate</h3>
+                  <button
+                    type="button"
+                    onClick={() => setShowAddCard(true)}
+                    className="px-4 py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase flex items-center gap-1.5 shadow-md transition"
+                  >
+                    <span className="material-symbols-outlined text-sm">add</span>
+                    Adaugă Card
+                  </button>
+                </div>
+
+                {showAddCard && (
+                  <div className="p-5 rounded-2xl bg-slate-950 border border-emerald-500/30 space-y-4 animate-in fade-in">
+                    <h4 className="text-sm font-bold font-headline uppercase text-emerald-400">Adaugă Card Nou (Stripe)</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="sm:col-span-2">
+                        <label className="text-[10px] font-label font-bold text-slate-400 uppercase block mb-1.5">
+                          Număr Card
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="4242 4242 4242 4242"
+                          value={newCardNumber}
+                          onChange={(e) => setNewCardNumber(e.target.value)}
+                          maxLength={19}
+                          className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-lime-400 font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-label font-bold text-slate-400 uppercase block mb-1.5">
+                          Data Expirării
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="MM/AA"
+                          value={newCardExpiry}
+                          onChange={(e) => setNewCardExpiry(e.target.value)}
+                          maxLength={5}
+                          className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-lime-400 font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-label font-bold text-slate-400 uppercase block mb-1.5">
+                          CVC
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="123"
+                          value={newCardCvc}
+                          onChange={(e) => setNewCardCvc(e.target.value)}
+                          maxLength={4}
+                          className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-lime-400 font-mono"
+                        />
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label className="text-[10px] font-label font-bold text-slate-400 uppercase block mb-1.5">
+                          Numele pe Card
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="ex: Maria Ionescu"
+                          value={newCardHolder}
+                          onChange={(e) => setNewCardHolder(e.target.value)}
+                          className="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-lime-400"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-end gap-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowAddCard(false)}
+                        className="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 text-xs font-bold"
+                      >
+                        Anulează
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleAddCard}
+                        className="px-5 py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase shadow-md"
+                      >
+                        Salvează Cardul
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {paymentMethods.length === 0 ? (
+                  <div className="p-6 text-center text-sm text-slate-400 bg-slate-950 border border-slate-800 rounded-2xl italic">
+                    Nu ai nicio metodă de plată salvată. Adaugă un card pentru a crea echipe plătite.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {paymentMethods.map((pm) => (
+                      <div
+                        key={pm.id}
+                        className="p-4 rounded-2xl border border-slate-700 bg-slate-950 flex items-center justify-between"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-2xl text-slate-500">
+                            {pm.cardBrand === "Visa" ? "credit_card" : pm.cardBrand === "Mastercard" ? "credit_card" : "payment"}
+                          </span>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-headline font-bold text-sm text-white">{pm.cardBrand || "Card"}</span>
+                              <span className="text-xs text-slate-500">•••• •••• •••• {pm.cardLast4 || "____"}</span>
+                              {pm.cardExpMonth && pm.cardExpYear && (
+                                <span className="text-xs text-slate-500">
+                                  {String(pm.cardExpMonth).padStart(2, "0")}/{String(pm.cardExpYear).slice(-2)}
+                                </span>
+                              )}
+                            </div>
+                            <span className="text-[10px] text-slate-400">
+                              {pm.isDefault ? "Implicit" : "Secundar"}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {!pm.isDefault && (
+                            <button
+                              type="button"
+                              onClick={() => handleSetDefaultPayment(pm.id)}
+                              className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-lime-400 text-xs font-bold transition"
+                            >
+                              Setează ca Implicit
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => handleDeletePaymentMethod(pm.id)}
+                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-red-400 text-xs transition"
+                            title="Șterge"
+                          >
+                            <span className="material-symbols-outlined text-sm">delete</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Invoices Tab */}
+            {activePaymentTab === "invoices" && (
+              <div className="space-y-5">
+                <h3 className="text-lg font-bold font-headline uppercase text-white">Factura Ta</h3>
+
+                {invoices.length === 0 ? (
+                  <div className="p-6 text-center text-sm text-slate-400 bg-slate-950 border border-slate-800 rounded-2xl italic">
+                    Nu ai emis încă nicio factură. Facturile tale apar aici după crearea unei echipe plătite.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {invoices.map((inv) => (
+                      <div
+                        key={inv.id}
+                        className="p-4 rounded-2xl border border-slate-700 bg-slate-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                      >
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="material-symbols-outlined text-lime-400">receipt</span>
+                            <span className="font-headline font-bold text-sm text-white">
+                              {inv.invoiceNumber || inv.id}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-3 mt-1 text-xs font-label text-slate-400">
+                            <span>📅 Emisă: {new Date(inv.issueDate).toLocaleDateString("ro-RO")}</span>
+                            <span>📅 Scadentă: {new Date(inv.dueDate).toLocaleDateString("ro-RO")}</span>
+                            <span className={`font-bold ${
+                              inv.status === "paid" ? "text-emerald-400" : inv.status === "pending" ? "text-amber-400" : "text-red-400"
+                            }`}>
+                              {inv.status === "paid" ? "Plătită" : inv.status === "pending" ? "În Așteptare" : inv.status}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <span className="font-headline font-black text-lg text-white">
+                            {inv.totalAmount} {inv.currency || "EUR"}
+                          </span>
+                          <div className="text-[10px] text-slate-500 mt-1">
+                            {inv.lineItems ? "Detaliu disponibil" : "Fără detalii"}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Payment Info Panel */}
+          <div className="card p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-4">
+            <h3 className="text-lg font-bold font-headline uppercase text-white">
+              Informații de Facturare ale Contului
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs font-label">
+              <div>
+                <span className="text-slate-500">Nume Cont Manager:</span>
+                <span className="text-white font-bold ml-2">{currentUser?.name || "N/A"}</span>
+              </div>
+              <div>
+                <span className="text-slate-500">Email:</span>
+                <span className="text-white font-bold ml-2">{currentUser?.email || "N/A"}</span>
+              </div>
+              <div>
+                <span className="text-slate-500">Companie:</span>
+                <span className="text-white font-bold ml-2">buu.ro S.R.L.</span>
+              </div>
+              <div>
+                <span className="text-slate-500">Preț Abonament Echipă:</span>
+                <span className="text-lime-400 font-bold ml-2">{teamSubscriptionPrice} EUR / an</span>
+              </div>
+              <div>
+                <span className="text-slate-500">Echipe Gratuite:</span>
+                <span className="text-white font-bold ml-2">{freeTeamLimit}</span>
+              </div>
+              <div>
+                <span className="text-slate-500">Echipe Create:</span>
+                <span className="text-white font-bold ml-2">{teamCount}</span>
+              </div>
+            </div>
           </div>
         </div>
       )}

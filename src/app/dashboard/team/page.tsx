@@ -72,27 +72,14 @@ export default async function TeamManagerDashboardPage() {
 
     team = await prisma.team.create({
       data: {
-        name: "Politehnica Timișoara",
-        shortName: "POL",
+        name: `${user.name || "Managerul meu"} F.C.`,
+        shortName: user.name ? user.name.split(" ").map((w: string) => w[0]).join("").substring(0, 3).toUpperCase() : "F.C.",
         color: "#581c87",
+        description: `Echipa mea de fotbal – în căștei îți poti schimba numele, culorea și badge-ul din panoul de configurare.`,
         championshipId: defaultChamp.id,
         managerId: validOwnerId,
         formation: "4-3-3",
-        homeArena: "Stadionul Dan Păltinișanu (Timișoara)",
-        headCoach: "Dan Alexa (Licență UEFA Pro)",
-        assistantCoach: "Sorin Rădoi (Secund)",
-        medic: "Dr. Mihai Popescu",
-        fitnessCoach: "Alexandru Radu",
-        players: {
-          create: [
-            { name: "Cosmin Bîrnoi", number: 10, position: "Atacant", isStarter: true, goals: 14, assists: 6 },
-            { name: "Cătălin Oancea", number: 1, position: "Portar", isStarter: true, goals: 0, assists: 0 },
-            { name: "Denis Radu", number: 4, position: "Fundaș Central", isStarter: true, goals: 1, assists: 2 },
-            { name: "Alin Ignea", number: 8, position: "Mijlocaș", isStarter: true, goals: 5, assists: 8 },
-            { name: "Octavian Ursu", number: 7, position: "Extremă", isStarter: true, goals: 8, assists: 5 },
-            { name: "Marius Staicu", number: 9, position: "Atacant", isStarter: false, goals: 4, assists: 1 },
-          ],
-        },
+        homeArena: "Alege un stadion pentru echipa ta",
       },
       include: {
         championship: true,
@@ -214,6 +201,7 @@ export default async function TeamManagerDashboardPage() {
             teamSubscriptionPrice={settings?.teamSubscriptionPrice ?? 60.0}
             freeTeamLimit={1}
             invitations={invitations}
+            currentUser={{ id: user.id, name: user.name, email: user.email, role: user.role }}
           />
         </main>
       </div>
