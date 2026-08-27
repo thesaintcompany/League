@@ -235,7 +235,7 @@ export function AdminSuperPanel() {
 
   async function handleRevokeAllDemo() {
     const confirmed = confirm(
-      "🚫 ANULARE DREPTURI USERI DEMO & PRECOMPLETARE LOGIN\n\n" +
+      "ANULARE DREPTURI USERI DEMO & PRECOMPLETARE LOGIN\n\n" +
       "Ești sigur că dorești să execuți această acțiune?\n\n" +
       "1. Toți utilizatorii demo vor fi DEZACTIVAȚI definitv.\n" +
       "2. Precompletarea conturilor demo pe pagina de autentificare va fi ELIMINATĂ.\n" +
@@ -253,7 +253,7 @@ export function AdminSuperPanel() {
       });
       const data = await res.json();
       if (res.ok) {
-        showToast(data.message || "Drepturile demo au fost anulate cu succes! ✓");
+        showToast(data.message || "Drepturile demo au fost anulate cu succes!");
         if (data.newSuperAdminPassword) {
           setNewSuperAdminPassModal(data.newSuperAdminPassword);
         }
@@ -275,7 +275,7 @@ export function AdminSuperPanel() {
         ?          "Sigur dorești să DEZACTIVEZI toți utilizatorii demo?\n\n" +
         "Conturile demonstrative vor fi marcate ca DEZACTIVATE și nu se vor mai putea autentifica.\n\n" +
         " Utilizatorii reali și arenele NU sunt afectați!"
-        : "⚡ Sigur dorești să REACTIVEZI toți utilizatorii demo?"
+        : "Sigur dorești să REACTIVEZI toți utilizatorii demo?"
     );
     if (!confirmed) return;
 
@@ -290,7 +290,7 @@ export function AdminSuperPanel() {
       });
       const data = await res.json();
       if (res.ok) {
-        showToast(data.message || "Operațiune realizată cu succes! ✓");
+        showToast(data.message || "Operațiune realizată cu succes!");
         loadData();
       } else {
         alert(data.error || "Eroare la actualizarea utilizatorilor demo.");
@@ -363,7 +363,7 @@ export function AdminSuperPanel() {
       if (res.ok) {
         setActiveLogoUrl(url);
         window.dispatchEvent(new CustomEvent("app-logo-updated", { detail: { logoUrl: url } }));
-        showToast("Logo-ul principal al platformei a fost actualizat pe tot site-ul! ✓");
+        showToast("Logo-ul principal al platformei a fost actualizat pe tot site-ul! ");
       } else {
         alert(data.error || "Eroare la actualizarea logo-ului.");
       }
@@ -392,7 +392,7 @@ export function AdminSuperPanel() {
       });
       const data = await res.json();
       if (res.ok) {
-        showToast(data.message || "Operațiunea a fost executată cu succes! ✓");
+        showToast(data.message || "Operațiunea a fost executată cu succes! ");
         loadData();
       } else {
         alert(data.error || "Eroare la procesarea cererii.");
@@ -406,7 +406,7 @@ export function AdminSuperPanel() {
 
   function handleExportUsers(format: "json" | "csv") {
     window.open(`/api/admin/export-users?format=${format}&type=real`, "_blank");
-    showToast(`Fișierul de export utilizatori (${format.toUpperCase()}) a fost descărcat! ✓`);
+    showToast(`Fișierul de export utilizatori (${format.toUpperCase()}) a fost descărcat! `);
   }
 
   async function handleSaveTicketSettings(e: React.FormEvent) {
@@ -419,7 +419,7 @@ export function AdminSuperPanel() {
         body: JSON.stringify(ticketSettings),
       });
       if (res.ok) {
-        showToast("Setările API și comisionul au fost salvate cu succes! ✓");
+        showToast("Setările API și comisionul au fost salvate cu succes! ");
         loadData();
       }
     } catch (err) {
@@ -481,7 +481,7 @@ export function AdminSuperPanel() {
           body: JSON.stringify(form),
         });
         if (res.ok) {
-          showToast(`Arena "${form.name}" a fost actualizată! ✓`);
+          showToast(`Arena "${form.name}" a fost actualizată! `);
           setModalOpen(false);
           loadData();
         }
@@ -492,7 +492,7 @@ export function AdminSuperPanel() {
           body: JSON.stringify(form),
         });
         if (res.ok) {
-          showToast(`Arena "${form.name}" a fost adăugată în baza de date! ✓`);
+          showToast(`Arena "${form.name}" a fost adăugată în baza de date! `);
           setModalOpen(false);
           loadData();
         }
@@ -567,7 +567,7 @@ export function AdminSuperPanel() {
         body: JSON.stringify({ userId, role: newRole }),
       });
       if (res.ok) {
-        showToast(`Rolul utilizatorului a fost actualizat la "${newRole}"! ✓`);
+        showToast(`Rolul utilizatorului a fost actualizat la "${newRole}"! `);
         setUsers(users.map((u) => (u.id === userId ? { ...u, role: newRole } : u)));
       }
     } catch (err) {
@@ -586,7 +586,7 @@ export function AdminSuperPanel() {
       const data = await res.json();
       if (res.ok) {
         const newStatus = !u.isActive;
-        showToast(data.message || `Statutul utilizatorului ${u.email} a fost schimbat! ✓`);
+        showToast(data.message || `Statutul utilizatorului ${u.email} a fost schimbat! `);
         setUsers(users.map((item) => (item.id === u.id ? { ...item, isActive: newStatus } : item)));
       } else {
         alert(data.error || "Eroare la schimbarea statusului.");
@@ -624,7 +624,7 @@ export function AdminSuperPanel() {
       });
       const data = await res.json();
       if (res.ok) {
-        showToast(`Datele utilizatorului ${editUserForm.email} au fost actualizate! ✓`);
+        showToast(`Datele utilizatorului ${editUserForm.email} au fost actualizate! `);
         setEditUserModalOpen(false);
         setUsers(
           users.map((item) =>
@@ -676,7 +676,7 @@ export function AdminSuperPanel() {
       });
       const data = await res.json();
       if (res.ok) {
-        showToast(data.message || `Parola utilizatorului ${selectedUser.email} a fost resetată! ✓`);
+        showToast(data.message || `Parola utilizatorului ${selectedUser.email} a fost resetată! `);
         setResetPassModalOpen(false);
       } else {
         alert(data.error || "Eroare la resetarea parolei.");
@@ -807,10 +807,10 @@ export function AdminSuperPanel() {
             <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-label font-bold uppercase text-slate-400 tracking-wider">
-                  🔍 Previzualizare Antet Public (Live Demo):
+                  <span className="material-symbols-outlined text-sm">search</span> Previzualizare Antet Public (Live Demo):
                 </span>
                 <span className="text-[10px] font-mono text-lime-400 font-bold">
-                  Sincronizat automat ✓
+                  Sincronizat automat
                 </span>
               </div>
               <div className="bg-slate-950 border border-slate-800/80 px-6 py-3 rounded-xl flex items-center justify-between">
@@ -845,7 +845,7 @@ export function AdminSuperPanel() {
                 title: "Varianta 1 • PRO LIGUE - ROMÂNIA (Principal)",
                 subtitle: "Logo-ul   cu Fulger & Neon Green",
                 url: "/images/logos/logo-1.png",
-                badge: "⚡ Principal • HD Transparent",
+                badge: "bolt Principal • HD Transparent",
                 badgeColor: "bg-lime-400/20 text-lime-400 border-lime-400/30",
                 description:
                   "Logo-ul   PRO LIGUE ROMANIA cu font futuristic, vortex dinamic, fulger auriu și detalii de impact pentru header.",
@@ -949,7 +949,7 @@ export function AdminSuperPanel() {
                     {isSelected ? (
                       <>
                         <span className="material-symbols-outlined text-[18px]">verified</span>
-                        <span>Logo Principal Activ ✓</span>
+                        <span>Logo Principal Activ</span>
                       </>
                     ) : (
                       <>
@@ -1145,7 +1145,7 @@ export function AdminSuperPanel() {
                   className="px-6 py-2.5 rounded-xl bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-sm transition active:scale-95 flex items-center gap-1.5"
                 >
                   <span className="material-symbols-outlined text-sm">save</span>
-                  <span>{savingSettings ? "Se salvează..." : "Salvează Date Legale Operator ✓"}</span>
+                  <span>{savingSettings ? "Se salvează..." : "Salvează Date Legale Operator"}</span>
                 </button>
               </div>
             </form>
@@ -1299,7 +1299,7 @@ export function AdminSuperPanel() {
               <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl">🍎</span>
+                    <span className="text-2xl material-symbols-outlined">apple</span>
                     <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
                       Modul Apple Pay (iOS &amp; Safari)
                     </h3>
@@ -1339,7 +1339,7 @@ export function AdminSuperPanel() {
                         Domeniu Web Verificat:
                       </span>
                       <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
-                        sp.  buu.ro (Verificat ✓)
+                        sp.  buu.ro (Verificat)
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-500 font-body">
@@ -1353,7 +1353,7 @@ export function AdminSuperPanel() {
               <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl">🟢</span>
+                    <span className="text-2xl material-symbols-outlined">circle</span>
                     <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
                       Modul Google Pay (Android &amp; Chrome)
                     </h3>
@@ -1481,7 +1481,7 @@ export function AdminSuperPanel() {
               {/* Webhook Endpoints Box */}
               <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">🔗</span>
+                  <span className="text-xl material-symbols-outlined">link</span>
                   <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
                     Webhook Endpoints Active
                   </h3>
@@ -1511,7 +1511,7 @@ export function AdminSuperPanel() {
                 className="px-8 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md transition active:scale-95 flex items-center gap-2"
               >
                 <span className="material-symbols-outlined text-lg">save</span>
-                <span>{savingSettings ? "Se salvează..." : "Salvează Setările API & Plăți ✓"}</span>
+                <span>{savingSettings ? "Se salvează..." : "Salvează Setările API & Plăți"}</span>
               </button>
             </div>
           </form>
@@ -1720,7 +1720,7 @@ export function AdminSuperPanel() {
                             onChange={(e) => handleRoleChange(u.id, e.target.value)}
                             className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl px-2.5 py-1.5 font-bold focus:outline-none focus:border-lime-500 cursor-pointer"
                           >
-                            <option value="organizer">⚡ Pro Organizer</option>
+                            <option value="organizer"><span className="material-symbols-outlined text-xs">bolt</span> Pro Organizer</option>
                             <option value="super_admin"><span className="material-symbols-outlined">star</span> Super Administrator</option>
                             <option value="referee"><span className="material-symbols-outlined">gavel</span> Arbitru   (RIFA)</option>
                             <option value="arena_owner">Proprietar</option>
@@ -1740,7 +1740,7 @@ export function AdminSuperPanel() {
                               }`}
                             title="Apasă pentru a schimba statusul contului"
                           >
-                            {u.isActive !== false ? "✓ ACTIV" : "🚫 DEZACTIVAT"}
+                            {u.isActive !== false ? "ACTIV" : "🚫 DEZACTIVAT"}
                           </button>
                         </td>
 
@@ -1755,7 +1755,7 @@ export function AdminSuperPanel() {
                             <span className="material-symbols-outlined text-sm">calendar_month</span> {new Date(u.createdAt).toLocaleDateString("ro-RO")} {new Date(u.createdAt).toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}
                           </div>
                           <div className="font-mono text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
-                            🌐 IP: <span className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 font-bold">{u.signupIp || "86.120.45.19"}</span>
+                            <span className="material-symbols-outlined text-sm">language</span> IP: <span className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 font-bold">{u.signupIp || "86.120.45.19"}</span>
                           </div>
                         </td>
 
@@ -1846,7 +1846,7 @@ export function AdminSuperPanel() {
 
             <div className="card p-6 bg-surface-container-lowest border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm">
               <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-                Baschet &amp; Volei 🏀🏐
+                Baschet &amp; Volei <span className="material-symbols-outlined text-sm">sports_basketball</span><span className="material-symbols-outlined text-sm">sports_volleyball</span>
               </span>
               <p className="text-3xl font-black data-font text-purple-500 mt-1">
                 {venues.filter((v) => v.sport === "baschet" || v.sport === "volei").length}
@@ -1873,19 +1873,19 @@ export function AdminSuperPanel() {
               <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-1">
                 <span className="text-slate-400 text-[10px] uppercase font-bold block">Bază de Date</span>
                 <p className="text-sm font-bold text-white">SQLite Engine Pro (WAL Mode)</p>
-                <p className="text-emerald-400 text-[11px]">✓ Conexiune Activă (league.db)</p>
+                <p className="text-emerald-400 text-[11px]"> Conexiune Activă (league.db)</p>
               </div>
 
               <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-1">
                 <span className="text-slate-400 text-[10px] uppercase font-bold block">Runtime &amp; Server</span>
                 <p className="text-sm font-bold text-white">Next.js 14 App Router + Node</p>
-                <p className="text-emerald-400 text-[11px]">✓ Memorie Heap: Stabilă</p>
+                <p className="text-emerald-400 text-[11px]"> Memorie Heap: Stabilă</p>
               </div>
 
               <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-1">
                 <span className="text-slate-400 text-[10px] uppercase font-bold block">Securitate &amp; Sesiuni</span>
                 <p className="text-sm font-bold text-white">NextAuth JWT + RBAC Shield</p>
-                <p className="text-emerald-400 text-[11px]">✓ 0 Alerte Critice</p>
+                <p className="text-emerald-400 text-[11px]"> 0 Alerte Critice</p>
               </div>
             </div>
           </div>
@@ -1984,7 +1984,7 @@ export function AdminSuperPanel() {
                             : "bg-red-500/10 text-red-500 border border-red-500/20"
                             }`}
                         >
-                          {log.status === "success" ? "Succes ✓" : "Blocat ⛔"}
+                          {log.status === "success" ? "Succes " : "Blocat ⛔"}
                         </span>
                       </td>
                       <td className="py-3.5 px-4 text-right text-slate-500 font-mono text-[11px]">
@@ -2144,7 +2144,7 @@ export function AdminSuperPanel() {
                               : "bg-slate-200 dark:bg-slate-800 text-slate-500"
                               }`}
                           >
-                            {v.isActive ? "ACTIV ✓" : "INACTIV"}
+                            {v.isActive ? "ACTIV " : "INACTIV"}
                           </button>
                         </td>
 
@@ -2333,8 +2333,7 @@ export function AdminSuperPanel() {
                 type="button"
                 onClick={() => setModalOpen(false)}
                 className="text-slate-400 hover:text-slate-600 p-1"
-              >
-                ✕
+              ><span className="material-symbols-outlined text-sm">close</span>
               </button>
             </div>
 
@@ -2459,7 +2458,7 @@ export function AdminSuperPanel() {
                       onChange={(e) => setForm({ ...form, floodlights: e.target.checked })}
                       className="rounded text-lime-500 focus:ring-lime-400"
                     />
-                    Nocturnă Funcțională 💡
+                    Nocturnă Funcțională <span className="material-symbols-outlined text-sm">lightbulb</span>
                   </label>
                 </div>
 
@@ -2489,7 +2488,7 @@ export function AdminSuperPanel() {
                   disabled={saving}
                   className="px-6 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-500 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md"
                 >
-                  {saving ? "Se salvează..." : "Salvează Arenă ✓"}
+                  {saving ? "Se salvează..." : "Salvează Arenă"}
                 </button>
               </div>
             </form>
@@ -2515,8 +2514,7 @@ export function AdminSuperPanel() {
                 type="button"
                 onClick={() => setEditUserModalOpen(false)}
                 className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center font-bold"
-              >
-                ✕
+              ><span className="material-symbols-outlined text-sm">close</span>
               </button>
             </div>
 
@@ -2531,7 +2529,7 @@ export function AdminSuperPanel() {
                 </div>
 
                 <div className="p-2.5 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700 text-[10px] font-mono">
-                  <span className="text-slate-400 font-bold block uppercase">🌐 Adresă IP de Înregistrare</span>
+                  <span className="text-slate-400 font-bold block uppercase flex items-center gap-1"><span className="material-symbols-outlined text-xs">language</span> Adresă IP de Înregistrare</span>
                   <span className="text-lime-600 dark:text-lime-400 font-bold text-xs">
                     {selectedUser.signupIp || "86.120.45.19"}
                   </span>
@@ -2586,7 +2584,7 @@ export function AdminSuperPanel() {
                     onChange={(e) => setEditUserForm({ ...editUserForm, role: e.target.value })}
                     className="input text-xs font-bold"
                   >
-                    <option value="organizer">⚡ Pro Organizer</option>
+                    <option value="organizer"><span className="material-symbols-outlined text-xs">bolt</span> Pro Organizer</option>
                     <option value="super_admin"><span className="material-symbols-outlined">star</span> Super Administrator</option>
                     <option value="referee"><span className="material-symbols-outlined">gavel</span> Arbitru   (RIFA)</option>
                     <option value="arena_owner">Proprietar</option>
@@ -2604,8 +2602,8 @@ export function AdminSuperPanel() {
                     onChange={(e) => setEditUserForm({ ...editUserForm, isActive: e.target.value === "active" })}
                     className="input text-xs font-bold"
                   >
-                    <option value="active">✓ ACTIV (Permis Logat)</option>
-                    <option value="inactive">🚫 DEZACTIVAT / SUSPENDAT</option>
+                    <option value="active"><span className="material-symbols-outlined text-xs">check_circle</span> ACTIV (Permis Logat)</option>
+                    <option value="inactive"><span className="material-symbols-outlined text-xs">block</span> DEZACTIVAT / SUSPENDAT</option>
                   </select>
                 </div>
               </div>
@@ -2623,7 +2621,7 @@ export function AdminSuperPanel() {
                   disabled={savingUser}
                   className="px-6 py-2 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md"
                 >
-                  {savingUser ? "Se salvează..." : "Salvează Modificările ✓"}
+                  {savingUser ? "Se salvează..." : "Salvează Modificările"}
                 </button>
               </div>
             </form>
@@ -2650,14 +2648,13 @@ export function AdminSuperPanel() {
                 type="button"
                 onClick={() => setResetPassModalOpen(false)}
                 className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center font-bold"
-              >
-                ✕
+              ><span className="material-symbols-outlined text-sm">close</span>
               </button>
             </div>
 
             <form onSubmit={handleResetPassSubmit} className="space-y-4">
               <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-2xl text-amber-600 dark:text-amber-400 text-xs font-body">
-                💡 Introdu noua parolă pentru contul <strong>{selectedUser.email}</strong>. Utilizatorul se va putea conecta imediat cu noua parolă.
+                <span className="material-symbols-outlined text-sm">lightbulb</span> Introdu noua parolă pentru contul <strong>{selectedUser.email}</strong>. Utilizatorul se va putea conecta imediat cu noua parolă.
               </div>
 
               <div>
@@ -2688,7 +2685,7 @@ export function AdminSuperPanel() {
                   disabled={savingUser}
                   className="px-6 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md"
                 >
-                  {savingUser ? "Se procesează..." : "Setează Noua Parolă ✓"}
+                  {savingUser ? "Se procesează..." : "Setează Noua Parolă"}
                 </button>
               </div>
             </form>
@@ -2726,7 +2723,7 @@ export function AdminSuperPanel() {
                   type="button"
                   onClick={() => {
                     navigator.clipboard.writeText(newSuperAdminPassModal);
-                    showToast("Parola nouă a fost copiată în clipboard! 📋");
+                    showToast("Parola nouă a fost copiată în clipboard!");
                   }}
                   className="px-3 py-1 bg-lime-400 text-slate-950 rounded-lg text-xs font-bold hover:bg-lime-300 transition"
                 >
@@ -2743,7 +2740,7 @@ export function AdminSuperPanel() {
               onClick={() => setNewSuperAdminPassModal(null)}
               className="w-full py-3 bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider rounded-xl transition shadow-lg"
             >
-              Am salvat parola. Închide ✓
+              Am salvat parola. Închide
             </button>
           </div>
         </div>

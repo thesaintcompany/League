@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { isOrganizer } from "@/lib/permissions";
+import { isOrganizer, isTeamLeader } from "@/lib/permissions";
 
 export function CreateFirstChampionshipButton() {
   const { data: session } = useSession();
@@ -14,7 +14,7 @@ export function CreateFirstChampionshipButton() {
       return;
     }
 
-    if (!isOrganizer(session.user)) {
+    if (!isOrganizer(session.user) && !isTeamLeader(session.user)) {
       router.push("/signin?error=organizer_required");
       return;
     }
