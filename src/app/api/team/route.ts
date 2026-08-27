@@ -91,6 +91,7 @@ export async function PUT(req: Request) {
       name: body.name !== undefined ? body.name : team.name,
       shortName: body.shortName !== undefined ? body.shortName : team.shortName,
       color: body.color !== undefined ? body.color : team.color,
+      description: body.description !== undefined ? body.description : team.description,
       headCoach: body.headCoach !== undefined ? body.headCoach : team.headCoach,
       assistantCoach: body.assistantCoach !== undefined ? body.assistantCoach : team.assistantCoach,
       medic: body.medic !== undefined ? body.medic : team.medic,

@@ -112,6 +112,8 @@ export default async function TeamManagerDashboardPage() {
     name: team.name,
     shortName: team.shortName,
     color: team.color,
+    logoUrl: team.logoUrl,
+    description: team.description,
     headCoach: team.headCoach,
     assistantCoach: team.assistantCoach,
     medic: team.medic,

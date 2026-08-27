@@ -36,6 +36,7 @@ interface TeamData {
   shortName: string | null;
   color: string | null;
   logoUrl?: string | null;
+  description?: string | null;
   headCoach: string | null;
   assistantCoach: string | null;
   medic: string | null;
@@ -76,13 +77,14 @@ export function TeamManagerPanel({
   invitations: initialInvitations = [],
 }: TeamManagerPanelProps) {
   const [team, setTeam] = useState<TeamData>(initialTeam);
-  const [activeTab, setActiveTab] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar">("roster");
+  const [activeTab, setActiveTab] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar" | "matches">("roster");
 
   // Edit Team State
   const [teamName, setTeamName] = useState(team.name);
   const [shortName, setShortName] = useState(team.shortName || "");
   const [color, setColor] = useState(team.color || "#84cc16");
   const [logoUrl, setLogoUrl] = useState(team.logoUrl || "");
+  const [description, setDescription] = useState(team.description || "");
   const [formation, setFormation] = useState(team.formation || "4-3-3");
   const [homeArena, setHomeArena] = useState(team.homeArena || "Stadionul Dan Păltinișanu (Timișoara)");
 
@@ -119,6 +121,7 @@ export function TeamManagerPanel({
   const [newTeamName, setNewTeamName] = useState("");
   const [newTeamShortName, setNewTeamShortName] = useState("");
   const [newTeamColor, setNewTeamColor] = useState("#84cc16");
+  const [newTeamDescription, setNewTeamDescription] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"card" | "apple_pay" | "google_pay" | "invoice">("card");
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentRequired, setPaymentRequired] = useState(false);
@@ -216,12 +219,13 @@ export function TeamManagerPanel({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: newTeamName,
-          shortName: newTeamShortName,
-          color: newTeamColor,
-          paymentMethod,
-          paymentConfirmed: !paymentRequired,
-        }),
+           name: newTeamName,
+           shortName: newTeamShortName,
+           color: newTeamColor,
+           description: newTeamDescription,
+           paymentMethod,
+           paymentConfirmed: !paymentRequired,
+         }),
       });
 
       const data = await res.json().catch(() => ({}));
@@ -240,9 +244,10 @@ export function TeamManagerPanel({
 
       notify(data.message || "Echipa a fost creată cu succes!");
       setShowCreateTeamModal(false);
-      setNewTeamName("");
+       setNewTeamName("");
       setNewTeamShortName("");
       setNewTeamColor("#84cc16");
+      setNewTeamDescription("");
       setPaymentRequired(false);
       setPaymentError(null);
       window.location.reload();
@@ -274,6 +279,7 @@ export function TeamManagerPanel({
           name: teamName,
           shortName,
           color,
+          description,
           formation,
           homeArena,
           headCoach,
@@ -699,6 +705,20 @@ export function TeamManagerPanel({
                   </div>
                 </div>
 
+                <div>
+                  <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+                    Descriere (opțional)
+                  </label>
+                  <textarea
+                    value={newTeamDescription}
+                    onChange={(e) => setNewTeamDescription(e.target.value)}
+                    placeholder="ex: Echipa noastră de fotbal din Timișoara, fondată în 2010..."
+                    maxLength={300}
+                    rows={3}
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-500 resize-none"
+                  />
+                </div>
+
                 {paymentError && <p className="text-xs text-red-500 font-semibold">{paymentError}</p>}
 
                 <button
@@ -722,6 +742,7 @@ export function TeamManagerPanel({
           { id: "invites", label: "Invită Jucători pe Email ✉️", icon: "mail" },
           { id: "staff", label: "Staff Tehnic & Antrenori 📋", icon: "badge" },
           { id: "calendar", label: `Calendar & Traseu Meciuri (${allMatches.length}) 🗺️`, icon: "calendar_month" },
+          { id: "matches", label: "Meciuri & Invitații 📅", icon: "sports_soccer" },
         ].map((t) => (
           <button
             key={t.id}
@@ -1011,6 +1032,20 @@ export function TeamManagerPanel({
                     <span className="text-xs font-mono text-slate-400">{color}</span>
                   </div>
                 </div>
+              </div>
+
+               <div>
+                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
+                  Descriere echipei
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="ex: Echipa noastră de fotbal din Timișoara, fondată în 2010..."
+                  maxLength={300}
+                  rows={3}
+                  className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-400 resize-none"
+                />
               </div>
 
               <div>
@@ -1444,6 +1479,154 @@ export function TeamManagerPanel({
               })}
             </div>
           )}
+         </div>
+       )}
+
+      {/* 7. TAB 6: Meciuri & Invitații */}
+      {activeTab === "matches" && (
+        <div className="space-y-8">
+          {/* Pending Invitation Section */}
+          <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-5">
+            <div className="flex items-center gap-2 pb-3 border-b border-slate-800">
+              <span className="material-symbols-outlined text-lime-400 text-2xl">mail</span>
+              <div>
+                <h3 className="font-headline font-black text-lg sm:text-xl uppercase text-white tracking-tight">
+                  Invitații la Campionate
+                </h3>
+                <p className="text-[11px] sm:text-xs text-slate-400 font-label mt-0.5">
+                  Acceptă sau refuză invitațiile primite de la organizerii de campionate. După acceptare, echipa ta este înscrisă în campionatul respectiv.
+                </p>
+              </div>
+            </div>
+
+            {invitations.length > 0 ? (
+              <div className="space-y-3">
+                {invitations.map((inv) => (
+                  <div
+                    key={inv.id}
+                    className="p-4 rounded-2xl border border-slate-700 bg-slate-800/60 text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black text-white shadow-md"
+                          style={{ backgroundColor: inv.team?.color || "#84cc16" }}
+                        >
+                          {inv.team?.shortName || inv.team?.name?.substring(0, 3)?.toUpperCase() || "TV"}
+                        </span>
+                        <p className="font-headline font-bold text-sm text-white truncate">
+                          {inv.championship?.name || "Campionat"}
+                        </p>
+                      </div>
+                      <p className="text-[11px] text-slate-400 font-label mt-1">
+                        {inv.championship?.sport || "Sport"} • Sezon {inv.championship?.season || "2026"} • {inv.championship?.county || "Național"}
+                      </p>
+                      <p className="text-[10px] text-slate-500 font-label">
+                        Echipa: {inv.team?.name || "N/A"} • Invitat de {inv.inviter?.name || inv.inviter?.email || "Organizator"}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => handleInvitationAction(inv.id, "accept")}
+                        disabled={invitationActionLoading === inv.id}
+                        className="px-4 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase transition disabled:opacity-50"
+                      >
+                        Acceptă
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleInvitationAction(inv.id, "reject")}
+                        disabled={invitationActionLoading === inv.id}
+                        className="px-4 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-headline font-bold text-xs uppercase transition disabled:opacity-50"
+                      >
+                        Refuză
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-6 text-center text-xs text-slate-400 bg-slate-800/30 rounded-2xl italic">
+                Nu ai invitații în așteptare la niciun campionat.
+              </div>
+            )}
+          </div>
+
+          {/* Confirmed Matches Section */}
+          <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-5">
+            <div className="flex items-center gap-2 pb-3 border-b border-slate-800">
+              <span className="material-symbols-outlined text-lime-400 text-2xl">sports_soccer</span>
+              <div>
+                <h3 className="font-headline font-black text-lg sm:text-xl uppercase text-white tracking-tight">
+                  Meciurile Echipei {team.name}
+                </h3>
+                <p className="text-[11px] sm:text-xs text-slate-400 font-label mt-0.5">
+                  Meciurile programate pentru echipa ta. După ce accepți unui campionat, toate meciurile programate vor apărea aici.
+                </p>
+              </div>
+            </div>
+
+            {allMatches.length === 0 ? (
+              <div className="p-6 text-center text-xs text-slate-400 bg-slate-800/30 rounded-2xl italic">
+                Nu există meciuri programate în acest moment pentru {team.name}.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {allMatches.map((m) => {
+                  const isHome = m.homeTeam.id === team.id;
+                  const opponent = isHome ? m.awayTeam : m.homeTeam;
+                  const dateObj = new Date(m.scheduledAt);
+
+                  return (
+                    <div
+                      key={m.id}
+                      className="card p-5 bg-slate-950 border border-slate-800 rounded-2xl shadow-md space-y-3"
+                    >
+                      <div className="flex justify-between items-center text-[10px] font-label text-slate-400 uppercase">
+                        <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 font-bold border border-lime-400/30">
+                          {isHome ? "🏠 Acasă" : "🚌 Deplasare"}
+                        </span>
+                        <span>
+                          {dateObj.toLocaleDateString("ro-RO", { weekday: "short", day: "numeric", month: "short" })} • {dateObj.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between items-center py-1 border-t border-b border-slate-800/80">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs text-white shadow"
+                            style={{ backgroundColor: team.color || "#84cc16" }}
+                          >
+                            {team.shortName || team.name.substring(0, 3)}
+                          </span>
+                          <span className="font-headline font-bold text-xs text-white">
+                            {team.name}
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-mono font-bold text-slate-500">VS</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-headline font-bold text-xs text-white text-right">
+                            {opponent.name}
+                          </span>
+                          <span
+                            className="w-8 h-8 rounded-lg flex items-center justify-center font-black text-xs text-white shadow"
+                            style={{ backgroundColor: opponent.color || "#38bdf8" }}
+                          >
+                            {opponent.shortName || opponent.name.substring(0, 3)}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="text-xs text-slate-400">
+                        <span>🏟️ {m.venue || team.homeArena || "Stadionul Dan Păltinișanu"}</span> • <span>🏆 {m.championship?.name || "Campionat"}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { name, shortName, color, paymentMethod, paymentConfirmed } = body;
+    const { name, shortName, color, description, paymentMethod, paymentConfirmed } = body;
 
     if (!name || !name.trim()) {
       return NextResponse.json({ error: "Numele echipei este obligatoriu" }, { status: 400 });
@@ -83,6 +83,7 @@ export async function POST(req: Request) {
         name: name.trim(),
         shortName: computedShortName,
         color: computedColor,
+        description: description?.trim() || null,
         championshipId: defaultChamp.id,
         managerId: user.id,
         managerEmail: user.email,
