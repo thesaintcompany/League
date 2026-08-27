@@ -101,6 +101,9 @@ export function TeamsTab({
   const isIndividual = isIndividualSport(sport);
   const isPadel = sport.toLowerCase().includes("padel");
   const isPingPong = sport.toLowerCase().includes("ping") || sport.toLowerCase().includes("pong") || sport.toLowerCase().includes("masă") || sport.toLowerCase().includes("masa");
+  const sportLabel = isPingPong ? "Ping-Pong" : isIndividual ? "Tenis" : "Club";
+  const sportPlayersLabel = isPingPong ? "Jucători de Tenis de Masă" : isIndividual ? "Jucători de Tenis" : "Cluburi";
+  const sportPlayerLabel = isPingPong ? "Jucător de Tenis de Masă" : isIndividual ? "Jucător de Tenis" : "Club";
 
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchFilter, setSearchFilter] = useState<string>("");
@@ -155,7 +158,7 @@ export function TeamsTab({
       });
 
       if (res.ok) {
-        setStatusMessage(`✓ ${isIndividual ? "Jucătorul" : "Clubul"} "${teamData.name}" a fost înscris cu succes!`);
+         setStatusMessage(`✓ ${isIndividual ? sportPlayerLabel : "Clubul"} "${teamData.name}" a fost înscris cu succes!`);
         setCustomName("");
         setCustomShortName("");
         setShowCustomForm(false);
@@ -191,7 +194,7 @@ export function TeamsTab({
     }
 
     setBusy(false);
-    setStatusMessage(`✓ ${availableToSeed.length} ${isIndividual ? "jucători au fost adăugați pe tablou" : "cluburi au fost înscrise"}!`);
+    setStatusMessage(`✓ ${availableToSeed.length} ${isIndividual ? sportPlayersLabel.toLowerCase() + " au fost adăugați pe tablou" : "cluburi au fost înscrise"}!`);
     onChanged();
     setTimeout(() => setStatusMessage(null), 3000);
   }
@@ -217,18 +220,18 @@ export function TeamsTab({
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-                {isIndividual ? "🎾 TABLOU JUCĂTORI TENIS" : "🛡️ GESTIUNE CLUBURI & ECHIPE"}
+                {isIndividual ? `🏓 TABLOU ${sportPlayersLabel.toUpperCase()}` : "🛡️ GESTIUNE CLUBURI & ECHIPE"}
               </span>
               <span className="px-3 py-1 rounded-full bg-slate-800 text-lime-400 font-bold text-xs font-label">
-                {teams.length} {isIndividual ? "Jucători Înscriși" : "Echipe Înscrise"}
+                {teams.length} {isIndividual ? `${sportPlayersLabel} Înscriși` : "Echipe Înscrise"}
               </span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black font-headline text-white uppercase tracking-tight">
-              {isIndividual ? "Tablou Jucători Tenis Înscriși" : "Echipe Înscrise în Competiție"}
+              {isIndividual ? `Tablou ${sportPlayersLabel} Înscrși` : "Echipe Înscrise în Competiție"}
             </h2>
             <p className="text-xs text-slate-300 font-body max-w-2xl leading-relaxed">
               {isIndividual
-                ? "Înscrie direct jucătorii de tenis pe tablou (capi de serie sau trageri libere) sau trimite-le link de WhatsApp pentru confirmarea prezenței."
+                ? `Înscrie direct ${sportPlayerLabel.toLowerCase()} pe tablou (capi de serie sau trageri libere) sau trimite-le link de WhatsApp pentru confirmarea prezenței.`
                 : "În calitate de organizator, selectezi cluburile participante din baza de date sau adaugi cluburi noi cu un singur click."}
             </p>
           </div>
@@ -240,7 +243,7 @@ export function TeamsTab({
               onClick={() => handleBulkSeed(4)}
               className="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase tracking-wider transition border border-slate-700 flex items-center gap-1.5"
             >
-              <span>⚡</span> {isIndividual ? "Înscrie Top 4 Jucători" : "Înscrie Top 4 Echipe"}
+                <span>⚡</span> {isIndividual ? `Înscrie Top 4 ${sportPlayerLabel}s` : "Înscrie Top 4 Echipe"}
             </button>
             <button
               type="button"
@@ -248,7 +251,7 @@ export function TeamsTab({
               onClick={() => handleBulkSeed(8)}
               className="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lime-400 font-label font-bold text-xs uppercase tracking-wider transition border border-lime-400/30 flex items-center gap-1.5"
             >
-              <span>🎲</span> {isIndividual ? "Înscrie Top 8 pe Tablou" : "Înscrie Top 8 (Brackets)"}
+              <span>🎲</span> {isIndividual ? `Înscrie Top 8 pe Tablou` : "Înscrie Top 8 (Brackets)"}
             </button>
             <button
               type="button"
@@ -256,7 +259,7 @@ export function TeamsTab({
               className="px-5 py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95"
             >
               <span className="material-symbols-outlined text-base">add_circle</span>
-              {isIndividual ? "Adaugă Jucător Nou" : "Club Personalizat Nou"}
+              {isIndividual ? `Adaugă ${sportPlayerLabel} Nou` : "Club Personalizat Nou"}
             </button>
           </div>
         </div>
@@ -284,7 +287,7 @@ export function TeamsTab({
           <div className="flex justify-between items-center pb-3 border-b border-slate-800">
             <h3 className="text-lg font-bold font-headline text-white uppercase tracking-tight flex items-center gap-2">
               <span className="material-symbols-outlined text-lime-400">{isIndividual ? "person" : "shield"}</span>
-              {isIndividual ? "Adaugă Jucător de Tenis pe Tablou" : "Adaugă un Club Nou în Competiție"}
+              {isIndividual ? `Adaugă ${sportPlayerLabel} pe Tablou` : "Adaugă un Club Nou în Competiție"}
             </h3>
             <button
               type="button"
@@ -302,10 +305,10 @@ export function TeamsTab({
                 className="w-20 h-20 rounded-2xl flex items-center justify-center font-black text-2xl text-white shadow-xl border-2 border-white/20 transition-all duration-300"
                 style={{ backgroundColor: customColor }}
               >
-                {customShortName || customName.substring(0, 3).toUpperCase() || (isIndividual ? "TEN" : "FC")}
+                {customShortName || customName.substring(0, 3).toUpperCase() || (isIndividual ? sportLabel.substring(0, 3).toUpperCase() : "FC")}
               </div>
               <span className="text-xs font-bold text-white font-headline truncate max-w-full">
-                {customName || (isIndividual ? "Nume Jucător" : "Nume Club")}
+                {customName || (isIndividual ? `${sportPlayerLabel}` : "Nume Club")}
               </span>
               <span className="text-[10px] font-label text-slate-400">Previzualizare Tablou</span>
             </div>
@@ -315,7 +318,7 @@ export function TeamsTab({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-label font-bold text-slate-300 uppercase tracking-wider block mb-1.5">
-                    {isIndividual ? "Nume Complet Jucător *" : "Nume Club / Echipă *"}
+                    {isIndividual ? `${sportPlayerLabel} - Nume Complet *` : "Nume Club / Echipă *"}
                   </label>
                   <input
                     type="text"
@@ -387,7 +390,7 @@ export function TeamsTab({
       <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-bold font-headline text-slate-900 dark:text-white uppercase tracking-tight">
-            {isIndividual ? `Tablou Oficial (${teams.length} Jucători Înscriși)` : `Cluburi Înscrise (${teams.length})`}
+            {isIndividual ? `Tablou Oficial (${teams.length} ${sportPlayerLabel.toLowerCase()} înscriși)` : `Cluburi Înscrise (${teams.length})`}
           </h3>
           <span className="text-xs font-label text-slate-500">
             {teams.length === 8 ? "✓ Tablou complet de 8 participanți" : `${teams.length} / 8 recomandați`}
@@ -397,8 +400,8 @@ export function TeamsTab({
         {teams.length === 0 ? (
           <div className="p-8 rounded-2xl bg-slate-50 dark:bg-slate-950 text-center space-y-2 border border-slate-200 dark:border-slate-800">
             <span className="text-3xl">{isIndividual ? "🎾" : "🛡️"}</span>
-            <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
-              {isIndividual ? "Nu există jucători înscriși încă pe tablou." : "Nu există echipe înscrise încă în acest campionat."}
+              <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+              {isIndividual ? `Nu există ${sportPlayerLabel.toLowerCase()} înscriși încă pe tablou.` : "Nu există echipe înscrise încă în acest campionat."}
             </p>
             <p className="text-xs text-slate-500">
               Folosește butoanele de mai sus pentru înscriere rapidă sau trimite linkul de invitație.
@@ -447,7 +450,7 @@ export function TeamsTab({
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
           <div>
             <h3 className="text-base font-bold font-headline text-slate-900 dark:text-white uppercase tracking-tight">
-              {isIndividual ? "Catalog Jucători de Tenis & Vedete FRT" : "Catalog Cluburi Populare din România"}
+              {isIndividual ? `Catalog ${sportPlayersLabel} & Vedete FRT` : "Catalog Cluburi Populare din România"}
             </h3>
             <p className="text-xs text-slate-500 font-label">
               Apasă &quot;+ Înscrie&quot; pentru a adăuga instant un participant pe tablou.
@@ -456,7 +459,7 @@ export function TeamsTab({
 
           <input
             type="text"
-            placeholder={isIndividual ? "Caută jucător tenis..." : "Caută club..."}
+            placeholder={isIndividual ? `Caută ${sportPlayerLabel.toLowerCase()}...` : "Caută club..."}
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
             className="input text-xs w-full sm:w-60"
