@@ -55,7 +55,7 @@ export const AVAILABLE_SPORTS: SportOption[] = [
     id: "pingpong",
     name: "Ping-Pong (Tenis de Masă)",
     shortName: "Ping-Pong",
-    icon: "🎱",
+    icon: "circle",
     accentColor: "text-rose-400 border-rose-400 bg-rose-400/10",
     badgeBg: "bg-rose-400 text-slate-950",
     description: "Turnee de tenis de masă (ping-pong) simplu și dublu, pe categorii de nivel.",

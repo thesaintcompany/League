@@ -120,7 +120,15 @@ DB row: { cardBrand: "Visa", cardLast4: "4242", cardHolder: null, cardExpMonth: 
 
 ## 4. Icon Consistency Fix Applied (Pre-existing)
 
-During investigation, found that Ping-Pong sport entries had empty (`" "`) icons in several selectors (`PlayerProfileForm.tsx:35`, `ArenaOwnerPanel.tsx:58`, `SportContext.tsx:58`, `dashboard/new/page.tsx:381`). Replaced all with the Material Symbol `sports_table_tennis` (table-tennis ball icon) to match the existing pattern at `dashboard/new/page.tsx:811`.
+During investigation, found that Ping-Pong sport entries had empty (`" "`) icons in several selectors (`PlayerProfileForm.tsx:35`, `ArenaOwnerPanel.tsx:58`, `SportContext.tsx:58`, `dashboard/new/page.tsx:381`). Replaced with distinct glyphs so all three racket sports render separate icons:
+
+- **Tenis de Câmp** → `sports_tennis` (Material tennis-ball symbol)
+- **Padel** → `🏓` (emoji paddle+ball; Material Symbols has no dedicated `padel` glyph)
+- **Ping-Pong** → `circle` (Material Symbols `circle` glyph — renders as a solid round ball, matching the requested "o bila rotunda")
+
+The `circle` glyph is served by the existing `@import` of `Material Symbols Outlined` in `globals.css` (line 1). It renders as a solid circle inside any `<span class="material-symbols-outlined">circle</span>`.
+
+> Note: The Android XML `<ImageView android:src="@drawable/circle_24" />` and `<link ...&icon_names=padel>` are not applicable to this Next.js/web app. The web-native equivalents (`circle` Material glyph + `🏓` emoji) were used instead.
 
 ---
 
