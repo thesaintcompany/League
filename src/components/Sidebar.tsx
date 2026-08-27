@@ -72,13 +72,13 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
 
   if (isSuperAdminRole) {
     navItems = [
-      { name: "Setări Aplicație & Logo", href: "/dashboard/admin?tab=branding", icon: "tune" },
+      { name: "Setări", href: "/dashboard/admin?tab=branding", icon: "tune" },
       { name: "API & Integrare Plăți", href: "/dashboard/admin?tab=api_integrations", icon: "key" },
-      { name: "Permisiuni & Utilizatori", href: "/dashboard/admin?tab=users", icon: "manage_accounts" },
+      { name: "Utilizatori", href: "/dashboard/admin?tab=users", icon: "manage_accounts" },
       { name: "Statistici Utilizare", href: "/dashboard/admin?tab=analytics", icon: "analytics" },
-      { name: "Istoric Login & Securitate", href: "/dashboard/admin?tab=login_history", icon: "history" },
-      { name: "Infrastructură Arene", href: "/dashboard/admin?tab=venues", icon: "domain" },
-      { name: "Bază de Date & Backup", href: "/dashboard/admin?tab=data_export", icon: "database" },
+      { name: "Istoric Login", href: "/dashboard/admin?tab=login_history", icon: "history" },
+      { name: "Arene", href: "/dashboard/admin?tab=venues", icon: "domain" },
+      { name: "DB", href: "/dashboard/admin?tab=data_export", icon: "database" },
     ];
   } else if (role === "referee") {
     navItems = [

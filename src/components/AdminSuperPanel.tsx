@@ -2196,7 +2196,7 @@ export function AdminSuperPanel() {
                     Arene Naționale (Permanent)
                   </span>
                   <span className="font-bold text-white text-xs">
-                    59 Arene • 100% Protejate
+                    59 Arene •
                   </span>
                 </div>
               </div>

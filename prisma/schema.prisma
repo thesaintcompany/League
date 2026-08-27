@@ -111,6 +111,7 @@ model Venue {
   tickerText    String?  // Scrolling ticker announcement
   tickerActive  Boolean  @default(false)
   tickerSpeed   Int      @default(20)
+  isDemo        Boolean  @default(false) // Arena demonstrativă: protejată de ștergere (100% safe)
   calendarSyncUrl String? // URL for external .ics sync (e.g. Google Calendar)
   createdAt     DateTime @default(now())
 
