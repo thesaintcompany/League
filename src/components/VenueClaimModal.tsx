@@ -79,7 +79,7 @@ export function VenueClaimModal({
         <div className="space-y-2 pr-8">
           <div className="flex items-center gap-2">
             <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label tracking-widest">
-              🏛️ REVENDICARE  Ă ARENĂ
+              <span className="material-symbols-outlined">account_balance</span> REVENDICARE  Ă ARENĂ
             </span>
             <span className="text-xs font-mono font-bold text-slate-400">
               ID: {venueId.slice(-6).toUpperCase()}
@@ -257,7 +257,7 @@ export function VenueClaimModal({
             {/* Submit Action */}
             <div className="flex items-center justify-between gap-4 pt-2">
               <p className="text-[11px] text-slate-500 font-label">
-                🛡️ Datele sunt transmise securizat către SuperAdmin pentru verificare și atribuire acces.
+                <span className="material-symbols-outlined">shield</span> Datele sunt transmise securizat către SuperAdmin pentru verificare și atribuire acces.
               </p>
 
               <div className="flex items-center gap-2 shrink-0">

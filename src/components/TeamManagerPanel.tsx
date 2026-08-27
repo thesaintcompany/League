@@ -169,10 +169,10 @@ export function TeamManagerPanel({
         notify("✓ Metoda de plată a fost ștearsă.");
       } else {
         const errData = await res.json().catch(() => ({}));
-        notify(`⚠️ Eroare: ${errData.error || res.statusText}`);
+        notify(`Eroare: ${errData.error || res.statusText}`);
       }
     } catch {
-      notify("⚠️ Eroare de rețea.");
+      notify("Eroare de rețea.");
     }
   }
 
@@ -186,16 +186,16 @@ export function TeamManagerPanel({
         notify("✓ Metoda de plată implicită a fost actualizată.");
       } else {
         const errData = await res.json().catch(() => ({}));
-        notify(`⚠️ Eroare: ${errData.error || res.statusText}`);
+        notify(`Eroare: ${errData.error || res.statusText}`);
       }
     } catch {
-      notify("⚠️ Eroare de rețea.");
+      notify("Eroare de rețea.");
     }
   }
 
   async function handleAddCard() {
     if (!newCardNumber.trim() || !newCardHolder.trim()) {
-      notify("⚠️ Completează numărul cardului și numele titularului.");
+      notify("Completează numărul cardului și numele titularului.");
       return;
     }
     try {
@@ -223,10 +223,10 @@ export function TeamManagerPanel({
         notify("✓ Cardul a fost adăugat ca metodă de plată.");
       } else {
         const errData = await res.json().catch(() => ({}));
-        notify(`⚠️ Eroare: ${errData.error || res.statusText}`);
+        notify(`Eroare: ${errData.error || res.statusText}`);
       }
     } catch {
-      notify("⚠️ Eroare de rețea.");
+      notify("Eroare de rețea.");
     }
   }
 
@@ -411,10 +411,10 @@ export function TeamManagerPanel({
         notify("✓ Configurația clubului și staff-ul au fost salvate cu succes!");
       } else {
         const errData = await res.json().catch(() => ({}));
-        notify(`⚠️ Eroare la salvare: ${errData.error || res.statusText}`);
+        notify(`Eroare la salvare: ${errData.error || res.statusText}`);
       }
     } catch {
-      notify("⚠️ Eroare la salvare.");
+      notify("Eroare la salvare.");
     } finally {
       setBusy(false);
     }
@@ -442,7 +442,7 @@ export function TeamManagerPanel({
         notify(`✓ Jucătorul a fost trecut ca ${!currentStarter ? "TITULAR" : "REZERVĂ"}.`);
       }
     } catch {
-      notify("⚠️ Eroare la actualizare statut.");
+      notify("Eroare la actualizare statut.");
     } finally {
       setBusy(false);
     }
@@ -476,10 +476,10 @@ export function TeamManagerPanel({
         notify("✓ Jucător adăugat în lot!");
       } else {
         const errData = await res.json().catch(() => ({}));
-        notify(`⚠️ Eroare la adăugare: ${errData.error || res.statusText}`);
+        notify(`Eroare la adăugare: ${errData.error || res.statusText}`);
       }
     } catch {
-      notify("⚠️ Eroare la adăugare.");
+      notify("Eroare la adăugare.");
     } finally {
       setBusy(false);
     }
@@ -501,7 +501,7 @@ export function TeamManagerPanel({
         notify("✓ Jucător eliminat din lot.");
       }
     } catch {
-      notify("⚠️ Eroare la ștergere.");
+      notify("Eroare la ștergere.");
     } finally {
       setBusy(false);
     }
@@ -536,10 +536,10 @@ export function TeamManagerPanel({
         notify("✓ Invitația pe email a fost generată și trimisă!");
       } else {
         const errData = await res.json().catch(() => ({}));
-        notify(`⚠️ Eroare: ${errData.error || res.statusText}`);
+        notify(`Eroare: ${errData.error || res.statusText}`);
       }
     } catch {
-      notify("⚠️ Eroare la trimiterea invitației.");
+      notify("Eroare la trimiterea invitației.");
     } finally {
       setBusy(false);
     }

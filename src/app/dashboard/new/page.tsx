@@ -372,7 +372,7 @@ export default function NewChampionshipPage() {
                 },
                 {
                   id: "padel_tour" as const,
-                  icon: "🏓",
+                  icon: "sports_tennis",
                   title: "Padel  ",
                   desc: "Terenuri & Perechi",
                 },
@@ -808,7 +808,7 @@ export default function NewChampionshipPage() {
                 const isPingPong = form.sport.toLowerCase().includes("ping") || form.sport.toLowerCase().includes("pong") || form.sport.toLowerCase().includes("masă") || form.sport.toLowerCase().includes("masa");
                 const activeCatList = isPadel ? PADEL_CATEGORIES : isPingPong ? PINGPONG_CATEGORIES : TENNIS_CATEGORIES;
                 const sportTitle = isPadel ? "Padel  " : isPingPong ? "Ping-Pong (Tenis de Masă)" : "Tenis de Câmp";
-                const sportIcon = isPadel ? "🏓" : isPingPong ? "circle" : "sports_tennis";
+                const sportIcon = isPadel ? "sports_tennis" : isPingPong ? "circle" : "sports_tennis";
 
                 // Default to amateur / entry level if none chosen or category does not match active sport
                 const defaultCategoryForSport = isPadel ? "padel_amatori" : isPingPong ? "pingpong_amatori" : "simplu_masculin";

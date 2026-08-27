@@ -165,10 +165,10 @@ export function TeamsTab({
         onChanged();
       } else {
         const err = await res.json();
-        setStatusMessage(`⚠️ ${err.error || "Eroare la adăugare"}`);
+        setStatusMessage(`${err.error || "Eroare la adăugare"}`);
       }
     } catch {
-      setStatusMessage("⚠️ Eroare de rețea.");
+        setStatusMessage("Eroare de rețea.");
     } finally {
       setBusy(false);
       setTimeout(() => setStatusMessage(null), 3000);

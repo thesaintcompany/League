@@ -152,7 +152,7 @@ export function A4TicketPrintView({ ticket }: { ticket: TicketData }) {
             <div className="relative py-4 text-center select-none print:py-6">
               <div className="border-t-2 border-dashed border-slate-400 w-full absolute top-1/2 -translate-y-1/2"></div>
               <span className="relative z-10 px-4 py-1 rounded-full bg-slate-200 text-slate-600 text-[10px] font-bold font-mono uppercase tracking-widest print:bg-white print:border print:border-slate-300">
-                ✂️ TAIE AICI PENTRU AL DOILEA BILET / EXEMPLAR COPIE
+                TAIEREA ÎN DOUA EXEMPLARE — COPIE SEPARATĂ
               </span>
             </div>
 

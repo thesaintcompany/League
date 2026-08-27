@@ -447,7 +447,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           {/* Modul PayPal & Comisioane */}
           <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-              <span className="text-2xl">🅿️</span>
+              <span className="text-2xl material-symbols-outlined">payments</span>
               <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
                 PayPal &amp; Comisioane Platformă
               </h4>
@@ -512,7 +512,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           {/* Abonamente Echipe */}
           <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-              <span className="text-2xl">👔</span>
+              <span className="text-2xl material-symbols-outlined">badge</span>
               <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
                 Abonamente Echipe
               </h4>

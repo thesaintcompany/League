@@ -162,7 +162,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-              🛡️ PARTENERI &amp; SPONSORI  I
+              <span className="material-symbols-outlined">shield</span> PARTENERI &amp; SPONSORI  I
             </span>
             <span className="px-3 py-1 rounded-full bg-slate-900 text-lime-400 font-bold text-xs font-label border border-lime-400/20">
               {sponsors.length} Branduri Partenere
@@ -364,10 +364,10 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
                   className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-700 text-xs text-white font-bold focus:outline-none focus:border-lime-400"
                 >
                   <option value="Sponsor Principal">  Sponsor Principal</option>
-                  <option value="Sponsor  ">⭐ Sponsor  </option>
+                  <option value="Sponsor  "><span className="material-symbols-outlined">star</span> Sponsor  </option>
                   <option value="Partener Tehnic"><span className="material-symbols-outlined">settings</span> Partener Tehnic</option>
                   <option value="Partener Media"><span className="material-symbols-outlined">live_tv</span> Partener Media &amp; TV</option>
-                  <option value="Partener Local">📍 Partener Local</option>
+                  <option value="Partener Local"><span className="material-symbols-outlined">location_on</span> Partener Local</option>
                 </select>
               </div>
 

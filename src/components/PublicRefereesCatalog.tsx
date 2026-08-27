@@ -317,7 +317,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                       </div>
                       <div className="flex-1 px-1">
                         <span className="text-xs font-black font-mono text-lime-600 dark:text-lime-400 block">
-                          {tel.rating}⭐
+                          <span className="material-symbols-outlined">star</span> {tel.rating}
                         </span>
                         <span className="text-[9px] font-label font-bold text-slate-500 dark:text-slate-400 block uppercase">
                           Rating
@@ -400,7 +400,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                           {ref.name}
                         </h3>
                         <p className="text-[11px] text-slate-300 font-label">
-                          {tel.matchesCount} Meciuri • {tel.rating} ⭐ Rating
+                          {tel.matchesCount} Meciuri • {tel.rating} <span className="material-symbols-outlined align-middle">star</span> Rating
                         </p>
                       </div>
                     </div>
@@ -433,7 +433,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                       </div>
                       <div className="flex-1 px-1">
                         <span className="text-xs font-black font-mono text-lime-600 dark:text-lime-400 block">
-                          {tel.rating}⭐
+                          <span className="material-symbols-outlined">star</span> {tel.rating}
                         </span>
                         <span className="text-[9px] font-label font-bold text-slate-500 dark:text-slate-400 block uppercase">
                           Rating

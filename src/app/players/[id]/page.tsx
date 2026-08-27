@@ -85,7 +85,7 @@ export default async function PublicPlayerDetailPage({
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-                ⭐   ULTIMATE ATLET
+                <span className="material-symbols-outlined">star</span>   ULTIMATE ATLET
               </span>
               <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-xs font-label">
                 #{player.number || 10} • {player.position || "Atacant Central"}
@@ -107,7 +107,7 @@ export default async function PublicPlayerDetailPage({
               <span>•</span>
               <span>{player.team?.championship?.name || "Liga Pro România"}</span>
               <span>•</span>
-              <span className="text-lime-400 font-bold">⚽ {player.goals || 0} Goluri Marcate</span>
+              <span className="text-lime-400 font-bold"><span className="material-symbols-outlined align-middle">sports_soccer</span> {player.goals || 0} Goluri Marcate</span>
             </p>
           </div>
 
@@ -247,7 +247,7 @@ export default async function PublicPlayerDetailPage({
                   Goluri Înscrise
                 </span>
                 <span className="text-3xl sm:text-4xl font-black data-font text-amber-500 dark:text-amber-400 mt-1 block">
-                  {player.goals || 0} ⚽
+                  {player.goals || 0} <span className="material-symbols-outlined align-middle">sports_soccer</span>
                 </span>
               </div>
 
@@ -274,7 +274,7 @@ export default async function PublicPlayerDetailPage({
                   Rating
                 </span>
                 <span className="text-3xl sm:text-4xl font-black data-font text-amber-500 dark:text-amber-400 mt-1 block">
-                  {fut.futRating} ⭐
+                  {fut.futRating} <span className="material-symbols-outlined align-middle">star</span>
                 </span>
               </div>
             </div>

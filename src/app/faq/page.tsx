@@ -87,7 +87,7 @@ export default function FAQPage() {
               href="mailto:contact@buu.ro"
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-sm hover:bg-lime-300 transition"
             >
-              <span>✉️</span>
+              <span className="material-symbols-outlined">mail</span>
               <span>Trimite un Email (contact@buu.ro)</span>
             </a>
           </div>

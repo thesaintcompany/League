@@ -308,7 +308,7 @@ export function RefereeControlModal({
                       : "bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-300"
                       }`}
                   >
-                    <span>{isWithinDeadline ? "✅" : "⚠️"}</span>
+                    <span className="material-symbols-outlined">{isWithinDeadline ? "check_circle" : "warning"}</span>
                     <div>
                       <p className="leading-tight">
                         {isWithinDeadline
@@ -370,7 +370,7 @@ export function RefereeControlModal({
               {/* AJF County Official Portal Quick Discovery Button */}
               <div className="p-3.5 rounded-xl bg-lime-400/10 border border-lime-400/30 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
-                  <span className="text-xl">🏛️</span>
+                  <span className="text-xl material-symbols-outlined">account_balance</span>
                   <div>
                     <p className="text-xs font-headline font-bold text-slate-900 dark:text-white">
                       Ai nevoie de arbitri delegați  ?
@@ -438,7 +438,7 @@ export function RefereeControlModal({
             {/* Gate Scanner Access Box for Organizer */}
             <div className="p-4 rounded-2xl bg-slate-900 text-white border border-slate-800 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">🎟️</span>
+                <span className="text-2xl material-symbols-outlined">confirmation_number</span>
                 <div>
                   <p className="font-headline font-bold text-xs uppercase text-lime-400">
                     Scanner Porți Meci
@@ -692,16 +692,16 @@ export function RefereeControlModal({
                       <option value="ace"><span className="material-symbols-outlined">sports_tennis</span> As Serviciu (Ace)</option>
                       <option value="break">💥 Break de Serviciu</option>
                       <option value="set_won">  Set Câștigat</option>
-                      <option value="double_fault">❌ Dublă Greșeală</option>
-                      <option value="warning">⚠️ Avertisment Conduită</option>
+                      <option value="double_fault">Dublă Greșeală</option>
+                      <option value="warning"><span className="material-symbols-outlined">warning</span> Avertisment Conduită</option>
                     </>
                   ) : (
                     <>
-                      <option value="goal">⚽ Gol</option>
-                      <option value="yellow_card">🟨 Cartonaș Galben</option>
-                      <option value="red_card">🟥 Cartonaș Roșu</option>
-                      <option value="offside">🚩 Offside</option>
-                      <option value="sub">🔄 Schimbare</option>
+                      <option value="goal"><span className="material-symbols-outlined">sports_tennis</span> Gol</option>
+                      <option value="yellow_card"><span className="material-symbols-outlined">warning</span> Cartonaș Galben</option>
+                      <option value="red_card"><span className="material-symbols-outlined">cancel</span> Cartonaș Roșu</option>
+                      <option value="offside"><span className="material-symbols-outlined">flag</span> Offside</option>
+                      <option value="sub"><span className="material-symbols-outlined">sync</span> Schimbare</option>
                     </>
                   )}
                 </select>

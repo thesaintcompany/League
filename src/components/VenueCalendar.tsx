@@ -179,7 +179,7 @@ export function VenueCalendar({
                     </span>
                     {m.referee && (
                       <span className="text-[10px] text-slate-500 dark:text-slate-400 font-label">
-                        ⚖️ {m.referee}
+                        <span className="material-symbols-outlined text-sm">gavel</span> {m.referee}
                       </span>
                     )}
                   </div>

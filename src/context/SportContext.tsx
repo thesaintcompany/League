@@ -46,7 +46,7 @@ export const AVAILABLE_SPORTS: SportOption[] = [
     id: "padel",
     name: "Padel  ",
     shortName: "Padel",
-    icon: "🏓",
+    icon: "sports_tennis",
     accentColor: "text-teal-400 border-teal-400 bg-teal-400/10",
     badgeBg: "bg-teal-400 text-slate-950",
     description: "Campionate și turnee de Padel pe terenuri panoramice și gazon sintetic.",

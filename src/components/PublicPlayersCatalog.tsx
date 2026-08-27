@@ -82,7 +82,7 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
         <div className="relative z-10 max-w-4xl space-y-4">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-lg flex items-center gap-1.5">
-              <span>⭐</span> EA FC /   ULTIMATE EDITION
+              <span className="material-symbols-outlined">star</span> EA FC /   ULTIMATE EDITION
             </span>
             <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-[10px] uppercase font-label">
               Top 10 Golgheteri • Liga Pro
@@ -276,10 +276,10 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                     {/* Goals Ribbon */}
                     <div className="my-2.5 py-1.5 px-3 rounded-xl bg-gradient-to-r from-amber-400/20 via-lime-400/20 to-amber-400/20 border border-amber-400/40 flex justify-between items-center text-xs font-label">
                       <span className="font-bold text-amber-300 flex items-center gap-1">
-                        <span>⚽</span> {player.goals || 0} GOLURI
+                        <span className="material-symbols-outlined">sports_soccer</span> {player.goals || 0} GOLURI
                       </span>
                       <span className="font-bold text-lime-400">
-                        ⭐ {player.rating || 8.8} RATING
+                        <span className="material-symbols-outlined">star</span> {player.rating || 8.8} RATING
                       </span>
                     </div>
 

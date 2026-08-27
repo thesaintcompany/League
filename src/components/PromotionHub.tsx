@@ -65,7 +65,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
     ? `${window.location.origin}/matches/${selectedMatch.id}/promo`
     : `/matches/${selectedMatch.id}/promo`;
 
-  const shareText = `🔥 MECIUL ETAPEI în ${championshipName}!\n⚽ ${selectedMatch.homeTeam.name} vs ${selectedMatch.awayTeam.name}\n📍 Stadion: ${selectedMatch.venue || "Arena  ă"}\n📅 Data: ${new Date(selectedMatch.scheduledAt || Date.now()).toLocaleDateString("ro-RO", { weekday: "long", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}\n🎟️ Bilete (${ticketPrice} RON): ${ticketUrl}`;
+  const shareText = `MECIUL ETAPEI în ${championshipName}!\n${selectedMatch.homeTeam.name} vs ${selectedMatch.awayTeam.name}\nStadion: ${selectedMatch.venue || "Arena ă"}\nData: ${new Date(selectedMatch.scheduledAt || Date.now()).toLocaleDateString("ro-RO", { weekday: "long", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}\nBilete (${ticketPrice} RON): ${ticketUrl}`;
 
   function copyPromoLink() {
     navigator.clipboard.writeText(promoUrl);
@@ -394,7 +394,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
                 : "text-slate-500"
                 }`}
             >
-              🖼️ Post Pătrat (1:1)
+              <span className="material-symbols-outlined">image</span> Post Pătrat (1:1)
             </button>
           </div>
 
@@ -434,9 +434,9 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
 
               {/* Match Versus Central Art */}
               <div className="relative z-10 text-center space-y-4 my-auto">
-                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-lime-400 block animate-pulse">
-                  ⚔️ MECIUL ETAPEI ⚔️
-                </span>
+                  <span className="text-[10px] font-label font-bold uppercase tracking-widest text-lime-400 block animate-pulse">
+                    MECIUL ETAPEI
+                  </span>
 
                 <div className="flex items-center justify-around">
                   {/* Home */}
@@ -507,7 +507,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
 
                 {/* Ticket Price Box */}
                 <div className="bg-lime-400 text-slate-950 p-2.5 rounded-xl text-center shadow-md font-black font-label text-xs">
-                  🎟️ BILETE: {ticketPrice} RON • INTRARE LIVE
+                  <span className="material-symbols-outlined">confirmation_number</span> BILETE: {ticketPrice} RON • INTRARE LIVE
                 </div>
               </div>
 

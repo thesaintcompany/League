@@ -217,7 +217,7 @@ export default async function OfficialMatchReportPage({
                   <tr key={idx} className="hover:bg-slate-50">
                     <td className="p-2.5 font-bold font-mono">{ev.minute}&apos;</td>
                     <td className="p-2.5 font-bold">
-                      {ev.type === "goal" && "⚽ Gol"}
+                      {ev.type === "goal" && "Gol"}
                       {ev.type === "yellow_card" && "🟨 Cartonaș Galben"}
                       {ev.type === "red_card" && "🟥 Cartonaș Roșu"}
                       {ev.type === "penalty" && "🥅 Penalti"}

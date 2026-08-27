@@ -124,7 +124,7 @@ export function BracketVisualizer({
                 </span>
               ) : (
                 <span className="px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-600 dark:text-amber-300 text-[10px] font-black font-label uppercase border border-amber-400/30">
-                  🔒 Ciornă Privată
+                  <span className="material-symbols-outlined">lock</span> Ciornă Privată
                 </span>
               )}
               <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-900 text-lime-600 dark:text-lime-400 text-[10px] font-black font-mono border border-slate-300 dark:border-slate-700">
@@ -724,7 +724,7 @@ function BracketMatchNode({
               className="px-2 py-0.5 rounded-lg bg-lime-400 text-slate-950 hover:bg-lime-300 font-label font-black text-[9px] uppercase tracking-wider flex items-center gap-1 transition shadow-sm active:scale-95"
               title="Panou Organizare Meci (Arbitraj, Notițe, Bilete)"
             >
-              <span>⚙️</span>
+              <span className="material-symbols-outlined">settings</span>
               <span>Organizare</span>
             </button>
           )}

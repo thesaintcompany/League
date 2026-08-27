@@ -305,7 +305,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                 className="flex-1 min-w-[200px] py-4 bg-slate-900/90 border border-slate-700/80 text-slate-400 font-bold font-headline text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 shadow-inner cursor-not-allowed select-none"
                 title="Vânzarea online a biletelor este închisă (ziua meciului sau meci încheiat)"
               >
-                <span className="text-amber-400">🔒</span> Vânzare Închisă
+                <span className="text-amber-400 material-symbols-outlined">lock</span> Vânzare Închisă
               </div>
             ) : (
               <button
@@ -316,7 +316,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                 }}
                 className="flex-1 min-w-[200px] py-4 bg-lime-400 hover:bg-lime-300 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-xl transition active:scale-95 flex items-center justify-center gap-2"
               >
-                <span>🎟️</span> Cumpără Bilet Online ({unitPrice} RON)
+                <span className="material-symbols-outlined">confirmation_number</span> Cumpără Bilet Online ({unitPrice} RON)
               </button>
             )}
 
@@ -440,7 +440,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
 
             {purchasedTicket ? (
               <div className="p-6 rounded-3xl bg-lime-400/10 border-2 border-lime-400 text-center space-y-4">
-                <span className="text-5xl block animate-bounce">🎟️</span>
+                <span className="text-5xl block animate-bounce material-symbols-outlined">confirmation_number</span>
                 <div>
                   <span className="text-[10px] uppercase font-mono font-bold text-lime-600 dark:text-lime-400">
                     {purchasedWithPromo ? "COD PROMO VALIDAT CU SUCCES" : "PLATĂ CONFIRMATĂ CU SUCCES"}
@@ -463,7 +463,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                   </Link>
 
                   <a
-                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`🎟️ Iată biletul meu la meciul ${match.homeTeam.name} vs ${match.awayTeam.name}: https://sp.  buu.ro/tickets/${purchasedTicket.id}/print`)}`}
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Iată biletul meu la meciul ${match.homeTeam.name} vs ${match.awayTeam.name}: https://sp.  buu.ro/tickets/${purchasedTicket.id}/print`)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold font-label text-xs uppercase rounded-2xl flex items-center justify-center gap-2 transition"
@@ -619,7 +619,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                         : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
                         }`}
                     >
-                      <span className="text-xl">🅿️</span>
+                      <span className="text-xl material-symbols-outlined">payments</span>
                       <span className="text-[10px] font-label font-bold">PayPal</span>
                     </button>
                   </div>
@@ -641,7 +641,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                     disabled={processing}
                     className="w-full py-4 bg-lime-400 hover:bg-lime-300 disabled:opacity-50 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-xl transition active:scale-95 flex items-center justify-center gap-2"
                   >
-                    <span>{hasFreeTicketCode ? "🎟️" : "🔒"}</span> {processing ? "Se emite biletul..." : hasFreeTicketCode ? "Validează Codul & Emite Bilet Gratuit" : `Plătește ${totalPrice} RON & Emite Bilet`}
+                    <span className="material-symbols-outlined">{hasFreeTicketCode ? "confirmation_number" : "lock"}</span> {processing ? "Se emit biletele..." : hasFreeTicketCode ? "Validează Codul & Emite Bilet Gratuit" : `Plătește ${totalPrice} RON & Emite Bilet`}
                   </button>
                 </div>
               </form>

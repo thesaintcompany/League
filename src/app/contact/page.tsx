@@ -17,7 +17,7 @@ export default function ContactPage() {
       <section className="relative overflow-hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-lime-400/20 text-lime-700 dark:text-lime-400 text-xs font-headline font-black uppercase tracking-wider border border-lime-400/30">
-            <span>✉️</span> SUPORT &amp; CONTACT
+            <span className="material-symbols-outlined">mail</span> SUPORT &amp; CONTACT
           </div>
           <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-tight">
             Contactează Echipa PRO LIGUE
@@ -33,7 +33,7 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-3 shadow-sm text-center">
             <div className="w-12 h-12 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center text-2xl mx-auto">
-              ✉️
+              <span className="material-symbols-outlined">mail</span>
             </div>
             <h3 className="font-headline font-black uppercase text-slate-900 dark:text-white text-base">
               Email

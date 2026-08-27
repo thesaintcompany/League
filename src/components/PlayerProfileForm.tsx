@@ -31,7 +31,7 @@ interface PlayerProfileFormProps {
 const SPORT_OPTIONS = [
   { id: "fotbal", label: "Fotbal", icon: "sports_soccer" },
   { id: "tenis", label: "Tenis", icon: "sports_tennis" },
-  { id: "padel", label: "Padel", icon: "🏓" },
+  { id: "padel", label: "Padel", icon: "sports_tennis" },
   { id: "pingpong", label: "Ping-Pong", icon: "circle" },
   { id: "baschet", label: "Baschet", icon: "sports_basketball" },
   { id: "volei", label: "Volei", icon: "sports_volleyball" },

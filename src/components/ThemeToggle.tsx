@@ -38,7 +38,7 @@ export function ThemeToggle({ variant = "compact", className = "" }: ThemeToggle
             : "bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 shadow-sm"
         } ${className}`}
       >
-        <span className="text-base leading-none transition-transform duration-300 hover:rotate-12">{isDark ? "🌙" : "☀️"}</span>
+        <span className="text-base leading-none transition-transform duration-300 hover:rotate-12 material-symbols-outlined">{isDark ? "dark_mode" : "light_mode"}</span>
         <span className="uppercase tracking-wider text-[11px]">
           {isDark ? "Mod Noapte" : "Mod Zi"}
         </span>
@@ -68,7 +68,7 @@ export function ThemeToggle({ variant = "compact", className = "" }: ThemeToggle
               : "translate-x-0 bg-white text-slate-800 shadow-sm"
           }`}
         >
-          {isDark ? "🌙" : "☀️"}
+          <span className="material-symbols-outlined text-xl">{isDark ? "dark_mode" : "light_mode"}</span>
         </div>
       </button>
     );
@@ -83,7 +83,7 @@ export function ThemeToggle({ variant = "compact", className = "" }: ThemeToggle
       aria-label="Comută mod noapte / zi"
       className={`p-2 sm:p-2.5 rounded-xl transition-all duration-200 active:scale-95 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/60 ${className}`}
     >
-      <span className="text-sm leading-none">{isDark ? "🌙" : "☀️"}</span>
+      <span className="text-sm leading-none material-symbols-outlined">{isDark ? "dark_mode" : "light_mode"}</span>
       <span className="sr-only">{isDark ? "Mod Noapte" : "Mod Zi"}</span>
     </button>
   );

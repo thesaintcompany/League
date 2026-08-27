@@ -687,8 +687,8 @@ export function RefereeDashboardPanel({
                   onChange={(e) => setNewEventType(e.target.value as any)}
                   className="p-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"
                 >
-                  <option value="goal">⚽ Gol</option>
-                  <option value="yellow_card">🟨 Cartonaș Galben</option>
+                  <option value="goal"><span className="material-symbols-outlined text-xs">sports_tennis</span> Gol</option>
+                  <option value="yellow_card"><span className="material-symbols-outlined text-xs">warning</span> Cartonaș Galben</option>
                   <option value="red_card">🟥 Cartonaș Roșu</option>
                   <option value="penalty">🎯 Penalty</option>
                 </select>
@@ -741,12 +741,12 @@ export function RefereeDashboardPanel({
                       <div className="flex items-center gap-2">
                         <span>
                           {ev.type === "goal"
-                            ? "⚽"
+                            ? <span className="material-symbols-outlined text-xs">sports_tennis</span>
                             : ev.type === "yellow_card"
-                              ? "🟨"
+                              ? <span className="material-symbols-outlined text-xs">warning</span>
                               : ev.type === "red_card"
-                                ? "🟥"
-                                : "🎯"}
+                                ? <span className="material-symbols-outlined text-xs">cancel</span>
+                                : <span className="material-symbols-outlined text-xs">target</span>
                         </span>
                         <span className="font-bold text-lime-400">Min. {ev.minute}&apos;</span>
                         <span className="text-white font-bold">{ev.playerName}</span>
@@ -814,7 +814,7 @@ export function RefereeDashboardPanel({
 
             {saveError && (
               <div className="p-3 rounded-xl bg-red-950/80 border border-red-500 text-red-300 text-xs font-bold">
-                ⚠️ {saveError}
+                <span className="material-symbols-outlined text-sm">warning</span> {saveError}
               </div>
             )}
 

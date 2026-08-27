@@ -105,7 +105,7 @@ export default async function ProfilePage({
                   href="/dashboard/admin"
                   className="px-4 py-2.5 rounded-xl bg-lime-400 text-slate-950 hover:bg-lime-300 font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition"
                 >
-                  <span>⚙️</span> Consolă Master ↗
+                  <span className="material-symbols-outlined">settings</span> Consolă Master ↗
                 </Link>
               ) : currentRole === "organizer" ? (
                 <Link

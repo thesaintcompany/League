@@ -17,7 +17,7 @@ export default function ConfidentialitatePage() {
       <section className="relative overflow-hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-headline font-black uppercase tracking-wider border border-slate-300 dark:border-slate-700">
-            <span>🛡️</span> PROTECȚIA DATELOR
+            <span className="material-symbols-outlined">shield</span> PROTECȚIA DATELOR
           </div>
           <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-tight">
             Politica de Confidențialitate (GDPR)

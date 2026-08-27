@@ -54,7 +54,7 @@ interface VenueData {
 export const ARENA_SPORTS_OPTIONS = [
   { id: "fotbal", label: "Fotbal & Minifotbal", icon: "sports_soccer" },
   { id: "tenis", label: "Tenis de Câmp", icon: "sports_tennis" },
-  { id: "padel", label: "Padel  ", icon: "🏓" },
+  { id: "padel", label: "Padel  ", icon: "sports_tennis" },
   { id: "pingpong", label: "Tenis de Masă (Ping-Pong)", icon: "circle" },
   { id: "baschet", label: "Baschet 5x5 & 3x3", icon: "sports_basketball" },
   { id: "volei", label: "Volei / Beach Volley", icon: "sports_volleyball" },

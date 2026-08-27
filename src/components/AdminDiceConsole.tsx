@@ -228,7 +228,7 @@ export function AdminDiceConsole({
       {/* Lock Notice Banner if Published or 3 Rolls reached */}
       {isBracketPublished && (
         <div className="p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border-2 border-amber-400 text-amber-950 dark:text-amber-200 flex items-center gap-3 shadow-md">
-          <span className="text-2xl">🔒</span>
+          <span className="text-2xl material-symbols-outlined">lock</span>
           <div>
             <h4 className="font-headline font-bold text-sm uppercase">
               Harta Meciurilor este Publicată
@@ -242,7 +242,7 @@ export function AdminDiceConsole({
 
       {!isBracketPublished && diceRollCount >= 3 && (
         <div className="p-5 rounded-2xl bg-red-50 dark:bg-red-950/40 border-2 border-red-400 text-red-950 dark:text-red-200 flex items-center gap-3 shadow-md">
-          <span className="text-2xl">🔒</span>
+          <span className="text-2xl material-symbols-outlined">lock</span>
           <div>
             <h4 className="font-headline font-bold text-sm uppercase">
               Limita Maximă de 3 Aruncări a Fost Atinsă
@@ -370,9 +370,9 @@ export function AdminDiceConsole({
                     {rolling
                       ? "Se aruncă..."
                       : isBracketPublished
-                        ? "🔒 Zaruri Blocate"
-                        : diceRollCount >= 3
-                          ? "🔒 Limită 3/3 Atinsă"
+                      ? "Zaruri Blocate"
+                      : diceRollCount >= 3
+                        ? "Limită 3/3 Atinsă"
                           : `Aruncă Zarurile (${rollsLeft} Rămase)`}
                   </span>
                 </button>
@@ -500,7 +500,7 @@ export function AdminDiceConsole({
                 : "bg-lime-400 text-slate-950 hover:bg-lime-300"
               }`}
           >
-            {isLocked ? "Aruncare Blocată 🔒" : `Re-aruncă Zarurile (${rollsLeft} Rămase)`}
+            {isLocked ? "Aruncare Blocată" : `Repet Aruncarea (${rollsLeft} rămase)`}
           </button>
         </div>
       </div>
@@ -546,7 +546,7 @@ export function AdminDiceConsole({
                     </td>
                     <td className="py-3 px-2 text-right">
                       <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold uppercase">
-                        {isLocked ? "LOCKED 🔒" : "ASSIGNED ✓"}
+                        {isLocked ? "BLocat" : "ASIGNAT ✓"}
                       </span>
                     </td>
                   </tr>
