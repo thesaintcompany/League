@@ -148,6 +148,7 @@ export async function POST(req: Request) {
     const cleanName = name.trim();
     const cleanEmail = managerEmail?.trim() || null;
     const computedShortName = (shortName?.trim() || cleanName.substring(0, 3)).toUpperCase();
+    const isIndividual = isIndividualSport(champ.sport);
 
     // Check if manager email matches existing registered user
     let matchedManagerId: string | null = null;
@@ -157,7 +158,28 @@ export async function POST(req: Request) {
       });
       if (existingUser) {
         matchedManagerId = existingUser.id;
+        // Doar lideri de echipe pot fi managerii unei echipe (mod team)
+        // Doar jucători pot fi competiții înscrși (mod individual)
+        if (!isIndividual && existingUser.role !== "team_leader") {
+          return NextResponse.json({
+            error: `Acest email nu aparține unui lider de echipă înregistrat (${existingUser.role || "fără rol"}). Doar liderii de echipe pot fi managerii unei echipe.`,
+            code: "manager_not_team_leader",
+          }, { status: 403 });
+        }
+        if (isIndividual && existingUser.role !== "player") {
+          return NextResponse.json({
+            error: `Acest email nu aparține unui jucător înregistrat (${existingUser.role || "fără rol"}). Doar jucătorii pot fi invitați ca competiție individuală.`,
+            code: "competitor_not_player",
+          }, { status: 403 });
+        }
       }
+    }
+
+    if (!matchedManagerId && !isIndividual) {
+      return NextResponse.json({
+        error: "Email-ul managerului nu corespunde niciunui utilizator înregistrat ca lider de echipă. Doar liderii de echipe pot fi atribuiți managerii unei echipe.",
+        code: "manager_required",
+      }, { status: 400 });
     }
 
     const createdTeam = await prisma.team.create({
@@ -171,7 +193,8 @@ export async function POST(req: Request) {
       },
     });
 
-    const isIndividual = isIndividualSport(champ.sport);
+        
+
     const inviteRole = isIndividual ? "player" : "team_leader";
     const inviteLink = `https://sp.tscquantum.ro/signup?role=${inviteRole}&championshipId=${championshipId}&teamId=${createdTeam.id}&email=${encodeURIComponent(cleanEmail || "")}`;
 

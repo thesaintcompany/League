@@ -98,7 +98,15 @@ export function OrganizerInvitationsModal({
         if (compRes.ok) {
           const compData = await compRes.json();
           const allComps: CompetitorOption[] = compData.competitors || [];
-          const filteredComps = allComps.filter((c) => !enrolledNames.has(c.name.toLowerCase().trim()));
+          // Filtrăm după mod: individual → doar jucători; echipe → doar lideri de echipe
+          const roleFiltered = allComps.filter((c): c is CompetitorOption =>
+            isIndividual
+              ? c.role === "player"
+              : c.role === "team_leader"
+          );
+          const filteredComps = roleFiltered.filter(
+            (c) => !enrolledNames.has(c.name.toLowerCase().trim())
+          );
           setAvailableCompetitors(filteredComps);
           if (filteredComps.length > 0) {
             setSelectedCompetitorId(filteredComps[0].id);
@@ -354,19 +362,19 @@ export function OrganizerInvitationsModal({
                                   : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-400"
                               }`}
                             >
-                              <div className="flex items-center gap-3 min-w-0">
-                                <div className="w-9 h-9 rounded-full bg-slate-900 text-lime-400 flex items-center justify-center font-bold text-xs shrink-0">
-                                  {comp.name.substring(0, 2).toUpperCase()}
-                                </div>
-                                <div className="min-w-0">
-                                  <div className="text-xs font-headline font-bold text-slate-900 dark:text-white truncate">
-                                    {comp.name}
-                                  </div>
-                                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-label truncate">
-                                    {comp.email} {comp.phone ? `• ${comp.phone}` : ""} {comp.position ? `• ${comp.position}` : ""}
-                                  </div>
-                                </div>
-                              </div>
+                               <div className="flex items-center gap-3 min-w-0">
+                                 <div className={`w-9 h-9 rounded-full bg-slate-900 text-lime-400 flex items-center justify-center font-bold text-xs shrink-0 ${isIndividual ? "" : "bg-blue-400 text-white"}`}>
+                                   {isIndividual ? comp.name.substring(0, 2).toUpperCase() : <span className="material-symbols-outlined text-sm">shield</span>}
+                                 </div>
+                                 <div className="min-w-0">
+                                   <div className="text-xs font-headline font-bold text-slate-900 dark:text-white truncate">
+                                     {comp.name}
+                                   </div>
+                                   <div className="text-[11px] text-slate-500 dark:text-slate-400 font-label truncate">
+                                     {comp.email} {comp.phone ? `• ${comp.phone}` : ""} {isIndividual && comp.position ? `• ${comp.position}` : ""}
+                                   </div>
+                                 </div>
+                               </div>
 
                               <div className="flex items-center gap-2 shrink-0">
                                 <button
