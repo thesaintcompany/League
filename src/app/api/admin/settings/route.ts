@@ -48,6 +48,7 @@ export async function GET() {
       platformFeePercent: settings.platformFeePercent,
       applePayEnabled: settings.applePayEnabled,
       googlePayEnabled: settings.googlePayEnabled,
+      teamSubscriptionPrice: settings.teamSubscriptionPrice ?? 60.0,
     });
   }
 
@@ -108,6 +109,7 @@ export async function PUT(req: Request) {
       googlePayEnvironment,
       googlePayEnabled,
       payoutMinThreshold,
+      teamSubscriptionPrice,
     } = body;
 
     const updated = await prisma.systemSetting.upsert({
@@ -132,6 +134,7 @@ export async function PUT(req: Request) {
         googlePayEnvironment: googlePayEnvironment !== undefined ? googlePayEnvironment : undefined,
         googlePayEnabled: googlePayEnabled !== undefined ? Boolean(googlePayEnabled) : undefined,
         payoutMinThreshold: typeof payoutMinThreshold === "number" ? payoutMinThreshold : undefined,
+        teamSubscriptionPrice: typeof teamSubscriptionPrice === "number" ? teamSubscriptionPrice : undefined,
       },
       create: {
         id: "default",
@@ -154,6 +157,7 @@ export async function PUT(req: Request) {
         googlePayEnvironment: googlePayEnvironment || "PRODUCTION",
         googlePayEnabled: Boolean(googlePayEnabled),
         payoutMinThreshold: typeof payoutMinThreshold === "number" ? payoutMinThreshold : 100,
+        teamSubscriptionPrice: typeof teamSubscriptionPrice === "number" ? teamSubscriptionPrice : 60.0,
       },
     });
 

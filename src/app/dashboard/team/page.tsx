@@ -191,6 +191,18 @@ export default async function TeamManagerDashboardPage() {
     })),
   };
 
+  const settings = await prisma.systemSetting.findUnique({ where: { id: "default" } });
+  const teamCount = await prisma.team.count({ where: { managerId: userId } });
+  const managedTeams = await prisma.team.findMany({
+    where: { managerId: userId },
+    select: { id: true, name: true, shortName: true, color: true, subscriptionActive: true, subscriptionExpiresAt: true },
+  });
+
+  const formattedManagedTeams = managedTeams.map((t) => ({
+    ...t,
+    subscriptionExpiresAt: t.subscriptionExpiresAt ? t.subscriptionExpiresAt.toISOString() : null,
+  }));
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
       <Sidebar />
@@ -202,7 +214,13 @@ export default async function TeamManagerDashboardPage() {
         />
 
         <main className="p-4 sm:p-6 lg:p-10 max-w-7xl">
-          <TeamManagerPanel initialTeam={teamData} />
+          <TeamManagerPanel
+            initialTeam={teamData}
+            teamCount={teamCount}
+            managedTeams={formattedManagedTeams}
+            teamSubscriptionPrice={settings?.teamSubscriptionPrice ?? 60.0}
+            freeTeamLimit={1}
+          />
         </main>
       </div>
     </div>

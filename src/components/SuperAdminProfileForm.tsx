@@ -39,6 +39,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
     googlePayEnvironment: initialSettings?.googlePayEnvironment || "PRODUCTION",
     googlePayEnabled: initialSettings?.googlePayEnabled ?? true,
     payoutMinThreshold: initialSettings?.payoutMinThreshold ?? 100,
+    teamSubscriptionPrice: initialSettings?.teamSubscriptionPrice ?? 60.0,
   });
 
   const [savingSettings, setSavingSettings] = useState(false);
@@ -504,6 +505,40 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
                     className="input text-xs font-bold"
                   />
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Abonamente Echipe */}
+          <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+            <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+              <span className="text-2xl">👔</span>
+              <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
+                Abonamente Echipe
+              </h4>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                  Preț Abonament Anual / Echipă Suplimentară (EUR)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={settings.teamSubscriptionPrice}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      teamSubscriptionPrice: parseFloat(e.target.value) || 0,
+                    })
+                  }
+                  className="input text-xs font-bold"
+                />
+                <p className="text-[11px] text-slate-500 font-body mt-1">
+                  Primul echipe creată de un manager este gratuită. Următoarele necesită abonament activ la acest preț anual.
+                </p>
               </div>
             </div>
           </div>

@@ -17,9 +17,10 @@ export default function SignUpPage() {
 
   const ROLES = [
     { id: "organizer", label: "Organizator", icon: "dashboard_customize" },
-    { id: "team", label: "Lider Echipă", icon: "groups" },
+    { id: "team_leader", label: "Lider Echipă", icon: "groups" },
     { id: "referee", label: "Arbitru", icon: "sports" },
     { id: "player", label: "Jucător", icon: "directions_run" },
+    { id: "arena_owner", label: "Proprietar Arenă", icon: "stadium" },
   ];
 
   async function onSubmit(e: React.FormEvent) {
@@ -113,9 +114,10 @@ export default function SignUpPage() {
                 <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
                   Rol Principal
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
                   {[
                     { id: "organizer", label: "Organizator", icon: "emoji_events" },
+                    { id: "team_leader", label: "Lider Echipă", icon: "groups" },
                     { id: "player", label: "Jucător", icon: "sports_soccer" },
                     { id: "referee", label: "Arbitru", icon: "sports" },
                     { id: "arena_owner", label: "Proprietar Arenă", icon: "stadium" },

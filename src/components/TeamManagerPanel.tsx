@@ -47,7 +47,30 @@ interface TeamData {
   awayMatches: Match[];
 }
 
-export function TeamManagerPanel({ initialTeam }: { initialTeam: TeamData }) {
+interface ManagedTeamSummary {
+  id: string;
+  name: string;
+  shortName: string | null;
+  color: string | null;
+  subscriptionActive: boolean;
+  subscriptionExpiresAt: string | null;
+}
+
+interface TeamManagerPanelProps {
+  initialTeam: TeamData;
+  teamCount?: number;
+  managedTeams?: ManagedTeamSummary[];
+  teamSubscriptionPrice?: number;
+  freeTeamLimit?: number;
+}
+
+export function TeamManagerPanel({
+  initialTeam,
+  teamCount = 1,
+  managedTeams = [],
+  teamSubscriptionPrice = 60.0,
+  freeTeamLimit = 1,
+}: TeamManagerPanelProps) {
   const [team, setTeam] = useState<TeamData>(initialTeam);
   const [activeTab, setActiveTab] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar">("roster");
 
@@ -82,9 +105,73 @@ export function TeamManagerPanel({ initialTeam }: { initialTeam: TeamData }) {
   const [busy, setBusy] = useState(false);
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
 
+  // Team creation state
+  const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
+  const [newTeamName, setNewTeamName] = useState("");
+  const [newTeamShortName, setNewTeamShortName] = useState("");
+  const [newTeamColor, setNewTeamColor] = useState("#84cc16");
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "apple_pay" | "google_pay" | "invoice">("card");
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [paymentRequired, setPaymentRequired] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+
   function notify(msg: string) {
     setStatusMsg(msg);
     setTimeout(() => setStatusMsg(null), 3500);
+  }
+
+  async function handleCreateTeam() {
+    setBusy(true);
+    setPaymentError(null);
+    setPaymentRequired(false);
+    try {
+      const res = await fetch("/api/team/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newTeamName,
+          shortName: newTeamShortName,
+          color: newTeamColor,
+          paymentMethod,
+          paymentConfirmed: !paymentRequired,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        if (data.error === "payment_required") {
+          setPaymentRequired(true);
+          setPaymentError(data.message || "Plată necesară pentru echipă suplimentară.");
+          setBusy(false);
+          return;
+        }
+        setPaymentError(data.error || "Eroare la crearea echipei.");
+        setBusy(false);
+        return;
+      }
+
+      notify(data.message || "Echipa a fost creată cu succes!");
+      setShowCreateTeamModal(false);
+      setNewTeamName("");
+      setNewTeamShortName("");
+      setNewTeamColor("#84cc16");
+      setPaymentRequired(false);
+      setPaymentError(null);
+      window.location.reload();
+    } catch {
+      setPaymentError("Eroare de rețea. Te rugăm să reîncerci.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleConfirmPaymentAndCreateTeam() {
+    setIsProcessingPayment(true);
+    setTimeout(async () => {
+      await handleCreateTeam();
+      setIsProcessingPayment(false);
+    }, 1200);
   }
 
   // Save Team & Tactics
@@ -306,6 +393,183 @@ export function TeamManagerPanel({ initialTeam }: { initialTeam: TeamData }) {
           </div>
         )}
       </div>
+
+      {/* Team Management Section */}
+      <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="font-headline font-black text-lg sm:text-xl uppercase text-white tracking-tight">
+              Echipele Mele
+            </h2>
+            <p className="text-[11px] sm:text-xs text-slate-400 font-label mt-1">
+              {teamCount}/{freeTeamLimit} echipă gratuită • Următoarele: {teamSubscriptionPrice} EUR / an
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setPaymentRequired(false);
+              setPaymentError(null);
+              setShowCreateTeamModal(true);
+            }}
+            className="px-5 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2 active:scale-95"
+          >
+            <span className="material-symbols-outlined text-base">add_circle</span>
+            {teamCount >= freeTeamLimit ? "Creează Echipă (Plătită)" : "Creează Echipă Gratuită"}
+          </button>
+        </div>
+
+        {managedTeams.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {managedTeams.map((t) => (
+              <div
+                key={t.id}
+                className={`p-4 rounded-2xl border text-left transition flex flex-col gap-2 ${
+                  t.id === team.id
+                    ? "border-lime-500 bg-lime-500/10 text-white shadow-md"
+                    : "border-slate-700 bg-slate-800/60 text-slate-300"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black text-white shadow-md uppercase shrink-0 border border-white/10"
+                    style={{ backgroundColor: t.color || "#84cc16" }}
+                  >
+                    {t.shortName?.substring(0, 3) || t.name.substring(0, 3).toUpperCase()}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-headline font-bold text-sm leading-tight truncate">{t.name}</p>
+                    <p className="text-[10px] font-label text-slate-400 uppercase">
+                      {t.subscriptionActive ? `Abonament activ • ${t.subscriptionExpiresAt ? new Date(t.subscriptionExpiresAt).toLocaleDateString("ro-RO") : ""}` : "Plan gratuit"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Create Team Modal */}
+      {showCreateTeamModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+          <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl space-y-5 p-6 sm:p-8">
+            <div className="flex items-center justify-between">
+              <h3 className="font-headline font-black text-lg sm:text-xl uppercase text-slate-900 dark:text-white">
+                Creează Echipă Nouă
+              </h3>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowCreateTeamModal(false);
+                  setPaymentRequired(false);
+                  setPaymentError(null);
+                }}
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+              >
+                <span className="material-symbols-outlined text-slate-600 dark:text-slate-300">close</span>
+              </button>
+            </div>
+
+            {paymentRequired && (
+              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-xs font-semibold space-y-2">
+                <p className="font-bold">{paymentError}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {[
+                    { id: "card", label: "Card Stripe", icon: "credit_card" },
+                    { id: "apple_pay", label: "Apple Pay", icon: "apple" },
+                    { id: "google_pay", label: "Google Pay", icon: "google" },
+                    { id: "invoice", label: "Factură", icon: "receipt" },
+                  ].map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => setPaymentMethod(m.id as any)}
+                      className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${
+                        paymentMethod === m.id
+                          ? "border-lime-500 bg-lime-500/10 text-slate-900 dark:text-white"
+                          : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-lg">{m.icon}</span>
+                      <span className="text-[10px] font-bold font-label">{m.label}</span>
+                    </button>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleConfirmPaymentAndCreateTeam}
+                  disabled={isProcessingPayment || busy}
+                  className="w-full py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md disabled:opacity-50"
+                >
+                  {isProcessingPayment ? "Se procesează plata..." : `Plătește ${teamSubscriptionPrice} EUR / an`}
+                </button>
+              </div>
+            )}
+
+            {!paymentRequired && (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleCreateTeam();
+                }}
+                className="space-y-4"
+              >
+                <div>
+                  <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+                    Nume Echipa
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={newTeamName}
+                    onChange={(e) => setNewTeamName(e.target.value)}
+                    placeholder="ex. FC Stars"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+                      Scurt
+                    </label>
+                    <input
+                      type="text"
+                      value={newTeamShortName}
+                      onChange={(e) => setNewTeamShortName(e.target.value)}
+                      placeholder="STAR"
+                      maxLength={5}
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+                      Culoare
+                    </label>
+                    <input
+                      type="color"
+                      value={newTeamColor}
+                      onChange={(e) => setNewTeamColor(e.target.value)}
+                      className="w-full h-[38px] rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                {paymentError && <p className="text-xs text-red-500 font-semibold">{paymentError}</p>}
+
+                <button
+                  type="submit"
+                  disabled={busy || isProcessingPayment}
+                  className="w-full py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md disabled:opacity-50"
+                >
+                  {busy ? "Se creează..." : "Creează Echipa"}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* 2. Navigation Tabs */}
       <div className="flex flex-wrap gap-2 border-b border-slate-800 pb-3">

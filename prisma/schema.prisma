@@ -181,6 +181,10 @@ model Team {
   sponsors        String? // JSON string: [{ id, name, logoUrl, linkUrl, tier }]
   createdAt       DateTime @default(now())
 
+  subscriptionActive    Boolean   @default(false)
+  subscriptionStartAt   DateTime?
+  subscriptionExpiresAt DateTime?
+
   championship Championship @relation(fields: [championshipId], references: [id], onDelete: Cascade)
   players       Player[]
   homeMatches    Match[] @relation("HomeTeam")
@@ -292,6 +296,7 @@ model SystemSetting {
   googlePayEnabled      Boolean  @default(true)
   payoutMinThreshold    Int      @default(100)
   demoPreFillDisabled   Boolean  @default(false)
+  teamSubscriptionPrice Float    @default(60.0) // Preț abonament anual pentru echipe suplimentare (EUR)
   updatedAt             DateTime @updatedAt
 }
 
