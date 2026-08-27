@@ -199,9 +199,9 @@ export function RefereeControlModal({
         {/* Modal Header */}
         <div className="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-md">
-              {isIndividual ? "🎾" : "⚙️"}
-            </div>
+              <div className="w-10 h-10 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-md">
+                <span className="material-symbols-outlined">{isIndividual ? "sports_tennis" : "settings"}</span>
+              </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-lg font-bold font-headline text-slate-900 dark:text-white">
@@ -247,7 +247,7 @@ export function RefereeControlModal({
               : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
               }`}
           >
-            {isIndividual ? "🎾 Scor Seturi & Puncte" : "⚽ Scor & Evenimente"}
+            {isIndividual ? "Scor Seturi & Puncte" : "Scor & Evenimente"}
           </button>
 
           <button
@@ -275,7 +275,7 @@ export function RefereeControlModal({
             <div className="bg-slate-50 dark:bg-slate-800/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-headline font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
-                  <span>{isIndividual ? "🎾" : "👔"}</span> {isIndividual ? "Delegare Arbitru de Scaun (Umpire)" : "Delegare Arbitru  "}
+                  <span className="material-symbols-outlined">{isIndividual ? "sports_tennis" : "work"}</span> {isIndividual ? "Delegare Arbitru de Scaun (Umpire)" : "Delegare Arbitru  "}
                 </span>
                 <span className="text-[10px] font-label font-bold text-slate-500 dark:text-slate-400">
                   Selectat: {refereeName}
@@ -689,7 +689,7 @@ export function RefereeControlModal({
                 >
                   {isIndividual ? (
                     <>
-                      <option value="ace">🎾 As Serviciu (Ace)</option>
+                      <option value="ace"><span className="material-symbols-outlined">sports_tennis</span> As Serviciu (Ace)</option>
                       <option value="break">💥 Break de Serviciu</option>
                       <option value="set_won">  Set Câștigat</option>
                       <option value="double_fault">❌ Dublă Greșeală</option>

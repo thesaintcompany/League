@@ -246,8 +246,8 @@ export function OrganizerTeamsPanel() {
               onClick={() => setShowDiceModal(true)}
               disabled={teams.length < 2 || !activeChampId}
               className={`px-6 py-4 rounded-2xl font-headline font-black text-xs uppercase tracking-wider shadow-xl transition flex items-center justify-center gap-2.5 active:scale-95 ${teams.length >= 2
-                  ? "bg-lime-400 hover:bg-lime-300 text-slate-950 shadow-lime-400/20"
-                  : "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed"
+                ? "bg-lime-400 hover:bg-lime-300 text-slate-950 shadow-lime-400/20"
+                : "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed"
                 }`}
             >
               <span className="material-symbols-outlined text-lg">casino</span>
@@ -308,8 +308,8 @@ export function OrganizerTeamsPanel() {
                   type="button"
                   onClick={() => handleSelectChampionship(c.id)}
                   className={`px-4 py-3 rounded-2xl border text-xs font-headline font-bold text-left transition flex items-center gap-3 shrink-0 ${isSelected
-                      ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-950 dark:border-lime-400 shadow-md ring-2 ring-lime-400/40"
-                      : "bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-lime-500"
+                    ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-950 dark:border-lime-400 shadow-md ring-2 ring-lime-400/40"
+                    : "bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-lime-500"
                     }`}
                 >
                   <ChampionshipLogoBadge name={c.name} logoUrl={c.logoUrl} size="sm" />
@@ -337,8 +337,8 @@ export function OrganizerTeamsPanel() {
                 type="button"
                 onClick={() => setInviteMode("invite_new")}
                 className={`flex-1 py-2.5 px-3 rounded-xl transition text-center ${inviteMode === "invite_new"
-                    ? "bg-lime-400 text-slate-950 font-black shadow-sm"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-lime-400 text-slate-950 font-black shadow-sm"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                   }`}
               >
                 {isIndividual ? "Invitație Competitor (Jucător / Echipă)" : "Invitație Echipă Nouă"}
@@ -347,8 +347,8 @@ export function OrganizerTeamsPanel() {
                 type="button"
                 onClick={() => setInviteMode("enroll_existing")}
                 className={`flex-1 py-2.5 px-3 rounded-xl transition text-center ${inviteMode === "enroll_existing"
-                    ? "bg-lime-400 text-slate-950 font-black shadow-sm"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  ? "bg-lime-400 text-slate-950 font-black shadow-sm"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                   }`}
               >
                 {isIndividual ? `Competitor Existent (${availableTeams.length})` : `Echipă Existentă (${availableTeams.length})`}
@@ -591,7 +591,7 @@ export function OrganizerTeamsPanel() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {teams.map((t, idx) => {
                   const roleParam = isIndividual ? "player" : "team_leader";
-                  const inviteUrl = `https://sp.tscquantum.ro/signup?role=${roleParam}&championshipId=${activeChampId}&teamId=${t.id}&email=${encodeURIComponent(t.managerEmail || "")}`;
+                  const inviteUrl = `https://sp.  buu.ro/signup?role=${roleParam}&championshipId=${activeChampId}&teamId=${t.id}&email=${encodeURIComponent(t.managerEmail || "")}`;
 
                   return (
                     <div

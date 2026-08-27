@@ -172,7 +172,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
         <div className="relative z-10 max-w-4xl space-y-4">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md flex items-center gap-1.5">
-              <span>⚖️</span> CORPUL DE ARBITRI  I
+              <span className="material-symbols-outlined text-base">gavel</span> CORPUL DE ARBITRI  I
             </span>
             <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-[10px] uppercase font-label">
               30 Arbitri Licențiați

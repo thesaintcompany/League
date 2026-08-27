@@ -365,8 +365,8 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
                 >
                   <option value="Sponsor Principal">  Sponsor Principal</option>
                   <option value="Sponsor  ">⭐ Sponsor  </option>
-                  <option value="Partener Tehnic">⚙️ Partener Tehnic</option>
-                  <option value="Partener Media">📺 Partener Media &amp; TV</option>
+                  <option value="Partener Tehnic"><span className="material-symbols-outlined">settings</span> Partener Tehnic</option>
+                  <option value="Partener Media"><span className="material-symbols-outlined">live_tv</span> Partener Media &amp; TV</option>
                   <option value="Partener Local">📍 Partener Local</option>
                 </select>
               </div>

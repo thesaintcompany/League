@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     },
   });
 
-  const inviteLink = `https://sp.tscquantum.ro/signup?invite=${inviteToken}&team=${teamId}&email=${encodeURIComponent(email)}`;
+  const inviteLink = `https://sp.  buu.ro/signup?invite=${inviteToken}&team=${teamId}&email=${encodeURIComponent(email)}`;
 
   return NextResponse.json({
     ok: true,

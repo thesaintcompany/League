@@ -80,7 +80,7 @@ export default function FAQPage() {
             Nu ai găsit răspunsul căutat?
           </h3>
           <p className="text-xs text-slate-400 max-w-md mx-auto">
-            Echipa noastră de suport tehnic de la <strong>tscquantum.ro</strong> îți stă la dispoziție.
+            Echipa noastră de suport tehnic de la <strong>  buu.ro</strong> îți stă la dispoziție.
           </p>
           <div className="pt-2">
             <a

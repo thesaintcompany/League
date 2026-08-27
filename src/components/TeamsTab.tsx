@@ -251,7 +251,7 @@ export function TeamsTab({
               onClick={() => handleBulkSeed(8)}
               className="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lime-400 font-label font-bold text-xs uppercase tracking-wider transition border border-lime-400/30 flex items-center gap-1.5"
             >
-              <span>🎲</span> {isIndividual ? `Înscrie Top 8 pe Tablou` : "Înscrie Top 8 (Brackets)"}
+              <span className="material-symbols-outlined">casino</span> {isIndividual ? `Înscrie Top 8 pe Tablou` : "Înscrie Top 8 (Brackets)"}
             </button>
             <button
               type="button"
@@ -399,7 +399,7 @@ export function TeamsTab({
 
         {teams.length === 0 ? (
           <div className="p-8 rounded-2xl bg-slate-50 dark:bg-slate-950 text-center space-y-2 border border-slate-200 dark:border-slate-800">
-            <span className="text-3xl">{isIndividual ? "🎾" : "🛡️"}</span>
+            <span className="text-3xl material-symbols-outlined">{isIndividual ? "sports_tennis" : "shield"}</span>
             <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
               {isIndividual ? `Nu există ${sportPlayerLabel.toLowerCase()} înscriși încă pe tablou.` : "Nu există echipe înscrise încă în acest campionat."}
             </p>

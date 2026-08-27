@@ -196,7 +196,7 @@ export async function POST(
         referee: effectiveReferee,
         notes: isInstant
           ? `Generat prin Tragere la Sorți Instantă ⚡ (Anunțuri Zaruri Dezactivate • Seed #${matchIdx + 1}${effectiveVenue ? ` • Locație: ${effectiveVenue}` : ""})`
-          : `Generat prin Tragere la Sorți cu Zaruri 🎲 (Aruncarea #${currentRolls + 1}/3 - Seed #${matchIdx + 1}${effectiveVenue ? ` • Locație: ${effectiveVenue}` : ""})`,
+          : `Generat prin Tragere la Sorți cu Zaruri (Aruncarea #${currentRolls + 1}/3 - Seed #${matchIdx + 1}${effectiveVenue ? ` • Locație: ${effectiveVenue}` : ""})`,
       },
     });
     createdMatches.push(match);

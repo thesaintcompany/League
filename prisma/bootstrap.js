@@ -5,6 +5,7 @@
 const { execSync } = require("node:child_process");
 const path = require("node:path");
 const fs = require("node:fs");
+const demoNames = require("./demoNames.js");
 
 const cwd = process.cwd();
 
@@ -1366,17 +1367,8 @@ async function ensureDemoChampionship(ownerId) {
     },
   });
 
-  // 8 Elite Teams
-  const teamsData = [
-    { name: "FCSB București", shortName: "FCS", color: "#dc2626" },
-    { name: "CFR 1907 Cluj", shortName: "CFR", color: "#7c2d12" },
-    { name: "Universitatea Craiova", shortName: "UCV", color: "#2563eb" },
-    { name: "Rapid București", shortName: "RAP", color: "#991b1b" },
-    { name: "Farul Constanța", shortName: "FAR", color: "#0284c7" },
-    { name: "Dinamo București", shortName: "DIN", color: "#b91c1c" },
-    { name: "Oțelul Galați", shortName: "OTE", color: "#ea580c" },
-    { name: "Sepsi OSK", shortName: "SEP", color: "#15803d" },
-  ];
+  // 8 Elite Teams (randomized Romanian club names)
+  const teamsData = Array.from({ length: 8 }, () => demoNames.randomTeam());
 
   const createdTeams = [];
   for (const t of teamsData) {
@@ -1398,134 +1390,26 @@ async function ensureDemoChampionship(ownerId) {
     where: { team: { isDemo: true } },
   });
 
-  const TOP_SCORERS = [
-    {
-      name: "Florin Tănase",
-      teamShort: "FCS",
-      number: 10,
-      position: "Mijlocaș Ofensiv / Atacant",
-      goals: 18,
-      matchesCount: 28,
-      assists: 6,
-      rating: 9.2,
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80",
-    },
-    {
-      name: "Louis Munteanu",
-      teamShort: "CFR",
-      number: 9,
-      position: "Atacant Central",
-      goals: 16,
-      matchesCount: 26,
-      assists: 4,
-      rating: 9.0,
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80",
-    },
-    {
-      name: "Alexandru Mitriță",
-      teamShort: "UCV",
-      number: 28,
-      position: "Extremă Stânga",
-      goals: 15,
-      matchesCount: 27,
-      assists: 9,
-      rating: 9.1,
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
-    },
-    {
-      name: "Albion Rrahmani",
-      teamShort: "RAP",
-      number: 9,
-      position: "Atacant Central",
-      goals: 14,
-      matchesCount: 24,
-      assists: 3,
-      rating: 8.9,
-      image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&auto=format&fit=crop&q=80",
-    },
-    {
-      name: "Denis Alibec",
-      teamShort: "FAR",
-      number: 7,
-      position: "Atacant Central",
-      goals: 13,
-      matchesCount: 25,
-      assists: 7,
-      rating: 8.8,
-      image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&auto=format&fit=crop&q=80",
-    },
-    {
-      name: "Astrit Selmani",
-      teamShort: "DIN",
-      number: 9,
-      position: "Atacant Central",
-      goals: 12,
-      matchesCount: 26,
-      assists: 4,
-      rating: 8.7,
-      image: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=400&auto=format&fit=crop&q=80",
-    },
-    {
-      name: "Alexandru Pop",
-      teamShort: "OTE",
-      number: 11,
-      position: "Extremă Dreapta",
-      goals: 11,
-      matchesCount: 28,
-      assists: 2,
-      rating: 8.6,
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80",
-    },
-    {
-      name: "Gabriel Debeljuh",
-      teamShort: "SEP",
-      number: 96,
-      position: "Atacant Central",
-      goals: 10,
-      matchesCount: 22,
-      assists: 3,
-      rating: 8.5,
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80",
-    },
-    {
-      name: "Darius Olaru",
-      teamShort: "FCS",
-      number: 27,
-      position: "Mijlocaș Central",
-      goals: 10,
-      matchesCount: 27,
-      assists: 8,
-      rating: 8.9,
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
-    },
-    {
-      name: "Daniel Bîrligea",
-      teamShort: "FCS",
-      number: 9,
-      position: "Atacant Central",
-      goals: 9,
-      matchesCount: 23,
-      assists: 4,
-      rating: 8.6,
-      image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&auto=format&fit=crop&q=80",
-    },
-  ];
-
-  for (const p of TOP_SCORERS) {
-    const team = createdTeams.find((t) => t.shortName === p.teamShort) || createdTeams[0];
-    await prisma.player.create({
-      data: {
-        teamId: team.id,
-        name: p.name,
-        number: p.number,
-        position: p.position,
-        goals: p.goals,
-        matchesCount: p.matchesCount,
-        assists: p.assists,
-        rating: p.rating,
-        image: p.image,
-      },
-    });
+  // Randomized Romanian player names distributed across the demo teams.
+  for (let i = 0; i < createdTeams.length; i++) {
+    const team = createdTeams[i];
+    const numPlayers = demoNames.randomInt(14, 22);
+    for (let j = 0; j < numPlayers; j++) {
+      const p = demoNames.randomPlayer(team.shortName);
+      await prisma.player.create({
+        data: {
+          teamId: team.id,
+          name: p.name,
+          number: p.number,
+          position: p.position,
+          goals: p.goals,
+          matchesCount: p.matchesCount,
+          assists: p.assists,
+          rating: p.rating,
+          image: p.image,
+        },
+      });
+    }
   }
 
   const venuesList = ["Arena Națională", "Stadionul Steaua Ghencea", "Cluj Arena", "Complexul Sportiv Craiova"];

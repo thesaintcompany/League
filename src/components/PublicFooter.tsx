@@ -193,7 +193,7 @@ export function PublicFooter() {
           <p>
             © {currentYear} PRO LIGUE • Operat de{" "}
             <a
-              href="https://tscquantum.ro"
+              href="https://  buu.ro"
               target="_blank"
               rel="noreferrer"
               className="font-bold text-slate-800 dark:text-slate-200 hover:underline"

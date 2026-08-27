@@ -233,7 +233,7 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                                 : "bg-slate-800 text-slate-300"
                             }`}
                         >
-                          {idx === 0 ? "👑 Top 1" : `#${idx + 1} Sezon`}
+                          {idx === 0 ? <><span className="material-symbols-outlined text-sm">star</span> Top 1</> : `#${idx + 1} Sezon`}
                         </span>
                         <span
                           className="px-2 py-0.5 rounded-lg text-[9px] font-black uppercase font-label text-white shadow-sm"

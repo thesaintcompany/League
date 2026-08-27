@@ -23,7 +23,7 @@ export default function DesprePage() {
             PRO LIGUE • ROMÂNIA
           </h1>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Platforma digitală integrată pentru organizarea, arbitrajul   și telemetria în timp real a competițiilor sportive din România, operată de <strong>tscquantum.ro</strong>.
+            Platforma digitală integrată pentru organizarea, arbitrajul   și telemetria în timp real a competițiilor sportive din România, operată de <strong>  buu.ro</strong>.
           </p>
         </div>
       </section>
@@ -33,7 +33,7 @@ export default function DesprePage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-3 shadow-sm">
             <div className="w-12 h-12 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center text-2xl font-black">
-              🎲
+              <span className="material-symbols-outlined">casino</span>
             </div>
             <h3 className="text-lg font-black font-headline uppercase text-slate-900 dark:text-white">
               Tragere la Sorți cu Zaruri
@@ -57,7 +57,7 @@ export default function DesprePage() {
 
           <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-3 shadow-sm">
             <div className="w-12 h-12 rounded-2xl bg-purple-500 text-white flex items-center justify-center text-2xl font-black">
-              ⚖️
+              <span className="material-symbols-outlined">gavel</span>
             </div>
             <h3 className="text-lg font-black font-headline uppercase text-slate-900 dark:text-white">
               Corp Arbitri RIFA

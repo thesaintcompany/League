@@ -124,7 +124,7 @@ export function ChampionshipPublicClientView({
     router.push(`/campionat?id=${id}`);
   }
 
-  const shareUrl = typeof window !== "undefined" ? window.location.href : "https://sp.tscquantum.ro/campionat";
+  const shareUrl = typeof window !== "undefined" ? window.location.href : "https://sp.  buu.ro/campionat";
 
   function copyShareLink() {
     navigator.clipboard.writeText(shareUrl);
@@ -265,7 +265,7 @@ export function ChampionshipPublicClientView({
               : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
               }`}
           >
-            <span>🌳</span>
+            <span className="material-symbols-outlined">account_tree</span>
             <span className="truncate">Harta Meciuri (Mindmap)</span>
           </button>
           <button
@@ -276,7 +276,7 @@ export function ChampionshipPublicClientView({
               : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
               }`}
           >
-            <span>📊</span>
+            <span className="material-symbols-outlined">bar_chart</span>
             <span className="truncate">Clasament</span>
           </button>
         </div>
@@ -313,7 +313,7 @@ export function ChampionshipPublicClientView({
                   onClick={() => setActiveView("bracket")}
                   className="text-xs font-bold font-label text-slate-700 dark:text-lime-400 uppercase tracking-widest hover:underline flex items-center gap-1"
                 >
-                  <span>🌳 Vezi Harta Meciurilor</span>
+                  <span className="material-symbols-outlined">account_tree</span> Vezi Harta Meciurilor
                   <span className="material-symbols-outlined text-sm">arrow_forward</span>
                 </button>
               </div>

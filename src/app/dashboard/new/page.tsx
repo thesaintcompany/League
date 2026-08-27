@@ -396,13 +396,13 @@ export default function NewChampionshipPage() {
                 },
                 {
                   id: "knockout" as const,
-                  icon: "🎲",
+                  icon: "casino",
                   title: "Turneu Zaruri",
                   desc: "Arbore eliminatoriu",
                 },
                 {
                   id: "friendly" as const,
-                  icon: "🤝",
+                  icon: "handshake",
                   title: "Meciuri Amicale",
                   desc: "Partide demonstrative",
                 },
@@ -521,7 +521,7 @@ export default function NewChampionshipPage() {
                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                         }`}
                     >
-                      <span>2. 🗺️ Arie Teritorială</span>
+                      <span className="material-symbols-outlined text-sm">map</span> 2. Arie Teritorială
                       <span className="text-[10px] uppercase font-mono">({form.scope})</span>
                     </button>
                   </div>
@@ -960,7 +960,7 @@ export default function NewChampionshipPage() {
                   <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm">⚖️</span>
+                        <span className="text-sm material-symbols-outlined">gavel</span>
                         <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white">
                           Activare Modul Arbitraj &amp; Delegare Arbitri
                         </span>

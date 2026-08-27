@@ -1035,7 +1035,7 @@ export function AdminSuperPanel() {
             </div>
           </div>
 
-          {/* Date Legale & Identitate Fiscală Operator (tscquantum.ro) */}
+          {/* Date Legale & Identitate Fiscală Operator (  buu.ro) */}
           <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-3">
@@ -1044,7 +1044,7 @@ export function AdminSuperPanel() {
                 </div>
                 <div>
                   <h3 className="font-headline font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase">
-                    Date Legale &amp; Identitate Fiscală Operator (tscquantum.ro)
+                    Date Legale &amp; Identitate Fiscală Operator (  buu.ro)
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
                     Informațiile  e ale entității juridice care operează platforma, facturile de ticketing și termenii legali.
@@ -1053,7 +1053,7 @@ export function AdminSuperPanel() {
               </div>
 
               <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-mono font-bold uppercase border border-blue-500/20">
-                Operator  : tscquantum.ro
+                Operator  :   buu.ro
               </span>
             </div>
 
@@ -1339,7 +1339,7 @@ export function AdminSuperPanel() {
                         Domeniu Web Verificat:
                       </span>
                       <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
-                        sp.tscquantum.ro (Verificat ✓)
+                        sp.  buu.ro (Verificat ✓)
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-500 font-body">
@@ -1489,13 +1489,13 @@ export function AdminSuperPanel() {
 
                 <div className="space-y-2 text-xs">
                   <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 font-mono text-[11px] flex justify-between items-center">
-                    <span className="truncate">https://sp.tscquantum.ro/api/webhooks/stripe</span>
+                    <span className="truncate">https://sp.  buu.ro/api/webhooks/stripe</span>
                     <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
                       Stripe Live
                     </span>
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 font-mono text-[11px] flex justify-between items-center">
-                    <span className="truncate">https://sp.tscquantum.ro/api/webhooks/paypal</span>
+                    <span className="truncate">https://sp.  buu.ro/api/webhooks/paypal</span>
                     <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-bold">
                       PayPal Live
                     </span>
@@ -1721,8 +1721,8 @@ export function AdminSuperPanel() {
                             className="bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl px-2.5 py-1.5 font-bold focus:outline-none focus:border-lime-500 cursor-pointer"
                           >
                             <option value="organizer">⚡ Pro Organizer</option>
-                            <option value="super_admin">👑 Super Administrator</option>
-                            <option value="referee">⚖️ Arbitru   (RIFA)</option>
+                            <option value="super_admin"><span className="material-symbols-outlined">star</span> Super Administrator</option>
+                            <option value="referee"><span className="material-symbols-outlined">gavel</span> Arbitru   (RIFA)</option>
                             <option value="arena_owner">Proprietar</option>
                             <option value="team_leader">👔 Manager Echipă</option>
                             <option value="player">⚽ Jucător</option>
@@ -2301,9 +2301,9 @@ export function AdminSuperPanel() {
               </div>
 
               <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-black text-lg">
-                  🎲
-                </div>
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-black text-lg">
+                    <span className="material-symbols-outlined">casino</span>
+                  </div>
                 <div>
                   <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
                     Status Date Demo
@@ -2587,8 +2587,8 @@ export function AdminSuperPanel() {
                     className="input text-xs font-bold"
                   >
                     <option value="organizer">⚡ Pro Organizer</option>
-                    <option value="super_admin">👑 Super Administrator</option>
-                    <option value="referee">⚖️ Arbitru   (RIFA)</option>
+                    <option value="super_admin"><span className="material-symbols-outlined">star</span> Super Administrator</option>
+                    <option value="referee"><span className="material-symbols-outlined">gavel</span> Arbitru   (RIFA)</option>
                     <option value="arena_owner">Proprietar</option>
                     <option value="team_leader">👔 Manager Echipă</option>
                     <option value="player">⚽ Jucător</option>

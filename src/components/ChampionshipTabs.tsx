@@ -295,7 +295,7 @@ export function ChampionshipTabs({
                     : "bg-lime-400 hover:bg-lime-300 text-slate-950"
                   }`}
               >
-                <span className="text-sm">🎲</span>
+                <span className="text-sm material-symbols-outlined">casino</span>
                 <span>{hasGeneratedMatches ? "Vezi Arborele Generat" : "Trage la Sorți Tabloul"}</span>
               </button>
             </div>

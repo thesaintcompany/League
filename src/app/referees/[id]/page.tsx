@@ -62,7 +62,7 @@ export default async function PublicRefereeDetailPage({
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-                ⚖️   ATESTAT   / LIGUE PRO
+                <span className="material-symbols-outlined text-sm">gavel</span>   ATESTAT   / LIGUE PRO
               </span>
               <RefereeBadgePill badge={referee.refereeBadge} />
               <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-xs font-label border border-lime-400/30">
@@ -196,7 +196,7 @@ export default async function PublicRefereeDetailPage({
             <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-[2rem] space-y-6 shadow-xl dark:shadow-2xl">
               <div className="flex items-center gap-3.5 pb-4 border-b border-slate-200 dark:border-slate-800">
                 <div className="w-11 h-11 rounded-2xl bg-lime-400/20 text-lime-600 dark:text-lime-400 flex items-center justify-center font-black text-2xl border border-lime-400/40 shadow-inner">
-                  ⚖️
+                  <span className="material-symbols-outlined">gavel</span>
                 </div>
                 <div>
                   <h3 className="text-lg sm:text-xl font-bold font-headline text-slate-900 dark:text-white">

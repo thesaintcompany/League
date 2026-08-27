@@ -102,7 +102,7 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
         </div>
 
         <div class="footer">
-          © Ligue Pro România • Document generat automat pentru <strong>${championshipName}</strong> • Powered by tscquantum.ro
+          © Ligue Pro România • Document generat automat pentru <strong>${championshipName}</strong> • Powered by   buu.ro
         </div>
       </body>
       </html>
@@ -138,8 +138,8 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
                 type="button"
                 onClick={() => setLang("RO")}
                 className={`px-2 py-0.5 rounded-md transition ${lang === "RO"
-                    ? "bg-lime-400 text-slate-950 font-black shadow-sm"
-                    : "text-slate-400 hover:text-white"
+                  ? "bg-lime-400 text-slate-950 font-black shadow-sm"
+                  : "text-slate-400 hover:text-white"
                   }`}
               >
                 RO
@@ -149,8 +149,8 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
                 type="button"
                 onClick={() => setLang("ENG")}
                 className={`px-2 py-0.5 rounded-md transition ${lang === "ENG"
-                    ? "bg-lime-400 text-slate-950 font-black shadow-sm"
-                    : "text-slate-400 hover:text-white"
+                  ? "bg-lime-400 text-slate-950 font-black shadow-sm"
+                  : "text-slate-400 hover:text-white"
                   }`}
               >
                 ENG

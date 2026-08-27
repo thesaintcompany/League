@@ -117,7 +117,7 @@ export function ChampionshipBracketSwitcher({
             className="px-3.5 py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-sm flex items-center gap-1 shrink-0 active:scale-95"
             title="Explorează toate campionatele pe harta interactivă"
           >
-            <span>🗺️</span>
+            <span className="material-symbols-outlined">map</span>
             <span className="hidden sm:inline">Harta RO</span>
           </Link>
         </div>

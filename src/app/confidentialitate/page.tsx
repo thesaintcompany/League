@@ -23,7 +23,7 @@ export default function ConfidentialitatePage() {
             Politica de Confidențialitate (GDPR)
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-            Protecția datelor dumneavoastră este prioritatea noastră • Operat de <strong>tscquantum.ro</strong>
+            Protecția datelor dumneavoastră este prioritatea noastră • Operat de <strong>  buu.ro</strong>
           </p>
         </div>
       </section>

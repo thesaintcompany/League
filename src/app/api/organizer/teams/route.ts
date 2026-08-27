@@ -193,10 +193,10 @@ export async function POST(req: Request) {
       },
     });
 
-        
+
 
     const inviteRole = isIndividual ? "player" : "team_leader";
-    const inviteLink = `https://sp.tscquantum.ro/signup?role=${inviteRole}&championshipId=${championshipId}&teamId=${createdTeam.id}&email=${encodeURIComponent(cleanEmail || "")}`;
+    const inviteLink = `https://sp.  buu.ro/signup?role=${inviteRole}&championshipId=${championshipId}&teamId=${createdTeam.id}&email=${encodeURIComponent(cleanEmail || "")}`;
 
     return NextResponse.json({
       ok: true,

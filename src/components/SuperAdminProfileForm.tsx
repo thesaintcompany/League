@@ -95,7 +95,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-slate-950 text-lime-400 dark:bg-lime-400 dark:text-slate-950 flex items-center justify-center font-black text-xl shadow-md">
-              👑
+              <span className="material-symbols-outlined">star</span>
             </div>
             <div>
               <h2 className="text-lg font-black font-headline uppercase text-slate-900 dark:text-white">
@@ -160,7 +160,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
         </form>
       </div>
 
-      {/* 2. Date Legale & Identitate Fiscală Operator (tscquantum.ro) */}
+      {/* 2. Date Legale & Identitate Fiscală Operator (  buu.ro) */}
       <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
         <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
@@ -169,7 +169,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
             </div>
             <div>
               <h3 className="font-headline font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase">
-                Date Legale &amp; Identitate Fiscală (tscquantum.ro)
+                Date Legale &amp; Identitate Fiscală (  buu.ro)
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
                 Datele entității juridice care operează platforma, facturile de ticketing și termenii legali.
@@ -178,7 +178,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           </div>
 
           <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-mono font-bold uppercase border border-blue-500/20">
-            Operator: tscquantum.ro
+            Operator:   buu.ro
           </span>
         </div>
 
@@ -378,7 +378,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
                     Domeniu Web Verificat:
                   </span>
                   <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
-                    sp.tscquantum.ro (Verificat ✓)
+                    sp.  buu.ro (Verificat ✓)
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 font-body">

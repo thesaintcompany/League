@@ -156,3 +156,37 @@ node tools/check-payments.js
 | P1 | Restrict `/api/team` GET auto-assignment to `team_leader` role only (exclude `player`) | `api/team/route.ts:33-58` |
 | P1 | Allow team creation to specify `championshipId`, `sport`, `category` | `api/team/create/route.ts:47-98` |
 | P2 | Implement `GET /api/arena/matches/[id]` (cancelation/visibility view) | `api/arena/matches/[id]/route.ts` |
+
+---
+
+## 7. Demo Data: Randomized Romanian Names
+
+The seed/bootstrap scripts previously used well-known Romanian football clubs and famous players as hardcoded fixtures (`teamsData`: FCSB, CFR Cluj, Universitatea Craiova, Dinamo, etc.; `TOP_SCORERS`: Florin Tănase, Alexandru Mitriță, Denis Alibec, ...).
+
+To avoid recognizable entities and satisfy the "random but real Romanian names" requirement, a generator util was introduced.
+
+**New file:** `prisma/demoNames.js` (CommonJS, no deps) — lists of Romanian first names (male/female), surnames, club prefixes/suffixes, cities, positions, and colors. Exports `randomNume()`, `randomTeam()`, `randomPlayer(teamShort)`, `randomOras(unique)`.
+
+**Modified seed/bootstrap files:**
+- `prisma/bootstrap.js`: `require("./demoNames.js")` added; `teamsData` replaced with `Array.from({ length: 8 }, () => randomTeam())`; `TOP_SCORERS` (famous players) replaced with a loop generating `randomInt(14,22)` random players per team distributed across `createdTeams`.
+- `prisma/seed.ts`: imported `randomTeam`; teams created with random names/colors.
+
+**Verified output** (sample from re-seeded DB):
+```
+CSC Râiga | CR
+CS Cluj | CC
+FC Eroii Constanța | CC
+FC United Râmnicu Vâlaca | URV
+```
+No well-known club names (no `FCSB`, `Dinamo`, `CFR`, etc.) appear — all are random combinations of Romanian prefixes (FC, CS, CSC, ACS, AS, CS Universitar, CSM, CSG, SC, AC, FK, FC Rapid, FC United, AS Sporting) and Romanian cities (Râiga, Cluj, Constanța, Râmnicu Vâlaca, ...).
+
+> Note: Static UI fixture arrays in components like `TeamsTab.tsx` (catalog preview) remain unchanged — those are display-only preview data, not DB-backed seed data.
+
+**Verification commands:**
+```bash
+node tools/check-seed.js        # confirms no old club names in DB
+node tools/wipe-demo.js         # wipes demo data (matches→players→teams→champs→venues)
+node "node_modules/tsx/dist/cli.mjs" prisma/seed.ts  # reseeds with random names
+```
+
+Re-run full flow: `node tools/test-flows.js`

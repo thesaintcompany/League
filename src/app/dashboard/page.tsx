@@ -155,7 +155,7 @@ export default async function DashboardPage({
                   Echipe Organizator &amp; Invitații Lideri
                 </h3>
                 <p className="text-xs text-slate-400 font-body mt-0.5">
-                  Înscrie echipe existente din sistem sau trimite invitații prin email/WhatsApp managerilor noi, apoi extrage-le cu zarurile 🎲.
+                  Înscrie echipe existente din sistem sau trimite invitații prin email/WhatsApp managerilor noi, apoi extrage-le cu zarurile (tragere la sorți).
                 </p>
               </div>
             </div>

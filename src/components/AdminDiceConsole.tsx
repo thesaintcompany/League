@@ -191,7 +191,7 @@ export function AdminDiceConsole({
               </span>
             </div>
             <h2 className="font-headline text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight uppercase">
-              Logic Hub &amp; <span className="text-emerald-700 dark:text-lime-400">Tragere Zaruri</span> 🎲
+              Logic Hub &amp; <span className="text-emerald-700 dark:text-lime-400">Tragere Zaruri</span> <span className="material-symbols-outlined text-emerald-700 dark:text-lime-400">casino</span>
             </h2>
             <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm max-w-2xl font-body leading-relaxed">
               Zarurile se pot arunca de <strong>maxim 3 ori</strong> înainte de a publica harta mindmap a meciurilor. Odată ce harta meciurilor este făcută publică, aruncarea zarurilor este blocată definitiv pentru a garanta integritatea competiției.
@@ -200,7 +200,7 @@ export function AdminDiceConsole({
 
           <div className="flex flex-wrap items-center gap-3">
             <div className="px-4 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold font-label border border-slate-200 dark:border-slate-700 flex items-center gap-2">
-              <span>{isIndividual ? "🎾" : "🛡️"}</span>
+              <span className="material-symbols-outlined text-sm">{isIndividual ? "sports_tennis" : "shield"}</span>
               <span>{selectedTeamIds.length} / {teams.length} {isIndividual ? "Competitori Selectați" : "Echipe Selectate"}</span>
             </div>
 
@@ -212,7 +212,7 @@ export function AdminDiceConsole({
                     : "bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-lime-950/60 dark:text-lime-300 dark:border-lime-700"
                 }`}
             >
-              <span>{isLocked ? "🔒" : "🎲"}</span>
+              <span className="material-symbols-outlined">{isLocked ? "lock" : "casino"}</span>
               <span>
                 {isBracketPublished
                   ? "HARTĂ PUBLICATĂ (BLOCAT)"
@@ -276,7 +276,7 @@ export function AdminDiceConsole({
           <div className="flex justify-between items-start mb-8 relative z-10">
             <div className="space-y-2">
               <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md inline-block">
-                {isIndividual ? `🎲 TRAGERE LA SORȚI TABLOU ${sport.toUpperCase()}` : "🎲 TRAGERE LA SORȚI CU ZARURI"}
+                {isIndividual ? `Tragere La Sorți pe Tablou ${sport.toUpperCase()}` : "Tragere La Sorți cu Zaruri"}
               </span>
               <h2 className="text-xl sm:text-2xl font-black font-headline text-slate-900 dark:text-white uppercase tracking-tight leading-snug">
                 {isIndividual ? (

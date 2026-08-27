@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+// Shared randomized-Romanian-name generator (CommonJS so it loads from TSX too).
+const { randomTeam } = require("./demoNames.js");
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -29,12 +32,19 @@ async function main() {
     },
   });
 
-  const teams = await Promise.all([
-    prisma.team.create({ data: { championshipId: champ.id, name: "FC Steaua", shortName: "STE", color: "#dc2626" } }),
-    prisma.team.create({ data: { championshipId: champ.id, name: "Dinamo", shortName: "DIN", color: "#1e3a8a" } }),
-    prisma.team.create({ data: { championshipId: champ.id, name: "Rapid", shortName: "RAP", color: "#fbbf24" } }),
-    prisma.team.create({ data: { championshipId: champ.id, name: "CFR", shortName: "CFR", color: "#7c2d12" } }),
-  ]);
+  const teams = await Promise.all(
+    Array.from({ length: 4 }).map(async () => {
+      const d = randomTeam();
+      return await prisma.team.create({
+        data: {
+          championshipId: champ.id,
+          name: d.name,
+          shortName: d.shortName,
+          color: d.color,
+        },
+      });
+    })
+  );
 
   // Round-robin: 6 meciuri
   const pairings = [

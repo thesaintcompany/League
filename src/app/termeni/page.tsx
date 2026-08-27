@@ -17,13 +17,13 @@ export default function TermeniPage() {
       <section className="relative overflow-hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-4 relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-headline font-black uppercase tracking-wider border border-slate-300 dark:border-slate-700">
-            <span>⚖️</span> CADRU LEGAL
+            <span className="material-symbols-outlined">gavel</span> CADRU LEGAL
           </div>
           <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-tight">
             Termeni și Condiții de Utilizare
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-            Ultima actualizare: Sezon 2026 • Operat   de <strong>tscquantum.ro</strong>
+            Ultima actualizare: Sezon 2026 • Operat   de <strong>  buu.ro</strong>
           </p>
         </div>
       </section>
@@ -36,7 +36,7 @@ export default function TermeniPage() {
               1. Acceptarea Termenilor
             </h2>
             <p>
-              Prin accesarea și utilizarea platformei <strong>PRO LIGUE</strong> (disponibilă pe domeniile  e operate de tscquantum.ro), confirmați că ați citit, înțeles și sunteți de acord să respectați acești Termeni și Condiții, precum și toate legile și reglementările românești aplicabile.
+              Prin accesarea și utilizarea platformei <strong>PRO LIGUE</strong> (disponibilă pe domeniile  e operate de   buu.ro), confirmați că ați citit, înțeles și sunteți de acord să respectați acești Termeni și Condiții, precum și toate legile și reglementările românești aplicabile.
             </p>
           </section>
 
@@ -72,7 +72,7 @@ export default function TermeniPage() {
               5. Drepturi de Proprietate Intelectuală
             </h2>
             <p>
-              Toate mărcile, siglele (inclusiv sigla  ă PRO LIGUE ROMANIA), denumirile de arene, elementele grafice și codul sursă aparțin exclusiv <strong>tscquantum.ro</strong> și partenerilor afiliați. Este interzisă reproducerea neautorizată.
+              Toate mărcile, siglele (inclusiv sigla  ă PRO LIGUE ROMANIA), denumirile de arene, elementele grafice și codul sursă aparțin exclusiv <strong>  buu.ro</strong> și partenerilor afiliați. Este interzisă reproducerea neautorizată.
             </p>
           </section>
 

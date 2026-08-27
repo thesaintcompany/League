@@ -179,7 +179,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
         <div className="relative z-10 max-w-4xl space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] sm:text-[11px] uppercase font-label tracking-wider shadow-md flex items-center gap-1.5">
-              <span>🗺️</span> HARTA PE JUDEȚE
+              <span className="material-symbols-outlined text-base">map</span> HARTA PE JUDEȚE
             </span>
             <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white font-bold text-[10px] sm:text-[11px] uppercase font-label border border-slate-200 dark:border-slate-700">
               41 Județe + București
@@ -271,7 +271,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
           <div className="card p-4 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-lg space-y-4">
             <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
-                <span className="text-xl">🗺️</span>
+                <span className="text-xl material-symbols-outlined">map</span>
                 <h3 className="font-headline font-bold text-sm sm:text-base text-slate-900 dark:text-white">
                   RO MAP
                 </h3>
@@ -470,7 +470,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                               href={`/brackets?id=${champ.id}`}
                               className="px-2.5 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-900 dark:text-white font-bold text-[10px] sm:text-[11px] uppercase font-label transition flex items-center gap-1"
                             >
-                              🌳 Harta
+                              <span className="material-symbols-outlined text-sm">account_tree</span> Harta
                             </Link>
                             <Link
                               href={`/campionat?id=${champ.id}`}

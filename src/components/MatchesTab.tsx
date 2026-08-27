@@ -136,8 +136,8 @@ export function MatchesTab({
           <span className="w-2 h-5 bg-lime-500 rounded-full"></span>
           <h2 className="text-lg font-bold font-headline text-blue-950 dark:text-white">
             {refereeEnabled
-              ? `Program Meciuri & Arbitraj ${isIndividual ? "Individual 🎾" : ""} (${matches.length})`
-              : `Program Meciuri ${isIndividual ? "Individual 🎾" : ""} (${matches.length})`}
+              ? `Program Meciuri & Arbitraj ${isIndividual ? "Individual" : ""} (${matches.length})`
+              : `Program Meciuri ${isIndividual ? "Individual" : ""} (${matches.length})`}
           </h2>
           {!refereeEnabled && (
             <span className="px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-label font-bold text-[10px] uppercase">

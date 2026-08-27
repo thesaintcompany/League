@@ -86,7 +86,7 @@ export function BracketVisualizer({
   }
 
   // Get clean direct public URL
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://sp.tscquantum.ro";
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://sp.  buu.ro";
   const publicShareUrl = `${origin}/brackets?code=${currentShareCode}`;
 
   function copyToClipboard(text: string, type: "link" | "code") {
@@ -110,7 +110,7 @@ export function BracketVisualizer({
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-6 border-b border-slate-200 dark:border-white/10 relative z-10">
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xl sm:text-2xl shadow-lg shadow-lime-400/20 shrink-0">
-            🎲
+            <span className="material-symbols-outlined">casino</span>
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
@@ -181,7 +181,7 @@ export function BracketVisualizer({
             : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
         >
-          <span>🌳</span> Mindmap Arbore
+          <span className="material-symbols-outlined">account_tree</span> Mindmap Arbore
         </button>
         <button
           type="button"
