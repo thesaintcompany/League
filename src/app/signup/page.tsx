@@ -131,7 +131,7 @@ function SignUpForm() {
         
         {/* Card 1 (Dark Side / Mobile Step 1): Visual Impact + 2-Column Compact Roles on Mobile */}
         <div
-          className={`w-full lg:w-5/12 bg-slate-950 p-4 sm:p-8 lg:p-12 flex-col justify-between relative overflow-hidden text-white min-h-[480px] lg:min-h-[660px] ${
+          className={`w-full lg:w-5/12 bg-slate-950 p-5 sm:p-8 lg:p-12 flex-col justify-between relative overflow-hidden text-white min-h-[620px] sm:min-h-[680px] lg:min-h-[780px] ${
             mobileView === "roles" ? "flex" : "hidden lg:flex"
           }`}
         >
@@ -289,7 +289,7 @@ function SignUpForm() {
 
         {/* Card 2 (Right Side / Mobile Step 2): Registration Form & Disabled Google Auth */}
         <div
-          className={`w-full lg:w-7/12 p-4 sm:p-8 lg:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 relative overflow-hidden min-h-[480px] lg:min-h-[660px] ${
+          className={`w-full lg:w-7/12 p-5 sm:p-8 lg:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 relative overflow-hidden min-h-[620px] sm:min-h-[680px] lg:min-h-[780px] ${
             mobileView === "form" ? "flex" : "hidden lg:flex"
           }`}
         >
