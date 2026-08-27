@@ -110,7 +110,7 @@ export default async function PublicBracketsPage({
         <PublicHeader currentTab="brackets" />
         <main className="max-w-4xl mx-auto px-4 py-16 text-center space-y-6 flex-1">
           <div className="w-16 h-16 rounded-3xl bg-amber-500/20 text-amber-500 flex items-center justify-center text-3xl mx-auto">
-            🔍
+            <span className="material-symbols-outlined align-middle text-sm">search</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black font-headline uppercase">
             Competiția #{requestedCode} nu a fost găsită
@@ -311,7 +311,7 @@ export default async function PublicBracketsPage({
               href="/matches"
               className="px-4 py-2.5 sm:py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md"
             >
-              📋 Lista Meciuri
+               Lista Meciuri
             </Link>
             <Link
               href="/harta-romaniei"

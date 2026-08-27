@@ -105,7 +105,7 @@ export default async function PublicRefereeDetailPage({
                   Fișă Arbitru Omologat
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
-                  DISPONIBIL PENTRU MECIURI ✓
+                  DISPONIBIL PENTRU MECIURI 
                 </span>
               </div>
 

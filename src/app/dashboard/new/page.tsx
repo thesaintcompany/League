@@ -348,7 +348,7 @@ export default function NewChampionshipPage() {
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-xs sm:text-sm font-label font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
-                  ⚡ Șabloane Rapide (1-Click Fill)
+                  <span className="material-symbols-outlined text-sm align-middle">bolt</span> Șabloane Rapide (1-Click Fill)
                 </span>
                 <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-label">
                   Alege un tip de competiție pentru a pre-completa automat setările optime
@@ -429,7 +429,7 @@ export default function NewChampionshipPage() {
                           : "border-2 border-slate-300 dark:border-slate-700 text-transparent"
                           }`}
                       >
-                        {isSelected ? "✓" : ""}
+                        {isSelected ? <span className="material-symbols-outlined text-xs">check_circle</span> : ""}
                       </div>
                     </div>
                     <div>
@@ -511,7 +511,7 @@ export default function NewChampionshipPage() {
                         }`}
                     >
                       <span>1. <span className="material-symbols-outlined text-xs align-middle">image</span> Siglă  ă</span>
-                      {form.logoUrl && <span className="text-[10px]">✓</span>}
+                      {form.logoUrl && <span className="text-[10px] material-symbols-outlined">check_circle</span>}
                     </button>
                     <button
                       type="button"
@@ -682,7 +682,7 @@ export default function NewChampionshipPage() {
                         >
                           <div className="flex items-center justify-between w-full">
                             <span className="text-sm font-headline font-bold uppercase">{sc.label}</span>
-                            <span className="text-xs font-bold">{form.scope === sc.value ? "✓" : ""}</span>
+                            <span className="text-xs font-bold">{form.scope === sc.value ? <span className="material-symbols-outlined text-xs">check_circle</span> : ""}</span>
                           </div>
                           <span className="text-[11px] font-label font-normal opacity-80">
                             {sc.value === "national"
@@ -863,7 +863,7 @@ export default function NewChampionshipPage() {
                                   : "border-2 border-slate-300 dark:border-slate-700 text-transparent"
                                   }`}
                               >
-                                {isSelected ? "✓" : ""}
+                                {isSelected ? <span className="material-symbols-outlined text-xs">check_circle</span> : ""}
                               </div>
                             </button>
                           );
@@ -929,15 +929,15 @@ export default function NewChampionshipPage() {
                   <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm">⚡</span>
+                        <span className="text-sm material-symbols-outlined">bolt</span>
                         <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white">
                           Dezactivează Anunțurile cu Zaruri (Tragere Silent)
                         </span>
                       </div>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label mt-0.5">
                         {form.silentDice
-                          ? "✓ Tragere Silent: Rezultatul tragerii se generează discret, fără notificări pe WhatsApp/Email către cluburi."
-                          : "📢 Anunțuri Active: Echipele primesc notificare automată despre stabilirea meciurilor."}
+                          ? "Tragere Silent: Rezultatul tragerii se generează discret, fără notificări pe WhatsApp/Email către cluburi."
+                          : "Anunțuri Active: Echipele primesc notificare automată despre stabilirea meciurilor."}
                       </p>
                     </div>
 
@@ -967,8 +967,8 @@ export default function NewChampionshipPage() {
                       </div>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label mt-0.5">
                         {form.refereeEnabled
-                          ? "✓ Arbitraj   Activ: Se pot delega arbitri  i, întocmi rapoarte de joc și cartonașe."
-                          : "✕ Fără Arbitraj  : Turneu amical / meciuri autogestionate (fără delegare de arbitri)."}
+                          ? "Arbitraj Activ: Se pot delega arbitri  i, întocmi rapoarte de joc și cartonașe."
+                          : "Fără Arbitraj  : Turneu amical / meciuri autogestionate (fără delegare de arbitri)."}
                       </p>
                     </div>
 
@@ -1062,7 +1062,7 @@ export default function NewChampionshipPage() {
                                 onClick={() => setShowVenueOwnerInvite(false)}
                                 className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-white"
                               >
-                                ✕
+                                <span className="material-symbols-outlined text-sm">close</span>
                               </button>
                             </div>
 
@@ -1104,12 +1104,12 @@ export default function NewChampionshipPage() {
                                 title="Trimite Invitație pe WhatsApp"
                                 className="w-9 h-9 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center text-lg shadow-sm transition active:scale-95 shrink-0"
                               >
-                                <span>💬</span>
+                                <span className="material-symbols-outlined text-sm">chat_bubble</span>
                               </button>
 
                               {venueInviteSent && (
                                 <span className="text-[11px] font-bold text-teal-700 dark:text-teal-300 font-label flex items-center gap-1">
-                                  ✓ Invitație pregătită!
+                                  Invitație pregătită!
                                 </span>
                               )}
                             </div>
@@ -1184,7 +1184,7 @@ export default function NewChampionshipPage() {
                   disabled={loading}
                   className="px-6 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md transition active:scale-95 flex items-center gap-2"
                 >
-                  <span>{loading ? "Se creează..." : existingCount >= 1 ? "Continuă la Plată (280 €) 💳" : "Lansează Campionatul (Gratuit)  "}</span>
+                  <span>{loading ? "Se creează..." : existingCount >= 1 ? "Continuă la Plată (280 €)" : "Lansează Campionatul (Gratuit)  "}</span>
                 </button>
               </div>
             </form>
@@ -1337,7 +1337,7 @@ export default function NewChampionshipPage() {
                 className="w-2/3 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg transition active:scale-95 flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined text-sm">lock</span>
-                <span>{isProcessingPayment ? "Se procesează..." : "Achită & Lansează (280 €) ✓"}</span>
+                <span>{isProcessingPayment ? "Se procesează..." : "Achită & Lansează (280 €)"}</span>
               </button>
             </div>
           </div>

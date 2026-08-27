@@ -106,7 +106,7 @@ export function VenueClaimModal({
         {successMessage ? (
           <div className="py-8 text-center space-y-4">
             <div className="w-16 h-16 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center text-3xl mx-auto shadow-lg shadow-lime-400/20 animate-bounce">
-              ✓
+              <span className="material-symbols-outlined align-middle text-sm">check_circle</span>
             </div>
             <h4 className="text-xl font-headline font-bold uppercase text-slate-900 dark:text-white">
               Cerere Transmisă cu Succes!

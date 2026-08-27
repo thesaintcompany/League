@@ -166,7 +166,7 @@ export function TeamManagerPanel({
       const res = await fetch(`/api/team/payments/methods/${id}`, { method: "DELETE" });
       if (res.ok) {
         setPaymentMethods((prev) => prev.filter((m) => m.id !== id));
-        notify("✓ Metoda de plată a fost ștearsă.");
+        notify(" Metoda de plată a fost ștearsă.");
       } else {
         const errData = await res.json().catch(() => ({}));
         notify(`Eroare: ${errData.error || res.statusText}`);
@@ -183,7 +183,7 @@ export function TeamManagerPanel({
         setPaymentMethods((prev) =>
           prev.map((m) => ({ ...m, isDefault: m.id === id }))
         );
-        notify("✓ Metoda de plată implicită a fost actualizată.");
+        notify(" Metoda de plată implicită a fost actualizată.");
       } else {
         const errData = await res.json().catch(() => ({}));
         notify(`Eroare: ${errData.error || res.statusText}`);
@@ -220,7 +220,7 @@ export function TeamManagerPanel({
         setNewCardExpiry("");
         setNewCardCvc("");
         setNewCardHolder("");
-        notify("✓ Cardul a fost adăugat ca metodă de plată.");
+        notify(" Cardul a fost adăugat ca metodă de plată.");
       } else {
         const errData = await res.json().catch(() => ({}));
         notify(`Eroare: ${errData.error || res.statusText}`);
@@ -295,7 +295,7 @@ export function TeamManagerPanel({
           const data = await res.json().catch(() => ({}));
           setTeam((prev) => ({ ...prev, logoUrl: data.team?.logoUrl || result }));
           setLogoUrl(result);
-          notify("✓ Logo-ul echipei a fost actualizat!");
+          notify(" Logo-ul echipei a fost actualizat!");
         } else {
           notify("Eroare la actualizarea logo-ului.");
         }
@@ -346,7 +346,7 @@ export function TeamManagerPanel({
         if (data.error === "payment_required") {
           const hasPaymentMethod = paymentMethods.some((m) => m.isActive);
           if (!hasPaymentMethod) {
-            setPaymentError("💳 Nu ai o metodă de plată activă. Adaugă un card înainte de a crea o echipă plătită.");
+            setPaymentError(" Nu ai o metodă de plată activă. Adaugă un card înainte de a crea o echipă plătită.");
           } else {
             setPaymentError(data.message || "Plată necesară pentru echipă suplimentară.");
           }
@@ -408,7 +408,7 @@ export function TeamManagerPanel({
       if (res.ok) {
         const data = await res.json();
         setTeam((prev) => ({ ...prev, ...data.team }));
-        notify("✓ Configurația clubului și staff-ul au fost salvate cu succes!");
+        notify(" Configurația clubului și staff-ul au fost salvate cu succes!");
       } else {
         const errData = await res.json().catch(() => ({}));
         notify(`Eroare la salvare: ${errData.error || res.statusText}`);
@@ -439,7 +439,7 @@ export function TeamManagerPanel({
             p.id === playerId ? { ...p, isStarter: !currentStarter } : p
           ),
         }));
-        notify(`✓ Jucătorul a fost trecut ca ${!currentStarter ? "TITULAR" : "REZERVĂ"}.`);
+        notify(` Jucătorul a fost trecut ca ${!currentStarter ? "TITULAR" : "REZERVĂ"}.`);
       }
     } catch {
       notify("Eroare la actualizare statut.");
@@ -473,7 +473,7 @@ export function TeamManagerPanel({
         setNewPlayerName("");
         setNewPlayerNumber("");
         setShowAddPlayer(false);
-        notify("✓ Jucător adăugat în lot!");
+        notify(" Jucător adăugat în lot!");
       } else {
         const errData = await res.json().catch(() => ({}));
         notify(`Eroare la adăugare: ${errData.error || res.statusText}`);
@@ -498,7 +498,7 @@ export function TeamManagerPanel({
           ...prev,
           players: prev.players.filter((p) => p.id !== playerId),
         }));
-        notify("✓ Jucător eliminat din lot.");
+        notify(" Jucător eliminat din lot.");
       }
     } catch {
       notify("Eroare la ștergere.");
@@ -533,7 +533,7 @@ export function TeamManagerPanel({
         setInviteEmail("");
         setInviteName("");
         setInviteNumber("");
-        notify("✓ Invitația pe email a fost generată și trimisă!");
+        notify(" Invitația pe email a fost generată și trimisă!");
       } else {
         const errData = await res.json().catch(() => ({}));
         notify(`Eroare: ${errData.error || res.statusText}`);
@@ -1029,7 +1029,7 @@ export function TeamManagerPanel({
 
                   <div className="flex justify-between items-center pt-2 border-t border-slate-800 text-xs font-label">
                     <span className="px-2 py-0.5 rounded bg-lime-400/20 text-lime-400 font-bold text-[10px] uppercase">
-                      Titular ✓
+                      Titular 
                     </span>
                     <button
                       type="button"
@@ -1233,7 +1233,7 @@ export function TeamManagerPanel({
                 disabled={busy}
                 className="w-full py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg transition active:scale-95"
               >
-                {busy ? "Se salvează..." : "Salvează Modificările Clubului 💾"}
+                {busy ? "Se salvează..." : "Salvează Modificările Clubului "}
               </button>
             </div>
 
@@ -1376,7 +1376,7 @@ export function TeamManagerPanel({
                   disabled={busy || !inviteEmail.trim()}
                   className="px-6 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg transition active:scale-95"
                 >
-                  {busy ? "Se trimite..." : "Generează & Trimite Invitația ✉️"}
+                  {busy ? "Se trimite..." : "Generează & Trimite Invitația ️"}
                 </button>
               </div>
             </form>
@@ -1402,7 +1402,7 @@ export function TeamManagerPanel({
                     }}
                     className="px-4 py-2.5 rounded-xl bg-lime-400 text-slate-950 font-bold text-xs uppercase"
                   >
-                    {copiedLink ? "Copiat! ✓" : "Copiază"}
+                    {copiedLink ? "Copiat! " : "Copiază"}
                   </button>
                   <a
                     href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`  Ai fost invitat să faci parte din lotul ${team.name}! Înregistrează-ți contul de jucător aici: ${lastInviteLink}`)}`}
@@ -1410,7 +1410,7 @@ export function TeamManagerPanel({
                     rel="noreferrer"
                     className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase flex items-center gap-1"
                   >
-                    <span>💬</span> WhatsApp
+                    <span><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></span> WhatsApp
                   </a>
                 </div>
               </div>
@@ -1488,7 +1488,7 @@ export function TeamManagerPanel({
               disabled={busy}
               className="px-6 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg transition"
             >
-              {busy ? "Se salvează..." : "Salvează Staff-ul Tehnic 💾"}
+              {busy ? "Se salvează..." : "Salvează Staff-ul Tehnic "}
             </button>
           </div>
         </form>
@@ -1534,7 +1534,7 @@ export function TeamManagerPanel({
                   >
                     <div className="flex justify-between items-center text-[10px] font-label text-slate-400 uppercase">
                       <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 font-bold border border-lime-400/30">
-                        {isHome ? "🏠 Meci pe Teren Propriu" : "🚌 Deplasare  ă"}
+                        {isHome ? " Meci pe Teren Propriu" : " Deplasare  ă"}
                       </span>
                       <span>
                         {dateObj.toLocaleDateString("ro-RO", { weekday: "short", day: "numeric", month: "short" })} • {dateObj.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}
@@ -1710,7 +1710,7 @@ export function TeamManagerPanel({
                     >
                       <div className="flex justify-between items-center text-[10px] font-label text-slate-400 uppercase">
                         <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 font-bold border border-lime-400/30">
-                          {isHome ? "🏠 Acasă" : "🚌 Deplasare"}
+                          {isHome ? " Acasă" : " Deplasare"}
                         </span>
                         <span>
                           {dateObj.toLocaleDateString("ro-RO", { weekday: "short", day: "numeric", month: "short" })} • {dateObj.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}

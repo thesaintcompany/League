@@ -177,7 +177,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
               className="btn btn-primary text-xs uppercase tracking-wider font-bold py-2.5 px-4 rounded-xl bg-primary text-white hover:bg-slate-800 flex items-center gap-2 shadow-md"
             >
               <span className="material-symbols-outlined text-[16px]">link</span>
-              {copied ? "Link Copiat! ✓" : "Copiază Link Promo"}
+              {copied ? "Link Copiat! " : "Copiază Link Promo"}
             </button>
           </div>
         </div>
@@ -384,7 +384,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
                 : "text-slate-500"
                 }`}
             >
-              📱 Story (9:16)
+               Story (9:16)
             </button>
             <button
               type="button"
@@ -421,7 +421,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
               <div className="relative z-10 flex justify-between items-center pt-2">
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 rounded-md bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xs">
-                    ⚡
+                    <span className="material-symbols-outlined align-middle text-sm">bolt</span>
                   </div>
                   <span className="text-[11px] font-bold tracking-tight font-headline text-white uppercase">
                     {championshipName}
@@ -536,7 +536,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
             </h3>
 
             <div className="grid grid-cols-3 gap-2.5">
-              <button type="button" onClick={shareWhatsApp} title="Trimite pe WhatsApp" aria-label="Trimite pe WhatsApp" className="aspect-square rounded-2xl bg-emerald-500 text-xl text-white shadow-sm transition hover:bg-emerald-600 hover:scale-105 active:scale-95">💬</button>
+              <button type="button" onClick={shareWhatsApp} title="Trimite pe WhatsApp" aria-label="Trimite pe WhatsApp" className="aspect-square rounded-2xl bg-emerald-500 text-xl text-white shadow-sm transition hover:bg-emerald-600 hover:scale-105 active:scale-95"><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></button>
               <button type="button" onClick={shareFacebook} title="Postează pe Facebook" aria-label="Postează pe Facebook" className="aspect-square rounded-2xl bg-blue-600 text-xl text-white shadow-sm transition hover:bg-blue-700 hover:scale-105 active:scale-95">f</button>
               <button type="button" onClick={shareX} title="Publică pe X" aria-label="Publică pe X" className="aspect-square rounded-2xl bg-slate-950 text-xl text-white shadow-sm transition hover:bg-slate-800 hover:scale-105 active:scale-95">𝕏</button>
               <button type="button" onClick={shareLinkedIn} title="Distribuie pe LinkedIn" aria-label="Distribuie pe LinkedIn" className="aspect-square rounded-2xl bg-sky-700 text-sm font-black text-white shadow-sm transition hover:bg-sky-800 hover:scale-105 active:scale-95">in</button>
@@ -550,7 +550,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
 
           <div className="card p-6 bg-surface-container-low dark:bg-slate-800/40 rounded-3xl space-y-3">
             <h4 className="text-xs font-bold font-headline text-blue-950 dark:text-white">
-              💡 Sfaturi de Promovare
+               Sfaturi de Promovare
             </h4>
             <p className="text-xs text-slate-500 leading-relaxed font-body">
               Distribuie linkul în grupurile de suporteri cu 48–24h înainte de meci. Apelează și la influenceri locali: oferă-le codul de bilete gratuite generat mai sus, pentru a-și putea imprima biletele direct din pagina meciului.

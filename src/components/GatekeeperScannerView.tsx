@@ -173,7 +173,7 @@ export function GatekeeperScannerView({
       <header className="flex justify-between items-center pb-4 border-b border-slate-800 mb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-lg">
-            📲
+            <span className="material-symbols-outlined align-middle text-sm">phone_iphone</span>
           </div>
           <div>
             <h1 className="text-base font-black font-headline uppercase text-white tracking-tight leading-none">
@@ -189,7 +189,7 @@ export function GatekeeperScannerView({
           href="/dashboard"
           className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-white text-xs font-bold"
         >
-          ✕ Ieșire
+           Ieșire
         </Link>
       </header>
 
@@ -206,7 +206,7 @@ export function GatekeeperScannerView({
           />
         </div>
         <span className="px-2.5 py-1 rounded-full bg-slate-950 text-lime-400 font-mono text-[10px] font-bold border border-slate-800 shrink-0">
-          🟢 ONLINE
+           ONLINE
         </span>
       </div>
 
@@ -316,7 +316,7 @@ export function GatekeeperScannerView({
               onClick={startCamera}
               className="flex-1 py-3 bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider rounded-2xl shadow-lg transition"
             >
-              📸 Pornește Camera Scanner
+              <span className="material-symbols-outlined text-sm">camera_alt</span> Pornește Camera Scanner
             </button>
           )}
         </div>
@@ -355,7 +355,7 @@ export function GatekeeperScannerView({
       <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 space-y-3 mt-auto">
         <div className="flex justify-between items-center pb-2 border-b border-slate-800">
           <span className="text-[11px] font-black uppercase font-headline text-white flex items-center gap-1.5">
-            <span>📋</span> Istoric Scanări Recente
+            <span><span className="material-symbols-outlined align-middle text-sm">clipboard</span></span> Istoric Scanări Recente
           </span>
           <span className="text-[10px] font-mono text-lime-400 font-bold">
             {stats.checkedIn} Intrări Înregistrate

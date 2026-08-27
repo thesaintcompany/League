@@ -320,7 +320,7 @@ export function RefereeDashboardPanel({
         <div className="flex items-center gap-2.5">
           <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
           <h2 className="text-xl font-bold font-headline text-white uppercase tracking-tight">
-            ⚡ Meciul Următor Asignat (Delegare  ă)
+             Meciul Următor Asignat (Delegare  ă)
           </h2>
         </div>
 
@@ -337,10 +337,10 @@ export function RefereeDashboardPanel({
               </div>
               <span className="px-3 py-1 rounded-full bg-slate-800 text-amber-400 font-bold text-xs font-label uppercase">
                 {upcomingMatch.status === "live"
-                  ? "🔴 LIVE ÎN DESFĂȘURARE"
+                  ? <><span className="material-symbols-outlined align-middle text-sm">circle</span> LIVE ÎN DESFĂȘURARE</>
                   : upcomingMatch.status === "finished"
-                    ? "✓ FINALIZAT"
-                    : "⏳ PROGRAMAT"}
+                    ? <><span className="material-symbols-outlined align-middle text-sm">check_circle</span> FINALIZAT</>
+                    : <><span className="material-symbols-outlined align-middle text-sm">schedule</span> PROGRAMAT</>}
               </span>
             </div>
 
@@ -372,7 +372,7 @@ export function RefereeDashboardPanel({
                   <span className="flex items-center gap-1 text-xs text-slate-400"><span className="material-symbols-outlined text-xs">location_on</span> {upcomingMatch.venue || "Arena ă"}</span>
                 </p>
                 <p className="text-[11px] text-slate-500 font-label">
-                  🕒 {new Date(upcomingMatch.scheduledAt).toLocaleString("ro-RO", { dateStyle: "medium", timeStyle: "short" })}
+                   {new Date(upcomingMatch.scheduledAt).toLocaleString("ro-RO", { dateStyle: "medium", timeStyle: "short" })}
                 </p>
               </div>
 
@@ -437,7 +437,7 @@ export function RefereeDashboardPanel({
           <div className="flex items-center gap-2.5">
             <span className="w-2.5 h-6 bg-primary rounded-full"></span>
             <h2 className="text-xl font-bold font-headline text-white uppercase tracking-tight">
-              📋 Istoric Meciuri Arbitrate ({matchHistory.length})
+               Istoric Meciuri Arbitrate ({matchHistory.length})
             </h2>
           </div>
           <span className="text-xs text-slate-400 font-label">Rapoarte  e Înregistrate</span>
@@ -525,7 +525,7 @@ export function RefereeDashboardPanel({
                 onClick={() => setActiveMatchModal(null)}
                 className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center font-bold"
               >
-                ✕
+                <span className="material-symbols-outlined align-middle text-sm">close</span>
               </button>
             </div>
 
@@ -541,8 +541,8 @@ export function RefereeDashboardPanel({
                   className="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-lime-400 focus:outline-none"
                 >
                   <option value="scheduled">⏳ Programat</option>
-                  <option value="live">🔴 Live În Desfășurare</option>
-                  <option value="finished">✓ Meci Finalizat</option>
+                  <option value="live"> Live În Desfășurare</option>
+                  <option value="finished"> Meci Finalizat</option>
                 </select>
               </div>
 
@@ -760,7 +760,7 @@ export function RefereeDashboardPanel({
                         onClick={() => handleRemoveEvent(idx)}
                         className="text-red-400 hover:text-red-300 text-xs"
                       >
-                        ✕
+                        <span className="material-symbols-outlined align-middle text-sm">close</span>
                       </button>
                     </div>
                   ))}
@@ -820,7 +820,7 @@ export function RefereeDashboardPanel({
 
             {saveSuccess && (
               <div className="p-3 rounded-xl bg-lime-950/80 border border-lime-400 text-lime-300 text-xs font-bold">
-                ✓ Raportul și scorul meciului au fost salvate cu succes!
+                 Raportul și scorul meciului au fost salvate cu succes!
               </div>
             )}
 
@@ -894,7 +894,7 @@ export function RefereeDashboardPanel({
                       {m.venue || "Stadion necunoscut"} • {m.championship?.name || "Campionat"}
                     </p>
                     {m.refereeConfirmed && (
-                      <p className="text-xs text-emerald-400 font-bold">✓ Ai confirmat prezența</p>
+                      <p className="text-xs text-emerald-400 font-bold"> Ai confirmat prezența</p>
                     )}
                     {m.refereeDeclined && (
                       <p className="text-xs text-red-400 font-bold">Ai refuzat acest meci</p>

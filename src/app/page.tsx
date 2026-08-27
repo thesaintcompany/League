@@ -94,7 +94,7 @@ function WelcomePortalForm() {
           {/* Center Pitch Title */}
           <div className="relative z-10 my-auto py-6 sm:py-8 space-y-4 max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-slate-200 text-xs font-label border border-white/15">
-              <span>⚡</span> Turnee, Campionate &amp; 33 Arene Omologate
+              <span><span className="material-symbols-outlined align-middle text-sm">bolt</span></span> Turnee, Campionate &amp; 33 Arene Omologate
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black italic font-headline uppercase leading-none tracking-tight text-white drop-shadow-xl">
@@ -308,7 +308,7 @@ function WelcomePortalForm() {
                 className="w-full py-4 bg-slate-950 dark:bg-lime-400 text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-lime-300 font-headline font-black text-xs uppercase tracking-wider rounded-2xl shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 mt-4"
               >
                 <span className="material-symbols-outlined text-lg">login</span>
-                {loading ? "Se verifică contul..." : "Intră în Panou ✓"}
+                {loading ? "Se verifică contul..." : "Intră în Panou "}
               </button>
             </form>
           </div>

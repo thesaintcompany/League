@@ -173,7 +173,7 @@ export async function PATCH(req: Request) {
         where: { id: userId },
         data: { passwordHash },
       });
-      return NextResponse.json({ success: true, message: `Parola utilizatorului ${updated.email} a fost resetată cu succes! ✓` });
+      return NextResponse.json({ success: true, message: `Parola utilizatorului ${updated.email} a fost resetată cu succes!` });
     }
 
     // 2. Toggle Active Status Action
@@ -186,7 +186,7 @@ export async function PATCH(req: Request) {
       return NextResponse.json({
         success: true,
         user: updated,
-        message: `Contul ${updated.email} este acum ${newStatus ? "ACTIV" : "SUSPENDAT / DEZACTIVAT"}. ✓`,
+        message: `Contul ${updated.email} este acum ${newStatus ? "ACTIV" : "SUSPENDAT / DEZACTIVAT"}.`,
       });
     }
 
@@ -202,7 +202,7 @@ export async function PATCH(req: Request) {
           isActive: typeof isActive === "boolean" ? isActive : targetUser.isActive,
         },
       });
-      return NextResponse.json({ success: true, user: updated, message: "Datele utilizatorului au fost actualizate! ✓" });
+      return NextResponse.json({ success: true, user: updated, message: "Datele utilizatorului au fost actualizate! " });
     }
 
     // 4. Update Role Action (default fallback)
@@ -211,7 +211,7 @@ export async function PATCH(req: Request) {
         where: { id: userId },
         data: { role },
       });
-      return NextResponse.json({ success: true, user: updated, message: `Rolul utilizatorului ${updated.email} a fost schimbat în ${role}. ✓` });
+      return NextResponse.json({ success: true, user: updated, message: `Rolul utilizatorului ${updated.email} a fost schimbat în ${role}.` });
     }
 
     return NextResponse.json({ error: "Acțiune necunoscută" }, { status: 400 });
@@ -245,7 +245,7 @@ export async function DELETE(req: Request) {
     }
 
     await prisma.user.delete({ where: { id: userId } });
-    return NextResponse.json({ success: true, message: "Utilizatorul a fost șters definitiv din baza de date. ✓" });
+    return NextResponse.json({ success: true, message: "Utilizatorul a fost șters definitiv din baza de date. " });
   } catch (err: any) {
     console.error("Error deleting user:", err);
     return NextResponse.json({ error: err.message || "Eroare la ștergerea utilizatorului." }, { status: 500 });

@@ -146,7 +146,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           <div className="sm:col-span-2 flex justify-end items-center gap-3 pt-2">
             {userSuccess && (
               <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-label">
-                Nume actualizat cu succes! ✓
+                Nume actualizat cu succes! 
               </span>
             )}
             <button
@@ -165,7 +165,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
         <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-blue-500 text-white flex items-center justify-center font-black text-lg shadow-sm">
-              🏢
+              <span className="material-symbols-outlined align-middle text-sm">domain</span>
             </div>
             <div>
               <h3 className="font-headline font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase">
@@ -266,7 +266,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
       {/* 3. Module de Plată (Stripe, Apple Pay, Google Pay, PayPal) */}
       <div className="space-y-6">
         <div className="flex items-center gap-2">
-          <span className="text-xl">💳</span>
+          <span className="text-xl"><span className="material-symbols-outlined align-middle text-sm">credit_card</span></span>
           <h3 className="font-headline font-black text-lg text-slate-900 dark:text-white uppercase">
             Module de Plată &amp; Gateways Integrate
           </h3>
@@ -277,7 +277,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">💳</span>
+                <span className="text-2xl"><span className="material-symbols-outlined align-middle text-sm">credit_card</span></span>
                 <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
                   Modul Stripe (Carduri Bancare)
                 </h4>
@@ -342,7 +342,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">🍎</span>
+                <span className="text-2xl"><span className="material-symbols-outlined align-middle text-sm">apple</span></span>
                 <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
                   Modul Apple Pay (iOS &amp; Safari)
                 </h4>
@@ -378,7 +378,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
                     Domeniu Web Verificat:
                   </span>
                   <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
-                    sp.  buu.ro (Verificat ✓)
+                    sp.  buu.ro (Verificat )
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 font-body">
@@ -392,7 +392,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">🟢</span>
+                <span className="text-2xl"><span className="material-symbols-outlined align-middle text-sm">circle</span></span>
                 <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
                   Modul Google Pay (Android &amp; Chrome)
                 </h4>
@@ -549,7 +549,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           <div>
             {settingsSuccess && (
               <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-label flex items-center gap-1.5">
-                <span>✓</span> Datele legale și setările de plată au fost salvate cu succes!
+                <span><span className="material-symbols-outlined align-middle text-sm">check_circle</span></span> Datele legale și setările de plată au fost salvate cu succes!
               </span>
             )}
           </div>
@@ -561,7 +561,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
             className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-400/20 transition active:scale-95 flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-lg">save</span>
-            <span>{savingSettings ? "Se salvează..." : "Salvează Date Legale & Module de Plată ✓"}</span>
+            <span>{savingSettings ? "Se salvează..." : "Salvează Date Legale & Module de Plată "}</span>
           </button>
         </div>
       </div>

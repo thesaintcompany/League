@@ -119,7 +119,7 @@ export function OrganizerTicketingTab({
         }),
       });
       if (res.ok) {
-        showToast(`Categoria "${tierForm.name}" a fost adăugată! ✓`);
+        showToast(`Categoria "${tierForm.name}" a fost adăugată! `);
         loadTiers();
       }
     } catch (err) {
@@ -159,7 +159,7 @@ export function OrganizerTicketingTab({
         }),
       });
       if (res.ok) {
-        showToast("Contul bancar de virament a fost salvat cu succes! ✓");
+        showToast("Contul bancar de virament a fost salvat cu succes! ");
       }
     } catch (err) {
       console.error(err);
@@ -319,7 +319,7 @@ export function OrganizerTicketingTab({
                         className="text-xs text-red-500 hover:text-red-700 p-1"
                         title="Șterge"
                       >
-                        ✕
+                        <span className="material-symbols-outlined align-middle text-sm">close</span>
                       </button>
                     </div>
                   </div>
@@ -388,7 +388,7 @@ export function OrganizerTicketingTab({
                   disabled={savingPayout}
                   className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-headline font-black text-xs uppercase tracking-wider shadow"
                 >
-                  {savingPayout ? "Se salvează..." : "Salvează Cont Bancar ✓"}
+                  {savingPayout ? "Se salvează..." : "Salvează Cont Bancar "}
                 </button>
               </div>
             </form>
@@ -440,16 +440,16 @@ export function OrganizerTicketingTab({
                     target="_blank"
                     className="w-full py-3.5 bg-lime-400 hover:bg-lime-300 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-lg flex items-center justify-center gap-2 transition"
                   >
-                    <span>📱</span> Deschide Scanner pe Ecran ↗
+                    <span><span className="material-symbols-outlined align-middle text-sm">smartphone</span></span> Deschide Scanner pe Ecran ↗
                   </Link>
 
                   <a
-                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`📲 Link Scanner Porți Meci ${activeMatch?.homeTeam.name} vs ${activeMatch?.awayTeam.name}: https://sp.  buu.ro/tickets/scanner?matchId=${activeMatch?.id}&token=${activeMatch?.gateAccessSecret || "SECRET"}`)}`}
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(` Link Scanner Porți Meci ${activeMatch?.homeTeam.name} vs ${activeMatch?.awayTeam.name}: https://sp.  buu.ro/tickets/scanner?matchId=${activeMatch?.id}&token=${activeMatch?.gateAccessSecret || "SECRET"}`)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold font-label text-xs uppercase rounded-2xl flex items-center justify-center gap-2 transition"
                   >
-                    <span>💬</span> Trimite pe WhatsApp la Stewarzi
+                    <span><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></span> Trimite pe WhatsApp la Stewarzi
                   </a>
                 </div>
               </>

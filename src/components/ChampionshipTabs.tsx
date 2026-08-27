@@ -224,7 +224,7 @@ export function ChampionshipTabs({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-800">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-wider">
-                ⚡ Workflow Rapid Organizator
+                 Workflow Rapid Organizator
               </span>
               <span className="text-xs text-slate-400 font-label">
                 Finalizează acești 3 pași pentru lansarea  ă a competiției

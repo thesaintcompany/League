@@ -222,7 +222,7 @@ export function RefereeControlModal({
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-slate-600 transition"
           >
-            ✕
+            <span className="material-symbols-outlined align-middle text-sm">close</span>
           </button>
         </div>
 
@@ -236,7 +236,7 @@ export function RefereeControlModal({
               : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
               }`}
           >
-            {isIndividual ? "📋 Organizare & Arbitru Scaun" : "📋 Organizare & Arbitri"}
+            {isIndividual ? " Organizare & Arbitru Scaun" : " Organizare & Arbitri"}
           </button>
 
           <button
@@ -258,7 +258,7 @@ export function RefereeControlModal({
               : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
               }`}
           >
-            📄 Raport Tehnic
+             Raport Tehnic
           </button>
         </div>
 
@@ -576,8 +576,8 @@ export function RefereeControlModal({
               <div className="grid grid-cols-3 gap-2">
                 {[
                   { id: "scheduled", label: "Programat" },
-                  { id: "live", label: "🔴 În Desfășurare" },
-                  { id: "finished", label: "✓ Finalizat" },
+                  { id: "live", label: " În Desfășurare" },
+                  { id: "finished", label: " Finalizat" },
                 ].map((st) => (
                   <button
                     key={st.id}
@@ -686,7 +686,7 @@ export function RefereeControlModal({
                   {isIndividual ? (
                     <>
                       <option value="ace"><span className="material-symbols-outlined">sports_tennis</span> As Serviciu (Ace)</option>
-                      <option value="break">💥 Break de Serviciu</option>
+                      <option value="break"><span className="material-symbols-outlined text-xs">sports_tennis</span> Break de Serviciu</option>
                       <option value="set_won">  Set Câștigat</option>
                       <option value="double_fault">Dublă Greșeală</option>
                       <option value="warning"><span className="material-symbols-outlined">warning</span> Avertisment Conduită</option>

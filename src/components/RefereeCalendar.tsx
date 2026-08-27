@@ -107,7 +107,7 @@ export function RefereeCalendar({
             className="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-headline font-black text-xs flex items-center gap-1.5 transition active:scale-95 shadow-md"
           >
             <span className="material-symbols-outlined text-base">sync</span>
-            <span>{copiedLink ? "Link Copiat ✓" : "Sincronizare Google Calendar"}</span>
+            <span><span className="material-symbols-outlined align-middle">link</span> {copiedLink ? "Link Copiat" : "Sincronizare Google Calendar"}</span>
           </button>
         </div>
       </div>
@@ -134,7 +134,7 @@ export function RefereeCalendar({
               : "bg-slate-300 dark:bg-slate-800 text-slate-700 dark:text-slate-400"
             }`}
         >
-          {isAvailable ? "✓ Calendar Liber (Activ)" : "✕ Indisponibil"}
+          {isAvailable ? "Calendar Liber (Activ)" : "Indisponibil"}
         </button>
       </div>
 

@@ -1363,7 +1363,7 @@ async function ensureDemoChampionship(ownerId) {
       season: "2025-2026",
       startDate: new Date(),
       isBracketPublished: true,
-      description: "Campionat demonstrativ complet: 8 cluburi de elită, meciuri de campionat și faze eliminatorii cu zaruri 🎲, arbitraj live și rapoarte  e PDF.",
+      description: "Campionat demonstrativ complet: 8 cluburi de elită, meciuri de campionat și faze eliminatorii cu tragere la sorți, arbitraj live și rapoarte  e PDF.",
     },
   });
 

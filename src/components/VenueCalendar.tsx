@@ -112,7 +112,7 @@ export function VenueCalendar({
             className="px-3.5 py-2 rounded-xl bg-lime-400 hover:bg-lime-500 text-slate-950 font-headline font-black text-xs flex items-center gap-1.5 transition active:scale-95 shadow-md"
           >
             <span className="material-symbols-outlined text-base">sync</span>
-            <span>{copiedLink ? "Link Copiat ✓" : "Sincronizare Google Calendar"}</span>
+            <span>{copiedLink ? "Link Copiat " : "Sincronizare Google Calendar"}</span>
           </button>
         </div>
       </div>

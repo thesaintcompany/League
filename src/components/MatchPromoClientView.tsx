@@ -187,11 +187,11 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
             {isLive ? (
               <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-red-600 text-white font-black text-xs uppercase tracking-wider font-label shadow-xl shadow-red-600/50 border border-red-400 animate-pulse">
                 <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
-                <span>🔴 LIVE MECH • {champName}</span>
+                <span> LIVE MECH • {champName}</span>
               </div>
             ) : isFinished ? (
               <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-500 text-slate-950 font-black text-xs uppercase tracking-wider font-label shadow-lg border border-emerald-300">
-                <span>✓</span> REZULTAT FINAL • {champName}
+                <span><span className="material-symbols-outlined align-middle text-sm">check_circle</span></span> REZULTAT FINAL • {champName}
               </div>
             ) : (
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label shadow-lg">
@@ -326,7 +326,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
               rel="noreferrer"
               className="p-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition"
             >
-              <span>💬</span> WhatsApp
+              <span><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></span> WhatsApp
             </a>
 
             <button
@@ -336,7 +336,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
               title="Copiază Linkul"
             >
               <span className="material-symbols-outlined text-sm">share</span>
-              {copiedLink ? "Copiat! ✓" : "Distribuie"}
+              {copiedLink ? "Copiat! " : "Distribuie"}
             </button>
           </div>
         </div>
@@ -389,7 +389,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
             <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
               <span className="w-3 h-7 bg-blue-500 rounded-full"></span>
               <h3 className="text-lg font-bold font-headline uppercase text-slate-900 dark:text-white">
-                📄 Documente &amp; Rapoarte Meci
+                 Documente &amp; Rapoarte Meci
               </h3>
             </div>
 
@@ -434,7 +434,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                 onClick={() => setShowTicketModal(false)}
                 className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-white flex items-center justify-center font-bold text-xs"
               >
-                ✕
+                <span className="material-symbols-outlined align-middle text-sm">close</span>
               </button>
             </div>
 
@@ -459,7 +459,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                     target="_blank"
                     className="w-full py-4 bg-lime-400 hover:bg-lime-300 text-slate-950 font-black font-headline text-xs uppercase tracking-wider rounded-2xl shadow-xl flex items-center justify-center gap-2 transition"
                   >
-                    <span>📄</span> Descarcă / Imprimă Bilet A4 PDF ↗
+                    <span><span className="material-symbols-outlined align-middle text-sm">description</span></span> Descarcă / Imprimă Bilet A4 PDF ↗
                   </Link>
 
                   <a
@@ -468,7 +468,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                     rel="noreferrer"
                     className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold font-label text-xs uppercase rounded-2xl flex items-center justify-center gap-2 transition"
                   >
-                    <span>💬</span> Trimite Bilet pe WhatsApp
+                    <span><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></span> Trimite Bilet pe WhatsApp
                   </a>
                 </div>
               </div>
@@ -583,7 +583,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                         : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
                         }`}
                     >
-                      <span className="text-xl">💳</span>
+                      <span className="text-xl"><span className="material-symbols-outlined align-middle text-sm">credit_card</span></span>
                       <span className="text-[10px] font-label font-bold">Card Stripe</span>
                     </button>
 
@@ -595,7 +595,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                         : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
                         }`}
                     >
-                      <span className="text-xl">🍎</span>
+                      <span className="text-xl"><span className="material-symbols-outlined align-middle text-sm">apple</span></span>
                       <span className="text-[10px] font-label font-bold">Apple Pay</span>
                     </button>
 
@@ -607,7 +607,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                         : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
                         }`}
                     >
-                      <span className="text-xl">🟢</span>
+                      <span className="text-xl"><span className="material-symbols-outlined align-middle text-sm">circle</span></span>
                       <span className="text-[10px] font-label font-bold">Google Pay</span>
                     </button>
 

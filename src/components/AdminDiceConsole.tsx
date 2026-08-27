@@ -17,7 +17,7 @@ interface AdminDiceConsoleProps {
   onDrawCompleted: () => void;
 }
 
-const DICE_FACES = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+const DICE_FACES = ["1", "2", "3", "4", "5", "6"];
 
 export function AdminDiceConsole({
   championshipId,
@@ -167,7 +167,7 @@ export function AdminDiceConsole({
           setIsLocked(true);
           setLockReason("A fost atinsă limita maximă de 3 aruncări");
         }
-        setResultMessage(data.message || "⚡ Tragere la sorți instantă efectuată!");
+        setResultMessage(data.message || "Tragere la sorți instantă efectuată!");
         onDrawCompleted();
       } catch (e: any) {
         setRolling(false);
@@ -262,7 +262,7 @@ export function AdminDiceConsole({
 
       {resultMessage && (
         <div className="p-4 bg-emerald-50 text-emerald-950 dark:bg-lime-950/60 dark:text-lime-200 text-xs font-bold rounded-2xl border border-emerald-300 dark:border-lime-700 flex items-center gap-2 shadow-sm">
-          <span className="text-lg">🎉</span>
+          <span className="text-lg material-symbols-outlined">celebration</span>
           {resultMessage}
         </div>
       )}
@@ -389,7 +389,7 @@ export function AdminDiceConsole({
                   title="Efectuează tragerea instantaneu și dezactivează anunțurile cu zaruri pe WhatsApp/Email"
                 >
                   <span className="material-symbols-outlined text-base">bolt</span>
-                  <span>⚡ Aruncă Instant (Fără Anunțuri)</span>
+                  <span>Aruncă Instant (Fără Anunțuri)</span>
                 </button>
               </div>
             </div>
@@ -429,7 +429,7 @@ export function AdminDiceConsole({
                 Status Tablou
               </p>
               <p className="font-headline text-sm font-black text-slate-900 dark:text-white mt-2">
-                {isBracketPublished ? "PUBLICAT ✓" : "CIORNĂ"}
+                {isBracketPublished ? "PUBLICAT" : "CIORNĂ"}
               </p>
             </div>
           </div>
@@ -546,7 +546,7 @@ export function AdminDiceConsole({
                     </td>
                     <td className="py-3 px-2 text-right">
                       <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-bold uppercase">
-                        {isLocked ? "BLocat" : "ASIGNAT ✓"}
+                        {isLocked ? "Închis" : "Atribuit"}
                       </span>
                     </td>
                   </tr>

@@ -237,7 +237,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
                   onClick={() => setMobileMenuOpen(false)}
                   className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center"
                 >
-                  ✕
+                  <span className="material-symbols-outlined align-middle text-sm">close</span>
                 </button>
               </div>
 

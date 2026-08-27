@@ -1326,7 +1326,7 @@ export function ArenaOwnerPanel({
                 onClick={() => setShowPhotoModal(false)}
                 className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center text-xs"
               >
-                ✕
+                <span className="material-symbols-outlined align-middle text-sm">close</span>
               </button>
             </div>
 

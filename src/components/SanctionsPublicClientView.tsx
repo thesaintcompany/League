@@ -219,7 +219,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
               Jucători Suspendați
             </span>
             <div className="w-7 h-7 rounded-xl bg-red-600 text-white flex items-center justify-center shrink-0 text-xs font-black">
-              🚫
+              <span className="material-symbols-outlined align-middle text-sm">block</span>
             </div>
           </div>
           <div className="flex items-baseline gap-1.5">
@@ -312,7 +312,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                 : "bg-red-500/10 text-red-600 dark:text-red-400"
                 }`}
             >
-              <span>🚫</span> Suspendate ({totalSuspended})
+              <span><span className="material-symbols-outlined align-middle text-sm">block</span></span> Suspendate ({totalSuspended})
             </button>
             <button
               type="button"
@@ -431,7 +431,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                       <td className="py-3 px-4 whitespace-nowrap font-label">
                         {s.isSuspended ? (
                           <span className="px-2.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-black uppercase tracking-wider shadow-xs inline-flex items-center gap-1 animate-pulse">
-                            <span>🚫</span> SUSPENDAT ({s.suspensionRounds || 1} ETAPĂ)
+                            <span><span className="material-symbols-outlined align-middle text-sm">block</span></span> SUSPENDAT ({s.suspensionRounds || 1} ETAPĂ)
                           </span>
                         ) : s.yellowCards >= 3 ? (
                           <span className="px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1">
@@ -439,7 +439,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                           </span>
                         ) : (
                           <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1">
-                            <span>✓</span> ELIGIBIL
+                            <span><span className="material-symbols-outlined align-middle text-sm">check_circle</span></span> ELIGIBIL
                           </span>
                         )}
                       </td>
@@ -493,7 +493,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                     <div className="shrink-0">
                       {s.isSuspended ? (
                         <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[9px] font-black uppercase tracking-wider shadow-xs flex items-center gap-0.5 animate-pulse">
-                          <span>🚫</span> SUSPENDAT ({s.suspensionRounds || 1}E)
+                          <span><span className="material-symbols-outlined align-middle text-sm">block</span></span> SUSPENDAT ({s.suspensionRounds || 1}E)
                         </span>
                       ) : s.yellowCards >= 3 ? (
                         <span className="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40 text-[9px] font-bold uppercase tracking-wider flex items-center gap-0.5">
@@ -501,7 +501,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                         </span>
                       ) : (
                         <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 text-[9px] font-bold uppercase tracking-wider flex items-center gap-0.5">
-                          <span>✓</span> ELIGIBIL
+                          <span><span className="material-symbols-outlined align-middle text-sm">check_circle</span></span> ELIGIBIL
                         </span>
                       )}
                     </div>

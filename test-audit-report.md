@@ -190,3 +190,38 @@ node "node_modules/tsx/dist/cli.mjs" prisma/seed.ts  # reseeds with random names
 ```
 
 Re-run full flow: `node tools/test-flows.js`
+
+## 8. Iconițe UI: Înlocuire emoji cu Material Symbols
+
+Toate emoji-urile (`🗺️`, `🏆`, `⚽`, `✓`, `⚡`, `🎉`, `🔒`, etc.) au fost eliminate din `src/` și înlocuite cu `material-symbols-outlined` (font deja încărcat în `globals.css`).
+
+| Emoji | Material glyph | Used for |
+|---|---|---|
+| 🗺️ / 📍 | `map` / `location_on` | Hartă, locație |
+| 🏆 / 🥇 | `emoji_events` | Campionat, top scorers |
+| ⚽ | `sports_soccer` | Gol, fotbal |
+| 🏓 / 🎾 | `sports_tennis` | Padel / Tenis |
+| ⚖️ | `gavel` | Arbitri |
+| ⚠️ | `warning` | Avertismente |
+| ✅ / ❌ / ⛔ / 🚫 | `check_circle`/`cancel`/`block` | Stare succes/eroare |
+| 🔒 | `lock` | Blocat |
+| 🔑 / 💰 | `key`/`paid` | Chei, plăți |
+| 🏠 | `home` | Teren propriu |
+| 💬 / 📋 / 📄 | `chat_bubble`/`clipboard`/`description` | Chat, clipboard |
+| 🌙 / ☀️ | `dark_mode`/`light_mode` | Theme toggle |
+| 🏀 / 🏐 | `sports_basketball`/`sports_volleyball` | Sport |
+| 🔍 / 📷 / 📱 | `search`/`photo_camera`/`smartphone` | UI divers |
+
+> `✓`/`✕` în stringuri de notificare (`notify("✓ ...")`) au fost eliminate pur și simplu (textul de confirmare rămâne clar). `⚠`/`⚀⚁⚂` (zaru) au fost înlocuite cu cifre.
+
+**Navigare principală acum fără emoji** (în `src/app/page.tsx`):
+- `map` Hartă → `/brackets`
+- `stadium` Arene → `/venues`
+- `leaderboard` Golgheteri → `/players`
+- `gavel` Arbitri → `/referees`
+
+## 9. Bug Fix: `team_leader` poate acum crea campionate
+
+`CreateFirstChampionshipButton` bloca `team_leader`-i de la accesarea paginii `dashboard/new` (îl redirecționa spre `/signin?error=organizer_required`). Am extins permisiunea să include `team_leader` — acum orice utilizator autentificat ca `organizer` **sau** `team_leader` poate accesa pagina de creare campionat.
+
+`src/components/CreateFirstChampionshipButton.tsx:17`

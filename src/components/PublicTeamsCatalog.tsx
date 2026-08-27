@@ -138,7 +138,7 @@ export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] 
                   onClick={() => setSearchQuery("")}
                   className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-slate-800 text-slate-300 text-xs flex items-center justify-center hover:bg-slate-700 transition"
                 >
-                  ✕
+                  <span className="material-symbols-outlined text-sm">close</span>
                 </button>
               )}
             </div>
@@ -227,7 +227,7 @@ export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] 
                     <span className="text-slate-500 dark:text-slate-400 font-bold">Statut Club:</span>
                     <span className="text-emerald-600 dark:text-lime-400 font-extrabold flex items-center gap-1">
                       <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
-                      Confirmat ✓
+                      Confirmat <span className="material-symbols-outlined text-xs align-middle">check_circle</span>
                     </span>
                   </div>
                 </div>

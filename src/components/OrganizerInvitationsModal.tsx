@@ -233,7 +233,7 @@ export function OrganizerInvitationsModal({
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold"
           >
-            ✕
+            <span className="material-symbols-outlined align-middle text-sm">close</span>
           </button>
         </div>
 
@@ -386,7 +386,7 @@ export function OrganizerInvitationsModal({
                                         }),
                                       });
                                       if (res.ok) {
-                                        setCompetitorEnrolledSuccess(`✓ ${comp.name} a fost adăugat pe tablou!`);
+                                        setCompetitorEnrolledSuccess(` ${comp.name} a fost adăugat pe tablou!`);
                                         // Elimină instant competitorul din lista disponibilă pentru a nu putea fi adăugat de două ori
                                         setAvailableCompetitors((prev) => prev.filter((c) => c.id !== comp.id && c.name.toLowerCase() !== comp.name.toLowerCase()));
                                         if (selectedCompetitorId === comp.id) {
@@ -448,7 +448,7 @@ export function OrganizerInvitationsModal({
                           rel="noreferrer"
                           className="p-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-xs uppercase flex items-center justify-center gap-2 shadow-sm transition active:scale-95"
                         >
-                          <span className="text-base">💬</span>
+                          <span className="text-base"><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></span>
                           <span>Trimite pe WhatsApp</span>
                         </a>
 
@@ -536,7 +536,7 @@ export function OrganizerInvitationsModal({
                       rel="noreferrer"
                       className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-headline font-bold text-xs uppercase flex items-center gap-1.5 shadow-sm transition active:scale-95"
                     >
-                      <span className="text-base">💬</span>
+                      <span className="text-base"><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></span>
                       <span>Trimite pe WhatsApp</span>
                     </a>
                   </div>
@@ -563,7 +563,7 @@ export function OrganizerInvitationsModal({
                       onClick={handleCopyInviteLink}
                       className="px-4 py-2 rounded-xl bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 font-black text-xs uppercase tracking-wider shrink-0 transition active:scale-95"
                     >
-                      {copiedLink ? "Copiat ✓" : "Copiază"}
+                      {copiedLink ? "Copiat " : "Copiază"}
                     </button>
                   </div>
                 </div>
@@ -575,7 +575,7 @@ export function OrganizerInvitationsModal({
                     rel="noreferrer"
                     className="p-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
                   >
-                    <span className="text-lg">💬</span>
+                    <span className="text-lg"><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></span>
                     <span>Distribuie pe WhatsApp</span>
                   </a>
 
@@ -680,7 +680,7 @@ export function OrganizerInvitationsModal({
                     rel="noreferrer"
                     className="p-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
                   >
-                    <span className="text-lg">💬</span>
+                    <span className="text-lg"><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></span>
                     <span>Invită pe WhatsApp</span>
                   </a>
 
@@ -747,7 +747,7 @@ export function OrganizerInvitationsModal({
                         onClick={handleCopyRefereeLink}
                         className="px-4 py-2 rounded-xl bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 font-black text-xs uppercase tracking-wider shrink-0 transition active:scale-95"
                       >
-                        {copiedLink ? "Copiat ✓" : "Copiază"}
+                        {copiedLink ? "Copiat " : "Copiază"}
                       </button>
                     </div>
                   </div>
@@ -760,7 +760,7 @@ export function OrganizerInvitationsModal({
                     rel="noreferrer"
                     className="p-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
                   >
-                    <span className="text-lg">💬</span>
+                    <span className="text-lg"><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></span>
                     <span>Invită pe WhatsApp</span>
                   </a>
 
@@ -835,15 +835,15 @@ export function OrganizerInvitationsModal({
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-base">⚡</span>
+                  <span className="text-base"><span className="material-symbols-outlined align-middle text-sm">bolt</span></span>
                   <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white">
                     Dezactivează Anunțurile cu Zaruri (Tragere Silent)
                   </span>
                 </div>
                 <span className="text-[11px] text-slate-500 dark:text-slate-400 font-label block mt-0.5">
                   {disableAnnouncements
-                    ? "✓ Activ: Tragerea la sorți este executată instant, fără notificări/comunicate către echipe."
-                    : "📢 Inactiv: Echipele primesc notificări programate despre evenimentul tragerii la sorți."}
+                    ? " Activ: Tragerea la sorți este executată instant, fără notificări/comunicate către echipe."
+                    : " Inactiv: Echipele primesc notificări programate despre evenimentul tragerii la sorți."}
                 </span>
               </div>
               <button
@@ -917,7 +917,7 @@ export function OrganizerInvitationsModal({
                     rel="noreferrer"
                     className="p-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
                   >
-                    <span className="text-lg">💬</span>
+                    <span className="text-lg"><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></span>
                     <span>Anunță pe WhatsApp</span>
                   </a>
 

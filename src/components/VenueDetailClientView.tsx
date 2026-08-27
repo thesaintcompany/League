@@ -800,7 +800,7 @@ export function VenueDetailClientView({
                 onClick={() => setSelectedPhotoIndex(null)}
                 className="w-9 h-9 rounded-full bg-slate-800 text-white flex items-center justify-center hover:bg-slate-700 font-bold"
               >
-                ✕
+                <span className="material-symbols-outlined align-middle text-sm">close</span>
               </button>
             </div>
 

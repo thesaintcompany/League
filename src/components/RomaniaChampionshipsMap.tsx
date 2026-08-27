@@ -229,7 +229,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
             <span className="material-symbols-outlined text-sm">location_on</span>
             <span>Selector Rapid Județe (42 Regiuni)</span>
           </div>
-          <span className="text-[10px] text-slate-400 font-label">Glisează orizontal ➔</span>
+              <span className="text-[10px] text-slate-400 font-label">Glisează orizontal →</span>
         </div>
 
         <div
@@ -538,7 +538,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
 
                       <div className="pt-2 border-t border-slate-200/80 dark:border-slate-700 flex justify-between items-center">
                         <span className="text-[11px] font-label text-slate-500">
-                          {v.floodlights ? "💡 Nocturnă Omologată" : "Fără nocturnă"}
+                          {v.floodlights ? <><span className="material-symbols-outlined text-sm">lightbulb</span> Nocturnă Omologată</> : "Fără nocturnă"}
                         </span>
 
                         <Link

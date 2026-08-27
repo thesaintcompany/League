@@ -238,7 +238,7 @@ export function BracketVisualizer({
             <span>⟷</span> Glisează orizontal pentru a naviga în arborele Mindmap
           </span>
           <span className="text-[9px] bg-slate-100 dark:bg-slate-900 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-800">
-            Sferturi ➔ Semis ➔ Finală
+            Sferturi → Semis → Finală
           </span>
         </div>
       )}

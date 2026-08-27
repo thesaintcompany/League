@@ -70,7 +70,7 @@ export function RefereeProfileForm({ initialUser }: RefereeProfileProps) {
         throw new Error(d.error || "Eroare la salvarea profilului de arbitru");
       }
 
-      setMessage({ text: "Profilul de arbitru   a fost actualizat cu succes! ✓", type: "success" });
+      setMessage({ text: "Profilul de arbitru   a fost actualizat cu succes! ", type: "success" });
     } catch (e: any) {
       setMessage({ text: e.message, type: "error" });
     } finally {
@@ -115,7 +115,7 @@ export function RefereeProfileForm({ initialUser }: RefereeProfileProps) {
             </div>
             <div className="bg-surface-container-low p-2.5 rounded-xl">
               <span className="text-[10px] text-slate-400 font-label uppercase block">Statut</span>
-              <span className="font-black text-sm text-lime-600 dark:text-lime-400">Activ ✓</span>
+              <span className="font-black text-sm text-lime-600 dark:text-lime-400">Activ </span>
             </div>
           </div>
         </div>
@@ -255,7 +255,7 @@ export function RefereeProfileForm({ initialUser }: RefereeProfileProps) {
             className="w-full sm:w-auto px-10 py-3.5 rounded-xl font-headline font-black text-xs uppercase tracking-wider bg-lime-400 hover:bg-lime-500 text-slate-950 shadow-lg shadow-lime-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-[18px]">check_circle</span>
-            {saving ? "Se salvează..." : "Salvează Date Arbitru ✓"}
+            {saving ? "Se salvează..." : "Salvează Date Arbitru "}
           </button>
         </div>
       </div>

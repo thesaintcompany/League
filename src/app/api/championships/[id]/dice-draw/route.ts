@@ -195,7 +195,7 @@ export async function POST(
         venue: effectiveVenue,
         referee: effectiveReferee,
         notes: isInstant
-          ? `Generat prin Tragere la Sorți Instantă ⚡ (Anunțuri Zaruri Dezactivate • Seed #${matchIdx + 1}${effectiveVenue ? ` • Locație: ${effectiveVenue}` : ""})`
+          ? `Generat prin Tragere la Sorți Instantă (Anunțuri Zaruri Dezactivate • Seed #${matchIdx + 1}${effectiveVenue ? ` • Locație: ${effectiveVenue}` : ""})`
           : `Generat prin Tragere la Sorți cu Zaruri (Aruncarea #${currentRolls + 1}/3 - Seed #${matchIdx + 1}${effectiveVenue ? ` • Locație: ${effectiveVenue}` : ""})`,
       },
     });
@@ -221,7 +221,7 @@ export async function POST(
     isInstant,
     announcementsDisabled: isInstant,
     message: isInstant
-      ? `⚡ Tragere la sorți instantă efectuată cu succes! Anunțurile automate cu zaruri au fost DEZACTIVATE (${nextRollCount}/3 aruncări utilizate).`
+      ? `Tragere la sorți instantă efectuată cu succes! Anunțurile automate cu zaruri au fost DEZACTIVATE (${nextRollCount}/3 aruncări utilizate).`
       : `Tragere la sorți cu zaruri efectuată cu succes! (${nextRollCount}/3 aruncări utilizate • Mai ai ${rollsRemaining} ${rollsRemaining === 1 ? "aruncare" : "aruncări"} disponibile).`,
     matches: createdMatches,
   });

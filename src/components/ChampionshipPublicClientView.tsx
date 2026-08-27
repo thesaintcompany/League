@@ -438,7 +438,7 @@ export function ChampionshipPublicClientView({
                     >
                       <div className="flex justify-between text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase">
                         <span>{m.stage}</span>
-                        <span className="text-emerald-700 dark:text-lime-400 font-bold">Finalizat ✓</span>
+                        <span className="text-emerald-700 dark:text-lime-400 font-bold">Finalizat </span>
                       </div>
 
                       <div className="flex items-center justify-between">
@@ -627,7 +627,7 @@ export function ChampionshipPublicClientView({
                 onClick={() => setShowShareModal(false)}
                 className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center"
               >
-                ✕
+                <span className="material-symbols-outlined align-middle text-sm">close</span>
               </button>
             </div>
 
@@ -651,7 +651,7 @@ export function ChampionshipPublicClientView({
                   onClick={copyShareLink}
                   className="px-4 py-2.5 bg-lime-400 hover:bg-lime-500 text-slate-950 text-xs font-bold font-label uppercase rounded-xl shadow transition shrink-0"
                 >
-                  {copiedLink ? "Copiat! ✓" : "Copiază"}
+                  {copiedLink ? "Copiat! " : "Copiază"}
                 </button>
               </div>
             </div>
@@ -665,7 +665,7 @@ export function ChampionshipPublicClientView({
                 rel="noreferrer"
                 className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-headline font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow"
               >
-                <span>💬</span> Trimite pe WhatsApp
+                <span><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></span> Trimite pe WhatsApp
               </a>
             </div>
           </div>

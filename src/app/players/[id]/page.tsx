@@ -224,7 +224,7 @@ export default async function PublicPlayerDetailPage({
                   rel="noreferrer"
                   className="flex-1 py-2.5 bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-400 hover:bg-pink-100 dark:hover:bg-pink-900/50 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition border border-pink-200/60 dark:border-pink-800/40"
                 >
-                  <span>📷</span> Instagram
+                  <span><span className="material-symbols-outlined align-middle text-sm">photo_camera</span></span> Instagram
                 </a>
                 <a
                   href="https://x.com"
@@ -256,7 +256,7 @@ export default async function PublicPlayerDetailPage({
                   Pase de Gol
                 </span>
                 <span className="text-3xl sm:text-4xl font-black data-font text-lime-600 dark:text-lime-400 mt-1 block">
-                  {player.assists || 6} 👟
+                  {player.assists || 6} 
                 </span>
               </div>
 
@@ -283,7 +283,7 @@ export default async function PublicPlayerDetailPage({
             <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-[2rem] space-y-6 shadow-xl dark:shadow-2xl">
               <div className="flex items-center gap-3.5 pb-4 border-b border-slate-200 dark:border-slate-800">
                 <div className="w-11 h-11 rounded-2xl bg-amber-400/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-2xl border border-amber-400/40 shadow-inner">
-                  ⚡
+                  <span className="material-symbols-outlined align-middle text-sm">bolt</span>
                 </div>
                 <div>
                   <h3 className="text-lg sm:text-xl font-bold font-headline text-slate-900 dark:text-white">

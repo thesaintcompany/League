@@ -68,7 +68,7 @@ export default async function OfficialMatchReportPage({
         <header className="border-b-2 border-slate-900 pb-6 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center font-black text-2xl print:border print:border-slate-900">
-              ⚡
+              <span className="material-symbols-outlined align-middle text-sm">bolt</span>
             </div>
             <div>
               <h1 className="text-2xl font-black italic tracking-tight font-headline uppercase text-slate-900 leading-tight">

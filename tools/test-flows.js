@@ -111,8 +111,8 @@ async function run() {
   // ── Summary ────────────────────────────────────────────────────────
   console.log("\n\n=== SUMMARY ===");
   console.log(`PASSED: ${results.pass.length}  FAILED: ${results.fail.length}`);
-  console.log("\n--- PASSED ---"); results.pass.forEach(f => console.log("  ✓ " + f));
-  if (results.fail.length) { console.log("\n--- FAILED ---"); results.fail.forEach(f => console.log("  ✗ " + f)); }
+  console.log("\n--- PASSED ---"); results.pass.forEach(f => console.log("  [OK] " + f));
+  if (results.fail.length) { console.log("\n--- FAILED ---"); results.fail.forEach(f => console.log("  [FAIL] " + f)); }
   process.exit(results.fail.length > 0 ? 1 : 0);
 }
 

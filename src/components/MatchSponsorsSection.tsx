@@ -129,7 +129,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
     const updated = [newItem, ...sponsors];
     saveSponsorsList(updated);
 
-    setStatusMsg(`✓ Logoul pentru "${newSponsorName}" a fost adăugat cu succes!`);
+    setStatusMsg(` Logoul pentru "${newSponsorName}" a fost adăugat cu succes!`);
     setNewSponsorName("");
     setNewSponsorLogoUrl("");
     setPreviewDataUrl(null);
@@ -190,7 +190,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
               <span className="material-symbols-outlined text-base">
                 {isOrganizerMode ? "admin_panel_settings" : "lock"}
               </span>
-              {isOrganizerMode ? "Mod Organizator Activ ✓" : "Panou Exclusiv Organizator"}
+              {isOrganizerMode ? "Mod Organizator Activ " : "Panou Exclusiv Organizator"}
             </button>
 
             {isOrganizerMode && (
@@ -231,7 +231,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
                 className="absolute top-2 right-2 w-6 h-6 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center font-bold text-xs shadow-md z-20 transition"
                 title="Şterge Logo Sponsor"
               >
-                ✕
+                <span className="material-symbols-outlined align-middle text-sm">close</span>
               </button>
             )}
 
@@ -307,7 +307,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
                 onClick={() => setShowAddModal(false)}
                 className="w-7 h-7 rounded-full bg-slate-800 text-white hover:bg-slate-700 flex items-center justify-center font-bold text-xs"
               >
-                ✕
+                <span className="material-symbols-outlined align-middle text-sm">close</span>
               </button>
             </div>
 

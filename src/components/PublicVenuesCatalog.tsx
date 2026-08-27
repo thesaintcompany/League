@@ -297,7 +297,7 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                 className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs flex items-center justify-center hover:bg-slate-300 dark:hover:bg-slate-700 transition"
                 title="Șterge căutarea"
               >
-                ✕
+                <span className="material-symbols-outlined align-middle text-sm">close</span>
               </button>
             )}
           </div>
@@ -379,7 +379,7 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
           <div className="flex items-center gap-2.5">
             <span className="w-2.5 h-6 bg-slate-950 dark:bg-lime-400 rounded-full"></span>
             <h2 className="text-xl font-bold font-headline text-slate-900 dark:text-white uppercase tracking-tight">
-              🏅 Arene de Nivel Mondial (Gazde Competiții Internaționale)
+               Arene de Nivel Mondial (Gazde Competiții Internaționale)
             </h2>
           </div>
 

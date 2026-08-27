@@ -263,17 +263,17 @@ export function OrganizerTeamsPanel() {
             <span className="material-symbols-outlined text-base">error</span>
             <span>{error}</span>
           </div>
-          <button type="button" onClick={() => setError(null)} className="text-xs font-bold">✕</button>
+          <button type="button" onClick={() => setError(null)} className="text-xs font-bold"><span className="material-symbols-outlined align-middle text-sm">close</span></button>
         </div>
       )}
 
       {successMsg && (
         <div className="p-4 bg-emerald-100 dark:bg-lime-950/80 text-emerald-900 dark:text-lime-200 text-xs font-bold rounded-2xl border border-emerald-300 dark:border-lime-700 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-2">
-            <span className="text-base">🎉</span>
+            <span className="text-base"><span className="material-symbols-outlined align-middle text-sm">celebration</span></span>
             <span>{successMsg}</span>
           </div>
-          <button type="button" onClick={() => setSuccessMsg(null)} className="text-xs font-bold">✕</button>
+          <button type="button" onClick={() => setSuccessMsg(null)} className="text-xs font-bold"><span className="material-symbols-outlined align-middle text-sm">close</span></button>
         </div>
       )}
 
@@ -460,7 +460,7 @@ export function OrganizerTeamsPanel() {
                         }}
                         className="px-3 py-2 bg-lime-400 text-slate-950 text-xs font-bold rounded-xl font-label shrink-0"
                       >
-                        {copiedInvite ? "Copiat! ✓" : "Copiază"}
+                        {copiedInvite ? "Copiat! " : "Copiază"}
                       </button>
                     </div>
 
@@ -654,7 +654,7 @@ export function OrganizerTeamsPanel() {
                           rel="noreferrer"
                           className="flex-1 py-1.5 px-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-headline font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1 shadow-sm"
                         >
-                          <span>💬</span> WhatsApp
+                          <span><span className="material-symbols-outlined align-middle text-sm">chat_bubble</span></span> WhatsApp
                         </a>
 
                         <button
@@ -666,7 +666,7 @@ export function OrganizerTeamsPanel() {
                           className="py-1.5 px-3 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl font-headline font-bold text-[10px] uppercase tracking-wider"
                           title="Copiază Link Invitație"
                         >
-                          🔗 Copiază
+                           Copiază
                         </button>
                       </div>
                     </div>
@@ -702,7 +702,7 @@ export function OrganizerTeamsPanel() {
                 onClick={() => setShowDiceModal(false)}
                 className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-white"
               >
-                ✕
+                <span className="material-symbols-outlined align-middle text-sm">close</span>
               </button>
             </div>
 

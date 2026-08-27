@@ -158,7 +158,7 @@ export function TeamsTab({
       });
 
       if (res.ok) {
-        setStatusMessage(`✓ ${isIndividual ? sportPlayerLabel : "Clubul"} "${teamData.name}" a fost înscris cu succes!`);
+        setStatusMessage(` ${isIndividual ? sportPlayerLabel : "Clubul"} "${teamData.name}" a fost înscris cu succes!`);
         setCustomName("");
         setCustomShortName("");
         setShowCustomForm(false);
@@ -194,7 +194,7 @@ export function TeamsTab({
     }
 
     setBusy(false);
-    setStatusMessage(`✓ ${availableToSeed.length} ${isIndividual ? sportPlayersLabel.toLowerCase() + " au fost adăugați pe tablou" : "cluburi au fost înscrise"}!`);
+    setStatusMessage(` ${availableToSeed.length} ${isIndividual ? sportPlayersLabel.toLowerCase() + " au fost adăugați pe tablou" : "cluburi au fost înscrise"}!`);
     onChanged();
     setTimeout(() => setStatusMessage(null), 3000);
   }
@@ -243,7 +243,7 @@ export function TeamsTab({
               onClick={() => handleBulkSeed(4)}
               className="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase tracking-wider transition border border-slate-700 flex items-center gap-1.5"
             >
-              <span>⚡</span> {isIndividual ? `Înscrie Top 4 ${sportPlayerLabel}s` : "Înscrie Top 4 Echipe"}
+              <span><span className="material-symbols-outlined align-middle text-sm">bolt</span></span> {isIndividual ? `Înscrie Top 4 ${sportPlayerLabel}s` : "Înscrie Top 4 Echipe"}
             </button>
             <button
               type="button"
@@ -294,7 +294,7 @@ export function TeamsTab({
               onClick={() => setShowCustomForm(false)}
               className="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center font-bold text-xs"
             >
-              ✕
+              <span className="material-symbols-outlined align-middle text-sm">close</span>
             </button>
           </div>
 
@@ -393,7 +393,7 @@ export function TeamsTab({
             {isIndividual ? `Tablou   (${teams.length} ${sportPlayerLabel.toLowerCase()} înscriși)` : `Cluburi Înscrise (${teams.length})`}
           </h3>
           <span className="text-xs font-label text-slate-500">
-            {teams.length === 8 ? "✓ Tablou complet de 8 participanți" : `${teams.length} / 8 recomandați`}
+            {teams.length === 8 ? " Tablou complet de 8 participanți" : `${teams.length} / 8 recomandați`}
           </span>
         </div>
 
@@ -498,7 +498,7 @@ export function TeamsTab({
                     : "bg-lime-400 hover:bg-lime-300 text-slate-950 shadow-sm active:scale-95"
                     }`}
                 >
-                  {enrolled ? "✓ Înscris" : "+ Înscrie"}
+                  {enrolled ? <> <span className="material-symbols-outlined text-xs">check_circle</span> Înscris </> : "+ Înscrie"}
                 </button>
               </div>
             );

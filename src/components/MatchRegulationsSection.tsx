@@ -51,7 +51,7 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
           </div>
         </div>
 
-        <div class="badge">✓ VERSIUNE PRO LIGUE &amp; COMISIA DE ARBITRI</div>
+        <div class="badge"> VERSIUNE PRO LIGUE &amp; COMISIA DE ARBITRI</div>
 
         <div class="title">${isRo ? "REGULAMENTUL   AL COMPETIȚIEI" : "OFFICIAL COMPETITION REGULATIONS"}</div>
         <p style="font-size: 13px; color: #475569; margin-bottom: 25px;">
