@@ -120,7 +120,7 @@ export function BracketVisualizer({
               {published ? (
                 <span className="px-2.5 py-0.5 rounded-full bg-lime-400/20 text-lime-600 dark:text-lime-400 text-[10px] font-black font-label uppercase border border-lime-400/30 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-lime-500 dark:bg-lime-400 animate-pulse"></span>
-                  Public ✓
+                  Public <span className="material-symbols-outlined text-xs">check_circle</span>
                 </span>
               ) : (
                 <span className="px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-600 dark:text-amber-300 text-[10px] font-black font-label uppercase border border-amber-400/30">
@@ -191,7 +191,7 @@ export function BracketVisualizer({
             : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
         >
-          <span>📑</span> Etape Separate
+              <span className="material-symbols-outlined text-sm">description</span> Etape Separate
         </button>
       </div>
 
@@ -483,7 +483,7 @@ export function BracketVisualizer({
                 onClick={() => setShowShareModal(false)}
                 className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center justify-center"
               >
-                ✕
+                <span className="material-symbols-outlined">close</span>
               </button>
             </div>
 
@@ -508,7 +508,7 @@ export function BracketVisualizer({
                   onClick={() => copyToClipboard(publicShareUrl, "link")}
                   className="px-4 py-2.5 bg-lime-400 hover:bg-lime-500 text-slate-950 text-xs font-bold font-label uppercase rounded-xl shadow transition shrink-0"
                 >
-                  {copiedLink ? "Copiat! ✓" : "Copiază"}
+                  {copiedLink ? "Copiat!" : "Copiază"}
                 </button>
               </div>
             </div>
@@ -530,7 +530,7 @@ export function BracketVisualizer({
                   onClick={() => copyToClipboard(currentShareCode, "code")}
                   className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-white text-xs font-bold font-label uppercase rounded-xl transition border border-slate-300 dark:border-slate-700 shrink-0"
                 >
-                  {copiedCode ? "Copiat! ✓" : "Copiază Cod"}
+                  {copiedCode ? "Cod Copiat!" : "Copiază Cod"}
                 </button>
               </div>
             </div>
@@ -545,7 +545,7 @@ export function BracketVisualizer({
                 rel="noreferrer"
                 className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-headline font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow"
               >
-                <span>💬</span> Trimite pe WhatsApp
+                <span className="material-symbols-outlined">chat_bubble</span> Trimite pe WhatsApp
               </a>
             </div>
           </div>

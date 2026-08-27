@@ -865,7 +865,7 @@ export function AdminSuperPanel() {
                 title: "Varianta 3 • Neon Vortex & Gold Flash",
                 subtitle: "Ediția Glow & Energie Electrică",
                 url: "/images/logos/logo-3.png",
-                badge: "⚡ Glow Electric",
+                badge: "Glow Electric",
                 badgeColor: "bg-lime-400/20 text-lime-400 border-lime-400/30",
                 description:
                   "Energie pură cu glow verde neon, minge iluminată electric și fulger integrat pentru prezență spectaculoasă.",
@@ -1040,7 +1040,7 @@ export function AdminSuperPanel() {
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-blue-500 text-white flex items-center justify-center font-black text-lg shadow-sm">
-                  🏢
+                  <span className="material-symbols-outlined text-lg">domain</span>
                 </div>
                 <div>
                   <h3 className="font-headline font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase">
@@ -1228,7 +1228,7 @@ export function AdminSuperPanel() {
               <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl">💳</span>
+                    <span className="text-2xl material-symbols-outlined">payments</span>
                     <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
                       Modul Stripe (Carduri 3D Secure)
                     </h3>
@@ -1740,7 +1740,7 @@ export function AdminSuperPanel() {
                               }`}
                             title="Apasă pentru a schimba statusul contului"
                           >
-                            {u.isActive !== false ? "ACTIV" : "🚫 DEZACTIVAT"}
+                            {u.isActive !== false ? "ACTIV" : "DEZACTIVAT"}
                           </button>
                         </td>
 
@@ -1914,7 +1914,7 @@ export function AdminSuperPanel() {
                 {[
                   { id: "all", label: "Toate Jurnalele" },
                   { id: "success", label: "Reușite" },
-                  { id: "blocked", label: "⛔ Blocări WAF" },
+                  { id: "blocked", label: "Blocări WAF" },
                 ].map((item) => (
                   <button
                     key={item.id}
@@ -1984,7 +1984,7 @@ export function AdminSuperPanel() {
                             : "bg-red-500/10 text-red-500 border border-red-500/20"
                             }`}
                         >
-                          {log.status === "success" ? "Succes " : "Blocat ⛔"}
+                          {log.status === "success" ? "Succes" : "Blocat"}
                         </span>
                       </td>
                       <td className="py-3.5 px-4 text-right text-slate-500 font-mono text-[11px]">
@@ -2727,7 +2727,7 @@ export function AdminSuperPanel() {
                   }}
                   className="px-3 py-1 bg-lime-400 text-slate-950 rounded-lg text-xs font-bold hover:bg-lime-300 transition"
                 >
-                  Copiază 📋
+                  <span className="material-symbols-outlined text-sm">content_copy</span> Copiază
                 </button>
               </div>
               <p className="text-[11px] text-amber-300 font-body leading-relaxed pt-1">

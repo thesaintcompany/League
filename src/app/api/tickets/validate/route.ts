@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       return NextResponse.json({
         valid: false,
         status: "cancelled",
-        error: "🚫 Acest meci este deja finalizat. Scannerul porților și validarea biletelor au fost dezactivate.",
+        error: "Acest meci este deja finalizat. Scannerul porților și validarea biletelor au fost dezactivate.",
       }, { status: 400 });
     }
 
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
       return NextResponse.json({
         valid: false,
         status: "cancelled",
-        error: "🚫 Acest bilet a fost anulat sau rambursat.",
+        error: "Acest bilet a fost anulat sau rambursat.",
       });
     }
 

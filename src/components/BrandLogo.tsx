@@ -79,7 +79,7 @@ export function BrandLogo({
         /* Fallback if image path fails */
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xl shadow-md group-hover:scale-105 transition-transform">
-            ⚡
+            <span className="material-symbols-outlined">bolt</span>
           </div>
           <div>
             <span className="text-xl sm:text-2xl font-black italic tracking-tight uppercase font-headline block leading-none text-slate-950 dark:text-white">
