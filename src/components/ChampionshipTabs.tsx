@@ -227,7 +227,7 @@ export function ChampionshipTabs({
                 ⚡ Workflow Rapid Organizator
               </span>
               <span className="text-xs text-slate-400 font-label">
-                Finalizează acești 3 pași pentru lansarea oficială a competiției
+                Finalizează acești 3 pași pentru lansarea  ă a competiției
               </span>
             </div>
             {isRefreshing && (
@@ -240,11 +240,10 @@ export function ChampionshipTabs({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {/* Step 1: Add/Invite Competitors */}
-            <div className={`p-3.5 rounded-2xl border transition-all flex flex-col justify-between gap-2.5 ${
-              hasEnoughTeams
+            <div className={`p-3.5 rounded-2xl border transition-all flex flex-col justify-between gap-2.5 ${hasEnoughTeams
                 ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-100"
                 : "bg-amber-500/10 border-amber-500/40 text-amber-100"
-            }`}>
+              }`}>
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-wider block opacity-70">
@@ -254,9 +253,8 @@ export function ChampionshipTabs({
                     1. {isIndividual ? "Competitori Înscriși" : "Echipe Înscrise"}
                   </p>
                 </div>
-                <span className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-black uppercase ${
-                  hasEnoughTeams ? "bg-emerald-500 text-slate-950" : "bg-amber-500 text-slate-950"
-                }`}>
+                <span className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-black uppercase ${hasEnoughTeams ? "bg-emerald-500 text-slate-950" : "bg-amber-500 text-slate-950"
+                  }`}>
                   {liveTeams.length} {isIndividual ? "Jucători" : "Echipe"}
                 </span>
               </div>
@@ -271,11 +269,10 @@ export function ChampionshipTabs({
             </div>
 
             {/* Step 2: Roll Dice & Generate Bracket */}
-            <div className={`p-3.5 rounded-2xl border transition-all flex flex-col justify-between gap-2.5 ${
-              hasGeneratedMatches
+            <div className={`p-3.5 rounded-2xl border transition-all flex flex-col justify-between gap-2.5 ${hasGeneratedMatches
                 ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-100"
                 : "bg-slate-800/80 border-slate-700 text-slate-200"
-            }`}>
+              }`}>
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-wider block opacity-70">
@@ -285,20 +282,18 @@ export function ChampionshipTabs({
                     2. Zaruri &amp; Arbore
                   </p>
                 </div>
-                <span className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-black uppercase ${
-                  hasGeneratedMatches ? "bg-emerald-500 text-slate-950" : "bg-slate-700 text-slate-300"
-                }`}>
+                <span className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-black uppercase ${hasGeneratedMatches ? "bg-emerald-500 text-slate-950" : "bg-slate-700 text-slate-300"
+                  }`}>
                   {hasGeneratedMatches ? `${liveMatches.length} Meciuri` : "În Așteptare"}
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => handleTabChange("brackets")}
-                className={`w-full py-2 px-3 rounded-xl font-headline font-black text-xs uppercase tracking-wider shadow-sm transition active:scale-95 flex items-center justify-center gap-1.5 ${
-                  hasGeneratedMatches
+                className={`w-full py-2 px-3 rounded-xl font-headline font-black text-xs uppercase tracking-wider shadow-sm transition active:scale-95 flex items-center justify-center gap-1.5 ${hasGeneratedMatches
                     ? "bg-emerald-500 hover:bg-emerald-400 text-slate-950"
                     : "bg-lime-400 hover:bg-lime-300 text-slate-950"
-                }`}
+                  }`}
               >
                 <span className="text-sm">🎲</span>
                 <span>{hasGeneratedMatches ? "Vezi Arborele Generat" : "Trage la Sorți Tabloul"}</span>
@@ -340,11 +335,10 @@ export function ChampionshipTabs({
           <button
             type="button"
             onClick={() => handleTabChange(tab === "tickets" ? (isIndividual ? "brackets" : "standings") : "tickets")}
-            className={`flex-1 sm:flex-initial px-6 py-3.5 rounded-2xl font-headline font-black text-xs uppercase tracking-wider transition-all duration-150 flex items-center justify-center gap-2.5 shadow-sm active:scale-95 border ${
-              tab === "tickets"
+            className={`flex-1 sm:flex-initial px-6 py-3.5 rounded-2xl font-headline font-black text-xs uppercase tracking-wider transition-all duration-150 flex items-center justify-center gap-2.5 shadow-sm active:scale-95 border ${tab === "tickets"
                 ? "bg-slate-950 text-white dark:bg-slate-800 dark:text-lime-400 border-lime-400 shadow-md ring-2 ring-lime-400/30"
                 : "bg-slate-100 hover:bg-slate-200 dark:bg-slate-950 dark:hover:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-700"
-            }`}
+              }`}
           >
             <span className="material-symbols-outlined text-lg text-amber-500">confirmation_number</span>
             <span>Bilete &amp; Scanner Porți</span>

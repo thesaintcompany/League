@@ -245,11 +245,10 @@ export function OrganizerTeamsPanel() {
               type="button"
               onClick={() => setShowDiceModal(true)}
               disabled={teams.length < 2 || !activeChampId}
-              className={`px-6 py-4 rounded-2xl font-headline font-black text-xs uppercase tracking-wider shadow-xl transition flex items-center justify-center gap-2.5 active:scale-95 ${
-                teams.length >= 2
+              className={`px-6 py-4 rounded-2xl font-headline font-black text-xs uppercase tracking-wider shadow-xl transition flex items-center justify-center gap-2.5 active:scale-95 ${teams.length >= 2
                   ? "bg-lime-400 hover:bg-lime-300 text-slate-950 shadow-lime-400/20"
                   : "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed"
-              }`}
+                }`}
             >
               <span className="material-symbols-outlined text-lg">casino</span>
               <span>Lansează cu Zaruri ({teams.length} {isIndividual ? "Competitori" : "Echipe"})</span>
@@ -308,11 +307,10 @@ export function OrganizerTeamsPanel() {
                   key={c.id}
                   type="button"
                   onClick={() => handleSelectChampionship(c.id)}
-                  className={`px-4 py-3 rounded-2xl border text-xs font-headline font-bold text-left transition flex items-center gap-3 shrink-0 ${
-                    isSelected
+                  className={`px-4 py-3 rounded-2xl border text-xs font-headline font-bold text-left transition flex items-center gap-3 shrink-0 ${isSelected
                       ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-950 dark:border-lime-400 shadow-md ring-2 ring-lime-400/40"
                       : "bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-lime-500"
-                  }`}
+                    }`}
                 >
                   <ChampionshipLogoBadge name={c.name} logoUrl={c.logoUrl} size="sm" />
                   <div>
@@ -338,22 +336,20 @@ export function OrganizerTeamsPanel() {
               <button
                 type="button"
                 onClick={() => setInviteMode("invite_new")}
-                className={`flex-1 py-2.5 px-3 rounded-xl transition text-center ${
-                  inviteMode === "invite_new"
+                className={`flex-1 py-2.5 px-3 rounded-xl transition text-center ${inviteMode === "invite_new"
                     ? "bg-lime-400 text-slate-950 font-black shadow-sm"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 {isIndividual ? "Invitație Competitor (Jucător / Echipă)" : "Invitație Echipă Nouă"}
               </button>
               <button
                 type="button"
                 onClick={() => setInviteMode("enroll_existing")}
-                className={`flex-1 py-2.5 px-3 rounded-xl transition text-center ${
-                  inviteMode === "enroll_existing"
+                className={`flex-1 py-2.5 px-3 rounded-xl transition text-center ${inviteMode === "enroll_existing"
                     ? "bg-lime-400 text-slate-950 font-black shadow-sm"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 {isIndividual ? `Competitor Existent (${availableTeams.length})` : `Echipă Existentă (${availableTeams.length})`}
               </button>
@@ -471,8 +467,8 @@ export function OrganizerTeamsPanel() {
                     <a
                       href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
                         isIndividual
-                          ? `Invitație Oficială ca jucător/competitor în Turneul de Tenis ${activeChamp?.name || ""}: ${lastInviteLink}`
-                          : `Invitație Oficială pentru echipa ta în Campionatul ${activeChamp?.name || ""}: ${lastInviteLink}`
+                          ? `Invitație  ă ca jucător/competitor în Turneul de Tenis ${activeChamp?.name || ""}: ${lastInviteLink}`
+                          : `Invitație  ă pentru echipa ta în Campionatul ${activeChamp?.name || ""}: ${lastInviteLink}`
                       )}`}
                       target="_blank"
                       rel="noreferrer"

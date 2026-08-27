@@ -63,7 +63,7 @@ export function RefereeControlModal({
   const [refereeNotes, setRefereeNotes] = useState<string>(
     isIndividual
       ? "Meci de tenis simplu. Sistem cel mai bun din 3 seturi cu tiebreak clasic la 6-6. Pauză de hidratare permisă la fiecare schimbare de teren."
-      : "Partida se va desfășura în conformitate cu regulamentul oficial. Verificați legitimațiile jucătorilor înainte de fluierul de start."
+      : "Partida se va desfășura în conformitate cu regulamentul  . Verificați legitimațiile jucătorilor înainte de fluierul de start."
   );
 
   // Match telemetry (Football: Offsides/Fouls/Corners vs Tennis: Aces/DoubleFaults/BreakPoints)
@@ -231,11 +231,10 @@ export function RefereeControlModal({
           <button
             type="button"
             onClick={() => setActiveTab("organizer")}
-            className={`flex-1 py-2.5 rounded-xl text-xs font-headline font-black uppercase tracking-wider transition ${
-              activeTab === "organizer"
+            className={`flex-1 py-2.5 rounded-xl text-xs font-headline font-black uppercase tracking-wider transition ${activeTab === "organizer"
                 ? "bg-lime-400 text-slate-950 shadow"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-            }`}
+              }`}
           >
             {isIndividual ? "📋 Organizare & Arbitru Scaun" : "📋 Organizare & Arbitri"}
           </button>
@@ -243,11 +242,10 @@ export function RefereeControlModal({
           <button
             type="button"
             onClick={() => setActiveTab("live_score")}
-            className={`flex-1 py-2.5 rounded-xl text-xs font-headline font-black uppercase tracking-wider transition ${
-              activeTab === "live_score"
+            className={`flex-1 py-2.5 rounded-xl text-xs font-headline font-black uppercase tracking-wider transition ${activeTab === "live_score"
                 ? "bg-lime-400 text-slate-950 shadow"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-            }`}
+              }`}
           >
             {isIndividual ? "🎾 Scor Seturi & Puncte" : "⚽ Scor & Evenimente"}
           </button>
@@ -255,11 +253,10 @@ export function RefereeControlModal({
           <button
             type="button"
             onClick={() => setActiveTab("report")}
-            className={`flex-1 py-2.5 rounded-xl text-xs font-headline font-black uppercase tracking-wider transition ${
-              activeTab === "report"
+            className={`flex-1 py-2.5 rounded-xl text-xs font-headline font-black uppercase tracking-wider transition ${activeTab === "report"
                 ? "bg-lime-400 text-slate-950 shadow"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-            }`}
+              }`}
           >
             📄 Raport Tehnic
           </button>
@@ -278,7 +275,7 @@ export function RefereeControlModal({
             <div className="bg-slate-50 dark:bg-slate-800/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-headline font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
-                  <span>{isIndividual ? "🎾" : "👔"}</span> {isIndividual ? "Delegare Arbitru de Scaun (Umpire)" : "Delegare Arbitru Oficial"}
+                  <span>{isIndividual ? "🎾" : "👔"}</span> {isIndividual ? "Delegare Arbitru de Scaun (Umpire)" : "Delegare Arbitru  "}
                 </span>
                 <span className="text-[10px] font-label font-bold text-slate-500 dark:text-slate-400">
                   Selectat: {refereeName}
@@ -306,11 +303,10 @@ export function RefereeControlModal({
 
                 <div>
                   <div
-                    className={`p-2.5 rounded-xl text-[11px] font-bold border flex items-center gap-2 ${
-                      isWithinDeadline
+                    className={`p-2.5 rounded-xl text-[11px] font-bold border flex items-center gap-2 ${isWithinDeadline
                         ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-300"
                         : "bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-300"
-                    }`}
+                      }`}
                   >
                     <span>{isWithinDeadline ? "✅" : "⚠️"}</span>
                     <div>
@@ -377,10 +373,10 @@ export function RefereeControlModal({
                   <span className="text-xl">🏛️</span>
                   <div>
                     <p className="text-xs font-headline font-bold text-slate-900 dark:text-white">
-                      Ai nevoie de arbitri delegați oficial?
+                      Ai nevoie de arbitri delegați  ?
                     </p>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Te îndrumăm direct pe portalul oficial al asociației fără a stoca date sensibile.
+                      Te îndrumăm direct pe portalul   al asociației fără a stoca date sensibile.
                     </p>
                   </div>
                 </div>
@@ -427,7 +423,7 @@ export function RefereeControlModal({
 
               <div>
                 <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1">
-                  📍 {isIndividual ? "Teren / Arenă de Tenis" : "Stadion / Arenă Oficială"}
+                  📍 {isIndividual ? "Teren / Arenă de Tenis" : "Stadion / Arenă  ă"}
                 </label>
                 <input
                   type="text"
@@ -591,11 +587,10 @@ export function RefereeControlModal({
                     key={st.id}
                     type="button"
                     onClick={() => setStatus(st.id as any)}
-                    className={`py-2.5 px-3 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition ${
-                      status === st.id
+                    className={`py-2.5 px-3 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition ${status === st.id
                         ? "bg-lime-400 text-slate-950 shadow-sm font-black"
                         : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-                    }`}
+                      }`}
                   >
                     {st.label}
                   </button>

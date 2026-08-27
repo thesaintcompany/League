@@ -152,34 +152,34 @@ export function ChampionshipPublicClientView({
     topScorers && topScorers.length > 0
       ? topScorers
       : [
-          {
-            id: "1",
-            name: "Radu Drăgușin",
-            teamName: "FC Timișoara",
-            goals: 8,
-            assists: 3,
-            yellowCards: 1,
-            photoUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&auto=format&fit=crop&q=80",
-          },
-          {
-            id: "2",
-            name: "Florin Tănase",
-            teamName: "Politehnica",
-            goals: 6,
-            assists: 5,
-            yellowCards: 0,
-            photoUrl: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&auto=format&fit=crop&q=80",
-          },
-          {
-            id: "3",
-            name: "Denis Alibec",
-            teamName: "Ripensia",
-            goals: 5,
-            assists: 2,
-            yellowCards: 2,
-            photoUrl: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&auto=format&fit=crop&q=80",
-          },
-        ];
+        {
+          id: "1",
+          name: "Radu Drăgușin",
+          teamName: "FC Timișoara",
+          goals: 8,
+          assists: 3,
+          yellowCards: 1,
+          photoUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&auto=format&fit=crop&q=80",
+        },
+        {
+          id: "2",
+          name: "Florin Tănase",
+          teamName: "Politehnica",
+          goals: 6,
+          assists: 5,
+          yellowCards: 0,
+          photoUrl: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=400&auto=format&fit=crop&q=80",
+        },
+        {
+          id: "3",
+          name: "Denis Alibec",
+          teamName: "Ripensia",
+          goals: 5,
+          assists: 2,
+          yellowCards: 2,
+          photoUrl: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=400&auto=format&fit=crop&q=80",
+        },
+      ];
 
   return (
     <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 font-body text-slate-900 dark:text-white transition-colors duration-200">
@@ -209,12 +209,12 @@ export function ChampionshipPublicClientView({
             />
             <div>
               <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black italic tracking-tight font-headline uppercase leading-tight text-slate-900 dark:text-white drop-shadow-sm break-words">
-                {championship?.name || `${currentSportMeta.name} - Campionat Oficial`}
+                {championship?.name || `${currentSportMeta.name} - Campionat  `}
               </h1>
 
               <p className="text-xs text-slate-600 dark:text-slate-300 font-body max-w-2xl mt-1">
                 {championship?.description ||
-                  `Harta interactivă, arbore eliminatoriu, clasamente oficiale și telemetria meciurilor de ${currentSportMeta.name}.`}
+                  `Harta interactivă, arbore eliminatoriu, clasamente  e și telemetria meciurilor de ${currentSportMeta.name}.`}
               </p>
             </div>
           </div>
@@ -260,11 +260,10 @@ export function ChampionshipPublicClientView({
           <button
             type="button"
             onClick={() => setActiveView("bracket")}
-            className={`flex-1 sm:flex-initial px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2 ${
-              activeView === "bracket"
+            className={`flex-1 sm:flex-initial px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2 ${activeView === "bracket"
                 ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
-            }`}
+              }`}
           >
             <span>🌳</span>
             <span className="truncate">Harta Meciuri (Mindmap)</span>
@@ -272,11 +271,10 @@ export function ChampionshipPublicClientView({
           <button
             type="button"
             onClick={() => setActiveView("standings")}
-            className={`flex-1 sm:flex-initial px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2 ${
-              activeView === "standings"
+            className={`flex-1 sm:flex-initial px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2 ${activeView === "standings"
                 ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
-            }`}
+              }`}
           >
             <span>📊</span>
             <span className="truncate">Clasament</span>
@@ -307,7 +305,7 @@ export function ChampionshipPublicClientView({
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
                   <h2 className="text-base sm:text-xl font-bold font-headline uppercase text-slate-900 dark:text-white tracking-tight">
-                    Clasament General Oficial
+                    Clasament General
                   </h2>
                 </div>
                 <button
@@ -384,7 +382,7 @@ export function ChampionshipPublicClientView({
                                     {team.teamName}
                                   </span>
                                   <span className="text-[10px] font-label text-slate-500 dark:text-slate-400 uppercase">
-                                    Lot Oficial
+                                    Lot
                                   </span>
                                 </div>
                               </div>
@@ -423,7 +421,7 @@ export function ChampionshipPublicClientView({
                   </h3>
                 </div>
                 <span className="text-[10px] font-label uppercase font-bold text-slate-500 dark:text-slate-400 tracking-widest">
-                  Oficial Încheiate
+                  Încheiate
                 </span>
               </div>
 
@@ -661,7 +659,7 @@ export function ChampionshipPublicClientView({
             <div className="pt-2">
               <a
                 href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                  `Vezi Campionatul Oficial ${championship?.name || "Ligue Pro"}: ${shareUrl}`
+                  `Vezi Campionatul   ${championship?.name || "Ligue Pro"}: ${shareUrl}`
                 )}`}
                 target="_blank"
                 rel="noreferrer"

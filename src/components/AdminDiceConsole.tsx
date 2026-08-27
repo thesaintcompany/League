@@ -76,7 +76,7 @@ export function AdminDiceConsole({
           if (data.lockReason) setLockReason(data.lockReason);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, [championshipId]);
 
   function toggleTeam(id: string) {
@@ -205,21 +205,20 @@ export function AdminDiceConsole({
             </div>
 
             <div
-              className={`px-4 py-2.5 rounded-2xl text-xs font-black font-label uppercase tracking-wider flex items-center gap-2 shadow-sm ${
-                isBracketPublished
+              className={`px-4 py-2.5 rounded-2xl text-xs font-black font-label uppercase tracking-wider flex items-center gap-2 shadow-sm ${isBracketPublished
                   ? "bg-amber-100 text-amber-900 border border-amber-300 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-700"
                   : diceRollCount >= 3
-                  ? "bg-red-100 text-red-900 border border-red-300 dark:bg-red-950/60 dark:text-red-300 dark:border-red-700"
-                  : "bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-lime-950/60 dark:text-lime-300 dark:border-lime-700"
-              }`}
+                    ? "bg-red-100 text-red-900 border border-red-300 dark:bg-red-950/60 dark:text-red-300 dark:border-red-700"
+                    : "bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-lime-950/60 dark:text-lime-300 dark:border-lime-700"
+                }`}
             >
               <span>{isLocked ? "🔒" : "🎲"}</span>
               <span>
                 {isBracketPublished
                   ? "HARTĂ PUBLICATĂ (BLOCAT)"
                   : diceRollCount >= 3
-                  ? "LIMITĂ 3/3 ATINSĂ (BLOCAT)"
-                  : `ARUNCĂRI: ${diceRollCount}/3 (${rollsLeft} RĂMASE)`}
+                    ? "LIMITĂ 3/3 ATINSĂ (BLOCAT)"
+                    : `ARUNCĂRI: ${diceRollCount}/3 (${rollsLeft} RĂMASE)`}
               </span>
             </div>
           </div>
@@ -232,7 +231,7 @@ export function AdminDiceConsole({
           <span className="text-2xl">🔒</span>
           <div>
             <h4 className="font-headline font-bold text-sm uppercase">
-              Harta Meciurilor este Publicată Oficial
+              Harta Meciurilor este Publicată
             </h4>
             <p className="text-xs font-body opacity-90 mt-0.5">
               Conform regulamentului, nu se mai pot arunca zaruri sau regenera meciurile odată ce harta a fost făcută publică pentru spectatori și echipe.
@@ -282,12 +281,12 @@ export function AdminDiceConsole({
               <h2 className="text-xl sm:text-2xl font-black font-headline text-slate-900 dark:text-white uppercase tracking-tight leading-snug">
                 {isIndividual ? (
                   <>
-                    <span className="block">Consola Oficială de Tragere</span>
+                    <span className="block">Consola  ă de Tragere</span>
                     <span className="block text-lime-600 dark:text-lime-400">Tablou &amp; Capi de Serie</span>
                   </>
                 ) : (
                   <>
-                    <span className="block">Consola Oficială de Aruncare</span>
+                    <span className="block">Consola  ă de Aruncare</span>
                     <span className="block text-lime-600 dark:text-lime-400">Tragere la Sorți &amp; Zaruri</span>
                   </>
                 )}
@@ -308,7 +307,7 @@ export function AdminDiceConsole({
                       Aruncarea zarurilor generează o tragere 100% transparentă, imparțială și echitabilă.
                     </p>
                     <p className="text-slate-500 dark:text-slate-400">
-                      Stabilește împerecherile de meciuri și ordinea oficială pe arborele eliminatoriu.
+                      Stabilește împerecherile de meciuri și ordinea  ă pe arborele eliminatoriu.
                     </p>
                   </>
                 )}
@@ -327,16 +326,14 @@ export function AdminDiceConsole({
             {/* 3D Dice Display */}
             <div className="flex items-center gap-4">
               <div
-                className={`w-24 h-24 bg-slate-950 rounded-2xl flex items-center justify-center shadow-2xl text-lime-400 text-5xl transition-transform ${
-                  rolling ? "animate-spin" : "rotate-3 hover:rotate-0"
-                }`}
+                className={`w-24 h-24 bg-slate-950 rounded-2xl flex items-center justify-center shadow-2xl text-lime-400 text-5xl transition-transform ${rolling ? "animate-spin" : "rotate-3 hover:rotate-0"
+                  }`}
               >
                 {DICE_FACES[diceValues[0] - 1]}
               </div>
               <div
-                className={`w-24 h-24 bg-slate-950 rounded-2xl flex items-center justify-center shadow-2xl text-lime-400 text-5xl transition-transform ${
-                  rolling ? "animate-spin" : "-rotate-6 hover:rotate-0"
-                }`}
+                className={`w-24 h-24 bg-slate-950 rounded-2xl flex items-center justify-center shadow-2xl text-lime-400 text-5xl transition-transform ${rolling ? "animate-spin" : "-rotate-6 hover:rotate-0"
+                  }`}
               >
                 {DICE_FACES[diceValues[1] - 1]}
               </div>
@@ -361,11 +358,10 @@ export function AdminDiceConsole({
                   type="button"
                   onClick={() => handleDiceRoll(false)}
                   disabled={rolling || isLocked || isBracketPublished || diceRollCount >= 3}
-                  className={`px-6 py-3.5 rounded-2xl font-headline font-black text-xs uppercase tracking-wider shadow-lg transition-all flex items-center gap-2 active:scale-95 ${
-                    isLocked || isBracketPublished || diceRollCount >= 3
+                  className={`px-6 py-3.5 rounded-2xl font-headline font-black text-xs uppercase tracking-wider shadow-lg transition-all flex items-center gap-2 active:scale-95 ${isLocked || isBracketPublished || diceRollCount >= 3
                       ? "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed shadow-none"
                       : "bg-slate-950 text-white hover:bg-slate-800 dark:bg-lime-400 dark:text-slate-950 dark:hover:bg-lime-300"
-                  }`}
+                    }`}
                 >
                   <span className={`material-symbols-outlined text-base ${rolling ? "animate-spin" : ""}`}>
                     {isLocked ? "lock" : "casino"}
@@ -374,10 +370,10 @@ export function AdminDiceConsole({
                     {rolling
                       ? "Se aruncă..."
                       : isBracketPublished
-                      ? "🔒 Zaruri Blocate"
-                      : diceRollCount >= 3
-                      ? "🔒 Limită 3/3 Atinsă"
-                      : `Aruncă Zarurile (${rollsLeft} Rămase)`}
+                        ? "🔒 Zaruri Blocate"
+                        : diceRollCount >= 3
+                          ? "🔒 Limită 3/3 Atinsă"
+                          : `Aruncă Zarurile (${rollsLeft} Rămase)`}
                   </span>
                 </button>
 
@@ -386,11 +382,10 @@ export function AdminDiceConsole({
                   type="button"
                   onClick={() => handleDiceRoll(true)}
                   disabled={rolling || isLocked || isBracketPublished || diceRollCount >= 3}
-                  className={`px-6 py-3.5 rounded-2xl font-headline font-black text-xs uppercase tracking-wider shadow-lg transition-all flex items-center gap-2 active:scale-95 ${
-                    isLocked || isBracketPublished || diceRollCount >= 3
+                  className={`px-6 py-3.5 rounded-2xl font-headline font-black text-xs uppercase tracking-wider shadow-lg transition-all flex items-center gap-2 active:scale-95 ${isLocked || isBracketPublished || diceRollCount >= 3
                       ? "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed shadow-none"
                       : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-slate-950 font-black border border-amber-300"
-                  }`}
+                    }`}
                   title="Efectuează tragerea instantaneu și dezactivează anunțurile cu zaruri pe WhatsApp/Email"
                 >
                   <span className="material-symbols-outlined text-base">bolt</span>
@@ -500,11 +495,10 @@ export function AdminDiceConsole({
             type="button"
             onClick={() => handleDiceRoll(false)}
             disabled={rolling || isLocked || isBracketPublished || diceRollCount >= 3}
-            className={`mt-6 w-full py-3.5 rounded-xl font-black font-label text-xs uppercase tracking-wider transition shadow-md ${
-              isLocked || isBracketPublished || diceRollCount >= 3
+            className={`mt-6 w-full py-3.5 rounded-xl font-black font-label text-xs uppercase tracking-wider transition shadow-md ${isLocked || isBracketPublished || diceRollCount >= 3
                 ? "bg-slate-800 text-slate-500 cursor-not-allowed"
                 : "bg-lime-400 text-slate-950 hover:bg-lime-300"
-            }`}
+              }`}
           >
             {isLocked ? "Aruncare Blocată 🔒" : `Re-aruncă Zarurile (${rollsLeft} Rămase)`}
           </button>

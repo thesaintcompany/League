@@ -154,7 +154,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
     }
   }
 
-  const champName = match.championship?.name || "Campionat Oficial";
+  const champName = match.championship?.name || "Campionat  ";
   const homeShort = match.homeTeam.shortName || match.homeTeam.name.substring(0, 3).toUpperCase();
   const awayShort = match.awayTeam.shortName || match.awayTeam.name.substring(0, 3).toUpperCase();
 
@@ -251,7 +251,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
           <div className="flex flex-wrap justify-center items-center gap-4 text-xs font-label">
             <div className="bg-slate-900/90 backdrop-blur-md px-5 py-3 rounded-2xl border border-slate-800 flex items-center gap-2 text-slate-200">
               <span className="material-symbols-outlined text-lime-400">stadium</span>
-              <span className="font-bold">{match.venue || "Arena Oficială Ligue Pro"}</span>
+              <span className="font-bold">{match.venue || "Arena  ă Ligue Pro"}</span>
             </div>
 
             <div className="bg-slate-900/90 backdrop-blur-md px-5 py-3 rounded-2xl border border-slate-800 flex items-center gap-2 text-slate-200">
@@ -355,7 +355,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
             </div>
 
             <p className="text-xs text-slate-600 dark:text-slate-300 font-body leading-relaxed">
-              Meciul se dispută pe <strong>{match.venue || "Arena Oficială"}</strong>. Accesul suporterilor este permis cu 90 de minute înainte de fluierul de start.
+              Meciul se dispută pe <strong>{match.venue || "Arena  ă"}</strong>. Accesul suporterilor este permis cu 90 de minute înainte de fluierul de start.
             </p>
 
             <div className="space-y-2 text-xs font-label text-slate-500 dark:text-slate-400">
@@ -394,7 +394,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
             </div>
 
             <p className="text-xs text-slate-600 dark:text-slate-300 font-body leading-relaxed">
-              Descărcați raportul oficial de meci și foaia tehnică de arbitraj omologată.
+              Descărcați raportul   de meci și foaia tehnică de arbitraj omologată.
             </p>
 
             <div className="space-y-3 pt-2">
@@ -403,7 +403,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                 className="w-full py-3.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold font-headline text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 transition border border-slate-200 dark:border-slate-700"
               >
                 <span className="material-symbols-outlined text-sm">description</span>
-                Descarcă Fișă Joc Oficială PDF
+                Descarcă Fișă Joc  ă PDF
               </Link>
             </div>
           </div>
@@ -578,11 +578,10 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                     <button
                       type="button"
                       onClick={() => setPaymentMethod("card")}
-                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${
-                        paymentMethod === "card"
+                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${paymentMethod === "card"
                           ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
                           : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
-                      }`}
+                        }`}
                     >
                       <span className="text-xl">💳</span>
                       <span className="text-[10px] font-label font-bold">Card Stripe</span>
@@ -591,11 +590,10 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                     <button
                       type="button"
                       onClick={() => setPaymentMethod("apple_pay")}
-                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${
-                        paymentMethod === "apple_pay"
+                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${paymentMethod === "apple_pay"
                           ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
                           : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
-                      }`}
+                        }`}
                     >
                       <span className="text-xl">🍎</span>
                       <span className="text-[10px] font-label font-bold">Apple Pay</span>
@@ -604,11 +602,10 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                     <button
                       type="button"
                       onClick={() => setPaymentMethod("google_pay")}
-                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${
-                        paymentMethod === "google_pay"
+                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${paymentMethod === "google_pay"
                           ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
                           : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
-                      }`}
+                        }`}
                     >
                       <span className="text-xl">🟢</span>
                       <span className="text-[10px] font-label font-bold">Google Pay</span>
@@ -617,11 +614,10 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                     <button
                       type="button"
                       onClick={() => setPaymentMethod("paypal")}
-                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${
-                        paymentMethod === "paypal"
+                      className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${paymentMethod === "paypal"
                           ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
                           : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
-                      }`}
+                        }`}
                     >
                       <span className="text-xl">🅿️</span>
                       <span className="text-[10px] font-label font-bold">PayPal</span>

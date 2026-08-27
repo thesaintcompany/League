@@ -25,11 +25,11 @@ export interface MatchOfficiatingItem {
   pitchCondition?: string | null;
   crowdConduct?: string | null;
   refereeNotes?: string | null;
-   signedBy?: string | null;
-   signedAt?: string | Date | null;
-   refereeConfirmed?: boolean | null;
-   refereeConfirmedAt?: string | Date | null;
-   refereeDeclined?: boolean | null;
+  signedBy?: string | null;
+  signedAt?: string | Date | null;
+  refereeConfirmed?: boolean | null;
+  refereeConfirmedAt?: string | Date | null;
+  refereeDeclined?: boolean | null;
   homeTeam: {
     id: string;
     name: string;
@@ -74,7 +74,7 @@ export function RefereeDashboardPanel({
     image?: string | null;
     coverPhotoUrl?: string | null;
   };
-   upcomingMatch: MatchOfficiatingItem | null;
+  upcomingMatch: MatchOfficiatingItem | null;
   matchHistory: MatchOfficiatingItem[];
   pendingMatches?: MatchOfficiatingItem[];
 }) {
@@ -100,7 +100,7 @@ export function RefereeDashboardPanel({
   const [confirmSuccess, setConfirmSuccess] = useState<string | null>(null);
   const [crowdConduct, setCrowdConduct] = useState<string>("Sportivă / Fără incidente");
   const [refereeNotes, setRefereeNotes] = useState<string>("");
-  const [signedBy, setSignedBy] = useState<string>(refereeUser.name || "Arbitru Oficial");
+  const [signedBy, setSignedBy] = useState<string>(refereeUser.name || "Arbitru  ");
   const [eventsList, setEventsList] = useState<MatchEvent[]>([]);
 
   // New Event Form State
@@ -165,7 +165,7 @@ export function RefereeDashboardPanel({
     setPitchCondition(match.pitchCondition || "Excelent");
     setCrowdConduct(match.crowdConduct || "Sportivă / Fără incidente");
     setRefereeNotes(match.refereeNotes || "");
-    setSignedBy(match.signedBy || refereeUser.name || "Arbitru Oficial");
+    setSignedBy(match.signedBy || refereeUser.name || "Arbitru  ");
 
     try {
       if (match.events) {
@@ -263,7 +263,7 @@ export function RefereeDashboardPanel({
     <div className="space-y-10 font-body">
       {/* Referee Header Summary */}
       <section className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-         <div className="flex items-center gap-5">
+        <div className="flex items-center gap-5">
           <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-2xl shadow-lg shrink-0 overflow-hidden border-2 border-white dark:border-slate-950">
             {refereeUser.image ? (
               <img
@@ -275,23 +275,23 @@ export function RefereeDashboardPanel({
               <span className="font-headline font-black text-2xl">
                 {refereeUser.name
                   ? refereeUser.name
-                      .split(" ")
-                      .slice(0, 2)
-                      .map((w: string) => w[0])
-                      .join("")
-                      .toUpperCase()
+                    .split(" ")
+                    .slice(0, 2)
+                    .map((w: string) => w[0])
+                    .join("")
+                    .toUpperCase()
                   : "AR"}
               </span>
             )}
           </div>
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-                <span className="px-3 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
-                  {refereeUser.refereeBadge || "RIFA"}
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 text-[10px] font-bold font-label">
-                  Oficial Atestat
-                </span>
+              <span className="px-3 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
+                {refereeUser.refereeBadge || "RIFA"}
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 text-[10px] font-bold font-label">
+                Atestat
+              </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black font-headline text-white uppercase tracking-tight">
               {refereeUser.name}
@@ -299,7 +299,7 @@ export function RefereeDashboardPanel({
             <p className="text-xs text-slate-400 font-label">
               {refereeUser.experienceYears
                 ? `Experiență: ${refereeUser.experienceYears} ani`
-                : "Arbitru de Bază"} • <span className="text-lime-400">Delegat Oficial</span>
+                : "Arbitru de Bază"} • <span className="text-lime-400">Delegat  </span>
             </p>
           </div>
         </div>
@@ -320,7 +320,7 @@ export function RefereeDashboardPanel({
         <div className="flex items-center gap-2.5">
           <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
           <h2 className="text-xl font-bold font-headline text-white uppercase tracking-tight">
-            ⚡ Meciul Următor Asignat (Delegare Oficială)
+            ⚡ Meciul Următor Asignat (Delegare  ă)
           </h2>
         </div>
 
@@ -369,7 +369,7 @@ export function RefereeDashboardPanel({
                   </span>
                 </div>
                 <p className="text-xs text-slate-400 font-label">
-                  📍 {upcomingMatch.venue || "Arena Oficială"}
+                  📍 {upcomingMatch.venue || "Arena  ă"}
                 </p>
                 <p className="text-[11px] text-slate-500 font-label">
                   🕒 {new Date(upcomingMatch.scheduledAt).toLocaleString("ro-RO", { dateStyle: "medium", timeStyle: "short" })}
@@ -391,7 +391,7 @@ export function RefereeDashboardPanel({
             {/* Actions for Upcoming Match */}
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-2">
               <div className="text-xs text-slate-400 font-label">
-                Arbitru Oficial Delegat: <strong className="text-lime-400">{refereeUser.name}</strong>
+                Arbitru   Delegat: <strong className="text-lime-400">{refereeUser.name}</strong>
               </div>
 
               <div className="flex flex-wrap gap-3 w-full sm:w-auto">
@@ -440,7 +440,7 @@ export function RefereeDashboardPanel({
               📋 Istoric Meciuri Arbitrate ({matchHistory.length})
             </h2>
           </div>
-          <span className="text-xs text-slate-400 font-label">Rapoarte Oficiale Înregistrate</span>
+          <span className="text-xs text-slate-400 font-label">Rapoarte  e Înregistrate</span>
         </div>
 
         {matchHistory.length === 0 ? (
@@ -471,7 +471,7 @@ export function RefereeDashboardPanel({
                   </div>
 
                   <div className="text-[11px] text-slate-400 font-label flex items-center justify-between pt-1">
-                    <span>📍 {m.venue || "Arena Oficială"}</span>
+                    <span>📍 {m.venue || "Arena  ă"}</span>
                     <span>
                       {new Date(m.scheduledAt).toLocaleDateString("ro-RO", { dateStyle: "short" })}
                     </span>
@@ -510,7 +510,7 @@ export function RefereeDashboardPanel({
             <div className="flex justify-between items-start pb-4 border-b border-slate-800">
               <div>
                 <span className="px-3 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
-                  FOAIE DE ARBITRAJ OFICIALĂ
+                  FOAIE DE ARBITRAJ  Ă
                 </span>
                 <h3 className="text-xl sm:text-2xl font-black font-headline uppercase text-white mt-1">
                   {activeMatchModal.homeTeam.name} vs {activeMatchModal.awayTeam.name}
@@ -771,7 +771,7 @@ export function RefereeDashboardPanel({
             {/* Official Report Notes & Signature */}
             <div className="space-y-3">
               <label className="text-xs font-bold font-label text-slate-300 uppercase block">
-                Raportul Oficial al Arbitrului &amp; Incidente
+                Raportul   al Arbitrului &amp; Incidente
               </label>
               <textarea
                 rows={3}
@@ -801,7 +801,7 @@ export function RefereeDashboardPanel({
 
               <div>
                 <label className="text-[11px] font-label text-slate-400 block mb-1">
-                  Semnătură Arbitru Oficial
+                  Semnătură Arbitru
                 </label>
                 <input
                   type="text"

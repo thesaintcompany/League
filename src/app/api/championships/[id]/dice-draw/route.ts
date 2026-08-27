@@ -37,10 +37,10 @@ export async function GET(
     isLocked,
     maxRolls: 3,
     lockReason: isPublished
-      ? "Harta meciurilor este publicată oficial"
+      ? "Harta meciurilor este publicată  "
       : rollCount >= 3
-      ? "A fost atinsă limita maximă de 3 aruncări"
-      : null,
+        ? "A fost atinsă limita maximă de 3 aruncări"
+        : null,
   });
 }
 
@@ -77,7 +77,7 @@ export async function POST(
     return NextResponse.json(
       {
         error:
-          "Harta meciurilor este deja publicată oficial. Nu se mai pot arunca zarurile pentru un campionat cu harta publicată!",
+          "Harta meciurilor este deja publicată  . Nu se mai pot arunca zarurile pentru un campionat cu harta publicată!",
         isLocked: true,
         reason: "Harta este deja publică",
       },
@@ -127,7 +127,7 @@ export async function POST(
   });
 
   const refereesList = dbReferees.length > 0
-    ? dbReferees.map((r) => r.name || "Arbitru Oficial")
+    ? dbReferees.map((r) => r.name || "Arbitru  ")
     : body.referees || ["Cristian Balaj - Arbitru  ", "István Kovács - Arbitru UEFA"];
 
   const venuesList = dbVenues.length > 0

@@ -141,11 +141,10 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                   key={pos.id}
                   type="button"
                   onClick={() => setSelectedPosition(pos.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 whitespace-nowrap active:scale-95 ${
-                    selectedPosition === pos.id
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 whitespace-nowrap active:scale-95 ${selectedPosition === pos.id
                       ? "bg-amber-400 text-slate-950 font-black shadow-md scale-105"
                       : "text-slate-400 hover:text-white hover:bg-slate-800"
-                  }`}
+                    }`}
                 >
                   {pos.label}
                 </button>
@@ -165,7 +164,7 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
             Niciun jucător găsit pentru &quot;{searchQuery}&quot;.
           </p>
           <p className="text-xs text-slate-500 mt-1">
-            Resetează căutarea pentru a vedea toți cei 10 golgheteri oficiali.
+            Resetează căutarea pentru a vedea toți cei 10 golgheteri  i.
           </p>
         </div>
       ) : (
@@ -183,12 +182,12 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                 {/*   Ultimate Card Frame */}
                 <div
                   className={`relative rounded-3xl overflow-hidden p-1 border shadow-xl flex flex-col justify-between h-full ${idx === 0
-                      ? "bg-gradient-to-b from-amber-300 via-amber-600 to-slate-950 border-amber-300/80 shadow-amber-500/20"
-                      : idx === 1
-                        ? "bg-gradient-to-b from-slate-200 via-slate-500 to-slate-950 border-slate-300/80 shadow-slate-400/20"
-                        : idx === 2
-                          ? "bg-gradient-to-b from-amber-600 via-amber-900 to-slate-950 border-amber-600/80 shadow-amber-700/20"
-                          : "bg-gradient-to-b from-slate-700 via-slate-900 to-slate-950 border-slate-700/80 shadow-slate-900/40"
+                    ? "bg-gradient-to-b from-amber-300 via-amber-600 to-slate-950 border-amber-300/80 shadow-amber-500/20"
+                    : idx === 1
+                      ? "bg-gradient-to-b from-slate-200 via-slate-500 to-slate-950 border-slate-300/80 shadow-slate-400/20"
+                      : idx === 2
+                        ? "bg-gradient-to-b from-amber-600 via-amber-900 to-slate-950 border-amber-600/80 shadow-amber-700/20"
+                        : "bg-gradient-to-b from-slate-700 via-slate-900 to-slate-950 border-slate-700/80 shadow-slate-900/40"
                     }`}
                 >
                   <div className="bg-slate-950/95 rounded-[22px] p-5 flex flex-col justify-between h-full relative overflow-hidden">
@@ -201,8 +200,8 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                       <div className="flex flex-col items-center">
                         <span
                           className={`text-3xl sm:text-4xl font-black font-headline tracking-tighter leading-none ${idx === 0
-                              ? "text-amber-400 drop-shadow-[0_2px_10px_rgba(251,191,36,0.5)]"
-                              : "text-white"
+                            ? "text-amber-400 drop-shadow-[0_2px_10px_rgba(251,191,36,0.5)]"
+                            : "text-white"
                             }`}
                         >
                           {fut.futRating}
@@ -226,12 +225,12 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                       <div className="flex flex-col items-end gap-1">
                         <span
                           className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase font-label shadow-md ${idx === 0
-                              ? "bg-amber-400 text-slate-950 font-extrabold animate-pulse"
-                              : idx === 1
-                                ? "bg-slate-200 text-slate-950"
-                                : idx === 2
-                                  ? "bg-amber-700 text-white"
-                                  : "bg-slate-800 text-slate-300"
+                            ? "bg-amber-400 text-slate-950 font-extrabold animate-pulse"
+                            : idx === 1
+                              ? "bg-slate-200 text-slate-950"
+                              : idx === 2
+                                ? "bg-amber-700 text-white"
+                                : "bg-slate-800 text-slate-300"
                             }`}
                         >
                           {idx === 0 ? "👑 Top 1" : `#${idx + 1} Sezon`}
@@ -315,7 +314,7 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
                     {/* Action CTA */}
                     <div className="mt-3 pt-2 text-center">
                       <span className="text-[10px] font-label font-bold uppercase tracking-wider text-amber-400 group-hover:underline flex items-center justify-center gap-1">
-                        Vezi Fișa Oficială   ↗
+                        Vezi Fișa  ă   ↗
                       </span>
                     </div>
                   </div>

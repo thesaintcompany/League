@@ -4,8 +4,8 @@ import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 
 export const metadata = {
-  title: "Cum Funcționează • PRO L4GUE ROMÂNIA",
-  description: "Ghid pas cu pas despre cum funcționează organizarea campionatelor, tragerea la sorți cu zaruri, cumpărarea biletelor și arbitrajul oficial.",
+  title: "Cum Funcționează • PRO LIGUE ROMÂNIA",
+  description: "Ghid pas cu pas despre cum funcționează organizarea campionatelor, tragerea la sorți cu zaruri, cumpărarea biletelor și arbitrajul  .",
 };
 
 export default function CumFunctioneazaPage() {
@@ -19,7 +19,7 @@ export default function CumFunctioneazaPage() {
     {
       num: "02",
       title: "Tragerea la Sorți cu Zaruri (Dice Roll)",
-      desc: "Sistemul generează automat tabloul eliminatoriu prin aruncarea zarurilor 3D. Pentru a asigura corectitudinea, organizatorul are la dispoziție maxim 3 aruncări înainte ca arborele meciurilor să fie publicat oficial.",
+      desc: "Sistemul generează automat tabloul eliminatoriu prin aruncarea zarurilor 3D. Pentru a asigura corectitudinea, organizatorul are la dispoziție maxim 3 aruncări înainte ca arborele meciurilor să fie publicat  .",
       icon: "casino",
     },
     {
@@ -36,7 +36,7 @@ export default function CumFunctioneazaPage() {
     },
     {
       num: "05",
-      title: "Arbitraj Oficial RIFA & Statistici Live",
+      title: "Arbitraj   RIFA & Statistici Live",
       desc: "Arbitrii omologați completează rapoartele de meci, cartonașele și golurile în timp real. Clasamentele și clasamentele golgheterilor se actualizează automat.",
       icon: "sports",
     },
@@ -56,7 +56,7 @@ export default function CumFunctioneazaPage() {
             Cum Funcționează Platforma
           </h1>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            De la crearea primei ligi până la finala cu trofeu, iată pașii simpli prin care PRO L4GUE digitalizează sportul românesc.
+            De la crearea primei ligi până la finala cu trofeu, iată pașii simpli prin care PRO LIGUE digitalizează sportul românesc.
           </p>
         </div>
       </section>

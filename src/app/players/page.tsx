@@ -30,7 +30,7 @@ export default async function PublicPlayersPage() {
             Golgheterii &amp; Starurile din Liga Pro
           </h1>
           <p className="mt-3 text-slate-300 text-sm sm:text-base max-w-2xl font-body">
-            Clasamentul oficial al celor mai buni 10 marcatori din sezonul trecut al <strong>Ligii Pro</strong>. Caută orice jucător după nume sau club pentru a-i vedea profilul complet!
+            Clasamentul   al celor mai buni 10 marcatori din sezonul trecut al <strong>Ligii Pro</strong>. Caută orice jucător după nume sau club pentru a-i vedea profilul complet!
           </p>
         </div>
       </section>

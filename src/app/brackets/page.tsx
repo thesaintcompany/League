@@ -205,22 +205,22 @@ export default async function PublicBracketsPage({
         },
         awayTeam: away
           ? {
-              id: away.id,
-              name: away.name,
-              shortName: away.shortName || undefined,
-              color: away.color || "#3b82f6",
-            }
+            id: away.id,
+            name: away.name,
+            shortName: away.shortName || undefined,
+            color: away.color || "#3b82f6",
+          }
           : {
-              id: `slot-bye-${pairIdx}`,
-              name: "Tur Liber (Calificat Direct)",
-              shortName: undefined,
-              color: "#94a3b8",
-            },
+            id: `slot-bye-${pairIdx}`,
+            name: "Tur Liber (Calificat Direct)",
+            shortName: undefined,
+            color: "#94a3b8",
+          },
         scheduledAt: undefined,
         referee: undefined,
         homeScore: null,
         awayScore: null,
-        venue: championship?.defaultVenue || "Arena Oficială",
+        venue: championship?.defaultVenue || "Arena  ă",
       });
     }
   }
@@ -232,14 +232,14 @@ export default async function PublicBracketsPage({
     championship?.format === "knockout"
       ? "Turneu Eliminatoriu"
       : championship?.format === "groups_knockout"
-      ? "Grupe & Eliminatoriu"
-      : "Campionat Regular (Tur-Retur)";
+        ? "Grupe & Eliminatoriu"
+        : "Campionat Regular (Tur-Retur)";
 
   const sportIcon = isIndividual
     ? championship?.sport?.toLowerCase().includes("ping") || championship?.sport?.toLowerCase().includes("masă")
-      ? "🏓"
-      : "🎾"
-    : "⚽";
+      ? "table_tennis"
+      : "sports_tennis"
+    : "sports_soccer";
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200 overflow-x-hidden max-w-full">
@@ -258,7 +258,7 @@ export default async function PublicBracketsPage({
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label tracking-widest shadow-md flex items-center gap-1.5">
-                <span>{sportIcon}</span> {championship?.sport || "Sport"}
+                <span className="material-symbols-outlined text-base">{sportIcon}</span> {championship?.sport || "Sport"}
               </span>
               <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-800 dark:text-blue-300 font-black text-xs font-label border border-blue-500/20">
                 {formatLabel}
@@ -276,13 +276,13 @@ export default async function PublicBracketsPage({
               )}
               {championship?.defaultVenue && (
                 <span className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-800 dark:text-teal-300 font-bold text-xs font-label border border-teal-500/20">
-                  🏟️ {championship.defaultVenue}
+                  <span className="material-symbols-outlined text-sm">stadium</span> {championship.defaultVenue}
                 </span>
               )}
             </div>
 
             <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black italic tracking-tight font-headline uppercase leading-tight text-slate-950 dark:text-white break-words">
-              {championship?.name || "Harta Turneului Oficial"}
+              {championship?.name || "Harta Turneului  "}
             </h1>
 
             <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm max-w-2xl font-body leading-relaxed">
@@ -369,13 +369,13 @@ export default async function PublicBracketsPage({
               <section className="p-5 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
                 <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-2.5">
-                    <span className="text-lg">{isIndividual ? "🎾" : "🛡️"}</span>
+                    <span className="text-lg material-symbols-outlined">{isIndividual ? "sports_tennis" : "shield"}</span>
                     <div>
                       <h3 className="text-sm font-black font-headline uppercase tracking-tight text-slate-950 dark:text-white">
                         {isIndividual ? "Competitori Înscriși pe Tablou" : "Echipe Înscrise la Competiție"}
                       </h3>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label">
-                        Lista oficială a participanților validați pentru #{shareCode} ({championship.teams.length} {isIndividual ? "participanți" : "echipe"})
+                        Lista  ă a participanților validați pentru #{shareCode} ({championship.teams.length} {isIndividual ? "participanți" : "echipe"})
                       </p>
                     </div>
                   </div>

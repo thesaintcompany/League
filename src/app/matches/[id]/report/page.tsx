@@ -72,10 +72,10 @@ export default async function OfficialMatchReportPage({
             </div>
             <div>
               <h1 className="text-2xl font-black italic tracking-tight font-headline uppercase text-slate-900 leading-tight">
-                Ligue Pro • Raport Oficial de Arbitraj
+                Ligue Pro • Raport   de Arbitraj
               </h1>
               <p className="text-xs font-label text-slate-600 uppercase tracking-wider mt-0.5">
-                Foia Oficială de Joc &amp; Observații Arbitrale
+                Foia  ă de Joc &amp; Observații Arbitrale
               </p>
             </div>
           </div>
@@ -104,7 +104,7 @@ export default async function OfficialMatchReportPage({
           </div>
           <div>
             <span className="text-[10px] uppercase text-slate-400 font-bold block">Arenă &amp; Locație</span>
-            <span className="font-bold text-slate-900">{match.venue || "Arena Oficială"}</span>
+            <span className="font-bold text-slate-900">{match.venue || "Arena  ă"}</span>
           </div>
           <div>
             <span className="text-[10px] uppercase text-slate-400 font-bold block">Data &amp; Ora</span>
@@ -238,7 +238,7 @@ export default async function OfficialMatchReportPage({
         {/* Referee Observations & Statements */}
         <section className="mb-8 space-y-3">
           <h3 className="text-sm font-black font-headline uppercase tracking-wider border-b border-slate-200 pb-2">
-            3. Raportul Oficial al Arbitrului Central
+            3. Raportul   al Arbitrului Central
           </h3>
 
           <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-2 text-xs font-body">
@@ -259,7 +259,7 @@ export default async function OfficialMatchReportPage({
         <footer className="pt-8 border-t-2 border-slate-900 grid grid-cols-2 sm:grid-cols-3 gap-6 text-xs font-label">
           <div>
             <span className="text-[10px] uppercase text-slate-400 font-bold block mb-1">
-              Arbitru Central Oficial
+              Arbitru Central
             </span>
             <p className="font-bold text-slate-900">{match.referee || "Cristian Balaj - Arbitru  "}</p>
             <div className="mt-4 pt-2 border-t border-dashed border-slate-300 font-serif italic text-slate-500">

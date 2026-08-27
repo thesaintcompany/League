@@ -30,29 +30,27 @@ export function MatchCard({ match, onEdit, isAdmin = false }: MatchCardProps) {
 
   const formattedDate = match.scheduledAt
     ? new Date(match.scheduledAt).toLocaleDateString("ro-RO", {
-        weekday: "short",
-        day: "numeric",
-        month: "short",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
     : "Programat";
 
   return (
     <div
-      className={`rounded-2xl p-4 sm:p-5 shadow-sm transition-all duration-200 border ${
-        isLive
+      className={`rounded-2xl p-4 sm:p-5 shadow-sm transition-all duration-200 border ${isLive
           ? "bg-slate-900 text-white border-lime-500 ring-2 ring-lime-500/20"
           : "bg-surface-container-lowest dark:bg-slate-900 border-slate-200/60 dark:border-slate-800 hover:shadow-md"
-      }`}
+        }`}
     >
       {/* Match Header */}
       <div className="flex justify-between items-center mb-3 sm:mb-4">
         <div className="flex items-center gap-2">
           <span
-            className={`text-[10px] font-label font-bold uppercase tracking-widest ${
-              isLive ? "text-lime-400" : "text-slate-400"
-            }`}
+            className={`text-[10px] font-label font-bold uppercase tracking-widest ${isLive ? "text-lime-400" : "text-slate-400"
+              }`}
           >
             Etapa {match.round || 1} • {formattedDate}
           </span>
@@ -86,9 +84,8 @@ export function MatchCard({ match, onEdit, isAdmin = false }: MatchCardProps) {
             {match.homeTeam.shortName || match.homeTeam.name.substring(0, 3).toUpperCase()}
           </div>
           <p
-            className={`text-[11px] sm:text-xs font-bold font-headline truncate max-w-full px-1 ${
-              isLive ? "text-white" : "text-blue-950 dark:text-white"
-            }`}
+            className={`text-[11px] sm:text-xs font-bold font-headline truncate max-w-full px-1 ${isLive ? "text-white" : "text-blue-950 dark:text-white"
+              }`}
             title={match.homeTeam.name}
           >
             {match.homeTeam.name}
@@ -100,17 +97,15 @@ export function MatchCard({ match, onEdit, isAdmin = false }: MatchCardProps) {
           {isLive || isFinished ? (
             <div className="flex items-center justify-center gap-0.5 sm:gap-1">
               <span
-                className={`text-xl sm:text-2xl font-black data-font ${
-                  isLive ? "text-lime-400" : "text-blue-950 dark:text-white"
-                }`}
+                className={`text-xl sm:text-2xl font-black data-font ${isLive ? "text-lime-400" : "text-blue-950 dark:text-white"
+                  }`}
               >
                 {match.homeScore ?? 0}
               </span>
               <span className="text-slate-400 font-bold text-xs sm:text-sm">:</span>
               <span
-                className={`text-xl sm:text-2xl font-black data-font ${
-                  isLive ? "text-lime-400" : "text-blue-950 dark:text-white"
-                }`}
+                className={`text-xl sm:text-2xl font-black data-font ${isLive ? "text-lime-400" : "text-blue-950 dark:text-white"
+                  }`}
               >
                 {match.awayScore ?? 0}
               </span>
@@ -131,9 +126,8 @@ export function MatchCard({ match, onEdit, isAdmin = false }: MatchCardProps) {
             {match.awayTeam.shortName || match.awayTeam.name.substring(0, 3).toUpperCase()}
           </div>
           <p
-            className={`text-[11px] sm:text-xs font-bold font-headline truncate max-w-full px-1 ${
-              isLive ? "text-white" : "text-blue-950 dark:text-white"
-            }`}
+            className={`text-[11px] sm:text-xs font-bold font-headline truncate max-w-full px-1 ${isLive ? "text-white" : "text-blue-950 dark:text-white"
+              }`}
             title={match.awayTeam.name}
           >
             {match.awayTeam.name}
@@ -164,7 +158,7 @@ export function MatchCard({ match, onEdit, isAdmin = false }: MatchCardProps) {
               target="_blank"
               rel="noreferrer"
               className="text-[11px] font-label font-bold text-slate-600 dark:text-slate-300 hover:text-blue-950 dark:hover:text-white flex items-center gap-0.5"
-              title="Raport oficial PDF"
+              title="Raport   PDF"
             >
               <span className="material-symbols-outlined text-[13px]">description</span>
               PDF

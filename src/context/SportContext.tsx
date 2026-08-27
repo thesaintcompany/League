@@ -44,7 +44,7 @@ export const AVAILABLE_SPORTS: SportOption[] = [
   },
   {
     id: "padel",
-    name: "Padel Oficial",
+    name: "Padel  ",
     shortName: "Padel",
     icon: "sports_tennis",
     accentColor: "text-teal-400 border-teal-400 bg-teal-400/10",

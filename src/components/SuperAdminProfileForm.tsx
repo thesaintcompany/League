@@ -21,11 +21,11 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
 
   // System Legal & Payment Settings State
   const [settings, setSettings] = useState({
-    companyName: initialSettings?.companyName || "TSC QUANTUM S.R.L.",
+    companyName: initialSettings?.companyName || "TSC Q - BUU.RO",
     companyCui: initialSettings?.companyCui || "53063735",
     companyRegCom: initialSettings?.companyRegCom || "J2025095153006",
     companyAddress: initialSettings?.companyAddress || "Timișoara, Județul Timiș, România",
-    companyEmail: initialSettings?.companyEmail || "contact@tscquantum.ro",
+    companyEmail: initialSettings?.companyEmail || "contact@buu.ro",
     companyPhone: initialSettings?.companyPhone || "+40 700 000 000",
     platformFeePercent: initialSettings?.platformFeePercent ?? 10.0,
     stripePublishableKey: initialSettings?.stripePublishableKey || "",
@@ -192,7 +192,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
               value={settings.companyName}
               onChange={(e) => setSettings({ ...settings, companyName: e.target.value })}
               className="input text-xs font-bold"
-              placeholder="TSC QUANTUM S.R.L."
+              placeholder="TSC Q - BUU.RO"
             />
           </div>
 
@@ -231,13 +231,13 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
               value={settings.companyEmail}
               onChange={(e) => setSettings({ ...settings, companyEmail: e.target.value })}
               className="input text-xs font-mono"
-              placeholder="contact@tscquantum.ro"
+              placeholder="contact@buu.ro"
             />
           </div>
 
           <div>
             <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
-              Telefon Asistență Oficial
+              Telefon Asistență
             </label>
             <input
               type="tel"

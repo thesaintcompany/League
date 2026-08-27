@@ -102,11 +102,11 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
   // Visual Assets
   const [image, setImage] = useState<string>(
     initialUser.image ||
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80"
+    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80"
   );
   const [coverPhotoUrl, setCoverPhotoUrl] = useState<string>(
     initialUser.coverPhotoUrl ||
-      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80"
+    "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80"
   );
 
   // Modal State for Photo Change on Double Click
@@ -154,14 +154,14 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
       url: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=800&auto=format&fit=crop&q=80",
     },
     {
-      label: "Meci pe Stadion Oficial",
+      label: "Meci pe Stadion  ",
       url: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop&q=80",
     },
   ];
 
   const AVATAR_PRESETS = [
     {
-      label: "Portret Studio Oficial",
+      label: "Portret Studio  ",
       url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
     },
     {
@@ -455,11 +455,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
       <div className="lg:col-span-8 space-y-6">
         {message && (
           <div
-            className={`p-3.5 rounded-xl text-xs font-medium flex items-center gap-2 shadow-sm ${
-              message.type === "success"
+            className={`p-3.5 rounded-xl text-xs font-medium flex items-center gap-2 shadow-sm ${message.type === "success"
                 ? "bg-emerald-50 text-emerald-900 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
                 : "bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800"
-            }`}
+              }`}
           >
             <span className="material-symbols-outlined text-base">
               {message.type === "success" ? "check_circle" : "error"}
@@ -498,11 +497,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
                   type="button"
                   disabled={!isEditable}
                   onClick={() => handleSportChange(sp.id)}
-                  className={`p-3 rounded-xl border text-left transition flex items-center gap-2.5 ${
-                    isSelected
+                  className={`p-3 rounded-xl border text-left transition flex items-center gap-2.5 ${isSelected
                       ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-900 dark:border-lime-400 font-semibold shadow-sm"
                       : "bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:border-slate-400"
-                  }`}
+                    }`}
                 >
                   <span className="material-symbols-outlined text-lg">
                     {sp.icon}
@@ -525,7 +523,7 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
                 2. Date Personale &amp; Identitate
               </h3>
               <p className="text-[11px] text-slate-500 font-normal">
-                Informații afișate pe foaia oficială de joc și în catalogul de sportivi
+                Informații afișate pe foaia  ă de joc și în catalogul de sportivi
               </p>
             </div>
           </div>

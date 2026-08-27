@@ -49,4 +49,4 @@ De asemenea, este creat campionatul demonstrativ **"Liga Demo 2026"** cu echipe 
 
 ## Contact & Suport
 
-- **Email Oficial:** `contact@buu.ro` (Datele de contact sunt exclusiv `contact@buu.ro` și sunt definitive)
+- **Email  :** `contact@buu.ro` (Datele de contact sunt exclusiv `contact@buu.ro` și sunt definitive)

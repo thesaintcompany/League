@@ -38,7 +38,7 @@ export default async function AdminMasterPage() {
                   SuperAdmin Mode
                 </span>
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                  PRO L4GUE • Panou Master de Administrare Sistem
+                  PRO LIGUE • Panou Master de Administrare Sistem
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black italic tracking-tight font-headline uppercase text-slate-900 dark:text-white mt-1">

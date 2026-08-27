@@ -86,7 +86,7 @@ export function RefereeBadgePill({ badge }: { badge?: string | null }) {
   if (!badge) {
     return (
       <span className="px-2.5 py-0.5 rounded-full bg-slate-900/80 text-slate-300 text-[10px] font-bold font-label uppercase border border-slate-700">
-        Oficial FRF
+        FRF
       </span>
     );
   }
@@ -172,7 +172,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
         <div className="relative z-10 max-w-4xl space-y-4">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md flex items-center gap-1.5">
-              <span>⚖️</span> CORPUL DE ARBITRI OFICIALI
+              <span>⚖️</span> CORPUL DE ARBITRI  I
             </span>
             <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-[10px] uppercase font-label">
               30 Arbitri Licențiați
@@ -183,11 +183,11 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-none text-white drop-shadow-md">
-            Arbitri &amp; Oficiali de Joc
+            Arbitri &amp;  i de Joc
           </h1>
 
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl font-body">
-            Comisia Centrală a Arbitrilor din cadrul Ligue Pro. Descoperă cei 30 de arbitri omologați cu portrete umane reale (9:16), ecusoane oficiale inteligente, telemetrie avansată și delegări transparente.
+            Comisia Centrală a Arbitrilor din cadrul Ligue Pro. Descoperă cei 30 de arbitri omologați cu portrete umane reale (9:16), ecusoane  e inteligente, telemetrie avansată și delegări transparente.
           </p>
 
           {/* Search & Category Filter Pills */}
@@ -228,11 +228,10 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                   key={cat.id}
                   type="button"
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${
-                    selectedCategory === cat.id
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${selectedCategory === cat.id
                       ? "bg-lime-400 text-slate-950 font-black shadow-md"
                       : "text-slate-300 hover:text-white"
-                  }`}
+                    }`}
                 >
                   {cat.label}
                 </button>
@@ -327,7 +326,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                     </div>
 
                     <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-label font-bold text-slate-500 group-hover:text-lime-600 dark:group-hover:text-lime-400">
-                      <span>Fișă Oficială</span>
+                      <span>Fișă  ă</span>
                       <span className="material-symbols-outlined text-sm">arrow_forward</span>
                     </div>
                   </div>
@@ -346,7 +345,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
             <h2 className="text-xl sm:text-2xl font-bold font-headline text-slate-900 dark:text-white uppercase tracking-tight">
               {searchQuery || selectedCategory !== "all"
                 ? `Rezultate Căutare (${filtered.length} Arbitri)`
-                : "Catalog Complet Corp Arbitri (30 Oficiali)"}
+                : "Catalog Complet Corp Arbitri (30  i)"}
             </h2>
           </div>
           <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase">

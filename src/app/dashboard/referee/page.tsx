@@ -100,15 +100,15 @@ export default async function RefereeDashboardPage() {
       {/* Main Content Area */}
       <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
-          title="Panou Oficial de Arbitraj"
-          subtitle={`Bine ai venit, ${user.name || "Arbitru Oficial"} (${user.refereeBadge || "RIFA"})!`}
+          title="Panou   de Arbitraj"
+          subtitle={`Bine ai venit, ${user.name || "Arbitru  "} (${user.refereeBadge || "RIFA"})!`}
         />
 
         <main className="p-4 sm:p-8 space-y-6 sm:space-y-8 flex-1 max-w-7xl">
           <RefereeDashboardPanel
             refereeUser={{
               id: user.id,
-              name: user.name || "Arbitru Oficial",
+              name: user.name || "Arbitru  ",
               email: user.email,
               refereeBadge: user.refereeBadge,
               experienceYears: user.experienceYears,

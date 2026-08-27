@@ -67,9 +67,8 @@ function WelcomePortalForm() {
       <section className="w-full max-w-6xl bg-white dark:bg-slate-900/90 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_25px_70px_rgba(0,0,0,0.15)] dark:shadow-[0_25px_70px_rgba(0,0,0,0.6)] flex flex-col lg:flex-row overflow-hidden z-10 border border-slate-200 dark:border-slate-800/80">
         {/* Left Side: Teaser with Dynamic Goal Shot (Card 1 on Mobile) */}
         <div
-          className={`w-full lg:w-7/12 relative min-h-[460px] lg:min-h-[680px] p-6 sm:p-12 flex-col justify-between overflow-hidden text-white group bg-slate-950 ${
-            mobileView === "championships" ? "flex" : "hidden lg:flex"
-          }`}
+          className={`w-full lg:w-7/12 relative min-h-[460px] lg:min-h-[680px] p-6 sm:p-12 flex-col justify-between overflow-hidden text-white group bg-slate-950 ${mobileView === "championships" ? "flex" : "hidden lg:flex"
+            }`}
         >
           {/* Dynamic Background Goal Action Image */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -164,9 +163,8 @@ function WelcomePortalForm() {
 
         {/* Right Side: Authentication Panel (Card 2 on Mobile) */}
         <div
-          className={`w-full lg:w-5/12 p-6 sm:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 relative overflow-hidden ${
-            mobileView === "auth" ? "flex" : "hidden lg:flex"
-          }`}
+          className={`w-full lg:w-5/12 p-6 sm:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 relative overflow-hidden ${mobileView === "auth" ? "flex" : "hidden lg:flex"
+            }`}
         >
           {/* Subtle Dynamic Football Action Watermark Background (<10% Contrast Shadow) */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-[0.06] dark:opacity-[0.08] z-0">
@@ -320,7 +318,7 @@ function WelcomePortalForm() {
               © {new Date().getFullYear()} <a href="https://tscquantum.ro" target="_blank" rel="noreferrer" className="font-bold text-slate-900 dark:text-lime-400 hover:underline">tscquantum.ro</a>. Toate drepturile aparțin <strong>tscquantum.ro</strong>.
             </p>
             <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
-              Contact oficial: <a href="mailto:contact@tscquantum.ro" className="text-lime-600 dark:text-lime-400 hover:underline font-bold">contact@tscquantum.ro</a>
+              Contact  : <a href="mailto:contact@buu.ro" className="text-lime-600 dark:text-lime-400 hover:underline font-bold">contact@buu.ro</a>
             </p>
           </footer>
         </div>

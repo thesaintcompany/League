@@ -83,7 +83,7 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
   } else if (role === "referee") {
     navItems = [
       { name: "Meciuri & Panou Arbitraj", href: "/dashboard/referee", icon: "sports" },
-      { name: "Profil & Setări Oficiale", href: "/profile", icon: "account_circle" },
+      { name: "Profil & Setări  e", href: "/profile", icon: "account_circle" },
       { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
     ];
   } else if (role === "team_leader") {
@@ -153,14 +153,14 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
       },
       ...(isChampDetail || hasChamp
         ? [
-            {
-              name: "Bilete & Scanner Porți",
-              href: `${activeBase}?tab=tickets`,
-              icon: "confirmation_number",
-              disabled: !hasChamp,
-              disabledTooltip: "Creează un campionat pentru a vinde bilete",
-            },
-          ]
+          {
+            name: "Bilete & Scanner Porți",
+            href: `${activeBase}?tab=tickets`,
+            icon: "confirmation_number",
+            disabled: !hasChamp,
+            disabledTooltip: "Creează un campionat pentru a vinde bilete",
+          },
+        ]
         : []),
       {
         name: "Promotion Hub",
@@ -218,7 +218,7 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
                 {role === "super_admin" || role === "superadmin"
                   ? "Super Administrator"
                   : role === "referee"
-                    ? "Oficial Arbitraj"
+                    ? "  Arbitraj"
                     : role === "arena_owner"
                       ? "Panou Arenă"
                       : role === "team_leader"
@@ -300,17 +300,17 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-medium transition-all duration-200 ${isActive
-                    ? isDarkTheme
-                      ? "bg-lime-400 text-slate-950 font-black shadow-lg shadow-lime-400/20 scale-[1.02]"
-                      : "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-bold shadow-md scale-[1.02]"
-                    : isDarkTheme
-                      ? "text-slate-300 hover:text-white hover:bg-slate-800/90"
-                      : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70"
+                  ? isDarkTheme
+                    ? "bg-lime-400 text-slate-950 font-black shadow-lg shadow-lime-400/20 scale-[1.02]"
+                    : "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-bold shadow-md scale-[1.02]"
+                  : isDarkTheme
+                    ? "text-slate-300 hover:text-white hover:bg-slate-800/90"
+                    : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/70"
                   }`}
               >
                 <span className={`material-symbols-outlined text-[20px] sm:text-[22px] ${isActive
-                    ? isDarkTheme ? "text-slate-950" : "text-lime-400 dark:text-slate-950"
-                    : isDarkTheme ? "text-slate-400" : "text-slate-500 dark:text-slate-400"
+                  ? isDarkTheme ? "text-slate-950" : "text-lime-400 dark:text-slate-950"
+                  : isDarkTheme ? "text-slate-400" : "text-slate-500 dark:text-slate-400"
                   }`}>
                   {item.icon}
                 </span>
@@ -375,8 +375,8 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
       {/* Desktop Sidebar (hidden on mobile, fixed on desktop) */}
       <aside
         className={`hidden lg:flex h-screen w-64 fixed left-0 top-0 z-40 border-r flex-col py-6 transition-colors duration-200 ${isDarkTheme
-            ? "bg-slate-900 border-slate-800 text-white shadow-xl"
-            : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
+          ? "bg-slate-900 border-slate-800 text-white shadow-xl"
+          : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
           }`}
       >
         {sidebarContent}
@@ -391,8 +391,8 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
           />
           <div
             className={`relative w-4/5 max-w-xs h-full py-6 shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200 border-r ${isDarkTheme
-                ? "bg-slate-900 border-slate-800 text-white"
-                : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
+              ? "bg-slate-900 border-slate-800 text-white"
+              : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
               }`}
           >
             {sidebarContent}

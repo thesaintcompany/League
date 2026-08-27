@@ -121,7 +121,7 @@ export function VenueDetailClientView({
       return [];
     }
   }, [venue.galleryImages]);
-  
+
   const galleryPhotos = React.useMemo(() => {
     if (isHall) {
       return [
@@ -131,7 +131,7 @@ export function VenueDetailClientView({
           url: configuredGalleryImages[0] || venue.imageUrl || "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200&auto=format&fit=crop&q=80",
         },
         {
-          title: "Zonă Scaune Ergonomice & Tribuna Oficială",
+          title: "Zonă Scaune Ergonomice & Tribuna  ă",
           subtitle: "Vizibilitate optimă 360° din orice sector",
           url: configuredGalleryImages[1] || "https://images.unsplash.com/photo-1519766304817-4f37bda74a29?w=800&auto=format&fit=crop&q=80",
         },
@@ -211,7 +211,7 @@ export function VenueDetailClientView({
           <div className="space-y-4 max-w-3xl">
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-semibold uppercase tracking-wider font-label shadow-sm flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[15px]">stadium</span> ARENĂ OFICIALĂ LIGUE PRO
+                <span className="material-symbols-outlined text-[15px]">stadium</span> ARENĂ  Ă LIGUE PRO
               </span>
               {(venue.sport || "Fotbal").split(",").map((s, idx) => {
                 const spTrimmed = s.trim();
@@ -220,18 +220,18 @@ export function VenueDetailClientView({
                   spLower === "fotbal"
                     ? "sports_soccer"
                     : spLower === "tenis"
-                    ? "sports_tennis"
-                    : spLower === "padel"
-                    ? "sports_tennis"
-                    : spLower === "pingpong"
-                    ? "table_tennis"
-                    : spLower === "baschet"
-                    ? "sports_basketball"
-                    : spLower === "volei"
-                    ? "sports_volleyball"
-                    : spLower === "handbal"
-                    ? "sports_handball"
-                    : "stadium";
+                      ? "sports_tennis"
+                      : spLower === "padel"
+                        ? "sports_tennis"
+                        : spLower === "pingpong"
+                          ? "table_tennis"
+                          : spLower === "baschet"
+                            ? "sports_basketball"
+                            : spLower === "volei"
+                              ? "sports_volleyball"
+                              : spLower === "handbal"
+                                ? "sports_handball"
+                                : "stadium";
                 return (
                   <span
                     key={idx}
@@ -313,7 +313,7 @@ export function VenueDetailClientView({
             onClick={() => setShowClaimModal(true)}
             className="text-right text-[10px] font-label text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
           >
-            Administrezi această arenă? <span className="underline underline-offset-2">Solicită acces oficial</span>
+            Administrezi această arenă? <span className="underline underline-offset-2">Solicită acces  </span>
           </button>
         </div>
 
@@ -474,7 +474,7 @@ export function VenueDetailClientView({
                 Standarde de Performanță
               </span>
               <h2 className="text-xl sm:text-2xl font-black font-headline uppercase text-slate-900 dark:text-white">
-                Dotări &amp; Facilități Oficiale ale Arenei
+                Dotări &amp; Facilități  e ale Arenei
               </h2>
             </div>
           </div>
@@ -519,7 +519,7 @@ export function VenueDetailClientView({
                 Nu sunt meciuri programate momentan
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
-                Organizatorii ligilor vor programa în curând următoarele confruntări oficiale pe această arenă.
+                Organizatorii ligilor vor programa în curând următoarele confruntări  e pe această arenă.
               </p>
             </div>
           ) : (
@@ -528,10 +528,10 @@ export function VenueDetailClientView({
                 const matchDate = m.scheduledAt ? new Date(m.scheduledAt) : null;
                 const formattedDate = matchDate
                   ? matchDate.toLocaleDateString("ro-RO", {
-                      weekday: "long",
-                      day: "numeric",
-                      month: "long",
-                    })
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                  })
                   : "Data urmează a fi stabilită";
                 const formattedTime = matchDate
                   ? matchDate.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })
@@ -623,7 +623,7 @@ export function VenueDetailClientView({
             <div className="flex items-center gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
               <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
               <h2 className="text-xl font-bold font-headline uppercase text-slate-900 dark:text-white">
-                Comunicate &amp; Anunțuri Oficiale ale Arenei
+                Comunicate &amp; Anunțuri  e ale Arenei
               </h2>
             </div>
 
@@ -654,7 +654,7 @@ export function VenueDetailClientView({
             <div className="flex items-center gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
               <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
               <h2 className="text-xl font-bold font-headline uppercase text-slate-900 dark:text-white">
-                Sponsori &amp; Parteneri Oficiali Arenă
+                Sponsori &amp; Parteneri  i Arenă
               </h2>
             </div>
 
@@ -676,7 +676,7 @@ export function VenueDetailClientView({
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-4 text-white">
                       <span className="text-[10px] font-label font-bold uppercase text-lime-400">
-                        Partener Oficial
+                        Partener
                       </span>
                       <h4 className="font-headline font-bold text-base text-white">
                         {ad.title}
@@ -727,10 +727,10 @@ export function VenueDetailClientView({
                           <span>
                             {m.scheduledAt
                               ? new Date(m.scheduledAt).toLocaleDateString("ro-RO", {
-                                  day: "numeric",
-                                  month: "short",
-                                  year: "numeric",
-                                })
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              })
                               : "FINALIZAT"}
                           </span>
                           <span className="text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">

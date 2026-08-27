@@ -4,7 +4,7 @@ import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 
 export const metadata = {
-  title: "Despre Aplicație • PRO L4GUE ROMÂNIA",
+  title: "Despre Aplicație • PRO LIGUE ROMÂNIA",
   description: "Platforma digitală dedicată organizării și urmăririi campionatelor sportive naționale și județene din România.",
 };
 
@@ -20,10 +20,10 @@ export default function DesprePage() {
             <span>🇷🇴</span> DESPRE PLATFORMĂ
           </div>
           <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-tight">
-            PRO L4GUE • ROMÂNIA
+            PRO LIGUE • ROMÂNIA
           </h1>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Platforma digitală integrată pentru organizarea, arbitrajul oficial și telemetria în timp real a competițiilor sportive din România, operată de <strong>tscquantum.ro</strong>.
+            Platforma digitală integrată pentru organizarea, arbitrajul   și telemetria în timp real a competițiilor sportive din România, operată de <strong>tscquantum.ro</strong>.
           </p>
         </div>
       </section>
@@ -39,7 +39,7 @@ export default function DesprePage() {
               Tragere la Sorți cu Zaruri
             </h3>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-body">
-              Algoritm unic și transparent de generare a meciurilor eliminatorii, limitat la maxim 3 aruncări înainte de publicarea oficială a arborelui.
+              Algoritm unic și transparent de generare a meciurilor eliminatorii, limitat la maxim 3 aruncări înainte de publicarea  ă a arborelui.
             </p>
           </div>
 
@@ -63,7 +63,7 @@ export default function DesprePage() {
               Corp Arbitri RIFA
             </h3>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-body">
-              Sistem de delegare oficială și arbitraj video (VAR) cu insigne acreditate RIFA Pro Elite, First Class și Asistenți.
+              Sistem de delegare  ă și arbitraj video (VAR) cu insigne acreditate RIFA Pro Elite, First Class și Asistenți.
             </p>
           </div>
         </div>
@@ -74,7 +74,7 @@ export default function DesprePage() {
             Viziunea Noastră
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-            PRO L4GUE a fost creată pentru a aduce sportului de amatori și de performanță din România un standard tehnologic de clasă mondială. Fie că este vorba despre un campionat municipal de fotbal, o ligă de baschet 3x3, un turneu de volei pe plajă sau o competiție națională de futsal, platforma oferă vizibilitate instantanee, clasamente calculate automat și bilete electronice securizate.
+            PRO LIGUE a fost creată pentru a aduce sportului de amatori și de performanță din România un standard tehnologic de clasă mondială. Fie că este vorba despre un campionat municipal de fotbal, o ligă de baschet 3x3, un turneu de volei pe plajă sau o competiție națională de futsal, platforma oferă vizibilitate instantanee, clasamente calculate automat și bilete electronice securizate.
           </p>
           <div className="flex flex-wrap gap-3 pt-2">
             <Link

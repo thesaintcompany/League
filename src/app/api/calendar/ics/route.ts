@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
         return {
           id: m.id,
           title: `[Delegare Arbitraj] ${m.homeTeam.name} vs ${m.awayTeam.name}`,
-          description: `Delegare meci oficial în ${m.championship.name}. Arenă: ${m.venue || "TBD"}.`,
+          description: `Delegare meci   în ${m.championship.name}. Arenă: ${m.venue || "TBD"}.`,
           location: m.venue || "TBD",
           startDate: start,
           endDate: end,
@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
       events.push({
         id: "sample-event",
         title: "Eveniment Ligue Pro",
-        description: "Calendar oficial meciuri și delegări Ligue Pro",
+        description: "Calendar   meciuri și delegări Ligue Pro",
         location: "România",
         startDate: now,
         endDate: end,

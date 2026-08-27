@@ -232,7 +232,7 @@ const REFEREES_30 = [
     refereeBadge: "Liga Pro Central",
     experienceYears: 14,
     phone: "+40 722 101 023",
-    bio: "Oficial cu vastă experiență în gestionarea partidelor decisive.",
+    bio: "  cu vastă experiență în gestionarea partidelor decisive.",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&auto=format&fit=crop&q=80",
     coverPhotoUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&auto=format&fit=crop&q=80",
   },

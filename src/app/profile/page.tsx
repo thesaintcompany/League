@@ -36,12 +36,12 @@ export default async function ProfilePage({
   const roleLabels: Record<string, string> = {
     super_admin: "Super Admin",
     superadmin: "Super Admin",
-    organizer: "Organizator Oficial",
+    organizer: "Organizator  ",
     referee: "Arbitru Licențiat",
     player: "Fotbalist / Jucător",
     arena_owner: "Proprietar / Bază Sportivă",
     team_leader: "Manager Echipă",
-    observer: "Observator Oficial",
+    observer: "Observator  ",
   };
 
   const currentRole = user.role || "organizer";

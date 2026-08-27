@@ -10,26 +10,26 @@ export function PublicFooter() {
   return (
     <footer className="border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-950 pt-16 pb-28 lg:pb-14 px-4 sm:px-6 lg:px-12 text-slate-600 dark:text-slate-400 font-body transition-colors duration-200 mt-auto">
       <div className="max-w-7xl mx-auto space-y-12">
-        {/* PRO L4GUE Promotional Callout Banner */}
+        {/* PRO LIGUE Promotional Callout Banner */}
         <div className="relative rounded-3xl overflow-hidden bg-slate-950 text-white p-6 sm:p-10 border border-slate-800 shadow-2xl group">
           {/* Background image */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/hero-goal.jpg"
-            alt="PRO L4GUE • Și tu poți fi un profesionist în sport. Începe acum!"
+            alt="PRO LIGUE • Și tu poți fi un profesionist în sport. Începe acum!"
             className="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.4] group-hover:scale-105 transition-transform duration-700 pointer-events-none"
           />
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2 max-w-xl">
               <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-400 border border-lime-400/40 text-[10px] font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
-                PRO L4GUE ROMÂNIA
+                PRO LIGUE ROMÂNIA
               </span>
               <h3 className="text-2xl sm:text-3xl font-black italic font-headline uppercase leading-tight tracking-tight text-white drop-shadow-md">
                 Și tu poți fi un <span className="text-lime-400">profesionist în sport</span> — începe acum!
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 font-body drop-shadow-sm">
-                Creează propria ta ligă sau înscrie-te ca jucător, arbitru ori manager de echipă pe platforma oficială.
+                Creează propria ta ligă sau înscrie-te ca jucător, arbitru ori manager de echipă pe platforma  ă.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3 shrink-0">
@@ -55,11 +55,11 @@ export function PublicFooter() {
           <div className="col-span-2 lg:col-span-1 space-y-4">
             <BrandLogo size="md" href="/campionat" />
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-body">
-              Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat.
+              Platforma națională digitală de gestiune competițională, clasamente  e și arbitraj omologat.
             </p>
             <div className="pt-2 text-xs font-label space-y-1">
               <p className="text-slate-500 dark:text-slate-400">
-                Operator platformă: <strong className="text-slate-900 dark:text-white font-bold">TSC QUANTUM S.R.L.</strong>
+                Operator platformă: <strong className="text-slate-900 dark:text-white font-bold">TSC Q - BUU.RO</strong>
               </p>
               <p className="text-slate-400 dark:text-slate-500 text-[11px] font-mono">
                 CUI: 53063735 • J2025095153006
@@ -110,7 +110,7 @@ export function PublicFooter() {
               </li>
               <li>
                 <Link href="/referees" className="hover:text-slate-950 dark:hover:text-white transition-colors">
-                  Corp Arbitri Oficiali
+                  Corp Arbitri  i
                 </Link>
               </li>
             </ul>
@@ -178,10 +178,10 @@ export function PublicFooter() {
               </li>
               <li className="pt-3">
                 <a
-                  href="mailto:contact@tscquantum.ro"
+                  href="mailto:contact@buu.ro"
                   className="inline-block text-xs font-mono font-bold text-slate-900 dark:text-lime-400 hover:underline"
                 >
-                  contact@tscquantum.ro
+                  contact@buu.ro
                 </a>
               </li>
             </ul>
@@ -191,14 +191,14 @@ export function PublicFooter() {
         {/* Bottom Bar: Copyright & Inline Secondary Links */}
         <div className="pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-label text-slate-500 dark:text-slate-400">
           <p>
-            © {currentYear} PRO L4GUE • Operat de{" "}
+            © {currentYear} PRO LIGUE • Operat de{" "}
             <a
               href="https://tscquantum.ro"
               target="_blank"
               rel="noreferrer"
               className="font-bold text-slate-800 dark:text-slate-200 hover:underline"
             >
-              TSC QUANTUM S.R.L.
+              TSC Q - BUU.RO
             </a>
             . Toate drepturile rezervate.
           </p>

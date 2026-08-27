@@ -35,7 +35,7 @@ export function translateMatchStage(stage?: string | null): string {
     final: "Finală",
   };
 
-  return stage ? labels[stage] || stage : "Etapă oficială";
+  return stage ? labels[stage] || stage : "Etapă  ă";
 }
 
 export const FORMATS = [
@@ -147,7 +147,7 @@ export const ROMANIAN_COUNTIES = [
   "Vrancea",
 ] as const;
 
-// Harta linkurilor oficiale AJF (Asociația Județeană de Fotbal) / Comisia Județeană de Arbitri (CJA)
+// Harta linkurilor  e AJF (Asociația Județeană de Fotbal) / Comisia Județeană de Arbitri (CJA)
 export const AJF_COUNTY_URLS: Record<string, string> = {
   "Alba": "https://www.frf-ajf.ro/alba",
   "Arad": "https://www.frf-ajf.ro/arad",

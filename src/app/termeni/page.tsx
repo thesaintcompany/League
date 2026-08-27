@@ -4,8 +4,8 @@ import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 
 export const metadata = {
-  title: "Termeni și Condiții • PRO L4GUE ROMÂNIA",
-  description: "Termenii și condițiile oficiale de utilizare a platformei PRO L4GUE, regulamentul competițiilor și politica de ticketing.",
+  title: "Termeni și Condiții • PRO LIGUE ROMÂNIA",
+  description: "Termenii și condițiile  e de utilizare a platformei PRO LIGUE, regulamentul competițiilor și politica de ticketing.",
 };
 
 export default function TermeniPage() {
@@ -23,7 +23,7 @@ export default function TermeniPage() {
             Termeni și Condiții de Utilizare
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-            Ultima actualizare: Sezon 2026 • Operat oficial de <strong>tscquantum.ro</strong>
+            Ultima actualizare: Sezon 2026 • Operat   de <strong>tscquantum.ro</strong>
           </p>
         </div>
       </section>
@@ -36,7 +36,7 @@ export default function TermeniPage() {
               1. Acceptarea Termenilor
             </h2>
             <p>
-              Prin accesarea și utilizarea platformei <strong>PRO L4GUE</strong> (disponibilă pe domeniile oficiale operate de tscquantum.ro), confirmați că ați citit, înțeles și sunteți de acord să respectați acești Termeni și Condiții, precum și toate legile și reglementările românești aplicabile.
+              Prin accesarea și utilizarea platformei <strong>PRO LIGUE</strong> (disponibilă pe domeniile  e operate de tscquantum.ro), confirmați că ați citit, înțeles și sunteți de acord să respectați acești Termeni și Condiții, precum și toate legile și reglementările românești aplicabile.
             </p>
           </section>
 
@@ -54,7 +54,7 @@ export default function TermeniPage() {
               3. Regulamentul Tragerii la Sorți &amp; Meciurilor
             </h2>
             <p>
-              Sistemul de tragere la sorți cu zaruri 3D este guvernat de un algoritm pseudo-aleatoriu verificat. Organizatorii pot re-arunca zarurile de cel mult 3 ori înainte de publicarea oficială. Odată publicat, arborele competițional devine definitiv și nu mai poate fi rescris decât cu aprobarea comisiei de organizare.
+              Sistemul de tragere la sorți cu zaruri 3D este guvernat de un algoritm pseudo-aleatoriu verificat. Organizatorii pot re-arunca zarurile de cel mult 3 ori înainte de publicarea  ă. Odată publicat, arborele competițional devine definitiv și nu mai poate fi rescris decât cu aprobarea comisiei de organizare.
             </p>
           </section>
 
@@ -63,7 +63,7 @@ export default function TermeniPage() {
               4. Achiziția și Utilizarea Biletelor
             </h2>
             <p>
-              Biletele electronice emise prin PRO L4GUE conțin un cod unic de acces (QR). Prețul biletelor include comisionul de procesare al platformei. În caz de reprogramare a meciului, biletul rămâne valabil pentru noua dată stabilită. Returnarea contravalorii biletelor se face conform politicii stabilite de organizatorul meciului.
+              Biletele electronice emise prin PRO LIGUE conțin un cod unic de acces (QR). Prețul biletelor include comisionul de procesare al platformei. În caz de reprogramare a meciului, biletul rămâne valabil pentru noua dată stabilită. Returnarea contravalorii biletelor se face conform politicii stabilite de organizatorul meciului.
             </p>
           </section>
 
@@ -72,7 +72,7 @@ export default function TermeniPage() {
               5. Drepturi de Proprietate Intelectuală
             </h2>
             <p>
-              Toate mărcile, siglele (inclusiv sigla oficială PRO L4GUE ROMANIA), denumirile de arene, elementele grafice și codul sursă aparțin exclusiv <strong>tscquantum.ro</strong> și partenerilor afiliați. Este interzisă reproducerea neautorizată.
+              Toate mărcile, siglele (inclusiv sigla  ă PRO LIGUE ROMANIA), denumirile de arene, elementele grafice și codul sursă aparțin exclusiv <strong>tscquantum.ro</strong> și partenerilor afiliați. Este interzisă reproducerea neautorizată.
             </p>
           </section>
 
@@ -82,8 +82,8 @@ export default function TermeniPage() {
             </h2>
             <p>
               Pentru orice întrebări sau clarificări legate de acești termeni, vă rugăm să ne contactați la adresa de e-mail{" "}
-              <a href="mailto:contact@tscquantum.ro" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
-                contact@tscquantum.ro
+              <a href="mailto:contact@buu.ro" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
+                contact@buu.ro
               </a>.
             </p>
           </section>

@@ -79,7 +79,7 @@ export function VenueClaimModal({
         <div className="space-y-2 pr-8">
           <div className="flex items-center gap-2">
             <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label tracking-widest">
-              🏛️ REVENDICARE OFICIALĂ ARENĂ
+              🏛️ REVENDICARE  Ă ARENĂ
             </span>
             <span className="text-xs font-mono font-bold text-slate-400">
               ID: {venueId.slice(-6).toUpperCase()}
@@ -149,7 +149,7 @@ export function VenueClaimModal({
 
                 <div>
                   <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1 font-label">
-                    Email Oficial *
+                    Email   *
                   </label>
                   <input
                     type="email"
@@ -246,7 +246,7 @@ export function VenueClaimModal({
                 </label>
                 <textarea
                   rows={2}
-                  placeholder="Precizări suplimentare, link către site-ul oficial sau documente doveditoare..."
+                  placeholder="Precizări suplimentare, link către site-ul   sau documente doveditoare..."
                   value={formData.justification}
                   onChange={(e) => setFormData({ ...formData, justification: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-body focus:border-lime-400 outline-none resize-none"

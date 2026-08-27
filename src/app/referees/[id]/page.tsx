@@ -62,7 +62,7 @@ export default async function PublicRefereeDetailPage({
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-                ⚖️ OFICIAL ATESTAT   / LIGUE PRO
+                ⚖️   ATESTAT   / LIGUE PRO
               </span>
               <RefereeBadgePill badge={referee.refereeBadge} />
               <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-xs font-label border border-lime-400/30">
@@ -114,7 +114,7 @@ export default async function PublicRefereeDetailPage({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={coverImg}
-                  alt={referee.name || "Arbitru Oficial"}
+                  alt={referee.name || "Arbitru  "}
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-5">
@@ -134,7 +134,7 @@ export default async function PublicRefereeDetailPage({
               <div className="flex items-center gap-4 pt-2">
                 <div className="w-16 h-16 rounded-2xl border-2 border-lime-400 overflow-hidden shadow-lg relative bg-slate-800 shrink-0">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={avatarImg} alt={referee.name || "Arbitru Oficial"} className="w-full h-full object-cover" />
+                  <img src={avatarImg} alt={referee.name || "Arbitru  "} className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <h3 className="font-headline font-bold text-base text-white leading-tight">
@@ -203,7 +203,7 @@ export default async function PublicRefereeDetailPage({
                     Parametri de Evaluare &amp; Conducere a Jocului
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                    Statistici oficiale monitorizate de observatorii Ligue Pro
+                    Statistici  e monitorizate de observatorii Ligue Pro
                   </p>
                 </div>
               </div>
@@ -265,7 +265,7 @@ export default async function PublicRefereeDetailPage({
 
               {matches.length === 0 ? (
                 <div className="p-8 rounded-3xl bg-white dark:bg-slate-900/60 text-center text-xs text-slate-500 font-label border border-slate-200 dark:border-slate-800 shadow-sm">
-                  Momentan nu sunt meciuri oficiale înregistrate în baza de date pentru acest arbitru.
+                  Momentan nu sunt meciuri  e înregistrate în baza de date pentru acest arbitru.
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -289,14 +289,14 @@ export default async function PublicRefereeDetailPage({
 
                       <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
                         <span className="text-[11px] text-slate-500 dark:text-slate-400 font-label">
-                          🏟️ {m.venue || "Arena Oficială"}
+                          🏟️ {m.venue || "Arena  ă"}
                         </span>
                         <Link
                           href={`/matches/${m.id}/report`}
                           target="_blank"
                           className="text-[11px] font-bold text-lime-600 dark:text-lime-400 hover:underline font-label flex items-center gap-0.5"
                         >
-                          <span>Raport Oficial PDF</span>
+                          <span>Raport   PDF</span>
                           <span className="material-symbols-outlined text-[12px]">open_in_new</span>
                         </Link>
                       </div>

@@ -54,7 +54,7 @@ interface VenueData {
 export const ARENA_SPORTS_OPTIONS = [
   { id: "fotbal", label: "Fotbal & Minifotbal", icon: "sports_soccer" },
   { id: "tenis", label: "Tenis de Câmp", icon: "sports_tennis" },
-  { id: "padel", label: "Padel Oficial", icon: "sports_tennis" },
+  { id: "padel", label: "Padel  ", icon: "sports_tennis" },
   { id: "pingpong", label: "Tenis de Masă (Ping-Pong)", icon: "table_tennis" },
   { id: "baschet", label: "Baschet 5x5 & 3x3", icon: "sports_basketball" },
   { id: "volei", label: "Volei / Beach Volley", icon: "sports_volleyball" },
@@ -84,10 +84,10 @@ export function ArenaOwnerPanel({
   const requestedTab = searchParams.get("tab");
   const queryTab =
     requestedTab === "championships" ||
-    requestedTab === "ads" ||
-    requestedTab === "announcements" ||
-    requestedTab === "ticker" ||
-    requestedTab === "calendar"
+      requestedTab === "ads" ||
+      requestedTab === "announcements" ||
+      requestedTab === "ticker" ||
+      requestedTab === "calendar"
       ? requestedTab
       : "config";
   const [activeTab, setActiveTab] = useState<
@@ -452,11 +452,10 @@ export function ArenaOwnerPanel({
       {/* Alert Messages */}
       {message && (
         <div
-          className={`p-3.5 rounded-xl text-xs font-medium flex items-center gap-2 shadow-sm ${
-            message.type === "success"
+          className={`p-3.5 rounded-xl text-xs font-medium flex items-center gap-2 shadow-sm ${message.type === "success"
               ? "bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-900/50"
               : "bg-red-50 text-red-800 border border-red-200 dark:bg-red-950/30 dark:text-red-300 dark:border-red-900/50"
-          }`}
+            }`}
         >
           <span className="material-symbols-outlined text-base">
             {message.type === "success" ? "check_circle" : "error"}
@@ -470,11 +469,10 @@ export function ArenaOwnerPanel({
         <button
           type="button"
           onClick={() => setActiveTab("config")}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shrink-0 ${
-            activeTab === "config"
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shrink-0 ${activeTab === "config"
               ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm font-semibold"
               : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-          }`}
+            }`}
         >
           <span className="material-symbols-outlined text-[16px]">tune</span>
           <span>Configurare</span>
@@ -483,11 +481,10 @@ export function ArenaOwnerPanel({
         <button
           type="button"
           onClick={() => setActiveTab("championships")}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shrink-0 ${
-            activeTab === "championships"
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shrink-0 ${activeTab === "championships"
               ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm font-semibold"
               : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-          }`}
+            }`}
         >
           <span className="material-symbols-outlined text-[16px]">emoji_events</span>
           <span>Campionate ({arenaChampionships.length})</span>
@@ -496,11 +493,10 @@ export function ArenaOwnerPanel({
         <button
           type="button"
           onClick={() => setActiveTab("ads")}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shrink-0 ${
-            activeTab === "ads"
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shrink-0 ${activeTab === "ads"
               ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm font-semibold"
               : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-          }`}
+            }`}
         >
           <span className="material-symbols-outlined text-[16px]">ad_units</span>
           <span>Reclame ({ads.length})</span>
@@ -509,11 +505,10 @@ export function ArenaOwnerPanel({
         <button
           type="button"
           onClick={() => setActiveTab("announcements")}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shrink-0 ${
-            activeTab === "announcements"
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shrink-0 ${activeTab === "announcements"
               ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm font-semibold"
               : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-          }`}
+            }`}
         >
           <span className="material-symbols-outlined text-[16px]">campaign</span>
           <span>Anunțuri ({announcements.length})</span>
@@ -522,11 +517,10 @@ export function ArenaOwnerPanel({
         <button
           type="button"
           onClick={() => setActiveTab("ticker")}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shrink-0 ${
-            activeTab === "ticker"
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shrink-0 ${activeTab === "ticker"
               ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm font-semibold"
               : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-          }`}
+            }`}
         >
           <span className="material-symbols-outlined text-[16px]">rss_feed</span>
           <span>Ticker</span>
@@ -535,11 +529,10 @@ export function ArenaOwnerPanel({
         <button
           type="button"
           onClick={() => setActiveTab("calendar")}
-          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shrink-0 ${
-            activeTab === "calendar"
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 shrink-0 ${activeTab === "calendar"
               ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm font-semibold"
               : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-          }`}
+            }`}
         >
           <span className="material-symbols-outlined text-[16px]">calendar_month</span>
           <span>Calendar</span>
@@ -784,11 +777,10 @@ export function ArenaOwnerPanel({
                     return (
                       <label
                         key={sportOpt.id}
-                        className={`flex items-center gap-2 p-2.5 rounded-xl border transition cursor-pointer select-none ${
-                          isChecked
+                        className={`flex items-center gap-2 p-2.5 rounded-xl border transition cursor-pointer select-none ${isChecked
                             ? "bg-slate-900 text-white dark:bg-slate-800 dark:text-white border-slate-900 dark:border-slate-700 shadow-sm"
                             : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
-                        }`}
+                          }`}
                       >
                         <input
                           type="checkbox"
@@ -861,17 +853,16 @@ export function ArenaOwnerPanel({
                     Nocturnă LED Omologată
                   </span>
                   <span className="text-[11px] text-slate-500 font-normal">
-                    Permite desfășurarea meciurilor oficiale în nocturnă
+                    Permite desfășurarea meciurilor  e în nocturnă
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setFloodlights(!floodlights)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-                    floodlights
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${floodlights
                       ? "bg-lime-400 text-slate-950 font-semibold shadow-sm"
                       : "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-400"
-                  }`}
+                    }`}
                 >
                   {floodlights ? "Activată" : "Dezactivată"}
                 </button>
@@ -955,7 +946,7 @@ export function ArenaOwnerPanel({
                 Bannere Reclame &amp; Sponsori Arenă
               </h3>
               <p className="text-xs text-slate-500 font-normal mt-0.5">
-                Afișează bannere ale partenerilor comerciali pe pagina oficială a arenei tale.
+                Afișează bannere ale partenerilor comerciali pe pagina  ă a arenei tale.
               </p>
             </div>
             <button
@@ -984,11 +975,10 @@ export function ArenaOwnerPanel({
                     />
                     <div className="absolute top-2.5 right-2.5">
                       <span
-                        className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${
-                          ad.isActive
+                        className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${ad.isActive
                             ? "bg-emerald-500/90 text-white"
                             : "bg-slate-800 text-slate-300"
-                        }`}
+                          }`}
                       >
                         {ad.isActive ? "Activă" : "Inactivă"}
                       </span>
@@ -1068,11 +1058,10 @@ export function ArenaOwnerPanel({
                       {ann.date}
                     </span>
                     <span
-                      className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${
-                        ann.isActive
+                      className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${ann.isActive
                           ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
                           : "bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400"
-                      }`}
+                        }`}
                     >
                       {ann.isActive ? "Publicat" : "Ciornă"}
                     </span>
@@ -1132,11 +1121,10 @@ export function ArenaOwnerPanel({
             <button
               type="button"
               onClick={() => setTickerActive(!tickerActive)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-                tickerActive
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${tickerActive
                   ? "bg-lime-400 text-slate-950 font-semibold shadow-sm"
                   : "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-400"
-              }`}
+                }`}
             >
               {tickerActive ? "Ticker Activat" : "Ticker Oprit"}
             </button>

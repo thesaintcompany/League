@@ -16,7 +16,7 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
 
     const isRo = lang === "RO";
     const title = isRo
-      ? `REGULAMENT OFICIAL DE ORGANIZARE ŞI DESFĂŞURARE • ${championshipName.toUpperCase()}`
+      ? `REGULAMENT   DE ORGANIZARE ŞI DESFĂŞURARE • ${championshipName.toUpperCase()}`
       : `OFFICIAL COMPETITION REGULATIONS & CODE OF CONDUCT • ${championshipName.toUpperCase()}`;
 
     const content = `
@@ -46,63 +46,58 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
             <div class="subtitle">${championshipName}</div>
           </div>
           <div style="text-align: right;">
-            <div style="font-size: 11px; font-weight: 700; color: #64748b;">DOCUMENT OFICIAL SEZONUL 2025-2026</div>
+            <div style="font-size: 11px; font-weight: 700; color: #64748b;">DOCUMENT   SEZONUL 2025-2026</div>
             <div style="font-size: 11px; font-weight: 800; color: #0f172a;">COD: REG-${Date.now().toString().slice(-6)}</div>
           </div>
         </div>
 
         <div class="badge">✓ VERSIUNE PRO LIGUE &amp; COMISIA DE ARBITRI</div>
 
-        <div class="title">${isRo ? "REGULAMENTUL OFICIAL AL COMPETIȚIEI" : "OFFICIAL COMPETITION REGULATIONS"}</div>
+        <div class="title">${isRo ? "REGULAMENTUL   AL COMPETIȚIEI" : "OFFICIAL COMPETITION REGULATIONS"}</div>
         <p style="font-size: 13px; color: #475569; margin-bottom: 25px;">
-          ${
-            isRo
-              ? "Prezentul regulament stabilește normele tehnice, disciplinare și de organizare aplicabile tuturor partidelor oficiale desfășurate în cadrul competiției."
-              : "These regulations govern all technical, disciplinary, and organizational rules applicable to official matches within the championship."
-          }
+          ${isRo
+        ? "Prezentul regulament stabilește normele tehnice, disciplinare și de organizare aplicabile tuturor partidelor  e desfășurate în cadrul competiției."
+        : "These regulations govern all technical, disciplinary, and organizational rules applicable to official matches within the championship."
+      }
         </p>
 
         <div class="section">
           <div class="section-title">1. ${isRo ? "DURATA JOCULUI & SCHIMBĂRI" : "MATCH DURATION & SUBSTITUTIONS"}</div>
           <div class="section-body">
-            ${
-              isRo
-                ? "Meciul se joacă pe durata a două reprize egale de câte 45 de minute, cu o pauză de 15 minute. Fiecare echipă poate efectua maxim 5 schimbări în 3 momente de întrerupere ale jocului."
-                : "The match consists of two 45-minute halves with a 15-minute interval. Each team is permitted up to 5 substitutions in 3 stoppage windows."
-            }
+            ${isRo
+        ? "Meciul se joacă pe durata a două reprize egale de câte 45 de minute, cu o pauză de 15 minute. Fiecare echipă poate efectua maxim 5 schimbări în 3 momente de întrerupere ale jocului."
+        : "The match consists of two 45-minute halves with a 15-minute interval. Each team is permitted up to 5 substitutions in 3 stoppage windows."
+      }
           </div>
         </div>
 
         <div class="section">
           <div class="section-title">2. ${isRo ? "DISCIPLINĂ & CARTONAȘE" : "DISCIPLINE & BOOKING RULES"}</div>
           <div class="section-body">
-            ${
-              isRo
-                ? "Dacă un jucător acumulează 4 cartonașe galbene în meciuri consecutive, este suspendat automat pentru etapa următoare. Cartonașul roșu direct atrage o suspendare de minim 2 etape."
-                : "Accumulating 4 yellow cards across consecutive matches incurs a mandatory 1-match suspension. A direct red card results in a minimum 2-match suspension."
-            }
+            ${isRo
+        ? "Dacă un jucător acumulează 4 cartonașe galbene în meciuri consecutive, este suspendat automat pentru etapa următoare. Cartonașul roșu direct atrage o suspendare de minim 2 etape."
+        : "Accumulating 4 yellow cards across consecutive matches incurs a mandatory 1-match suspension. A direct red card results in a minimum 2-match suspension."
+      }
           </div>
         </div>
 
         <div class="section">
           <div class="section-title">3. ${isRo ? "DECIZIILE ARBITRILOR & SISTEMUL VAR" : "OFFICIATING STANDARDS & VAR SYSTEM"}</div>
           <div class="section-body">
-            ${
-              isRo
-                ? "Deciziile arbitrului pe terenul de joc cu privire la fapte legate de joc sunt definitive. În meciurile omologate cu asistență video, reluările sunt analizate exclusiv de brigada oficială."
-                : "Referee decisions on the field regarding facts of play are final. In VAR-enabled matches, video replays are reviewed exclusively by certified officials."
-            }
+            ${isRo
+        ? "Deciziile arbitrului pe terenul de joc cu privire la fapte legate de joc sunt definitive. În meciurile omologate cu asistență video, reluările sunt analizate exclusiv de brigada  ă."
+        : "Referee decisions on the field regarding facts of play are final. In VAR-enabled matches, video replays are reviewed exclusively by certified officials."
+      }
           </div>
         </div>
 
         <div class="section">
           <div class="section-title">4. ${isRo ? "ECHIPAMENTE & IDENTIFICARE" : "KIT & PLAYER IDENTIFICATION"}</div>
           <div class="section-body">
-            ${
-              isRo
-                ? "Echipele au obligația de a purta echipamente de culori contrastante. Jucătorii trebuie să prezinte legitimația oficială / buletinul înainte de începerea jocului."
-                : "Teams must wear distinct contrasting kit colors. All players are required to present valid official player IDs prior to kickoff."
-            }
+            ${isRo
+        ? "Echipele au obligația de a purta echipamente de culori contrastante. Jucătorii trebuie să prezinte legitimația  ă / buletinul înainte de începerea jocului."
+        : "Teams must wear distinct contrasting kit colors. All players are required to present valid official player IDs prior to kickoff."
+      }
           </div>
         </div>
 
@@ -142,11 +137,10 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
               <button
                 type="button"
                 onClick={() => setLang("RO")}
-                className={`px-2 py-0.5 rounded-md transition ${
-                  lang === "RO"
+                className={`px-2 py-0.5 rounded-md transition ${lang === "RO"
                     ? "bg-lime-400 text-slate-950 font-black shadow-sm"
                     : "text-slate-400 hover:text-white"
-                }`}
+                  }`}
               >
                 RO
               </button>
@@ -154,11 +148,10 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
               <button
                 type="button"
                 onClick={() => setLang("ENG")}
-                className={`px-2 py-0.5 rounded-md transition ${
-                  lang === "ENG"
+                className={`px-2 py-0.5 rounded-md transition ${lang === "ENG"
                     ? "bg-lime-400 text-slate-950 font-black shadow-sm"
                     : "text-slate-400 hover:text-white"
-                }`}
+                  }`}
               >
                 ENG
               </button>
@@ -167,7 +160,7 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
 
           <p className="text-xs text-slate-400 font-body">
             {lang === "RO"
-              ? "Consultați regulamentul oficial al competiției."
+              ? "Consultați regulamentul   al competiției."
               : "View the official competition regulations."}
           </p>
         </div>
@@ -183,7 +176,7 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
           <span>
             {isGeneratingPdf
               ? lang === "RO" ? "Se generează PDF..." : "Generating PDF..."
-              : lang === "RO" ? "Descarcă regulamentul oficial (PDF)" : "Download official regulations (PDF)"}
+              : lang === "RO" ? "Descarcă regulamentul   (PDF)" : "Download official regulations (PDF)"}
           </span>
         </button>
       </div>

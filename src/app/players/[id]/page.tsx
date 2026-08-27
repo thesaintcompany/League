@@ -171,7 +171,7 @@ export default async function PublicPlayerDetailPage({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-5">
                     <span className="text-[10px] font-label font-bold text-amber-400 uppercase tracking-widest">
-                      Fișă Oficială Atlet
+                      Fișă  ă Atlet
                     </span>
                     <h2 className="font-headline font-black text-white text-2xl uppercase tracking-tight leading-tight">
                       {player.name}
@@ -215,7 +215,7 @@ export default async function PublicPlayerDetailPage({
             {/* Social Connectivity */}
             <div className="card p-6 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-3xl space-y-3 shadow-md">
               <h4 className="font-headline font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider">
-                Rețele Sociale Oficiale
+                Rețele Sociale  e
               </h4>
               <div className="flex gap-2">
                 <a
@@ -290,7 +290,7 @@ export default async function PublicPlayerDetailPage({
                     Atribute Tehnice &amp; Parametri de Performanță
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                    Statistici calibrate conform standardelor oficiale de elită
+                    Statistici calibrate conform standardelor  e de elită
                   </p>
                 </div>
               </div>
@@ -369,7 +369,7 @@ export default async function PublicPlayerDetailPage({
               <div className="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-slate-800">
                 <h3 className="text-lg font-bold font-headline text-slate-900 dark:text-white flex items-center gap-2">
                   <span className="material-symbols-outlined text-amber-500 dark:text-amber-400">sports_soccer</span>
-                  Meciuri Oficiale &amp; Rapoarte
+                  Meciuri  e &amp; Rapoarte
                 </h3>
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-label font-bold">
                   {matches.length} Partide
@@ -407,7 +407,7 @@ export default async function PublicPlayerDetailPage({
 
                       <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
                         <span className="text-[11px] text-slate-500 dark:text-slate-400 font-label">
-                          🏟️ {m.venue || "Arena Oficială"}
+                          🏟️ {m.venue || "Arena  ă"}
                         </span>
                         <Link
                           href={`/matches/${m.id}/report`}

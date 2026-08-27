@@ -61,10 +61,10 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
   const [sponsors, setSponsors] = useState<SponsorItem[]>(DEFAULT_ROMANIAN_SPONSORS);
   const [isOrganizerMode, setIsOrganizerMode] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  
+
   // New sponsor form states
   const [newSponsorName, setNewSponsorName] = useState("");
-  const [newSponsorCategory, setNewSponsorCategory] = useState("Sponsor Oficial");
+  const [newSponsorCategory, setNewSponsorCategory] = useState("Sponsor  ");
   const [newSponsorLogoUrl, setNewSponsorLogoUrl] = useState("");
   const [previewDataUrl, setPreviewDataUrl] = useState<string | null>(null);
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
@@ -147,7 +147,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
 
   // Reset to default preset list
   function handleResetDefault() {
-    if (!confirm("Restabiliți lista implicită de 32 de sponsori oficiali?")) return;
+    if (!confirm("Restabiliți lista implicită de 32 de sponsori  i?")) return;
     saveSponsorsList(DEFAULT_ROMANIAN_SPONSORS);
   }
 
@@ -162,7 +162,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-              🛡️ PARTENERI &amp; SPONSORI OFICIALI
+              🛡️ PARTENERI &amp; SPONSORI  I
             </span>
             <span className="px-3 py-1 rounded-full bg-slate-900 text-lime-400 font-bold text-xs font-label border border-lime-400/20">
               {sponsors.length} Branduri Partenere
@@ -172,7 +172,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
             Sponsorii Meciului &amp; Competiției
           </h2>
           <p className="text-xs text-slate-400 font-body max-w-2xl leading-relaxed">
-            Grilă oficială de prezentare a sponsorilor parteneri. <strong>Organizatorul exclusiv</strong> poate adăuga, edita sau actualiza logourile de pe tabelul competițional.
+            Grilă  ă de prezentare a sponsorilor parteneri. <strong>Organizatorul exclusiv</strong> poate adăuga, edita sau actualiza logourile de pe tabelul competițional.
           </p>
         </div>
 
@@ -182,11 +182,10 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
             <button
               type="button"
               onClick={() => setIsOrganizerMode((v) => !v)}
-              className={`px-4 py-2.5 rounded-2xl text-xs font-label font-black uppercase tracking-wider transition border shadow-md flex items-center gap-2 ${
-                isOrganizerMode
+              className={`px-4 py-2.5 rounded-2xl text-xs font-label font-black uppercase tracking-wider transition border shadow-md flex items-center gap-2 ${isOrganizerMode
                   ? "bg-amber-400 text-slate-950 border-amber-400 scale-105"
                   : "bg-slate-900 hover:bg-slate-800 text-slate-300 border-slate-700 hover:text-white"
-              }`}
+                }`}
             >
               <span className="material-symbols-outlined text-base">
                 {isOrganizerMode ? "admin_panel_settings" : "lock"}
@@ -251,7 +250,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
                   {sponsor.name}
                 </span>
                 <span className="text-[9px] font-label font-bold text-slate-400 uppercase tracking-widest truncate max-w-full">
-                  {sponsor.category || "Partener Oficial"}
+                  {sponsor.category || "Partener  "}
                 </span>
               </div>
             )}
@@ -365,7 +364,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
                   className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-700 text-xs text-white font-bold focus:outline-none focus:border-lime-400"
                 >
                   <option value="Sponsor Principal">🏆 Sponsor Principal</option>
-                  <option value="Sponsor Oficial">⭐ Sponsor Oficial</option>
+                  <option value="Sponsor  ">⭐ Sponsor  </option>
                   <option value="Partener Tehnic">⚙️ Partener Tehnic</option>
                   <option value="Partener Media">📺 Partener Media &amp; TV</option>
                   <option value="Partener Local">📍 Partener Local</option>

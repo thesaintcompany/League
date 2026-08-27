@@ -4,7 +4,7 @@ import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 
 export const metadata = {
-  title: "Întrebări Frecvente (FAQ) • PRO L4GUE ROMÂNIA",
+  title: "Întrebări Frecvente (FAQ) • PRO LIGUE ROMÂNIA",
   description: "Răspunsuri la cele mai comune întrebări despre organizarea campionatelor, cumpărarea biletelor, arene și arbitraj.",
 };
 
@@ -24,7 +24,7 @@ export default function FAQPage() {
     },
     {
       q: "Ce reprezintă acreditarea RIFA pentru arbitri?",
-      a: "RIFA (Romanian International Football Arbitration) este standardul oficial de clasificare al arbitrilor pe platformă (RIFA Pro Elite, RIFA First Class, RIFA VAR și Asistenți).",
+      a: "RIFA (Romanian International Football Arbitration) este standardul   de clasificare al arbitrilor pe platformă (RIFA Pro Elite, RIFA First Class, RIFA VAR și Asistenți).",
     },
     {
       q: "Sunt disponibile toate cele 59 de arene din România?",
@@ -50,7 +50,7 @@ export default function FAQPage() {
             Întrebări Frecvente
           </h1>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Ai nelămuriri despre cum funcționează PRO L4GUE? Iată răspunsurile la cele mai frecvente întrebări.
+            Ai nelămuriri despre cum funcționează PRO LIGUE? Iată răspunsurile la cele mai frecvente întrebări.
           </p>
         </div>
       </section>
@@ -84,11 +84,11 @@ export default function FAQPage() {
           </p>
           <div className="pt-2">
             <a
-              href="mailto:contact@tscquantum.ro"
+              href="mailto:contact@buu.ro"
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-sm hover:bg-lime-300 transition"
             >
               <span>✉️</span>
-              <span>Trimite un Email (contact@tscquantum.ro)</span>
+              <span>Trimite un Email (contact@buu.ro)</span>
             </a>
           </div>
         </div>

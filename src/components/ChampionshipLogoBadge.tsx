@@ -152,7 +152,7 @@ export function ChampionshipLogoBadge({
     <div
       onDoubleClick={handleDoubleClick}
       className={`group relative select-none shrink-0 ${editable ? "cursor-pointer" : ""} ${className}`}
-      title={editable ? `Dublu-click pe siglă pentru a încărca imaginea oficială a campionatului (${name})` : `Campionat: ${name}`}
+      title={editable ? `Dublu-click pe siglă pentru a încărca imaginea  ă a campionatului (${name})` : `Campionat: ${name}`}
     >
       {editable && (
         <input

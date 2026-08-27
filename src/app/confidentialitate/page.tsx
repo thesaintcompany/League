@@ -4,7 +4,7 @@ import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 
 export const metadata = {
-  title: "Politica de Confidențialitate & GDPR • PRO L4GUE ROMÂNIA",
+  title: "Politica de Confidențialitate & GDPR • PRO LIGUE ROMÂNIA",
   description: "Politica privind protecția datelor cu caracter personal, utilizarea cookie-urilor și drepturile utilizatorilor conform Regulamentului GDPR.",
 };
 
@@ -73,8 +73,8 @@ export default function ConfidentialitatePage() {
             </h2>
             <p>
               Pentru orice solicitare privind datele dumneavoastră cu caracter personal, vă rugăm să trimiteți un e-mail către responsabilul DPO la{" "}
-              <a href="mailto:contact@tscquantum.ro" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
-                contact@tscquantum.ro
+              <a href="mailto:contact@buu.ro" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
+                contact@buu.ro
               </a>.
             </p>
           </section>

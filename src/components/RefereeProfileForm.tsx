@@ -70,7 +70,7 @@ export function RefereeProfileForm({ initialUser }: RefereeProfileProps) {
         throw new Error(d.error || "Eroare la salvarea profilului de arbitru");
       }
 
-      setMessage({ text: "Profilul de arbitru oficial a fost actualizat cu succes! ✓", type: "success" });
+      setMessage({ text: "Profilul de arbitru   a fost actualizat cu succes! ✓", type: "success" });
     } catch (e: any) {
       setMessage({ text: e.message, type: "error" });
     } finally {
@@ -85,10 +85,10 @@ export function RefereeProfileForm({ initialUser }: RefereeProfileProps) {
         <div className="card p-6 bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
           <div className="flex justify-between items-center">
             <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-              Legitimație Arbitraj Oficial
+              Legitimație Arbitraj
             </span>
             <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
-              OFICIAL DE JOC
+              DE JOC
             </span>
           </div>
 
@@ -99,7 +99,7 @@ export function RefereeProfileForm({ initialUser }: RefereeProfileProps) {
 
           <div className="text-center">
             <h3 className="font-headline font-bold text-lg text-blue-950 dark:text-white">
-              {name || "Arbitru Oficial"}
+              {name || "Arbitru  "}
             </h3>
             <p className="font-label text-xs text-lime-600 dark:text-lime-400 font-bold uppercase tracking-wider mt-0.5">
               {refereeBadge}
@@ -129,7 +129,7 @@ export function RefereeProfileForm({ initialUser }: RefereeProfileProps) {
             </h4>
           </div>
           <p className="text-xs text-slate-500 leading-relaxed font-body">
-            Ca arbitru licențiat, poți edita scorul, evenimentele live (cartonașe, goluri, ofsaiduri) și semna raportul oficial de meci doar pentru partidele la care ai fost delegat aleatoriu prin sistemul de zaruri.
+            Ca arbitru licențiat, poți edita scorul, evenimentele live (cartonașe, goluri, ofsaiduri) și semna raportul   de meci doar pentru partidele la care ai fost delegat aleatoriu prin sistemul de zaruri.
           </p>
         </div>
       </div>
@@ -139,8 +139,8 @@ export function RefereeProfileForm({ initialUser }: RefereeProfileProps) {
         {message && (
           <div
             className={`p-4 rounded-2xl text-xs font-bold font-label flex items-center gap-2 shadow-sm ${message.type === "success"
-                ? "bg-lime-100 text-lime-900 border border-lime-300"
-                : "bg-red-50 text-red-700 border border-red-200"
+              ? "bg-lime-100 text-lime-900 border border-lime-300"
+              : "bg-red-50 text-red-700 border border-red-200"
               }`}
           >
             <span className="material-symbols-outlined text-base">
@@ -154,10 +154,10 @@ export function RefereeProfileForm({ initialUser }: RefereeProfileProps) {
           <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
               <h3 className="font-headline font-extrabold text-xl text-blue-950 dark:text-white">
-                Date Oficiale Arbitru
+                Date  e Arbitru
               </h3>
               <p className="text-xs text-slate-500 font-label">
-                Parametri de acreditare și contact oficial
+                Parametri de acreditare și contact
               </p>
             </div>
             <span className="w-10 h-1 bg-lime-400 rounded-full"></span>
@@ -211,7 +211,7 @@ export function RefereeProfileForm({ initialUser }: RefereeProfileProps) {
             <div className="space-y-1.5">
               <div className="flex items-center gap-1.5">
                 <label className="text-[10px] font-label font-bold text-slate-400 uppercase tracking-widest">
-                  Telefon Oficial
+                  Telefon
                 </label>
                 <span className="material-symbols-outlined text-[13px] text-slate-400">lock</span>
               </div>

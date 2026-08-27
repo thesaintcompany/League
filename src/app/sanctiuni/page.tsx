@@ -79,7 +79,7 @@ export default async function SanctionsPage() {
       position: p.position || "Jucător",
       number: p.number,
       teamId: p.teamId,
-      teamName: p.team?.name || "Echipă Oficială",
+      teamName: p.team?.name || "Echipă  ă",
       teamColor: p.team?.color || "#84cc16",
       teamLogo: p.team?.logoUrl || null,
       championshipId: p.team?.championshipId || "default",

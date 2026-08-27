@@ -148,7 +148,7 @@ model Championship {
   isBracketPublished Boolean @default(false)
   diceRollCount      Int     @default(0) // Maximum 3 rolls allowed before publishing
   silentDice         Boolean @default(false) // Dezactivează anunțurile cu zaruri (Tragere Silent)
-  refereeEnabled     Boolean @default(true)  // Activare modul arbitraj oficial
+  refereeEnabled     Boolean @default(true)  // Activare modul arbitraj  
   singleVenueEnabled Boolean @default(false) // Toate meciurile în aceeași locație/arenă
   defaultVenue       String?                 // Numele locației unice
   shareCode   String?  @unique // unique public share code e.g. "LP-2026-A1"
@@ -308,7 +308,7 @@ model Match {
   awayPenalties   String?  // JSON stringified array of shootout results
   pitchCondition  String?  @default("Excelent")
   crowdConduct    String?  @default("Sportivă / Fără incidente")
-  refereeNotes    String?  // Raportul oficial de meci și incidente
+  refereeNotes    String?  // Raportul   de meci și incidente
    signedBy        String?  // Semnătura digitală a arbitrului
    signedAt        DateTime?
    refereeConfirmed Boolean     @default(false) // Arbitrul a confirmat prezența
@@ -319,7 +319,7 @@ model Match {
   ticketUrl       String?
   sponsorName     String?  @default("Ligue Pro Energy")
   sponsorLogoUrl  String?
-  sponsorTagline  String?  @default("Partener Oficial de Performanță")
+  sponsorTagline  String?  @default("Partener   de Performanță")
 
   // Organizer Payout & Gatekeeper Access Secret
   organizerIban          String?

@@ -113,7 +113,7 @@ export async function POST(req: Request) {
         price: updated.price,
         match: {
           teams: `${ticket.match.homeTeam.name} vs ${ticket.match.awayTeam.name}`,
-          venue: ticket.match.venue || "Arena Oficială",
+          venue: ticket.match.venue || "Arena  ă",
           stage: ticket.match.stage || `Etapa ${ticket.match.round}`,
         },
         checkedInAt: updated.checkedInAt,

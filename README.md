@@ -180,7 +180,7 @@ SQLite e ok pentru 1-10 campionate mici. Dacă vrei multi-tenant sau volum mare:
 
 ## Date de Contact
 
-- **Email Oficial & Suport:** `contact@buu.ro` (Datele de contact sunt exclusiv `contact@buu.ro` și nu se mai modifică)
+- **Email   & Suport:** `contact@buu.ro` (Datele de contact sunt exclusiv `contact@buu.ro` și nu se mai modifică)
 - **Website:** [https://sp.buu.ro](https://sp.buu.ro)
 
 ## Licență

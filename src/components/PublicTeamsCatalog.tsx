@@ -100,14 +100,14 @@ export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] 
 
         <div className="relative z-10 max-w-4xl space-y-4">
           <div className="flex flex-wrap items-center gap-2.5">
-                <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-lg">
-                  CATALOG OFICIAL CLUBURI &amp; ECHIPE
-                </span>
+            <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-lg">
+              CATALOG   CLUBURI &amp; ECHIPE
+            </span>
             <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-[10px] uppercase font-label">
               {allTeams.length} Cluburi Înregistrate
             </span>
             <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 font-bold text-[10px] uppercase font-label border border-blue-400/30">
-               Sezonul 2025-2026
+              Sezonul 2025-2026
             </span>
           </div>
 
@@ -116,7 +116,7 @@ export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] 
           </h1>
 
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl font-body">
-            Explorează toate cluburile participante în campionatele naționale și regionale din România. Descoperă loturile de jucători, siglele oficiale și statisticele fiecărei echipe.
+            Explorează toate cluburile participante în campionatele naționale și regionale din România. Descoperă loturile de jucători, siglele  e și statisticele fiecărei echipe.
           </p>
 
           {/* Search & Filters */}
@@ -153,11 +153,10 @@ export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] 
                   key={cat.id}
                   type="button"
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${
-                    selectedCategory === cat.id
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition ${selectedCategory === cat.id
                       ? "bg-lime-400 text-slate-950 font-black shadow-md"
                       : "text-slate-300 hover:text-white"
-                  }`}
+                    }`}
                 >
                   {cat.label}
                 </button>
@@ -233,24 +232,24 @@ export function PublicTeamsCatalog({ initialTeams }: { initialTeams: TeamItem[] 
                   </div>
                 </div>
 
-                 {team.id.startsWith("preset-") ? (
-                   <Link
-                     href="/teams"
-                     className="w-full py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-headline font-bold text-xs uppercase tracking-wider text-center transition flex items-center justify-center gap-1 active:scale-95"
-                   >
-                     <span>Vezi Catalog Echipe</span>
-                     <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                   </Link>
-                 ) : (
-                   <Link
-                     href={`/teams/${team.id}`}
-                     className="w-full py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 dark:text-slate-950 font-headline font-bold text-xs uppercase tracking-wider text-center transition flex items-center justify-center gap-1 active:scale-95"
-                   >
-                     <span>Vezi Fanion &amp; Profil</span>
-                     <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                   </Link>
-                 )}
-                 </div>
+                {team.id.startsWith("preset-") ? (
+                  <Link
+                    href="/teams"
+                    className="w-full py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-headline font-bold text-xs uppercase tracking-wider text-center transition flex items-center justify-center gap-1 active:scale-95"
+                  >
+                    <span>Vezi Catalog Echipe</span>
+                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/teams/${team.id}`}
+                    className="w-full py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 dark:text-slate-950 font-headline font-bold text-xs uppercase tracking-wider text-center transition flex items-center justify-center gap-1 active:scale-95"
+                  >
+                    <span>Vezi Fanion &amp; Profil</span>
+                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  </Link>
+                )}
+              </div>
             );
           })}
         </div>

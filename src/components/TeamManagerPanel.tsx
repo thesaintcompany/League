@@ -331,13 +331,13 @@ export function TeamManagerPanel({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-           name: newTeamName,
-           shortName: newTeamShortName,
-           color: newTeamColor,
-           description: newTeamDescription,
-           paymentMethod,
-           paymentConfirmed: !paymentRequired,
-         }),
+          name: newTeamName,
+          shortName: newTeamShortName,
+          color: newTeamColor,
+          description: newTeamDescription,
+          paymentMethod,
+          paymentConfirmed: !paymentRequired,
+        }),
       });
 
       const data = await res.json().catch(() => ({}));
@@ -361,7 +361,7 @@ export function TeamManagerPanel({
 
       notify(data.message || "Echipa a fost creată cu succes!");
       setShowCreateTeamModal(false);
-       setNewTeamName("");
+      setNewTeamName("");
       setNewTeamShortName("");
       setNewTeamColor("#84cc16");
       setNewTeamDescription("");
@@ -643,11 +643,10 @@ export function TeamManagerPanel({
             {managedTeams.map((t) => (
               <div
                 key={t.id}
-                className={`p-4 rounded-2xl border text-left transition flex flex-col gap-2 ${
-                  t.id === team.id
+                className={`p-4 rounded-2xl border text-left transition flex flex-col gap-2 ${t.id === team.id
                     ? "border-lime-500 bg-lime-500/10 text-white shadow-md"
                     : "border-slate-700 bg-slate-800/60 text-slate-300"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <div
@@ -760,11 +759,10 @@ export function TeamManagerPanel({
                       key={m.id}
                       type="button"
                       onClick={() => setPaymentMethod(m.id as any)}
-                      className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${
-                        paymentMethod === m.id
+                      className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${paymentMethod === m.id
                           ? "border-lime-500 bg-lime-500/10 text-slate-900 dark:text-white"
                           : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                      }`}
+                        }`}
                     >
                       <span className="material-symbols-outlined text-lg">{m.icon}</span>
                       <span className="text-[10px] font-bold font-label">{m.label}</span>
@@ -876,8 +874,8 @@ export function TeamManagerPanel({
             type="button"
             onClick={() => setActiveTab(t.id as any)}
             className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 border ${activeTab === t.id
-                ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
-                : "bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-white"
+              ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
+              : "bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-white"
               }`}
           >
             <span className="material-symbols-outlined text-base">{t.icon}</span>
@@ -1117,7 +1115,7 @@ export function TeamManagerPanel({
             {/* Left Col: Team Settings Form */}
             <div className="lg:col-span-6 card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-6">
               <h3 className="text-lg font-bold font-headline uppercase text-white pb-3 border-b border-slate-800">
-                Date Oficiale Club
+                Date  e Club
               </h3>
 
               <div>
@@ -1161,7 +1159,7 @@ export function TeamManagerPanel({
                 </div>
               </div>
 
-               <div>
+              <div>
                 <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
                   Descriere echipei
                 </label>
@@ -1198,8 +1196,8 @@ export function TeamManagerPanel({
                       type="button"
                       onClick={() => setFormation(f)}
                       className={`p-2.5 rounded-xl border text-xs font-headline font-bold uppercase transition ${formation === f
-                          ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
-                          : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700"
+                        ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
+                        : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700"
                         }`}
                     >
                       {f}
@@ -1430,7 +1428,7 @@ export function TeamManagerPanel({
               Staff Tehnic, Antrenori &amp; Personal Medical
             </h3>
             <p className="text-xs text-slate-400 font-label mt-1">
-              Înregistrează antrenorii licențiați, preparatorii fizici și medicul oficial al clubului
+              Înregistrează antrenorii licențiați, preparatorii fizici și medicul   al clubului
             </p>
           </div>
 
@@ -1536,7 +1534,7 @@ export function TeamManagerPanel({
                   >
                     <div className="flex justify-between items-center text-[10px] font-label text-slate-400 uppercase">
                       <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 font-bold border border-lime-400/30">
-                        {isHome ? "🏠 Meci pe Teren Propriu" : "🚌 Deplasare Oficială"}
+                        {isHome ? "🏠 Meci pe Teren Propriu" : "🚌 Deplasare  ă"}
                       </span>
                       <span>
                         {dateObj.toLocaleDateString("ro-RO", { weekday: "short", day: "numeric", month: "short" })} • {dateObj.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}
@@ -1606,8 +1604,8 @@ export function TeamManagerPanel({
               })}
             </div>
           )}
-         </div>
-       )}
+        </div>
+      )}
 
       {/* 7. TAB 6: Meciuri & Invitații */}
       {activeTab === "matches" && (
@@ -1754,8 +1752,8 @@ export function TeamManagerPanel({
               </div>
             )}
           </div>
-         </div>
-       )}
+        </div>
+      )}
 
       {/* 8. TAB 7: Metode de Plată & Facturi */}
       {activeTab === "payments" && (
@@ -1766,8 +1764,8 @@ export function TeamManagerPanel({
                 type="button"
                 onClick={() => setActivePaymentTab("cards")}
                 className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 border ${activePaymentTab === "cards"
-                    ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
-                    : "bg-slate-800 text-slate-400 border-slate-700 hover:border-slate-600 hover:text-white"
+                  ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
+                  : "bg-slate-800 text-slate-400 border-slate-700 hover:border-slate-600 hover:text-white"
                   }`}
               >
                 <span className="material-symbols-outlined text-base">credit_card</span>
@@ -1777,8 +1775,8 @@ export function TeamManagerPanel({
                 type="button"
                 onClick={() => setActivePaymentTab("invoices")}
                 className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 border ${activePaymentTab === "invoices"
-                    ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
-                    : "bg-slate-800 text-slate-400 border-slate-700 hover:border-slate-600 hover:text-white"
+                  ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
+                  : "bg-slate-800 text-slate-400 border-slate-700 hover:border-slate-600 hover:text-white"
                   }`}
               >
                 <span className="material-symbols-outlined text-base">receipt_long</span>
@@ -1958,9 +1956,8 @@ export function TeamManagerPanel({
                           <div className="flex flex-wrap gap-3 mt-1 text-xs font-label text-slate-400">
                             <span>📅 Emisă: {new Date(inv.issueDate).toLocaleDateString("ro-RO")}</span>
                             <span>📅 Scadentă: {new Date(inv.dueDate).toLocaleDateString("ro-RO")}</span>
-                            <span className={`font-bold ${
-                              inv.status === "paid" ? "text-emerald-400" : inv.status === "pending" ? "text-amber-400" : "text-red-400"
-                            }`}>
+                            <span className={`font-bold ${inv.status === "paid" ? "text-emerald-400" : inv.status === "pending" ? "text-amber-400" : "text-red-400"
+                              }`}>
                               {inv.status === "paid" ? "Plătită" : inv.status === "pending" ? "În Așteptare" : inv.status}
                             </span>
                           </div>

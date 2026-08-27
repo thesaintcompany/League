@@ -138,7 +138,7 @@ export function OrganizerInvitationsModal({
   const inviteUrl = isIndividual
     ? `${origin}/signup?role=player&championshipId=${championshipId}`
     : `${origin}/signup?role=team_leader&championshipId=${championshipId}`;
-  
+
   const refereeSignupUrl = `${origin}/signup?role=referee&championshipId=${championshipId}`;
   const bracketsUrl = `${origin}/brackets`;
 
@@ -150,14 +150,14 @@ export function OrganizerInvitationsModal({
   const refereeTargetEmail = refereeMode === "db" ? selectedRef?.email : refereeCustomEmail;
   const refereeTargetName = refereeMode === "db" ? selectedRef?.name : refereeCustomName;
 
-  const refereePersonalInviteMsg = `Salut ${refereeTargetName || "Oficial"}! Te invităm să arbitrezi partidele din cadrul competiției "${championshipName}" (${sport}${county ? ` • Județul ${county}` : ""}). Creează-ți sau accesează panoul oficial de arbitru aici: ${refereeSignupUrl}`;
-  
-  const refereeEmailHref = `mailto:${refereeTargetEmail || ""}?subject=${encodeURIComponent(`Invitație Oficială Arbitraj - ${championshipName}`)}&body=${encodeURIComponent(refereePersonalInviteMsg)}`;
+  const refereePersonalInviteMsg = `Salut ${refereeTargetName || " "}! Te invităm să arbitrezi partidele din cadrul competiției "${championshipName}" (${sport}${county ? ` • Județul ${county}` : ""}). Creează-ți sau accesează panoul   de arbitru aici: ${refereeSignupUrl}`;
+
+  const refereeEmailHref = `mailto:${refereeTargetEmail || ""}?subject=${encodeURIComponent(`Invitație  ă Arbitraj - ${championshipName}`)}&body=${encodeURIComponent(refereePersonalInviteMsg)}`;
   const refereeWhatsappHref = `https://api.whatsapp.com/send?text=${encodeURIComponent(refereePersonalInviteMsg)}`;
 
   const diceAnnouncementMessage = isIndividual
-    ? `ANUNȚ OFICIAL TABLOU: Tragerea la sorți a tabloului de meciuri pentru turneul "${championshipName}" va avea loc pe ${drawDate} la ora ${drawTime}. ${customNotes} Urmărește tabloul live aici: ${bracketsUrl}`
-    : `ANUNȚ OFICIAL: Aruncarea zarurilor și dispunerea meciurilor în brackets pentru "${championshipName}" va avea loc în data de ${drawDate} la ora ${drawTime}. ${customNotes} Urmărește tabloul meciurilor live aici: ${bracketsUrl}`;
+    ? `ANUNȚ   TABLOU: Tragerea la sorți a tabloului de meciuri pentru turneul "${championshipName}" va avea loc pe ${drawDate} la ora ${drawTime}. ${customNotes} Urmărește tabloul live aici: ${bracketsUrl}`
+    : `ANUNȚ  : Aruncarea zarurilor și dispunerea meciurilor în brackets pentru "${championshipName}" va avea loc în data de ${drawDate} la ora ${drawTime}. ${customNotes} Urmărește tabloul meciurilor live aici: ${bracketsUrl}`;
 
   const whatsappInviteUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(inviteMessage)}`;
   const emailInviteUrl = `mailto:?subject=${encodeURIComponent(
@@ -201,34 +201,32 @@ export function OrganizerInvitationsModal({
             </p>
           </div>
 
-            <div className="flex items-center gap-2 mt-2 px-1">
-              <button
-                type="button"
-                onClick={() => setIsIndividualMode(false)}
-                className={`px-3 py-1.5 rounded-xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-1.5 ${
-                  isIndividual
-                    ? "bg-slate-800 text-slate-400 border border-slate-700"
-                    : "bg-lime-400 text-slate-950 shadow-sm"
+          <div className="flex items-center gap-2 mt-2 px-1">
+            <button
+              type="button"
+              onClick={() => setIsIndividualMode(false)}
+              className={`px-3 py-1.5 rounded-xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-1.5 ${isIndividual
+                  ? "bg-slate-800 text-slate-400 border border-slate-700"
+                  : "bg-lime-400 text-slate-950 shadow-sm"
                 }`}
-                title="Comută la modul echipe"
-              >
-                <span className="material-symbols-outlined text-sm">groups_2</span>
-                <span>Echipe</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsIndividualMode(true)}
-                className={`px-3 py-1.5 rounded-xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-1.5 ${
-                  isIndividual
-                    ? "bg-lime-400 text-slate-950 shadow-sm"
-                    : "bg-slate-800 text-slate-400 border border-slate-700"
+              title="Comută la modul echipe"
+            >
+              <span className="material-symbols-outlined text-sm">groups_2</span>
+              <span>Echipe</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsIndividualMode(true)}
+              className={`px-3 py-1.5 rounded-xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-1.5 ${isIndividual
+                  ? "bg-lime-400 text-slate-950 shadow-sm"
+                  : "bg-slate-800 text-slate-400 border border-slate-700"
                 }`}
-                title="Comută la modul individual"
-              >
-                <span className="material-symbols-outlined text-sm">person</span>
-                <span>Individual</span>
-              </button>
-            </div>
+              title="Comută la modul individual"
+            >
+              <span className="material-symbols-outlined text-sm">person</span>
+              <span>Individual</span>
+            </button>
+          </div>
 
           <button
             type="button"
@@ -244,11 +242,10 @@ export function OrganizerInvitationsModal({
           <button
             type="button"
             onClick={() => setActiveTab("invite")}
-            className={`px-3.5 py-2.5 rounded-t-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition shrink-0 ${
-              activeTab === "invite"
+            className={`px-3.5 py-2.5 rounded-t-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition shrink-0 ${activeTab === "invite"
                 ? "bg-lime-400 text-slate-950 shadow-sm"
                 : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-            }`}
+              }`}
           >
             <span className="material-symbols-outlined text-base">person_add</span>
             {isIndividual ? "1. Invită Jucători" : "1. Invită Lideri Echipă"}
@@ -257,11 +254,10 @@ export function OrganizerInvitationsModal({
           <button
             type="button"
             onClick={() => setActiveTab("referees")}
-            className={`px-3.5 py-2.5 rounded-t-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition shrink-0 ${
-              activeTab === "referees"
+            className={`px-3.5 py-2.5 rounded-t-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition shrink-0 ${activeTab === "referees"
                 ? "bg-lime-400 text-slate-950 shadow-sm"
                 : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-            }`}
+              }`}
           >
             <span className="material-symbols-outlined text-base">sports</span>
             <span>2. Invită Arbitri</span>
@@ -270,11 +266,10 @@ export function OrganizerInvitationsModal({
           <button
             type="button"
             onClick={() => setActiveTab("dice_announcement")}
-            className={`px-3.5 py-2.5 rounded-t-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition shrink-0 ${
-              activeTab === "dice_announcement"
+            className={`px-3.5 py-2.5 rounded-t-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition shrink-0 ${activeTab === "dice_announcement"
                 ? "bg-lime-400 text-slate-950 shadow-sm"
                 : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-            }`}
+              }`}
           >
             <span className="material-symbols-outlined text-base">casino</span>
             {isIndividual ? "3. Anunț Tragere Tablou" : "3. Anunț Aruncare Zaruri"}
@@ -289,11 +284,10 @@ export function OrganizerInvitationsModal({
               <button
                 type="button"
                 onClick={() => setCompetitorMode("db")}
-                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
-                  competitorMode === "db"
+                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${competitorMode === "db"
                     ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm font-black"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <span className="material-symbols-outlined text-base">badge</span>
                 <span>Din Baza de Date ({availableCompetitors.length})</span>
@@ -302,11 +296,10 @@ export function OrganizerInvitationsModal({
               <button
                 type="button"
                 onClick={() => setCompetitorMode("email")}
-                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
-                  competitorMode === "email"
+                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${competitorMode === "email"
                     ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm font-black"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <span className="material-symbols-outlined text-base">mail</span>
                 <span>Invitație Email / Nume</span>
@@ -315,11 +308,10 @@ export function OrganizerInvitationsModal({
               <button
                 type="button"
                 onClick={() => setCompetitorMode("link")}
-                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
-                  competitorMode === "link"
+                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${competitorMode === "link"
                     ? "bg-lime-400 text-slate-950 shadow-sm font-black"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <span className="material-symbols-outlined text-base">link</span>
                 <span>Link Public &amp; Social</span>
@@ -356,25 +348,24 @@ export function OrganizerInvitationsModal({
                             <div
                               key={comp.id}
                               onClick={() => setSelectedCompetitorId(comp.id)}
-                              className={`p-3 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                                isSelected
+                              className={`p-3 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${isSelected
                                   ? "bg-lime-400/15 border-lime-500 dark:border-lime-400 ring-2 ring-lime-400/30"
                                   : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-400"
-                              }`}
+                                }`}
                             >
-                               <div className="flex items-center gap-3 min-w-0">
-                                 <div className={`w-9 h-9 rounded-full bg-slate-900 text-lime-400 flex items-center justify-center font-bold text-xs shrink-0 ${isIndividual ? "" : "bg-blue-400 text-white"}`}>
-                                   {isIndividual ? comp.name.substring(0, 2).toUpperCase() : <span className="material-symbols-outlined text-sm">shield</span>}
-                                 </div>
-                                 <div className="min-w-0">
-                                   <div className="text-xs font-headline font-bold text-slate-900 dark:text-white truncate">
-                                     {comp.name}
-                                   </div>
-                                   <div className="text-[11px] text-slate-500 dark:text-slate-400 font-label truncate">
-                                     {comp.email} {comp.phone ? `• ${comp.phone}` : ""} {isIndividual && comp.position ? `• ${comp.position}` : ""}
-                                   </div>
-                                 </div>
-                               </div>
+                              <div className="flex items-center gap-3 min-w-0">
+                                <div className={`w-9 h-9 rounded-full bg-slate-900 text-lime-400 flex items-center justify-center font-bold text-xs shrink-0 ${isIndividual ? "" : "bg-blue-400 text-white"}`}>
+                                  {isIndividual ? comp.name.substring(0, 2).toUpperCase() : <span className="material-symbols-outlined text-sm">shield</span>}
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="text-xs font-headline font-bold text-slate-900 dark:text-white truncate">
+                                    {comp.name}
+                                  </div>
+                                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-label truncate">
+                                    {comp.email} {comp.phone ? `• ${comp.phone}` : ""} {isIndividual && comp.position ? `• ${comp.position}` : ""}
+                                  </div>
+                                </div>
+                              </div>
 
                               <div className="flex items-center gap-2 shrink-0">
                                 <button
@@ -440,10 +431,10 @@ export function OrganizerInvitationsModal({
                   const selectedComp = availableCompetitors.find((c) => c.id === selectedCompetitorId);
                   if (!selectedComp) return null;
                   const personalMsg = isIndividual
-                    ? `Salut ${selectedComp.name}! Te invităm oficial în turneul de ${sport} "${championshipName}". Înscrie-te și validează-ți prezența pe tablou aici: ${inviteUrl}`
+                    ? `Salut ${selectedComp.name}! Te invităm   în turneul de ${sport} "${championshipName}". Înscrie-te și validează-ți prezența pe tablou aici: ${inviteUrl}`
                     : `Salut ${selectedComp.name}! Te invităm să-ți înscrii echipa în campionatul de ${sport} "${championshipName}". Confirmă participarea aici: ${inviteUrl}`;
                   const waHref = `https://api.whatsapp.com/send?${selectedComp.phone ? `phone=${selectedComp.phone.replace(/\D/g, "")}&` : ""}text=${encodeURIComponent(personalMsg)}`;
-                  const mailHref = `mailto:${selectedComp.email || ""}?subject=${encodeURIComponent(`Invitație Oficială - ${championshipName}`)}&body=${encodeURIComponent(personalMsg)}`;
+                  const mailHref = `mailto:${selectedComp.email || ""}?subject=${encodeURIComponent(`Invitație  ă - ${championshipName}`)}&body=${encodeURIComponent(personalMsg)}`;
 
                   return (
                     <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
@@ -527,7 +518,7 @@ export function OrganizerInvitationsModal({
                   <div className="pt-2 flex flex-wrap gap-2.5">
                     <a
                       href={`mailto:${competitorCustomEmail}?subject=${encodeURIComponent(
-                        isIndividual ? `Invitație Oficială Jucător - ${championshipName}` : `Invitație Oficială Echipă - ${championshipName}`
+                        isIndividual ? `Invitație  ă Jucător - ${championshipName}` : `Invitație  ă Echipă - ${championshipName}`
                       )}&body=${encodeURIComponent(
                         `Salut ${competitorCustomName || "Sportiv"}!\n\nTe invităm să participi la "${championshipName}" (${sport}).\nÎnscrie-te și confirmă prezența aici: ${inviteUrl}\n\nCu stimă,\nOrganizatorul competiției`
                       )}`}
@@ -609,11 +600,10 @@ export function OrganizerInvitationsModal({
               <button
                 type="button"
                 onClick={() => setRefereeMode("db")}
-                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
-                  refereeMode === "db"
+                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${refereeMode === "db"
                     ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm font-black"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <span className="material-symbols-outlined text-base">badge</span>
                 <span>Din Baza de Date ({availableReferees.length})</span>
@@ -622,11 +612,10 @@ export function OrganizerInvitationsModal({
               <button
                 type="button"
                 onClick={() => setRefereeMode("email")}
-                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
-                  refereeMode === "email"
+                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${refereeMode === "email"
                     ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm font-black"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <span className="material-symbols-outlined text-base">mail</span>
                 <span>Invitație Email / Nume</span>
@@ -635,14 +624,13 @@ export function OrganizerInvitationsModal({
               <button
                 type="button"
                 onClick={() => setRefereeMode("ajf")}
-                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${
-                  refereeMode === "ajf"
+                className={`py-2.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 ${refereeMode === "ajf"
                     ? "bg-lime-400 text-slate-950 shadow-sm font-black"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <span className="material-symbols-outlined text-base">open_in_new</span>
-                <span>Site Oficial AJF</span>
+                <span>Site   AJF</span>
               </button>
             </div>
 
@@ -679,7 +667,7 @@ export function OrganizerInvitationsModal({
                         <p className="text-[11px] text-slate-500 font-mono">{selectedRef.email} {selectedRef.phone ? `• ${selectedRef.phone}` : ""}</p>
                       </div>
                       <span className="px-2.5 py-0.5 rounded-full bg-lime-400/20 text-lime-700 dark:text-lime-400 font-bold text-[10px] uppercase">
-                        {selectedRef.refereeBadge || "Oficial"}
+                        {selectedRef.refereeBadge || " "}
                       </span>
                     </div>
                   )}
@@ -787,7 +775,7 @@ export function OrganizerInvitationsModal({
               </div>
             )}
 
-            {/* OPTION 3: Găsește arbitri în județul tău (Redirecționare site oficial AJF) */}
+            {/* OPTION 3: Găsește arbitri în județul tău (Redirecționare site   AJF) */}
             {refereeMode === "ajf" && (
               <div className="p-6 rounded-2xl bg-gradient-to-br from-lime-500/10 via-slate-50 dark:via-slate-900 to-emerald-500/10 border border-lime-400/40 dark:border-lime-500/30 space-y-4 text-center sm:text-left">
                 <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -796,13 +784,13 @@ export function OrganizerInvitationsModal({
                   </div>
                   <div>
                     <span className="text-[10px] font-label font-bold uppercase tracking-widest text-lime-600 dark:text-lime-400">
-                      Găsește Oficiali &amp; Arbitri Certificați
+                      Găsește  i &amp; Arbitri Certificați
                     </span>
                     <h4 className="text-base font-headline font-black text-slate-900 dark:text-white uppercase tracking-tight">
                       {county ? `Comisia Județeană de Arbitri (CJA) • ${county}` : "Comisia Centrală a Arbitrilor (CCA / FRF)"}
                     </h4>
                     <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                      Contactează direct Asociația Județeană de Fotbal sau Comisia Centrală a Arbitrilor pentru delegări oficiale, baremuri și arbitri autorizați.
+                      Contactează direct Asociația Județeană de Fotbal sau Comisia Centrală a Arbitrilor pentru delegări  e, baremuri și arbitri autorizați.
                     </p>
                   </div>
                 </div>
@@ -810,7 +798,7 @@ export function OrganizerInvitationsModal({
                 <div className="p-3.5 rounded-xl bg-white/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2.5">
                   <span className="material-symbols-outlined text-lg text-emerald-500 shrink-0">verified_user</span>
                   <span className="text-[11px] leading-relaxed">
-                    <strong>Protecția Datelor &amp; Siguranță:</strong> Nu este necesară introducerea de date cu caracter sensibil. Te îndrumăm direct către portalul oficial acreditat al asociației județene.
+                    <strong>Protecția Datelor &amp; Siguranță:</strong> Nu este necesară introducerea de date cu caracter sensibil. Te îndrumăm direct către portalul   acreditat al asociației județene.
                   </span>
                 </div>
 
@@ -861,16 +849,14 @@ export function OrganizerInvitationsModal({
               <button
                 type="button"
                 onClick={() => setDisableAnnouncements((v) => !v)}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  disableAnnouncements ? "bg-amber-500" : "bg-slate-300 dark:bg-slate-700"
-                }`}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${disableAnnouncements ? "bg-amber-500" : "bg-slate-300 dark:bg-slate-700"
+                  }`}
                 role="switch"
                 aria-checked={disableAnnouncements}
               >
                 <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    disableAnnouncements ? "translate-x-5" : "translate-x-0"
-                  }`}
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${disableAnnouncements ? "translate-x-5" : "translate-x-0"
+                    }`}
                 />
               </button>
             </div>

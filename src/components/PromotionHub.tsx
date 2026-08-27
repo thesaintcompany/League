@@ -65,7 +65,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
     ? `${window.location.origin}/matches/${selectedMatch.id}/promo`
     : `/matches/${selectedMatch.id}/promo`;
 
-  const shareText = `🔥 MECIUL ETAPEI în ${championshipName}!\n⚽ ${selectedMatch.homeTeam.name} vs ${selectedMatch.awayTeam.name}\n📍 Stadion: ${selectedMatch.venue || "Arena Oficială"}\n📅 Data: ${new Date(selectedMatch.scheduledAt || Date.now()).toLocaleDateString("ro-RO", { weekday: "long", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}\n🎟️ Bilete (${ticketPrice} RON): ${ticketUrl}`;
+  const shareText = `🔥 MECIUL ETAPEI în ${championshipName}!\n⚽ ${selectedMatch.homeTeam.name} vs ${selectedMatch.awayTeam.name}\n📍 Stadion: ${selectedMatch.venue || "Arena  ă"}\n📅 Data: ${new Date(selectedMatch.scheduledAt || Date.now()).toLocaleDateString("ro-RO", { weekday: "long", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}\n🎟️ Bilete (${ticketPrice} RON): ${ticketUrl}`;
 
   function copyPromoLink() {
     navigator.clipboard.writeText(promoUrl);
@@ -200,11 +200,10 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
                   <div
                     key={m.id}
                     onClick={() => setSelectedMatchId(m.id)}
-                    className={`p-3.5 rounded-2xl cursor-pointer transition border text-xs ${
-                      isSelected
+                    className={`p-3.5 rounded-2xl cursor-pointer transition border text-xs ${isSelected
                         ? "bg-slate-900 text-white border-lime-400 shadow-md font-bold"
                         : "bg-surface-container-low dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 border-transparent hover:bg-slate-100"
-                    }`}
+                      }`}
                   >
                     <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
                       <span>Etapa {m.round}</span>
@@ -350,7 +349,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
             )}
 
             <div>
-              <label className="label">Sponsor Oficial / Reclame Cluburi</label>
+              <label className="label">Sponsor   / Reclame Cluburi</label>
               <input
                 type="text"
                 value={sponsorName}
@@ -380,22 +379,20 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
             <button
               type="button"
               onClick={() => setFormat("story")}
-              className={`px-6 py-2 rounded-full font-bold text-xs transition ${
-                format === "story"
+              className={`px-6 py-2 rounded-full font-bold text-xs transition ${format === "story"
                   ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm"
                   : "text-slate-500"
-              }`}
+                }`}
             >
               📱 Story (9:16)
             </button>
             <button
               type="button"
               onClick={() => setFormat("post")}
-              className={`px-6 py-2 rounded-full font-bold text-xs transition ${
-                format === "post"
+              className={`px-6 py-2 rounded-full font-bold text-xs transition ${format === "post"
                   ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm"
                   : "text-slate-500"
-              }`}
+                }`}
             >
               🖼️ Post Pătrat (1:1)
             </button>
@@ -403,9 +400,8 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
 
           {/* Smartphone Frame */}
           <div
-            className={`relative w-full max-w-[340px] rounded-[3rem] border-[10px] border-slate-900 shadow-2xl overflow-hidden bg-slate-950 ring-8 ring-slate-200 dark:ring-slate-800 text-white ${
-              format === "story" ? "aspect-[9/16]" : "aspect-square"
-            }`}
+            className={`relative w-full max-w-[340px] rounded-[3rem] border-[10px] border-slate-900 shadow-2xl overflow-hidden bg-slate-950 ring-8 ring-slate-200 dark:ring-slate-800 text-white ${format === "story" ? "aspect-[9/16]" : "aspect-square"
+              }`}
           >
             {backgroundImage && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -487,7 +483,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
                     )}
                     <div className="relative z-10">
                       <p className="text-[8px] font-label text-slate-300 uppercase font-bold">
-                      🏟️ ARENĂ
+                        🏟️ ARENĂ
                       </p>
                       <p className="text-[10px] font-bold text-white truncate">
                         {selectedMatch.venue || "Arena Națională"}
@@ -518,7 +514,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
               {/* Sponsor & Ads Footer */}
               <div className="relative z-10 pt-2 border-t border-white/10 text-center">
                 <p className="text-[8px] font-label text-slate-400 uppercase tracking-wider">
-                  SPONSOR OFICIAL
+                  SPONSOR
                 </p>
                 <p className="text-[10px] font-black text-lime-400 uppercase font-headline">
                   {sponsorName}

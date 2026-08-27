@@ -8,33 +8,33 @@ const appDomain = process.env.NEXT_PUBLIC_APP_URL || "https://sp.buu.ro";
 export const metadata: Metadata = {
   metadataBase: new URL(appDomain),
   title: {
-    default: "PRO L4GUE • Aplicația care îți organizează campionatul!",
-    template: "%s | PRO L4GUE ROMÂNIA",
+    default: "PRO LIGUE • Aplicația care îți organizează campionatul!",
+    template: "%s | PRO LIGUE ROMÂNIA",
   },
   description:
-    "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!",
+    "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente  e și arbitraj omologat. Începe acum!",
   keywords: [
-    "PRO L4GUE",
+    "PRO LIGUE",
     "aplicatia care iti organizeaza campionatul",
     "campionat fotbal",
     "turnee fotbal romania",
-    "clasamente oficiale",
+    "clasamente  e",
     "arbitri meciuri",
     "TSC QUANTUM SRL",
     "profesionist in sport",
   ],
   openGraph: {
-    title: "PRO L4GUE • Aplicația care îți organizează campionatul!",
+    title: "PRO LIGUE • Aplicația care îți organizează campionatul!",
     description:
-      "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!",
+      "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente  e și arbitraj omologat. Începe acum!",
     url: appDomain,
-    siteName: "PRO L4GUE ROMÂNIA",
+    siteName: "PRO LIGUE ROMÂNIA",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "PRO L4GUE • Aplicația care îți organizează campionatul!",
+        alt: "PRO LIGUE • Aplicația care îți organizează campionatul!",
         type: "image/jpeg",
       },
     ],
@@ -43,9 +43,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PRO L4GUE • Aplicația care îți organizează campionatul!",
+    title: "PRO LIGUE • Aplicația care îți organizează campionatul!",
     description:
-      "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!",
+      "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente  e și arbitraj omologat. Începe acum!",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -58,14 +58,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const sportsOrgSchema = {
     "@context": "https://schema.org",
     "@type": "SportsOrganization",
-    "name": "PRO L4GUE ROMÂNIA",
+    "name": "PRO LIGUE ROMÂNIA",
     "alternateName": "PRO LIGUE",
     "url": appDomain,
     "logo": `${appDomain}/images/logos/logo-1.png`,
     "image": `${appDomain}/images/hero-goal.jpg`,
-    "description": "Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Și tu poți fi un profesionist în sport — începe acum!",
+    "description": "Platforma națională digitală de gestiune competițională, clasamente  e și arbitraj omologat. Și tu poți fi un profesionist în sport — începe acum!",
     "slogan": "Și tu poți fi un profesionist în sport - începe acum!",
-    "legalName": "TSC QUANTUM S.R.L.",
+    "legalName": "TSC Q - BUU.RO",
     "vatID": "53063735",
     "address": {
       "@type": "PostalAddress",
@@ -75,7 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     },
     "contactPoint": {
       "@type": "ContactPoint",
-      "email": "contact@tscquantum.ro",
+      "email": "contact@buu.ro",
       "contactType": "customer service"
     }
   };
@@ -83,7 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "PRO L4GUE ROMÂNIA",
+    "name": "PRO LIGUE ROMÂNIA",
     "url": appDomain,
     "potentialAction": {
       "@type": "SearchAction",

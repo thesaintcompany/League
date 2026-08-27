@@ -33,7 +33,7 @@ export default async function PublicChampionshipPage({
                   Clasamente
                 </h1>
                 <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-1 max-w-2xl">
-                  Alege un campionat pentru a vizualiza clasamentul general oficial, rezultatele și statisticele live.
+                  Alege un campionat pentru a vizualiza clasamentul general  , rezultatele și statisticele live.
                 </p>
               </div>
               <span className="text-[10px] font-label font-bold uppercase text-slate-400">
@@ -251,7 +251,7 @@ export default async function PublicChampionshipPage({
           homeScore: m.homeScore,
           awayScore: m.awayScore,
           status: m.status,
-          venue: m.venue || "Arenă Oficială",
+          venue: m.venue || "Arenă  ă",
           bracketIndex: m.bracketIndex,
           homeTeam: { id: m.homeTeam.id, name: m.homeTeam.name, shortName: m.homeTeam.shortName || m.homeTeam.name.substring(0, 3), color: m.homeTeam.color || "#84cc16" },
           awayTeam: { id: m.awayTeam.id, name: m.awayTeam.name, shortName: m.awayTeam.shortName || m.awayTeam.name.substring(0, 3), color: m.awayTeam.color || "#38bdf8" },
@@ -264,7 +264,7 @@ export default async function PublicChampionshipPage({
           homeScore: m.homeScore ?? 0,
           awayScore: m.awayScore ?? 0,
           status: m.status,
-          venue: m.venue || "Arenă Oficială",
+          venue: m.venue || "Arenă  ă",
           bracketIndex: m.bracketIndex,
           homeTeam: { id: m.homeTeam.id, name: m.homeTeam.name, shortName: m.homeTeam.shortName || m.homeTeam.name.substring(0, 3), color: m.homeTeam.color || "#84cc16" },
           awayTeam: { id: m.awayTeam.id, name: m.awayTeam.name, shortName: m.awayTeam.shortName || m.awayTeam.name.substring(0, 3), color: m.awayTeam.color || "#38bdf8" },
@@ -274,7 +274,7 @@ export default async function PublicChampionshipPage({
           round: m.round,
           stage: m.stage || "Etapa " + m.round,
           scheduledAt: m.scheduledAt ? m.scheduledAt.toISOString() : "",
-          venue: m.venue || "Arenă Oficială",
+          venue: m.venue || "Arenă  ă",
           status: m.status,
           bracketIndex: m.bracketIndex,
           homeTeam: { id: m.homeTeam.id, name: m.homeTeam.name, shortName: m.homeTeam.shortName || m.homeTeam.name.substring(0, 3), color: m.homeTeam.color || "#84cc16" },
@@ -284,7 +284,7 @@ export default async function PublicChampionshipPage({
           id: p.id,
           name: p.name,
           goals: p.goals,
-          teamName: p.team?.name || "Club Oficial",
+          teamName: p.team?.name || "Club  ",
           image: p.image || null,
         }))}
       />

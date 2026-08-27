@@ -134,7 +134,7 @@ export async function PATCH(
     return NextResponse.json(
       {
         error:
-          "Acces interzis: Doar arbitrul delegat la acest meci sau organizatorul campionatului pot modifica scorul, telemetria și raportul oficial.",
+          "Acces interzis: Doar arbitrul delegat la acest meci sau organizatorul campionatului pot modifica scorul, telemetria și raportul  .",
       },
       { status: 403 }
     );

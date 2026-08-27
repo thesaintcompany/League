@@ -4,8 +4,8 @@ import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 
 export const metadata = {
-  title: "Contact & Asistență Tehnică • PRO L4GUE ROMÂNIA",
-  description: "Contactează echipa PRO L4GUE și tscquantum.ro pentru asistență tehnică, parteneriate, înscriere arene sau organizare campionate.",
+  title: "Contact & Asistență Tehnică • PRO LIGUE ROMÂNIA",
+  description: "Contactează echipa PRO LIGUE și tscquantum.ro pentru asistență tehnică, parteneriate, înscriere arene sau organizare campionate.",
 };
 
 export default function ContactPage() {
@@ -20,7 +20,7 @@ export default function ContactPage() {
             <span>✉️</span> SUPORT &amp; CONTACT
           </div>
           <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-tight">
-            Contactează Echipa PRO L4GUE
+            Contactează Echipa PRO LIGUE
           </h1>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
             Suntem aici pentru a te ajuta cu asistență tehnică, parteneriate sportive, acreditări sau listarea arenei tale în rețeaua națională.
@@ -36,14 +36,14 @@ export default function ContactPage() {
               ✉️
             </div>
             <h3 className="font-headline font-black uppercase text-slate-900 dark:text-white text-base">
-              Email Oficial
+              Email
             </h3>
             <p className="text-xs text-slate-500 font-label">Răspundem în maxim 24h</p>
             <a
-              href="mailto:contact@tscquantum.ro"
+              href="mailto:contact@buu.ro"
               className="text-xs font-black font-mono text-lime-600 dark:text-lime-400 hover:underline block pt-1"
             >
-              contact@tscquantum.ro
+              contact@buu.ro
             </a>
           </div>
 

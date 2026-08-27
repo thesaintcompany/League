@@ -90,7 +90,7 @@ export function A4TicketPrintView({ ticket }: { ticket: TicketData }) {
           </Link>
           <div>
             <h1 className="text-sm font-bold font-headline uppercase text-white">
-              Bilet Oficial Acces • #{ticket.ticketCode}
+              Bilet   Acces • #{ticket.ticketCode}
             </h1>
             <p className="text-[11px] text-lime-400 font-label">
               Format A4 Standard (1 sau 2 bilete / coală)
@@ -103,22 +103,20 @@ export function A4TicketPrintView({ ticket }: { ticket: TicketData }) {
             <button
               type="button"
               onClick={() => setLayoutMode("1_per_page")}
-              className={`px-3 py-1.5 rounded-xl font-bold transition ${
-                layoutMode === "1_per_page"
-                  ? "bg-lime-400 text-slate-950 shadow"
-                  : "text-slate-400 hover:text-white"
-              }`}
+              className={`px-3 py-1.5 rounded-xl font-bold transition ${layoutMode === "1_per_page"
+                ? "bg-lime-400 text-slate-950 shadow"
+                : "text-slate-400 hover:text-white"
+                }`}
             >
               1 Bilet / A4
             </button>
             <button
               type="button"
               onClick={() => setLayoutMode("2_per_page")}
-              className={`px-3 py-1.5 rounded-xl font-bold transition ${
-                layoutMode === "2_per_page"
-                  ? "bg-lime-400 text-slate-950 shadow"
-                  : "text-slate-400 hover:text-white"
-              }`}
+              className={`px-3 py-1.5 rounded-xl font-bold transition ${layoutMode === "2_per_page"
+                ? "bg-lime-400 text-slate-950 shadow"
+                : "text-slate-400 hover:text-white"
+                }`}
             >
               2 Bilete / A4 (Duble)
             </button>
@@ -202,7 +200,7 @@ function SingleTicketCard({
           </div>
           <div>
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 font-label block">
-              BILET OFICIAL DE ACCES STADION • {champName.toUpperCase()}
+              BILET   DE ACCES STADION • {champName.toUpperCase()}
             </span>
             <h2 className="text-xl sm:text-2xl font-black italic font-headline uppercase text-slate-900 tracking-tight leading-none">
               LIGUE PRO ACCESS PASS
@@ -268,7 +266,7 @@ function SingleTicketCard({
 
             <div>
               <span className="text-[9px] uppercase text-slate-400 font-bold block">🏟️ Arenă &amp; Locație</span>
-              <p className="font-bold text-slate-900">{ticket.match.venue || "Arena Oficială"}</p>
+              <p className="font-bold text-slate-900">{ticket.match.venue || "Arena  ă"}</p>
               <p className="text-slate-500 text-[10px]">Porțile se deschid cu 90 min înainte</p>
             </div>
           </div>
@@ -318,10 +316,10 @@ function SingleTicketCard({
             Titular Bilet: <strong className="text-slate-950 font-bold">{ticket.buyerName}</strong> ({ticket.buyerEmail})
           </p>
           <p className="text-[10px] text-slate-500">
-            Partener Oficial &amp; Sponsor: <strong>{ticket.match.sponsorName || "Ligue Pro Energy"}</strong> • {ticket.match.sponsorTagline || "Performanță Sportivă"}
+            Partener   &amp; Sponsor: <strong>{ticket.match.sponsorName || "Ligue Pro Energy"}</strong> • {ticket.match.sponsorTagline || "Performanță Sportivă"}
           </p>
           <p className="text-[9px] text-slate-400 font-mono">
-            Platformă securizată operată de <strong>tscquantum.ro</strong> • Toate drepturile aparțin <strong>tscquantum.ro</strong> • Asistență: <strong>contact@tscquantum.ro</strong>
+            Platformă securizată operată de <strong>tscquantum.ro</strong> • Toate drepturile aparțin <strong>tscquantum.ro</strong> • Asistență: <strong>contact@buu.ro</strong>
           </p>
         </div>
 

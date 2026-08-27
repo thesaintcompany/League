@@ -24,7 +24,7 @@ export default async function PublicRefereesPage() {
 
   const formattedReferees = referees.map((r) => ({
     id: r.id,
-    name: r.name || "Arbitru Oficial",
+    name: r.name || "Arbitru  ",
     email: r.email,
     phone: r.phone,
     refereeBadge: r.refereeBadge,

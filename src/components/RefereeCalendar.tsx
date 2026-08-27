@@ -10,7 +10,7 @@ interface RefereeMatch {
   county: string;
   venue: string;
   scheduledAt: string;
-  role: string; // "Arbitru Principal", "Asistent 1", "Asistent 2", "Al 4-lea Oficial"
+  role: string; // "Arbitru Principal", "Asistent 1", "Asistent 2", "Al 4-lea  "
 }
 
 interface RefereeCalendarProps {
@@ -86,7 +86,7 @@ export function RefereeCalendar({
             </h3>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 font-label mt-0.5">
-            Oficial: <strong>{refereeName}</strong> • Județ de Înregistrare: <strong>{refereeCounty}</strong>
+            : <strong>{refereeName}</strong> • Județ de Înregistrare: <strong>{refereeCounty}</strong>
           </p>
         </div>
 
@@ -129,11 +129,10 @@ export function RefereeCalendar({
         <button
           type="button"
           onClick={() => setIsAvailable(!isAvailable)}
-          className={`px-4 py-2 rounded-xl font-headline font-black text-xs uppercase tracking-wider transition active:scale-95 ${
-            isAvailable
+          className={`px-4 py-2 rounded-xl font-headline font-black text-xs uppercase tracking-wider transition active:scale-95 ${isAvailable
               ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20"
               : "bg-slate-300 dark:bg-slate-800 text-slate-700 dark:text-slate-400"
-          }`}
+            }`}
         >
           {isAvailable ? "✓ Calendar Liber (Activ)" : "✕ Indisponibil"}
         </button>
@@ -142,7 +141,7 @@ export function RefereeCalendar({
       {/* Assigned Matches List */}
       <div className="space-y-3">
         <h4 className="text-xs font-label font-bold uppercase tracking-widest text-slate-400">
-          Meciuri Oficiale Delegate:
+          Meciuri  e Delegate:
         </h4>
 
         {assignedMatches.map((m) => {

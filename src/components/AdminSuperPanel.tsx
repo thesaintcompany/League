@@ -76,8 +76,8 @@ export function AdminSuperPanel() {
   const [activeLogoUrl, setActiveLogoUrl] = useState<string>("/images/logos/logo-1.png");
   const [customLogoInput, setCustomLogoInput] = useState<string>("");
   const [savingLogo, setSavingLogo] = useState(false);
-  const [appName, setAppName] = useState("PRO L4GUE ROMANIA");
-  const [appSlogan, setAppSlogan] = useState("Platforma Națională de Competiții Sportive & Arbitraj Oficial");
+  const [appName, setAppName] = useState("PRO LIGUE ROMANIA");
+  const [appSlogan, setAppSlogan] = useState("Platforma Națională de Competiții Sportive & Arbitraj  ");
 
   // Demo Data & Export State
   const [demoStats, setDemoStats] = useState<{
@@ -94,11 +94,11 @@ export function AdminSuperPanel() {
 
   // Ticketing, Legal & Payment Settings State
   const [ticketSettings, setTicketSettings] = useState({
-    companyName: "TSC QUANTUM S.R.L.",
+    companyName: "TSC Q - BUU.RO",
     companyCui: "53063735",
     companyRegCom: "J2025095153006",
     companyAddress: "Timișoara, Județul Timiș, România",
-    companyEmail: "contact@tscquantum.ro",
+    companyEmail: "contact@buu.ro",
     companyPhone: "+40 700 000 000",
     platformFeePercent: 10.0,
     stripePublishableKey: "",
@@ -234,11 +234,11 @@ export function AdminSuperPanel() {
   async function handleRevokeAllDemo() {
     const confirmed = confirm(
       "🚫 ANULARE DREPTURI USERI DEMO & PRECOMPLETARE LOGIN\n\n" +
-        "Ești sigur că dorești să execuți această acțiune?\n\n" +
-        "1. Toți utilizatorii demo vor fi DEZACTIVAȚI definitv.\n" +
-        "2. Precompletarea conturilor demo pe pagina de autentificare va fi ELIMINATĂ.\n" +
-        "3. SuperAdmin NU va fi anulat/dezactivat, dar i se va genera o NOUĂ PAROLĂ securizată!\n\n" +
-        "Apasă OK pentru a anula accesul demo."
+      "Ești sigur că dorești să execuți această acțiune?\n\n" +
+      "1. Toți utilizatorii demo vor fi DEZACTIVAȚI definitv.\n" +
+      "2. Precompletarea conturilor demo pe pagina de autentificare va fi ELIMINATĂ.\n" +
+      "3. SuperAdmin NU va fi anulat/dezactivat, dar i se va genera o NOUĂ PAROLĂ securizată!\n\n" +
+      "Apasă OK pentru a anula accesul demo."
     );
     if (!confirmed) return;
 
@@ -271,8 +271,8 @@ export function AdminSuperPanel() {
     const confirmed = confirm(
       isDeactivate
         ? "⚠️ Sigur dorești să DEZACTIVEZI toți utilizatorii demo?\n\n" +
-            "Conturile demonstrative vor fi marcate ca DEZACTIVATE și nu se vor mai putea autentifica.\n\n" +
-            "🛡️ Utilizatorii reali și arenele NU sunt afectați!"
+        "Conturile demonstrative vor fi marcate ca DEZACTIVATE și nu se vor mai putea autentifica.\n\n" +
+        "🛡️ Utilizatorii reali și arenele NU sunt afectați!"
         : "⚡ Sigur dorești să REACTIVEZI toți utilizatorii demo?"
     );
     if (!confirmed) return;
@@ -376,8 +376,8 @@ export function AdminSuperPanel() {
     if (action === "deactivate") {
       const confirmed = confirm(
         "⚠️ Sigur dorești să dezactivezi datele demo?\n\n" +
-          "Această acțiune va șterge campionatele, echipele și meciurile demonstrative.\n\n" +
-          "🛡️ GARANȚIE: Toate cele 59 de Arene Naționale și toți utilizatorii reali înregistrați sunt 100% PROTEJAȚI și NU vor fi șterși!"
+        "Această acțiune va șterge campionatele, echipele și meciurile demonstrative.\n\n" +
+        "🛡️ GARANȚIE: Toate cele 59 de Arene Naționale și toți utilizatorii reali înregistrați sunt 100% PROTEJAȚI și NU vor fi șterși!"
       );
       if (!confirmed) return;
     }
@@ -602,13 +602,13 @@ export function AdminSuperPanel() {
           users.map((item) =>
             item.id === selectedUser.id
               ? {
-                  ...item,
-                  name: editUserForm.name,
-                  email: editUserForm.email,
-                  phone: editUserForm.phone,
-                  role: editUserForm.role,
-                  isActive: editUserForm.isActive,
-                }
+                ...item,
+                name: editUserForm.name,
+                email: editUserForm.email,
+                phone: editUserForm.phone,
+                role: editUserForm.role,
+                isActive: editUserForm.isActive,
+              }
               : item
           )
         );
@@ -663,7 +663,7 @@ export function AdminSuperPanel() {
   async function handleDeleteUser(u: UserItem) {
     const confirmed = confirm(
       `⚠️ ATENȚIE: Sigur dorești să ștergi definitiv utilizatorul "${u.email}" (${u.name || "Fără nume"})?\n\n` +
-        "Această acțiune este IREVERSIBILĂ ca în WordPress admin!"
+      "Această acțiune este IREVERSIBILĂ ca în WordPress admin!"
     );
     if (!confirmed) return;
 
@@ -746,7 +746,7 @@ export function AdminSuperPanel() {
                   Identitate Vizuală &amp; Logo Principal
                 </h2>
                 <p className="text-xs text-slate-300 font-body max-w-2xl">
-                  Selectează logo-ul oficial al platformei sau introdu un URL extern. Modificarea este salvată <strong>în timp real în baza de date</strong> și actualizată instantaneu pe tot site-ul.
+                  Selectează logo-ul   al platformei sau introdu un URL extern. Modificarea este salvată <strong>în timp real în baza de date</strong> și actualizată instantaneu pe tot site-ul.
                 </p>
               </div>
 
@@ -810,13 +810,13 @@ export function AdminSuperPanel() {
             {[
               {
                 id: "logo-1",
-                title: "Varianta 1 • PRO L4GUE - ROMÂNIA (Principal)",
-                subtitle: "Logo-ul Oficial cu Fulger & Neon Green",
+                title: "Varianta 1 • PRO LIGUE - ROMÂNIA (Principal)",
+                subtitle: "Logo-ul   cu Fulger & Neon Green",
                 url: "/images/logos/logo-1.png",
                 badge: "⚡ Principal • HD Transparent",
                 badgeColor: "bg-lime-400/20 text-lime-400 border-lime-400/30",
                 description:
-                  "Logo-ul oficial PRO L4GUE ROMANIA cu font futuristic, vortex dinamic, fulger auriu și detalii de impact pentru header.",
+                  "Logo-ul   PRO LIGUE ROMANIA cu font futuristic, vortex dinamic, fulger auriu și detalii de impact pentru header.",
               },
               {
                 id: "logo-2",
@@ -844,11 +844,10 @@ export function AdminSuperPanel() {
               return (
                 <div
                   key={logoItem.id}
-                  className={`card p-6 bg-surface-container-lowest border rounded-3xl transition-all duration-300 flex flex-col justify-between space-y-6 ${
-                    isSelected
-                      ? "border-lime-500 ring-4 ring-lime-500/20 shadow-xl dark:bg-slate-900"
-                      : "border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700 shadow-sm"
-                  }`}
+                  className={`card p-6 bg-surface-container-lowest border rounded-3xl transition-all duration-300 flex flex-col justify-between space-y-6 ${isSelected
+                    ? "border-lime-500 ring-4 ring-lime-500/20 shadow-xl dark:bg-slate-900"
+                    : "border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700 shadow-sm"
+                    }`}
                 >
                   <div className="space-y-4">
                     <div className="flex items-start justify-between gap-2">
@@ -910,11 +909,10 @@ export function AdminSuperPanel() {
                     type="button"
                     disabled={savingLogo || isSelected}
                     onClick={() => handleSelectLogo(logoItem.url)}
-                    className={`w-full py-3 px-4 rounded-2xl font-headline font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md ${
-                      isSelected
-                        ? "bg-lime-400 text-slate-950 cursor-default opacity-100 shadow-lime-400/20 ring-2 ring-lime-400"
-                        : "bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-800 dark:hover:bg-lime-400 dark:hover:text-slate-950 active:scale-95"
-                    }`}
+                    className={`w-full py-3 px-4 rounded-2xl font-headline font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md ${isSelected
+                      ? "bg-lime-400 text-slate-950 cursor-default opacity-100 shadow-lime-400/20 ring-2 ring-lime-400"
+                      : "bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-800 dark:hover:bg-lime-400 dark:hover:text-slate-950 active:scale-95"
+                      }`}
                   >
                     {isSelected ? (
                       <>
@@ -992,7 +990,7 @@ export function AdminSuperPanel() {
                 </div>
                 <div>
                   <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
-                    Slogan / Subtitlu Oficial
+                    Slogan / Subtitlu
                   </label>
                   <input
                     type="text"
@@ -1017,13 +1015,13 @@ export function AdminSuperPanel() {
                     Date Legale &amp; Identitate Fiscală Operator (tscquantum.ro)
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                    Informațiile oficiale ale entității juridice care operează platforma, facturile de ticketing și termenii legali.
+                    Informațiile  e ale entității juridice care operează platforma, facturile de ticketing și termenii legali.
                   </p>
                 </div>
               </div>
 
               <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-mono font-bold uppercase border border-blue-500/20">
-                Operator Oficial: tscquantum.ro
+                Operator  : tscquantum.ro
               </span>
             </div>
 
@@ -1035,10 +1033,10 @@ export function AdminSuperPanel() {
                   </label>
                   <input
                     type="text"
-                    value={ticketSettings.companyName || "TSC QUANTUM S.R.L."}
+                    value={ticketSettings.companyName || "TSC Q - BUU.RO"}
                     onChange={(e) => setTicketSettings({ ...ticketSettings, companyName: e.target.value })}
                     className="input text-xs font-bold"
-                    placeholder="TSC QUANTUM S.R.L."
+                    placeholder="TSC Q - BUU.RO"
                   />
                 </div>
 
@@ -1074,16 +1072,16 @@ export function AdminSuperPanel() {
                   </label>
                   <input
                     type="email"
-                    value={ticketSettings.companyEmail || "contact@tscquantum.ro"}
+                    value={ticketSettings.companyEmail || "contact@buu.ro"}
                     onChange={(e) => setTicketSettings({ ...ticketSettings, companyEmail: e.target.value })}
                     className="input text-xs font-mono"
-                    placeholder="contact@tscquantum.ro"
+                    placeholder="contact@buu.ro"
                   />
                 </div>
 
                 <div>
                   <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
-                    Telefon Asistență Oficial
+                    Telefon Asistență
                   </label>
                   <input
                     type="tel"
@@ -1582,33 +1580,30 @@ export function AdminSuperPanel() {
                 <button
                   type="button"
                   onClick={() => setUserAccountTypeFilter("all")}
-                  className={`px-3 py-1 rounded-xl text-xs font-headline font-bold uppercase transition ${
-                    userAccountTypeFilter === "all"
-                      ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm"
-                      : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-                  }`}
+                  className={`px-3 py-1 rounded-xl text-xs font-headline font-bold uppercase transition ${userAccountTypeFilter === "all"
+                    ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm"
+                    : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                    }`}
                 >
                   Toate ({users.length})
                 </button>
                 <button
                   type="button"
                   onClick={() => setUserAccountTypeFilter("real")}
-                  className={`px-3 py-1 rounded-xl text-xs font-headline font-bold uppercase transition ${
-                    userAccountTypeFilter === "real"
-                      ? "bg-lime-400 text-slate-950 font-black shadow-sm"
-                      : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-                  }`}
+                  className={`px-3 py-1 rounded-xl text-xs font-headline font-bold uppercase transition ${userAccountTypeFilter === "real"
+                    ? "bg-lime-400 text-slate-950 font-black shadow-sm"
+                    : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                    }`}
                 >
                   👥 Reale ({users.filter((u) => !isDemoUser(u.email)).length})
                 </button>
                 <button
                   type="button"
                   onClick={() => setUserAccountTypeFilter("demo")}
-                  className={`px-3 py-1 rounded-xl text-xs font-headline font-bold uppercase transition ${
-                    userAccountTypeFilter === "demo"
-                      ? "bg-purple-500 text-white font-black shadow-sm"
-                      : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-                  }`}
+                  className={`px-3 py-1 rounded-xl text-xs font-headline font-bold uppercase transition ${userAccountTypeFilter === "demo"
+                    ? "bg-purple-500 text-white font-black shadow-sm"
+                    : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                    }`}
                 >
                   🤖 Demo ({users.filter((u) => isDemoUser(u.email)).length})
                 </button>
@@ -1619,11 +1614,10 @@ export function AdminSuperPanel() {
                   key={r}
                   type="button"
                   onClick={() => setUserRoleFilter(r)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-label font-bold uppercase transition ${
-                    userRoleFilter === r
-                      ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
-                      : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-                  }`}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-label font-bold uppercase transition ${userRoleFilter === r
+                    ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                    }`}
                 >
                   {r === "all" ? "Toate Rolurile" : r}
                 </button>
@@ -1696,7 +1690,7 @@ export function AdminSuperPanel() {
                           >
                             <option value="organizer">⚡ Pro Organizer</option>
                             <option value="super_admin">👑 Super Administrator</option>
-                            <option value="referee">⚖️ Arbitru Oficial (RIFA)</option>
+                            <option value="referee">⚖️ Arbitru   (RIFA)</option>
                             <option value="arena_owner">Proprietar</option>
                             <option value="team_leader">👔 Manager Echipă</option>
                             <option value="player">⚽ Jucător</option>
@@ -1708,11 +1702,10 @@ export function AdminSuperPanel() {
                           <button
                             type="button"
                             onClick={() => handleToggleUserStatus(u)}
-                            className={`px-3 py-1 rounded-full text-[10px] font-black uppercase font-mono border transition ${
-                              u.isActive !== false
-                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20"
-                                : "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30 hover:bg-red-500/20 animate-pulse"
-                            }`}
+                            className={`px-3 py-1 rounded-full text-[10px] font-black uppercase font-mono border transition ${u.isActive !== false
+                              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20"
+                              : "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30 hover:bg-red-500/20 animate-pulse"
+                              }`}
                             title="Apasă pentru a schimba statusul contului"
                           >
                             {u.isActive !== false ? "✓ ACTIV" : "🚫 DEZACTIVAT"}
@@ -1895,11 +1888,10 @@ export function AdminSuperPanel() {
                     key={item.id}
                     type="button"
                     onClick={() => setLogFilter(item.id)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-                      logFilter === item.id
-                        ? "bg-lime-400 text-slate-950 font-black"
-                        : "bg-slate-900 text-slate-400 hover:text-white"
-                    }`}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${logFilter === item.id
+                      ? "bg-lime-400 text-slate-950 font-black"
+                      : "bg-slate-900 text-slate-400 hover:text-white"
+                      }`}
                   >
                     {item.label}
                   </button>
@@ -1955,11 +1947,10 @@ export function AdminSuperPanel() {
                       </td>
                       <td className="py-3.5 px-4 text-center">
                         <span
-                          className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${
-                            log.status === "success"
-                              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-                              : "bg-red-500/10 text-red-500 border border-red-500/20"
-                          }`}
+                          className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${log.status === "success"
+                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                            : "bg-red-500/10 text-red-500 border border-red-500/20"
+                            }`}
                         >
                           {log.status === "success" ? "Succes ✓" : "Blocat ⛔"}
                         </span>
@@ -1995,11 +1986,10 @@ export function AdminSuperPanel() {
                   key={s.id}
                   type="button"
                   onClick={() => setSportFilter(s.id)}
-                  className={`px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition ${
-                    sportFilter === s.id
-                      ? "bg-blue-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
-                      : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-                  }`}
+                  className={`px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition ${sportFilter === s.id
+                    ? "bg-blue-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                    }`}
                 >
                   {s.label}
                 </button>
@@ -2099,11 +2089,10 @@ export function AdminSuperPanel() {
                           <button
                             type="button"
                             onClick={() => toggleActive(v)}
-                            className={`px-2.5 py-1 rounded-full font-label text-[10px] font-black uppercase transition ${
-                              v.isActive
-                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-                                : "bg-slate-200 dark:bg-slate-800 text-slate-500"
-                            }`}
+                            className={`px-2.5 py-1 rounded-full font-label text-[10px] font-black uppercase transition ${v.isActive
+                              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                              : "bg-slate-200 dark:bg-slate-800 text-slate-500"
+                              }`}
                           >
                             {v.isActive ? "ACTIV ✓" : "INACTIV"}
                           </button>
@@ -2538,7 +2527,7 @@ export function AdminSuperPanel() {
                   >
                     <option value="organizer">⚡ Pro Organizer</option>
                     <option value="super_admin">👑 Super Administrator</option>
-                    <option value="referee">⚖️ Arbitru Oficial (RIFA)</option>
+                    <option value="referee">⚖️ Arbitru   (RIFA)</option>
                     <option value="arena_owner">Proprietar</option>
                     <option value="team_leader">👔 Manager Echipă</option>
                     <option value="player">⚽ Jucător</option>

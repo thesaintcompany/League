@@ -39,7 +39,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
   const filteredSanctions = useMemo(() => {
     return sanctions.filter((item) => {
       const matchesChamp = selectedChampionship === "all" || item.championshipId === selectedChampionship;
-      
+
       let matchesCard = true;
       if (cardFilter === "suspended") matchesCard = item.isSuspended;
       else if (cardFilter === "red") matchesCard = item.redCards > 0;
@@ -70,7 +70,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
       <!DOCTYPE html>
       <html>
       <head>
-        <title>RAPORT OFICIAL SANCȚIUNI & SUSPENDĂRI • PRO L4GUE</title>
+        <title>RAPORT   SANCȚIUNI & SUSPENDĂRI • PRO LIGUE</title>
         <meta charset="utf-8" />
         <style>
           body { font-family: Arial, sans-serif; padding: 30px; color: #0f172a; line-height: 1.5; }
@@ -87,8 +87,8 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
       <body>
         <div class="header">
           <div>
-            <div class="title">PRO L4GUE • COMISIA DE DISCIPLINĂ</div>
-            <div class="subtitle">RAPORT OFICIAL SANCȚIUNI ȘI SUSPENDĂRI JUCĂTORI</div>
+            <div class="title">PRO LIGUE • COMISIA DE DISCIPLINĂ</div>
+            <div class="subtitle">RAPORT   SANCȚIUNI ȘI SUSPENDĂRI JUCĂTORI</div>
           </div>
           <div style="text-align: right; font-size: 11px;">
             <div>DATA: ${new Date().toLocaleDateString("ro-RO")}</div>
@@ -109,25 +109,24 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
           </thead>
           <tbody>
             ${filteredSanctions
-              .map(
-                (s) => `
+        .map(
+          (s) => `
               <tr>
                 <td><strong>${s.playerName}</strong> ${s.number ? `#${s.number}` : ""}</td>
                 <td>${s.teamName}</td>
                 <td>${s.championshipName}</td>
                 <td>🟨 ${s.yellowCards} | 🟥 ${s.redCards}</td>
                 <td>
-                  ${
-                    s.isSuspended
-                      ? `<span class="badge-suspended">SUSPENDAT (${s.suspensionRounds || 1} ETAPĂ)</span>`
-                      : `<span class="badge-warning">ELEGIBIL</span>`
-                  }
+                  ${s.isSuspended
+              ? `<span class="badge-suspended">SUSPENDAT (${s.suspensionRounds || 1} ETAPĂ)</span>`
+              : `<span class="badge-warning">ELEGIBIL</span>`
+            }
                 </td>
                 <td>${s.suspensionReason || s.lastEventNote || "Avertisment comisie"}</td>
               </tr>
             `
-              )
-              .join("")}
+        )
+        .join("")}
           </tbody>
         </table>
       </body>
@@ -151,10 +150,10 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
               COMISIA DE DISCIPLINĂ &amp; ARBITRAJ
             </span>
             <h1 className="text-xl sm:text-4xl font-black italic font-headline uppercase tracking-tight text-white">
-              Sancțiuni &amp; <span className="text-red-500">Suspendări Oficiale</span>
+              Sancțiuni &amp; <span className="text-red-500">Suspendări  e</span>
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-body">
-              Evidența centralizată a avertismentelor, cartonașelor galbene/roșii și suspendărilor aplicate în campionatele PRO L4GUE.
+              Evidența centralizată a avertismentelor, cartonașelor galbene/roșii și suspendărilor aplicate în campionatele PRO LIGUE.
             </p>
           </div>
 
@@ -298,44 +297,40 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
             <button
               type="button"
               onClick={() => setCardFilter("all")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 ${
-                cardFilter === "all"
-                  ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
-                  : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-              }`}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 ${cardFilter === "all"
+                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
+                : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                }`}
             >
               Toate
             </button>
             <button
               type="button"
               onClick={() => setCardFilter("suspended")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${
-                cardFilter === "suspended"
-                  ? "bg-red-600 text-white font-black shadow-sm"
-                  : "bg-red-500/10 text-red-600 dark:text-red-400"
-              }`}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${cardFilter === "suspended"
+                ? "bg-red-600 text-white font-black shadow-sm"
+                : "bg-red-500/10 text-red-600 dark:text-red-400"
+                }`}
             >
               <span>🚫</span> Suspendate ({totalSuspended})
             </button>
             <button
               type="button"
               onClick={() => setCardFilter("red")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${
-                cardFilter === "red"
-                  ? "bg-red-600 text-white font-black shadow-sm"
-                  : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-              }`}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${cardFilter === "red"
+                ? "bg-red-600 text-white font-black shadow-sm"
+                : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                }`}
             >
               <span>🟥</span> Roșii
             </button>
             <button
               type="button"
               onClick={() => setCardFilter("yellow")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${
-                cardFilter === "yellow"
-                  ? "bg-amber-500 text-slate-950 font-black shadow-sm"
-                  : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-              }`}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${cardFilter === "yellow"
+                ? "bg-amber-500 text-slate-950 font-black shadow-sm"
+                : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                }`}
             >
               <span>🟨</span> Galbene
             </button>
@@ -451,8 +446,8 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
 
                       {/* Reason Single Line */}
                       <td className="py-3 px-4 whitespace-nowrap text-xs">
-                        <span className="text-slate-800 dark:text-slate-200 font-medium truncate max-w-[220px] inline-block align-middle" title={s.suspensionReason || s.lastEventNote || "Avertisment oficial"}>
-                          {s.suspensionReason || s.lastEventNote || "Avertisment oficial"}
+                        <span className="text-slate-800 dark:text-slate-200 font-medium truncate max-w-[220px] inline-block align-middle" title={s.suspensionReason || s.lastEventNote || "Avertisment  "}>
+                          {s.suspensionReason || s.lastEventNote || "Avertisment  "}
                         </span>
                         {s.lastMatchStage && (
                           <span className="ml-2 text-[10px] font-mono text-slate-400 font-normal">

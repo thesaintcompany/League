@@ -44,7 +44,7 @@ async function generateOgImage() {
     <g transform="translate(60, 50)">
       <!-- Top Brand Logo & Season Badges -->
       <rect x="0" y="0" width="165" height="38" rx="12" fill="#a3e635" />
-      <text x="18" y="25" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="17" fill="#020617" letter-spacing="1">⚡ PRO L4GUE</text>
+      <text x="18" y="25" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="17" fill="#020617" letter-spacing="1">⚡ PRO LIGUE</text>
 
       <rect x="180" y="0" width="150" height="38" rx="19" fill="#020617" stroke="#84cc16" stroke-width="1.5" />
       <circle cx="200" cy="19" r="4.5" fill="#a3e635" />
@@ -60,7 +60,7 @@ async function generateOgImage() {
 
       <!-- Subtitle Description Lines -->
       <text x="0" y="252" font-family="'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="15" fill="#f8fafc">Platforma națională digitală de gestiune competițională,</text>
-      <text x="0" y="276" font-family="'Segoe UI', Roboto, sans-serif" font-weight="500" font-size="15" fill="#cbd5e1">clasamente oficiale, meciuri, bilete &amp; 59 arene omologate.</text>
+      <text x="0" y="276" font-family="'Segoe UI', Roboto, sans-serif" font-weight="500" font-size="15" fill="#cbd5e1">clasamente  e, meciuri, bilete &amp; 59 arene omologate.</text>
 
       <!-- Key Features Pills -->
       <g transform="translate(0, 310)">
@@ -78,7 +78,7 @@ async function generateOgImage() {
       <rect x="0" y="372" width="230" height="50" rx="16" fill="url(#btnGrad)" />
       <text x="32" y="403" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="15" fill="#020617" letter-spacing="1">VEZI CAMPIONATE →</text>
 
-      <text x="0" y="462" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="12" fill="#94a3b8">© tscquantum.ro • Operat oficial de TSC QUANTUM S.R.L.</text>
+      <text x="0" y="462" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="12" fill="#94a3b8">© tscquantum.ro • Operat   de TSC Q - BUU.RO</text>
     </g>
 
     <!-- RIGHT SIDE: Authentic Login UI Card Overlay (550px width) -->
@@ -100,7 +100,7 @@ async function generateOgImage() {
       <!-- App Card Body Content in Light Mode -->
       <g transform="translate(35, 60)">
         <!-- Brand Tagline Inside App Card -->
-        <text x="0" y="24" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="13" fill="#65a30d" letter-spacing="2">PRO L4GUE ROMÂNIA</text>
+        <text x="0" y="24" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="13" fill="#65a30d" letter-spacing="2">PRO LIGUE ROMÂNIA</text>
 
         <!-- Form Title & Subtitle in Light Mode -->
         <text x="0" y="58" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="25" fill="#0f172a" letter-spacing="-0.5">AUTENTIFICARE</text>

@@ -129,9 +129,9 @@ export default function NewChampionshipPage() {
       alert("Te rugăm să introduci o adresă de email validă a proprietarului arenei.");
       return;
     }
-    const subject = encodeURIComponent(`Invitație de colaborare pentru găzduire campionat: ${form.name || "Campionat Oficial"}`);
+    const subject = encodeURIComponent(`Invitație de colaborare pentru găzduire campionat: ${form.name || "Campionat  "}`);
     const body = encodeURIComponent(
-      `Bună ziua,\n\nVă contactăm în legătură cu campionatul "${form.name || "Campionat Oficial"}" (${form.sport || "Sport"}).\nDorim să disputăm meciurile oficiale la baza dumneavoastră sportivă ("${form.defaultVenue}").\n\nPentru a vă valida și lista gratuit arena pe platformă cu tarife, poze și facilități, vă invităm să accesați:\nhttps://sp.buu.ro/venues\n\nCu stimă,\nOrganizator ${form.name || "Campionat"}`
+      `Bună ziua,\n\nVă contactăm în legătură cu campionatul "${form.name || "Campionat  "}" (${form.sport || "Sport"}).\nDorim să disputăm meciurile  e la baza dumneavoastră sportivă ("${form.defaultVenue}").\n\nPentru a vă valida și lista gratuit arena pe platformă cu tarife, poze și facilități, vă invităm să accesați:\nhttps://sp.buu.ro/venues\n\nCu stimă,\nOrganizator ${form.name || "Campionat"}`
     );
     window.open(`mailto:${venueOwnerEmail}?subject=${subject}&body=${body}`, "_blank");
     setVenueInviteSent(true);
@@ -139,7 +139,7 @@ export default function NewChampionshipPage() {
 
   function handleSendVenueInviteWhatsApp() {
     const text = encodeURIComponent(
-      `🏆 Salut! Organizăm campionatul "${form.name || "Campionat Oficial"}" (${form.sport || "Sport"}) și dorim să programăm meciurile la baza sportivă "${form.defaultVenue}".\n\nTe invităm să îți listezi și să îți revendici gratuit arena pe platforma oficială la: https://sp.buu.ro/venues`
+      `🏆 Salut! Organizăm campionatul "${form.name || "Campionat  "}" (${form.sport || "Sport"}) și dorim să programăm meciurile la baza sportivă "${form.defaultVenue}".\n\nTe invităm să îți listezi și să îți revendici gratuit arena pe platforma  ă la: https://sp.buu.ro/venues`
     );
     const cleanPhone = venueOwnerPhone.replace(/\D/g, "");
     if (cleanPhone) {
@@ -174,7 +174,7 @@ export default function NewChampionshipPage() {
         format: "knockout",
         scope: "national",
         season: "2026",
-        description: "Campionat oficial de Padel pe terenuri panoramice.",
+        description: "Campionat   de Padel pe terenuri panoramice.",
       }));
     } else if (type === "pingpong_singles") {
       setForm((f) => ({
@@ -217,7 +217,7 @@ export default function NewChampionshipPage() {
         scope: "judetean",
         county: "Timiș",
         season: "2026",
-        description: "Campionat oficial arondat județului Timiș.",
+        description: "Campionat   arondat județului Timiș.",
       }));
     } else if (type === "knockout") {
       setForm((f) => ({
@@ -366,19 +366,19 @@ export default function NewChampionshipPage() {
               {[
                 {
                   id: "tennis_singles" as const,
-                  icon: "🎾",
+                  icon: "sports_tennis",
                   title: "Tenis Simplu",
                   desc: "Jucători direcți & Seeds",
                 },
                 {
                   id: "padel_tour" as const,
-                  icon: "🎾",
-                  title: "Padel Oficial",
+                  icon: "sports_tennis",
+                  title: "Padel  ",
                   desc: "Terenuri & Perechi",
                 },
                 {
                   id: "pingpong_singles" as const,
-                  icon: "🏓",
+                  icon: "table_tennis",
                   title: "Ping-Pong",
                   desc: "Tenis de Masă Amatori",
                 },
@@ -414,8 +414,8 @@ export default function NewChampionshipPage() {
                     type="button"
                     onClick={() => applyPreset(preset.id)}
                     className={`p-4 sm:p-4.5 rounded-2xl sm:rounded-3xl border text-left transition-all duration-150 flex flex-col justify-between gap-3 relative w-full active:scale-[0.98] ${isSelected
-                        ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md ring-2 ring-lime-400/40 scale-[1.01]"
-                        : "bg-slate-50 dark:bg-slate-950/70 hover:bg-slate-100 dark:hover:bg-slate-850 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800 hover:border-lime-500/60 dark:hover:border-lime-400/60"
+                      ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md ring-2 ring-lime-400/40 scale-[1.01]"
+                      : "bg-slate-50 dark:bg-slate-950/70 hover:bg-slate-100 dark:hover:bg-slate-850 text-slate-900 dark:text-white border-slate-200 dark:border-slate-800 hover:border-lime-500/60 dark:hover:border-lime-400/60"
                       }`}
                   >
                     <div className="flex items-center justify-between w-full">
@@ -425,8 +425,8 @@ export default function NewChampionshipPage() {
                       {/* Checkmark indicator */}
                       <div
                         className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black transition-all ${isSelected
-                            ? "bg-slate-950 text-lime-400 shadow-sm"
-                            : "border-2 border-slate-300 dark:border-slate-700 text-transparent"
+                          ? "bg-slate-950 text-lime-400 shadow-sm"
+                          : "border-2 border-slate-300 dark:border-slate-700 text-transparent"
                           }`}
                       >
                         {isSelected ? "✓" : ""}
@@ -497,7 +497,7 @@ export default function NewChampionshipPage() {
                 </div>
               </div>
 
-              {/* Carousel Container for Siglă Oficială & Arie Teritorială */}
+              {/* Carousel Container for Siglă  ă & Arie Teritorială */}
               <div className="p-4 sm:p-6 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm overflow-hidden">
                 {/* Carousel Header with Slide Tabs & Next/Prev Controls */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-200 dark:border-slate-800">
@@ -505,23 +505,21 @@ export default function NewChampionshipPage() {
                     <button
                       type="button"
                       onClick={() => setBrandingScopeSlide(0)}
-                      className={`px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all ${
-                        brandingScopeSlide === 0
-                          ? "bg-lime-400 text-slate-950 shadow-sm font-black"
-                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                      }`}
+                      className={`px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all ${brandingScopeSlide === 0
+                        ? "bg-lime-400 text-slate-950 shadow-sm font-black"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                        }`}
                     >
-                      <span>1. 🖼️ Siglă Oficială</span>
+                      <span>1. 🖼️ Siglă  ă</span>
                       {form.logoUrl && <span className="text-[10px]">✓</span>}
                     </button>
                     <button
                       type="button"
                       onClick={() => setBrandingScopeSlide(1)}
-                      className={`px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all ${
-                        brandingScopeSlide === 1
-                          ? "bg-lime-400 text-slate-950 shadow-sm font-black"
-                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                      }`}
+                      className={`px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all ${brandingScopeSlide === 1
+                        ? "bg-lime-400 text-slate-950 shadow-sm font-black"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                        }`}
                     >
                       <span>2. 🗺️ Arie Teritorială</span>
                       <span className="text-[10px] uppercase font-mono">({form.scope})</span>
@@ -555,12 +553,12 @@ export default function NewChampionshipPage() {
                   </div>
                 </div>
 
-                {/* SLIDE 0: Siglă Oficială Campionat (Rotundă) & Upload Foto */}
+                {/* SLIDE 0: Siglă  ă Campionat (Rotundă) & Upload Foto */}
                 {brandingScopeSlide === 0 && (
                   <div className="space-y-4 animate-in fade-in slide-in-from-right-2 duration-200">
                     <div className="flex items-center justify-between">
                       <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block">
-                        Siglă Oficială Campionat (Rotundă)
+                        Siglă  ă Campionat (Rotundă)
                       </label>
                       <span className="text-[10px] text-slate-400 font-label uppercase">Opțional</span>
                     </div>
@@ -809,8 +807,8 @@ export default function NewChampionshipPage() {
                 const isPadel = form.sport.toLowerCase().includes("padel");
                 const isPingPong = form.sport.toLowerCase().includes("ping") || form.sport.toLowerCase().includes("pong") || form.sport.toLowerCase().includes("masă") || form.sport.toLowerCase().includes("masa");
                 const activeCatList = isPadel ? PADEL_CATEGORIES : isPingPong ? PINGPONG_CATEGORIES : TENNIS_CATEGORIES;
-                const sportTitle = isPadel ? "Padel Oficial" : isPingPong ? "Ping-Pong (Tenis de Masă)" : "Tenis de Câmp";
-                const sportIcon = isPadel ? "🎾" : isPingPong ? "🏓" : "🎾";
+                const sportTitle = isPadel ? "Padel  " : isPingPong ? "Ping-Pong (Tenis de Masă)" : "Tenis de Câmp";
+                const sportIcon = isPadel ? "sports_tennis" : isPingPong ? "table_tennis" : "sports_tennis";
 
                 // Default to amateur / entry level if none chosen or category does not match active sport
                 const defaultCategoryForSport = isPadel ? "padel_amatori" : isPingPong ? "pingpong_amatori" : "simplu_masculin";
@@ -820,7 +818,7 @@ export default function NewChampionshipPage() {
                 return (
                   <div className={`p-4 sm:p-5 rounded-2xl ${isPadel ? "bg-teal-500/10 border-teal-500/30" : isPingPong ? "bg-rose-500/10 border-rose-500/30" : "bg-emerald-500/10 border-emerald-500/30"} border space-y-4`}>
                     <div className="flex items-center gap-2.5">
-                      <span className="text-xl sm:text-2xl">{sportIcon}</span>
+                      <span className="text-xl sm:text-2xl material-symbols-outlined">{sportIcon}</span>
                       <div>
                         <label className={`text-xs sm:text-sm font-bold font-headline ${isPadel ? "text-teal-950 dark:text-teal-300" : isPingPong ? "text-rose-950 dark:text-rose-300" : "text-emerald-950 dark:text-emerald-300"} uppercase block`}>
                           Configurare Specifică {sportTitle} (Competitori Individuali &amp; Perechi)
@@ -849,23 +847,21 @@ export default function NewChampionshipPage() {
                               key={cat.value}
                               type="button"
                               onClick={() => update("category", cat.value)}
-                              className={`p-3 rounded-2xl border text-xs font-headline font-bold text-left transition-all duration-150 flex items-center justify-between gap-2 shadow-sm active:scale-[0.98] ${
-                                isSelected
-                                  ? isPadel
-                                    ? "bg-teal-600 text-white border-teal-600 shadow-md ring-2 ring-teal-400/40 font-black scale-[1.01]"
-                                    : isPingPong
+                              className={`p-3 rounded-2xl border text-xs font-headline font-bold text-left transition-all duration-150 flex items-center justify-between gap-2 shadow-sm active:scale-[0.98] ${isSelected
+                                ? isPadel
+                                  ? "bg-teal-600 text-white border-teal-600 shadow-md ring-2 ring-teal-400/40 font-black scale-[1.01]"
+                                  : isPingPong
                                     ? "bg-rose-600 text-white border-rose-600 shadow-md ring-2 ring-rose-400/40 font-black scale-[1.01]"
                                     : "bg-emerald-600 text-white border-emerald-600 shadow-md ring-2 ring-emerald-400/40 font-black scale-[1.01]"
-                                  : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400"
-                              }`}
+                                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400"
+                                }`}
                             >
                               <span className="leading-snug">{cat.label}</span>
                               <div
-                                className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-black shrink-0 transition-all ${
-                                  isSelected
-                                    ? "bg-white text-slate-950 shadow-sm"
-                                    : "border-2 border-slate-300 dark:border-slate-700 text-transparent"
-                                }`}
+                                className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-black shrink-0 transition-all ${isSelected
+                                  ? "bg-white text-slate-950 shadow-sm"
+                                  : "border-2 border-slate-300 dark:border-slate-700 text-transparent"
+                                  }`}
                               >
                                 {isSelected ? "✓" : ""}
                               </div>
@@ -971,8 +967,8 @@ export default function NewChampionshipPage() {
                       </div>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label mt-0.5">
                         {form.refereeEnabled
-                          ? "✓ Arbitraj Oficial Activ: Se pot delega arbitri oficiali, întocmi rapoarte de joc și cartonașe."
-                          : "✕ Fără Arbitraj Oficial: Turneu amical / meciuri autogestionate (fără delegare de arbitri)."}
+                          ? "✓ Arbitraj   Activ: Se pot delega arbitri  i, întocmi rapoarte de joc și cartonașe."
+                          : "✕ Fără Arbitraj  : Turneu amical / meciuri autogestionate (fără delegare de arbitri)."}
                       </p>
                     </div>
 
@@ -1003,8 +999,8 @@ export default function NewChampionshipPage() {
                         </div>
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label mt-0.5">
                           {form.singleVenueEnabled
-                            ? "✓ Locație Unică Activă: Toate meciurile vor fi programate automat pe arena aleasă."
-                            : "🏟️ Locații Multiple: Meciurile se joacă pe terenul fiecărei echipe sau arene atribuite individual."}
+                            ? "Locație Unică Activă: Toate meciurile vor fi programate automat pe arena aleasă."
+                            : "Locații Multiple: Meciurile se joacă pe terenul fiecărei echipe sau arene atribuite individual."}
                         </p>
                       </div>
 
@@ -1071,7 +1067,7 @@ export default function NewChampionshipPage() {
                             </div>
 
                             <p className="text-[11px] text-teal-800 dark:text-teal-300 font-label">
-                              Dacă ai adresa de email sau contactul administratorului bazei sportive {form.defaultVenue ? <strong>&ldquo;{form.defaultVenue}&rdquo;</strong> : ""}, îi poți trimite o invitație pentru a-și revendica sau lista arena oficial în catalog.
+                              Dacă ai adresa de email sau contactul administratorului bazei sportive {form.defaultVenue ? <strong>&ldquo;{form.defaultVenue}&rdquo;</strong> : ""}, îi poți trimite o invitație pentru a-și revendica sau lista arena   în catalog.
                             </p>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -1209,7 +1205,7 @@ export default function NewChampionshipPage() {
                   Plată Licență Competiție
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                  Operator: <strong>TSC QUANTUM S.R.L.</strong> • CUI: 53063735
+                  Operator: <strong>TSC Q - BUU.RO</strong> • CUI: 53063735
                 </p>
               </div>
               <button
