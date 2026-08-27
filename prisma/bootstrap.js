@@ -1392,8 +1392,11 @@ async function ensureDemoChampionship(ownerId) {
     createdTeams.push(team);
   }
 
-  // Delete existing players and seed 10 Best Top Scorers of past season
-  await prisma.player.deleteMany({});
+  // Delete only demo players (attached to demo teams) to re-seed Top Scorers.
+  // Real players are NEVER deleted by bootstrap — they survive redeploys.
+  await prisma.player.deleteMany({
+    where: { team: { isDemo: true } },
+  });
 
   const TOP_SCORERS = [
     {
