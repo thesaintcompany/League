@@ -50,8 +50,6 @@ export default function SignUpPage() {
     router.push("/dashboard");
   }
 
-  const effectiveRole = selectedRole;
-
   return (
     <main className="min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-200">
       <div className="absolute top-0 right-0 -mr-32 -mt-32 w-96 h-96 bg-lime-400/10 blur-3xl rounded-full pointer-events-none"></div>
