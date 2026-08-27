@@ -41,7 +41,7 @@ export function InteractiveRomaniaSvgMap({
       <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 mb-2 px-2 pt-1">
         <div className="px-3 py-1 rounded-full bg-slate-900/90 border border-slate-700/80 text-white text-[10px] sm:text-[11px] font-bold font-label uppercase tracking-widest flex items-center gap-2 shadow-lg backdrop-blur-md">
           <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
-          <span><span className="material-symbols-outlined text-xs align-middle">flag</span> Harta Teritorială</span>
+          <span><span className="material-symbols-outlined text-xs align-middle">flag</span> Harta Teritorial</span>
         </div>
         <span className="text-[10px] sm:text-[11px] font-mono font-bold text-lime-400 bg-slate-900/90 border border-slate-800 px-2.5 py-1 rounded-xl">
           <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm">location_on</span> {selectedCounty.toUpperCase()} ACTIVAT</span>

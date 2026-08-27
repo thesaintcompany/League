@@ -501,7 +501,7 @@ export default function NewChampionshipPage() {
               <div className="p-4 sm:p-6 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm overflow-hidden">
                 {/* Carousel Header with Slide Tabs & Next/Prev Controls */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-200 dark:border-slate-800">
-                  <div className="flex items-center gap-1.5 p-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+                  <div clazssName="flex items-center gap-1.5 p-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
                     <button
                       type="button"
                       onClick={() => setBrandingScopeSlide(0)}
