@@ -12,35 +12,35 @@ const ROLES = [
     id: "organizer",
     label: "Organizator",
     title: "Organizator Campionat",
-    desc: "Creează turnee, gestionează ligi, meciuri și clasamente în timp real.",
+    desc: "Creează turnee, ligi și clasamente",
     icon: "emoji_events",
   },
   {
     id: "team_leader",
     label: "Lider Echipă",
-    title: "Căpitan / Delegat Echipă",
-    desc: "Înscrie echipa în campionate, convoacă lotul și administrează jucătorii.",
+    title: "Căpitan / Delegat",
+    desc: "Înscrie echipa și gestionează lotul",
     icon: "groups",
   },
   {
     id: "player",
     label: "Jucător",
     title: "Profil Jucător",
-    desc: "Urmărește statisticile tale, golurile, meciurile programate și cartonașele.",
+    desc: "Statistici individuale, meciuri și goluri",
     icon: "sports_soccer",
   },
   {
     id: "referee",
     label: "Arbitru",
     title: "Arbitru Oficial",
-    desc: "Completează rapoarte de joc live, validează scorul și sancțiunile disciplinare.",
+    desc: "Rapoarte de joc live și validare scor",
     icon: "sports",
   },
   {
     id: "arena_owner",
-    label: "Proprietar Arenă",
-    title: "Administrator Bază Sportivă",
-    desc: "Omologhează terenurile, publică orarul de închiriere și găzduiește meciuri.",
+    label: "Proprietar",
+    title: "Bază Sportivă / Arenă",
+    desc: "Omologare terenuri și închirieri",
     icon: "stadium",
   },
 ];
@@ -121,41 +121,42 @@ function SignUpForm() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden bg-slate-50 dark:bg-slate-950 font-body text-slate-900 dark:text-white transition-colors duration-200">
+    <main className="min-h-screen flex flex-col items-center justify-center p-3 sm:p-6 lg:p-8 relative overflow-hidden bg-slate-50 dark:bg-slate-950 font-body text-slate-900 dark:text-white transition-colors duration-200 pb-20 sm:pb-8">
       {/* Ambient Lighting */}
       <div className="absolute top-0 right-0 -mr-40 -mt-40 w-[600px] h-[600px] bg-lime-500/10 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 -ml-40 -mb-40 w-[600px] h-[600px] bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/5 blur-[150px] rounded-full pointer-events-none"></div>
 
-      <section className="w-full max-w-6xl bg-white dark:bg-slate-900/90 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_25px_70px_rgba(0,0,0,0.15)] dark:shadow-[0_25px_70px_rgba(0,0,0,0.6)] flex flex-col lg:flex-row overflow-hidden z-10 border border-slate-200 dark:border-slate-800/80">
+      <section className="w-full max-w-6xl bg-white dark:bg-slate-900/90 backdrop-blur-2xl rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_25px_70px_rgba(0,0,0,0.15)] dark:shadow-[0_25px_70px_rgba(0,0,0,0.6)] flex flex-col lg:flex-row overflow-hidden z-10 border border-slate-200 dark:border-slate-800/80 mb-6 lg:mb-0">
         
-        {/* Card 1 (Dark Side / Mobile Step 1): Branding on Desktop, Role Selection Carousel on Mobile */}
+        {/* Card 1 (Dark Side / Mobile Step 1): Visual Impact + 2-Column Compact Roles on Mobile */}
         <div
-          className={`w-full lg:w-5/12 bg-slate-950 p-6 sm:p-10 lg:p-12 flex-col justify-between relative overflow-hidden text-white ${
+          className={`w-full lg:w-5/12 bg-slate-950 p-4 sm:p-8 lg:p-12 flex-col justify-between relative overflow-hidden text-white min-h-[480px] lg:min-h-[660px] ${
             mobileView === "roles" ? "flex" : "hidden lg:flex"
           }`}
         >
-          {/* Subtle Background Action Image & Overlay */}
+          {/* High-Impact Background Goal Action Photo */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/hero-goal.jpg"
             alt="Dynamic Soccer Background"
-            className="absolute inset-0 w-full h-full object-cover object-center opacity-25 filter brightness-75 contrast-125 pointer-events-none"
+            className="absolute inset-0 w-full h-full object-cover object-center filter brightness-90 contrast-110 pointer-events-none opacity-80 lg:opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/85 to-slate-950/60 pointer-events-none"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/70 to-transparent pointer-events-none"></div>
+          {/* Cinematic Gradients leaving visual photo clearly visible */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-950/40 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/50 to-transparent pointer-events-none"></div>
 
           {/* Top Brand Header */}
           <div className="relative z-10 flex items-center justify-between">
             <BrandLogo size="lg" href="/" />
 
-            <span className="px-3.5 py-1 rounded-full bg-slate-900/90 text-lime-400 font-black text-[10px] uppercase font-label border border-lime-400/40 shadow-lg flex items-center gap-1.5">
+            <span className="px-3 py-1 rounded-full bg-slate-900/90 text-lime-400 font-black text-[10px] uppercase font-label border border-lime-400/40 shadow-lg flex items-center gap-1.5 backdrop-blur-md">
               <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
               SEZON {getCurrentSeasonYear()}
             </span>
           </div>
 
-          {/* Center Content: Desktop Branding Visual */}
+          {/* Desktop Center Visual Presentation */}
           <div className="relative z-10 my-auto py-6 space-y-4 hidden lg:block">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-slate-200 text-xs font-label border border-white/15">
               <span className="material-symbols-outlined text-sm text-lime-400">verified</span>
@@ -167,7 +168,7 @@ function SignUpForm() {
               <span className="text-lime-400">Tău Pro.</span>
             </h1>
 
-            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-body drop-shadow-md max-w-md">
+            <p className="text-slate-200 text-xs sm:text-sm leading-relaxed font-body drop-shadow-md max-w-md">
               Organizează campionate, gestionează meciuri live, clasamente, baze de date sportive,
               bilete și statistici individuale pentru fiecare competiție.
             </p>
@@ -189,59 +190,58 @@ function SignUpForm() {
             </div>
           </div>
 
-          {/* Center Content: Mobile Exclusive Role Selection Cards */}
-          <div className="relative z-10 my-4 space-y-3.5 lg:hidden">
+          {/* Mobile Center: Compact 2-Column Role Selection with Maximum Photo Visibility */}
+          <div className="relative z-10 my-auto py-3 space-y-2.5 lg:hidden">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-slate-200 text-[11px] font-label border border-white/15 mb-2">
-                <span className="material-symbols-outlined text-sm text-lime-400">person_add</span>
-                <span>Pasul 1: Alege rolul contului</span>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 backdrop-blur-md text-slate-200 text-[10px] font-label border border-white/15 mb-1.5">
+                <span className="material-symbols-outlined text-xs text-lime-400">person_add</span>
+                <span>Pasul 1: Alege rolul</span>
               </div>
-              <h2 className="text-2xl font-black italic font-headline uppercase leading-tight text-white drop-shadow-xl">
-                Creează Contul <br />
-                <span className="text-lime-400">Tău Pro.</span>
+              <h2 className="text-2xl font-black italic font-headline uppercase leading-none text-white drop-shadow-xl">
+                Creează Contul <span className="text-lime-400">Tău Pro</span>
               </h2>
-              <p className="text-slate-300 text-xs leading-relaxed font-body mt-1">
-                Selectează tipul contului pentru a trece la datele de înregistrare:
-              </p>
             </div>
 
-            {/* Mobile Role Cards */}
-            <div className="space-y-2 pt-1">
-              {ROLES.map((r) => {
+            {/* 2-Column Compact Role Tiles */}
+            <div className="grid grid-cols-2 gap-1.5 pt-1">
+              {ROLES.map((r, idx) => {
                 const isSelected = selectedRole === r.id;
+                const isLastOdd = idx === ROLES.length - 1 && ROLES.length % 2 === 1;
                 return (
                   <button
                     key={r.id}
                     type="button"
                     onClick={() => setSelectedRole(r.id)}
-                    className={`w-full p-3 rounded-2xl border text-left transition-all duration-200 flex items-start gap-3 relative overflow-hidden group ${
+                    className={`p-2 rounded-xl border text-left transition-all duration-200 flex items-center gap-2 relative overflow-hidden group ${
+                      isLastOdd ? "col-span-2" : ""
+                    } ${
                       isSelected
-                        ? "bg-slate-900/95 border-lime-400 text-white shadow-lg shadow-lime-400/10 ring-2 ring-lime-400/50"
-                        : "bg-slate-900/60 border-slate-800 text-slate-300 hover:bg-slate-900/80"
-                    }`}
+                        ? "bg-slate-900/95 border-lime-400 text-white shadow-lg shadow-lime-400/20 ring-1 ring-lime-400"
+                        : "bg-slate-950/75 border-slate-800/80 text-slate-300 hover:bg-slate-900/90 hover:border-slate-700"
+                    } backdrop-blur-md`}
                   >
                     <div
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
                         isSelected
                           ? "bg-lime-400 text-slate-950 font-bold"
-                          : "bg-slate-800 text-slate-300"
+                          : "bg-white/10 text-slate-200"
                       }`}
                     >
-                      <span className="material-symbols-outlined text-lg">{r.icon}</span>
+                      <span className="material-symbols-outlined text-base">{r.icon}</span>
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="text-xs font-bold font-headline text-white truncate">
-                          {r.title}
+                      <div className="flex items-center justify-between gap-0.5">
+                        <span className="text-[11px] font-bold font-headline text-white truncate">
+                          {r.label}
                         </span>
                         {isSelected && (
-                          <span className="material-symbols-outlined text-lime-400 text-base shrink-0">
+                          <span className="material-symbols-outlined text-lime-400 text-xs shrink-0">
                             check_circle
                           </span>
                         )}
                       </div>
-                      <p className="text-[10px] text-slate-400 line-clamp-2 mt-0.5 font-body leading-relaxed">
+                      <p className="text-[8.5px] text-slate-400 truncate font-body">
                         {r.desc}
                       </p>
                     </div>
@@ -251,8 +251,8 @@ function SignUpForm() {
             </div>
           </div>
 
-          {/* Bottom Area: Mobile Carousel Action Button to Right Card & Desktop Highlights */}
-          <div className="relative z-10 space-y-3 pt-2">
+          {/* Bottom Area: Mobile Carousel Action Button & Desktop Highlights */}
+          <div className="relative z-10 space-y-2 pt-1 pb-1 sm:pb-0">
             {/* Desktop Highlights Bar */}
             <div className="hidden lg:flex items-center justify-between gap-2 p-3 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md text-[11px] text-slate-300 font-label">
               <span className="flex items-center gap-1.5 text-lime-400 font-bold">
@@ -269,16 +269,16 @@ function SignUpForm() {
             <button
               type="button"
               onClick={() => setMobileView("form")}
-              className="w-full lg:hidden py-3.5 px-5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl shadow-lime-500/20 transition active:scale-95"
+              className="w-full lg:hidden py-3 px-4 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-xl shadow-lime-500/25 transition active:scale-95"
             >
               <span>Continuă ca {currentRole.label}</span>
-              <span className="material-symbols-outlined text-base">arrow_forward</span>
+              <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </button>
 
             {/* Mobile Link to Signin */}
-            <div className="lg:hidden text-center pt-1">
-              <span className="text-[11px] text-slate-400 font-label">
-                Ai deja un cont?{" "}
+            <div className="lg:hidden text-center pt-0.5">
+              <span className="text-[10px] text-slate-400 font-label">
+                Ai deja cont?{" "}
                 <Link href="/signin" className="text-lime-400 font-bold hover:underline">
                   Conectează-te ↗
                 </Link>
@@ -289,7 +289,7 @@ function SignUpForm() {
 
         {/* Card 2 (Right Side / Mobile Step 2): Registration Form & Disabled Google Auth */}
         <div
-          className={`w-full lg:w-7/12 p-6 sm:p-10 lg:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 relative overflow-hidden ${
+          className={`w-full lg:w-7/12 p-4 sm:p-8 lg:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 relative overflow-hidden min-h-[480px] lg:min-h-[660px] ${
             mobileView === "form" ? "flex" : "hidden lg:flex"
           }`}
         >
@@ -305,14 +305,14 @@ function SignUpForm() {
 
           <div className="relative z-10">
             {/* Mobile Back Button (Step 2 -> Step 1) */}
-            <div className="lg:hidden mb-4 pb-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            <div className="lg:hidden mb-3 pb-2.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => setMobileView("roles")}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold font-label hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold font-label hover:bg-slate-200 dark:hover:bg-slate-700 transition"
               >
-                <span className="material-symbols-outlined text-base">arrow_back</span>
-                <span>Înapoi la Alegere Rol</span>
+                <span className="material-symbols-outlined text-sm">arrow_back</span>
+                <span>Schimbă Rolul</span>
               </button>
               <span className="text-[10px] font-mono text-lime-600 dark:text-lime-400 font-bold uppercase">
                 Pasul 2 / 2
@@ -320,9 +320,9 @@ function SignUpForm() {
             </div>
 
             {/* Header */}
-            <header className="mb-5 flex justify-between items-start">
+            <header className="mb-4 flex justify-between items-start">
               <div>
-                <h2 className="text-2xl font-headline font-black uppercase text-slate-900 dark:text-white tracking-tight">
+                <h2 className="text-xl sm:text-2xl font-headline font-black uppercase text-slate-900 dark:text-white tracking-tight">
                   Înregistrare Ligue
                 </h2>
                 <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 font-label">
@@ -343,7 +343,7 @@ function SignUpForm() {
             </header>
 
             {/* Form */}
-            <form onSubmit={onSubmit} className="space-y-4">
+            <form onSubmit={onSubmit} className="space-y-3.5">
               {/* Role Selection on Desktop: Standard Grid */}
               <div className="hidden lg:block">
                 <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
@@ -369,16 +369,16 @@ function SignUpForm() {
               </div>
 
               {/* Role Selected Banner on Mobile */}
-              <div className="lg:hidden p-3 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-bold">
-                    <span className="material-symbols-outlined text-base">{currentRole.icon}</span>
+              <div className="lg:hidden p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-lime-400 text-slate-950 flex items-center justify-center font-bold">
+                    <span className="material-symbols-outlined text-sm">{currentRole.icon}</span>
                   </div>
                   <div>
-                    <span className="text-[9px] font-black uppercase tracking-wider font-label text-slate-500 dark:text-slate-400 block">
+                    <span className="text-[8.5px] font-black uppercase tracking-wider font-label text-slate-500 dark:text-slate-400 block">
                       Rol Selectat
                     </span>
-                    <span className="text-xs font-bold font-headline text-slate-900 dark:text-white">
+                    <span className="text-[11px] font-bold font-headline text-slate-900 dark:text-white">
                       {currentRole.title}
                     </span>
                   </div>
@@ -394,7 +394,7 @@ function SignUpForm() {
               </div>
 
               {isInvite && (
-                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl flex items-center gap-2">
+                <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 rounded-xl flex items-center gap-2">
                   <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-base">
                     mail
                   </span>
@@ -405,7 +405,7 @@ function SignUpForm() {
               )}
 
               {error && (
-                <div className="p-3.5 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-semibold rounded-2xl flex items-center gap-2">
+                <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-semibold rounded-xl flex items-center gap-2">
                   <span className="material-symbols-outlined text-base">error</span>
                   <span>{error}</span>
                 </div>
@@ -416,8 +416,8 @@ function SignUpForm() {
                 <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
                   Nume Complet
                 </label>
-                <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-2xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800 focus-within:border-lime-500 dark:focus-within:border-lime-400 transition">
-                  <span className="material-symbols-outlined text-slate-400 text-lg mr-2.5">
+                <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800 focus-within:border-lime-500 dark:focus-within:border-lime-400 transition">
+                  <span className="material-symbols-outlined text-slate-400 text-base mr-2.5">
                     person
                   </span>
                   <input
@@ -436,8 +436,8 @@ function SignUpForm() {
                 <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
                   Adresă Email
                 </label>
-                <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-2xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800 focus-within:border-lime-500 dark:focus-within:border-lime-400 transition">
-                  <span className="material-symbols-outlined text-slate-400 text-lg mr-2.5">
+                <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800 focus-within:border-lime-500 dark:focus-within:border-lime-400 transition">
+                  <span className="material-symbols-outlined text-slate-400 text-base mr-2.5">
                     mail
                   </span>
                   <input
@@ -456,8 +456,8 @@ function SignUpForm() {
                 <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
                   Parolă
                 </label>
-                <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-2xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800 focus-within:border-lime-500 dark:focus-within:border-lime-400 transition">
-                  <span className="material-symbols-outlined text-slate-400 text-lg mr-2.5">
+                <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800 focus-within:border-lime-500 dark:focus-within:border-lime-400 transition">
+                  <span className="material-symbols-outlined text-slate-400 text-base mr-2.5">
                     lock
                   </span>
                   <input
@@ -475,21 +475,21 @@ function SignUpForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 bg-slate-950 dark:bg-lime-400 text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-lime-300 font-headline font-black text-xs uppercase tracking-wider rounded-2xl shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
+                className="w-full py-3 bg-slate-950 dark:bg-lime-400 text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-lime-300 font-headline font-black text-xs uppercase tracking-wider rounded-xl shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 mt-1 disabled:opacity-50"
               >
                 {loading ? (
                   <span>Se creează contul...</span>
                 ) : (
                   <>
                     <span>Creează Contul Pro</span>
-                    <span className="material-symbols-outlined text-base">arrow_forward</span>
+                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
                   </>
                 )}
               </button>
             </form>
 
             {/* Divider */}
-            <div className="relative my-4">
+            <div className="relative my-3">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-slate-200 dark:border-slate-800"></div>
               </div>
@@ -506,9 +506,9 @@ function SignUpForm() {
                 type="button"
                 disabled
                 title="Autentificarea cu Google va fi activată în curând"
-                className="w-full py-3 px-4 rounded-2xl bg-slate-100/80 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 text-slate-400 dark:text-slate-500 font-headline font-bold text-xs flex items-center justify-between cursor-not-allowed opacity-75 select-none transition"
+                className="w-full py-2.5 px-3.5 rounded-xl bg-slate-100/80 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 text-slate-400 dark:text-slate-500 font-headline font-bold text-xs flex items-center justify-between cursor-not-allowed opacity-75 select-none transition"
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-2">
                   <svg className="w-4 h-4 opacity-50 grayscale" viewBox="0 0 24 24">
                     <path
                       fill="#4285F4"
@@ -527,10 +527,10 @@ function SignUpForm() {
                       d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
                     />
                   </svg>
-                  <span>Conectare cu Google</span>
+                  <span className="text-[11px]">Conectare cu Google</span>
                 </div>
 
-                <span className="text-[9px] font-label font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
+                <span className="text-[8.5px] font-label font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
                   În curând
                 </span>
               </button>
@@ -538,14 +538,14 @@ function SignUpForm() {
           </div>
 
           {/* Footer */}
-          <footer className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800 text-center space-y-1 relative z-10">
-            <p className="text-[11px] font-label text-slate-500 dark:text-slate-400">
-              Ai deja un cont înregistrat?{" "}
+          <footer className="pt-3 mt-3 border-t border-slate-200 dark:border-slate-800 text-center space-y-0.5 relative z-10">
+            <p className="text-[10.5px] font-label text-slate-500 dark:text-slate-400">
+              Ai deja cont înregistrat?{" "}
               <Link href="/signin" className="font-bold text-lime-600 dark:text-lime-400 hover:underline">
                 Conectează-te aici ↗
               </Link>
             </p>
-            <p className="text-[10px] font-mono text-slate-400 dark:text-slate-500">
+            <p className="text-[9.5px] font-mono text-slate-400 dark:text-slate-500">
               © {new Date().getFullYear()} buu.ro • Toate drepturile rezervate
             </p>
           </footer>
