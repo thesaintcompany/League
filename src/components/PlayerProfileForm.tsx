@@ -749,11 +749,11 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
         {/* Action Save Bar */}
         <div className="flex justify-between items-center pt-2">
           <Link
-            href="/campionat"
+            href="/clasamente"
             className="text-xs font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-1"
           >
             <span className="material-symbols-outlined text-sm">arrow_back</span>
-            <span>Înapoi la Campionat</span>
+            <span>Înapoi la Clasamente</span>
           </Link>
 
           {isEditable && (

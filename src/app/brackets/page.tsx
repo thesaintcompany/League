@@ -138,9 +138,8 @@ export default async function PublicBracketsPage({
     );
   }
 
-  // Fetch all published championships for the quick switcher (generic browse only)
+  // Fetch all championships for the quick switcher
   const allPublishedChampionships = await prisma.championship.findMany({
-    where: { isBracketPublished: true },
     select: {
       id: true,
       name: true,
@@ -154,9 +153,9 @@ export default async function PublicBracketsPage({
     orderBy: { createdAt: "desc" },
   });
 
-  // Check if map is private and visitor is not the owner
+  // Check if map is private and visitor is not the owner (direct links remain accessible)
   const isOwner = championship && currentUserId && championship.ownerId === currentUserId;
-  const isPrivate = championship && !championship.isBracketPublished && !isOwner;
+  const isPrivate = !isDirectLink && championship && !championship.isBracketPublished && !isOwner;
 
   let matches = (championship?.matches || []).map((m: any) => ({
     id: m.id,
@@ -292,6 +291,14 @@ export default async function PublicBracketsPage({
           </div>
 
           <div className="flex flex-wrap gap-2.5 sm:gap-3">
+            <Link
+              href={championship?.id ? `/clasamente?id=${championship.id}` : "/clasamente"}
+              className="px-4 py-2.5 sm:py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md flex items-center gap-1.5 active:scale-95"
+            >
+              <span className="material-symbols-outlined text-base">leaderboard</span>
+              <span>Clasament Campionat</span>
+            </Link>
+
             {isDirectLink ? (
               <Link
                 href="/brackets"
@@ -299,19 +306,13 @@ export default async function PublicBracketsPage({
               >
                 ← Toate Tablourile
               </Link>
-            ) : (
-              <Link
-                href="/campionat"
-                className="px-4 py-2.5 sm:py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 text-slate-900 dark:text-white font-headline font-bold text-xs uppercase tracking-wider transition border border-slate-200 dark:border-white/20"
-              >
-                ← Clasament
-              </Link>
-            )}
+            ) : null}
+
             <Link
               href="/matches"
-              className="px-4 py-2.5 sm:py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md"
+              className="px-4 py-2.5 sm:py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 text-slate-900 dark:text-white font-headline font-bold text-xs uppercase tracking-wider transition border border-slate-200 dark:border-white/20"
             >
-               Lista Meciuri
+              Lista Meciuri
             </Link>
             <Link
               href="/harta-romaniei"

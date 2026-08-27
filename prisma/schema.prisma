@@ -373,6 +373,8 @@ model SystemSetting {
   payoutMinThreshold    Int      @default(100)
   demoPreFillDisabled   Boolean  @default(false)
   teamSubscriptionPrice Float    @default(60.0) // Preț abonament anual pentru echipe suplimentare (EUR)
+  seasonYear            Int?     // Anul manual al sezonului setat de SuperAdmin (ex: 2027)
+  seasonMode            String   @default("auto") // "auto" (automat în funcție de timp) sau "manual" (setat manual de SuperAdmin)
   updatedAt             DateTime @updatedAt
 }
 

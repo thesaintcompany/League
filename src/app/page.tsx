@@ -145,7 +145,7 @@ function WelcomePortalForm() {
 
             {/* Quick public navigation links (1 line, 1 word each) */}
             <div className="grid grid-cols-4 gap-1.5 text-[11px] font-label font-bold text-slate-300 pt-1 text-center">
-              <Link href="/brackets" className="hover:text-lime-400 transition bg-white/5 hover:bg-white/10 py-1.5 px-1 rounded-lg truncate">
+              <Link href="https://sp.buu.ro/harta-romaniei" className="hover:text-lime-400 transition bg-white/5 hover:bg-white/10 py-1.5 px-1 rounded-lg truncate">
                 <span className="material-symbols-outlined text-base">map</span> Hartă
               </Link>
               <Link href="/venues" className="hover:text-lime-400 transition bg-white/5 hover:bg-white/10 py-1.5 px-1 rounded-lg truncate">

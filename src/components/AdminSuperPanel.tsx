@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
+import { getCurrentSeasonYear, getAutoSeasonYear } from "@/lib/season";
 
 export type AdminTab =
   | "branding"
@@ -114,6 +115,8 @@ export function AdminSuperPanel() {
     googlePayEnvironment: "PRODUCTION",
     googlePayEnabled: true,
     payoutMinThreshold: 100,
+    seasonYear: 2027,
+    seasonMode: "auto",
   });
   const [ticketStats, setTicketStats] = useState({
     totalTicketsSold: 0,
@@ -371,6 +374,27 @@ export function AdminSuperPanel() {
       console.error(err);
     } finally {
       setSavingLogo(false);
+    }
+  }
+
+  async function handleSaveSeasonSettings(mode: string, year: number) {
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ seasonMode: mode, seasonYear: year }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setTicketSettings((prev: any) => ({ ...prev, seasonMode: mode, seasonYear: year }));
+        const activeYear = getCurrentSeasonYear(year, mode);
+        window.dispatchEvent(new CustomEvent("app-season-updated", { detail: { seasonYear: activeYear } }));
+        showToast(`Sezonul a fost actualizat: SEZON ${activeYear}!`);
+      } else {
+        alert(data.error || "Eroare la salvarea sezonului.");
+      }
+    } catch (err) {
+      console.error(err);
     }
   }
 
@@ -823,7 +847,7 @@ export function AdminSuperPanel() {
                   />
                   <div className="hidden sm:flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-900 border border-lime-400/30 text-[10px] text-lime-400 font-label font-bold">
                     <span className="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse"></span>
-                    EDIȚIA NAȚIONALĂ 2026
+                    EDIȚIA NAȚIONALĂ {getCurrentSeasonYear(ticketSettings.seasonYear, ticketSettings.seasonMode)}
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-slate-400 font-label">
@@ -837,32 +861,147 @@ export function AdminSuperPanel() {
             </div>
           </div>
 
-          {/* 3 Logo Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Configurare Sezon Competițional (Automat / Manual) */}
+          <div className="card p-6 bg-surface-container-lowest border rounded-3xl space-y-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-lg shadow-sm">
+                  <span className="material-symbols-outlined align-middle text-base">calendar_month</span>
+                </div>
+                <div>
+                  <h3 className="font-headline font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase">
+                    Configurare Sezon Competițional
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
+                    Setează dacă sezonul se actualizează automat după timp sau este fixat manual de SuperAdmin.
+                  </p>
+                </div>
+              </div>
+
+              <div className="px-3.5 py-1.5 rounded-full bg-slate-950 text-lime-400 font-black text-xs uppercase font-label border border-lime-400/40 shadow-sm flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+                <span>SEZON ACTIV LIVE: {getCurrentSeasonYear(ticketSettings.seasonYear, ticketSettings.seasonMode)}</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Opțiunea Automat */}
+              <div
+                onClick={() => {
+                  const newMode = "auto";
+                  handleSaveSeasonSettings(newMode, ticketSettings.seasonYear || 2027);
+                }}
+                className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${
+                  ticketSettings.seasonMode === "auto"
+                    ? "bg-lime-400/10 border-lime-400 shadow-md ring-2 ring-lime-400/40"
+                    : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/80"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <span className="material-symbols-outlined text-lime-500 text-xl">schedule</span>
+                    <span className="font-headline font-bold text-sm text-slate-900 dark:text-white">
+                      Mod Automat (În funcție de timp)
+                    </span>
+                  </div>
+                  <input
+                    type="radio"
+                    name="adminSeasonMode"
+                    checked={ticketSettings.seasonMode === "auto"}
+                    onChange={() => handleSaveSeasonSettings("auto", ticketSettings.seasonYear || 2027)}
+                    className="text-lime-500 focus:ring-lime-400"
+                  />
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-body leading-relaxed">
+                  Calculează automat anul sezonului după calendar. Trecerea la anul următor (N+1) se face automat în noiembrie a fiecărui an (Sezon calculat: <strong>{getAutoSeasonYear()}</strong>).
+                </p>
+                <div className="pt-2">
+                  <span className="text-[11px] font-bold text-lime-600 dark:text-lime-400">
+                    {ticketSettings.seasonMode === "auto" ? "Activ în acest moment" : "Click pentru activare mod automat"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Opțiunea Manual */}
+              <div
+                onClick={() => {
+                  if (ticketSettings.seasonMode !== "manual") {
+                    handleSaveSeasonSettings("manual", ticketSettings.seasonYear || 2027);
+                  }
+                }}
+                className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${
+                  ticketSettings.seasonMode === "manual"
+                    ? "bg-lime-400/10 border-lime-400 shadow-md ring-2 ring-lime-400/40"
+                    : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/80"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <span className="material-symbols-outlined text-lime-500 text-xl">tune</span>
+                    <span className="font-headline font-bold text-sm text-slate-900 dark:text-white">
+                      Mod Manual (Setare SuperAdmin)
+                    </span>
+                  </div>
+                  <input
+                    type="radio"
+                    name="adminSeasonMode"
+                    checked={ticketSettings.seasonMode === "manual"}
+                    onChange={() => handleSaveSeasonSettings("manual", ticketSettings.seasonYear || 2027)}
+                    className="text-lime-500 focus:ring-lime-400"
+                  />
+                </div>
+
+                <div className="space-y-1.5" onClick={(e) => e.stopPropagation()}>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block">
+                    Alege Anul Sezonului:
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min="2020"
+                      max="2099"
+                      value={ticketSettings.seasonYear}
+                      onChange={(e) => {
+                        const newYear = parseInt(e.target.value) || 2027;
+                        setTicketSettings((prev: any) => ({ ...prev, seasonYear: newYear }));
+                      }}
+                      className="input text-xs font-mono font-bold w-32"
+                      placeholder="2027"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleSaveSeasonSettings("manual", ticketSettings.seasonYear || 2027)}
+                      className="btn btn-primary text-[11px] py-1.5 px-3 rounded-lg uppercase tracking-wider font-bold"
+                    >
+                      Aplică An
+                    </button>
+                  </div>
+                </div>
+                <div className="pt-1">
+                  <span className="text-[11px] font-bold text-lime-600 dark:text-lime-400">
+                    {ticketSettings.seasonMode === "manual" ? `Manual activ: SEZON ${ticketSettings.seasonYear}` : "Click pentru forțare manuală"}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Logo Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
                 id: "logo-1",
                 title: "Varianta 1 • PRO LIGUE - ROMÂNIA (Principal)",
-                subtitle: "Logo-ul   cu Fulger & Neon Green",
+                subtitle: "Logo-ul cu Fulger & Neon Green",
                 url: "/images/logos/logo-1.png",
-                badge: "bolt Principal • HD Transparent",
+                badge: "Principal • HD Transparent",
                 badgeColor: "bg-lime-400/20 text-lime-400 border-lime-400/30",
                 description:
-                  "Logo-ul   PRO LIGUE ROMANIA cu font futuristic, vortex dinamic, fulger auriu și detalii de impact pentru header.",
-              },
-              {
-                id: "logo-2",
-                title: "Varianta 2 • Linii Drapel & Steel Chrome",
-                subtitle: "Ediția Tricolor & Finisaj Metalic",
-                url: "/images/logos/logo-2.png",
-                badge: "Drapel Național (flag)",
-                badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
-                description:
-                  "Linii dinamice în culorile drapelului României cu minge de meci lucioasă și contur metalic robust.",
+                  "Logo-ul PRO LIGUE ROMANIA cu font futuristic, vortex dinamic, fulger auriu și detalii de impact pentru header.",
               },
               {
                 id: "logo-3",
-                title: "Varianta 3 • Neon Vortex & Gold Flash",
+                title: "Varianta 2 • Neon Vortex & Gold Flash",
                 subtitle: "Ediția Glow & Energie Electrică",
                 url: "/images/logos/logo-3.png",
                 badge: "Glow Electric",

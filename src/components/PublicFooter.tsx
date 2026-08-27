@@ -53,9 +53,9 @@ export function PublicFooter() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-9 sm:gap-x-10 lg:gap-12">
           {/* Column 1: Brand & Operator Identity */}
           <div className="col-span-2 lg:col-span-1 space-y-4">
-            <BrandLogo size="md" href="/campionat" />
+            <BrandLogo size="md" href="/clasamente" />
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-body">
-              Platforma națională digitală de gestiune competițională, clasamente  e și arbitraj omologat.
+              Platforma națională digitală de gestiune competițională, clasamente omologate și arbitraj live.
             </p>
             <div className="pt-2 text-xs font-label space-y-1">
               <p className="text-slate-500 dark:text-slate-400">
@@ -74,8 +74,8 @@ export function PublicFooter() {
             </h4>
             <ul className="space-y-2 text-xs font-label">
               <li>
-                <Link href="/campionat" className="hover:text-slate-950 dark:hover:text-white transition-colors">
-                  Campionate Naționale
+                <Link href="/clasamente" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Clasamente &amp; Ligi
                 </Link>
               </li>
               <li>

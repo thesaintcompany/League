@@ -559,7 +559,7 @@ export function ArenaOwnerPanel({
                     <h4 className="text-base font-semibold text-slate-900 dark:text-white mt-0.5">{championship.championshipName}</h4>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Link href={`/campionat?id=${championship.championshipId}`} target="_blank" className="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Vezi Campionatul</Link>
+                    <Link href={`/clasamente?id=${championship.championshipId}`} target="_blank" className="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Vezi Clasamentul</Link>
                     <Link href={`/brackets?id=${championship.championshipId}`} target="_blank" className="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Bracket</Link>
                     <Link href={`/matches/${championship.id}/promo`} target="_blank" className="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-900 dark:bg-lime-400 text-white dark:text-slate-950">Promo Meci</Link>
                   </div>

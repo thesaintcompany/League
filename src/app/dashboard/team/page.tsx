@@ -10,8 +10,19 @@ import { isTeamLeader } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
-export default async function TeamManagerDashboardPage(props: { searchParams?: Promise<{ tab?: string }> }) {
-  const searchParams: { tab?: string } = (await props.searchParams?.catch(() => ({}))) ?? {};
+export default async function TeamManagerDashboardPage(props: {
+  searchParams?: { tab?: string } | Promise<{ tab?: string }>;
+}) {
+  const rawParams = props.searchParams;
+  let searchParams: { tab?: string } = {};
+  if (rawParams) {
+    if (typeof (rawParams as any).then === "function") {
+      searchParams = (await (rawParams as Promise<{ tab?: string }>)) || {};
+    } else {
+      searchParams = (rawParams as { tab?: string }) || {};
+    }
+  }
+
   const tabParam = searchParams.tab;
   const validTabs = ["roster", "tactics", "invites", "staff", "calendar", "matches", "payments"];
   const defaultTab = validTabs.includes(tabParam || "") ? (tabParam as any) : "roster";
@@ -25,10 +36,16 @@ export default async function TeamManagerDashboardPage(props: { searchParams?: P
   }
 
   const userId = user.id;
+  const userEmail = user.email ? user.email.toLowerCase().trim() : "";
 
   // Find team managed by this user or fallback to first available team in DB
   let team = await prisma.team.findFirst({
-    where: { managerId: userId },
+    where: {
+      OR: [
+        ...(userId ? [{ managerId: userId }] : []),
+        ...(userEmail ? [{ managerEmail: userEmail }] : []),
+      ],
+    },
     include: {
       championship: true,
       players: {
@@ -47,14 +64,14 @@ export default async function TeamManagerDashboardPage(props: { searchParams?: P
 
   if (!team) {
     let dbUser = userId ? await prisma.user.findUnique({ where: { id: userId } }) : null;
-    if (!dbUser && user.email) {
-      dbUser = await prisma.user.findUnique({ where: { email: user.email.toLowerCase().trim() } });
+    if (!dbUser && userEmail) {
+      dbUser = await prisma.user.findUnique({ where: { email: userEmail } });
     }
     if (!dbUser) {
       dbUser = await prisma.user.create({
         data: {
           ...(userId ? { id: userId } : {}),
-          email: user.email ? user.email.toLowerCase().trim() : `user_${Date.now()}@buu.ro`,
+          email: userEmail || `user_${Date.now()}@buu.ro`,
           name: user.name || "Manager Echipă",
           role: user.role || "team_leader",
         },
@@ -62,10 +79,10 @@ export default async function TeamManagerDashboardPage(props: { searchParams?: P
     }
     const validOwnerId = dbUser.id;
 
-    // If no team exists in database yet, create a default demo team
-    const defaultChamp =
-      (await prisma.championship.findFirst()) ||
-      (await prisma.championship.create({
+    // If no team exists in database yet, create a default championship and team
+    let defaultChamp = await prisma.championship.findFirst();
+    if (!defaultChamp) {
+      defaultChamp = await prisma.championship.create({
         data: {
           name: "Liga Pro România 2026",
           sport: "Fotbal",
@@ -73,16 +90,25 @@ export default async function TeamManagerDashboardPage(props: { searchParams?: P
           startDate: new Date(),
           ownerId: validOwnerId,
         },
-      }));
+      });
+    }
 
     team = await prisma.team.create({
       data: {
-        name: `${user.name || "Managerul meu"} F.C.`,
-        shortName: user.name ? user.name.split(" ").map((w: string) => w[0]).join("").substring(0, 3).toUpperCase() : "F.C.",
+        name: `${user.name || "Echipa Mea"} F.C.`,
+        shortName: user.name
+          ? user.name
+              .split(" ")
+              .map((w: string) => w[0])
+              .join("")
+              .substring(0, 3)
+              .toUpperCase()
+          : "F.C.",
         color: "#581c87",
-        description: `Echipa mea de fotbal – în căștei îți poti schimba numele, culorea și badge-ul din panoul de configurare.`,
+        description: `Echipa mea de fotbal – îți poți schimba numele, culoarea și sigla din panoul de configurare.`,
         championshipId: defaultChamp.id,
         managerId: validOwnerId,
+        managerEmail: userEmail || undefined,
         formation: "4-3-3",
         homeArena: "Alege un stadion pentru echipa ta",
       },
@@ -119,7 +145,7 @@ export default async function TeamManagerDashboardPage(props: { searchParams?: P
           season: team.championship.season,
         }
       : undefined,
-    players: team.players.map((p) => ({
+    players: (team.players || []).map((p) => ({
       id: p.id,
       name: p.name,
       email: p.email,
@@ -131,9 +157,9 @@ export default async function TeamManagerDashboardPage(props: { searchParams?: P
       assists: p.assists,
       rating: p.rating,
     })),
-    homeMatches: team.homeMatches.map((m) => ({
+    homeMatches: (team.homeMatches || []).map((m) => ({
       id: m.id,
-      scheduledAt: m.scheduledAt.toISOString(),
+      scheduledAt: m.scheduledAt ? m.scheduledAt.toISOString() : new Date().toISOString(),
       venue: m.venue,
       stage: m.stage,
       round: m.round,
@@ -141,30 +167,48 @@ export default async function TeamManagerDashboardPage(props: { searchParams?: P
       homeScore: m.homeScore,
       awayScore: m.awayScore,
       homeTeam: { id: team.id, name: team.name, shortName: team.shortName, color: team.color },
-      awayTeam: { id: m.awayTeam.id, name: m.awayTeam.name, shortName: m.awayTeam.shortName, color: m.awayTeam.color },
-      championship: m.championship ? { id: m.championship.id, name: m.championship.name, season: m.championship.season } : undefined,
+      awayTeam: m.awayTeam
+        ? { id: m.awayTeam.id, name: m.awayTeam.name, shortName: m.awayTeam.shortName, color: m.awayTeam.color }
+        : { id: "unknown", name: "Echipă Oaspete", shortName: "OAS", color: "#64748b" },
+      championship: m.championship
+        ? { id: m.championship.id, name: m.championship.name, season: m.championship.season }
+        : undefined,
     })),
-    awayMatches: team.awayMatches.map((m) => ({
+    awayMatches: (team.awayMatches || []).map((m) => ({
       id: m.id,
-      scheduledAt: m.scheduledAt.toISOString(),
+      scheduledAt: m.scheduledAt ? m.scheduledAt.toISOString() : new Date().toISOString(),
       venue: m.venue,
       stage: m.stage,
       round: m.round,
       status: m.status,
       homeScore: m.homeScore,
       awayScore: m.awayScore,
-      homeTeam: { id: m.homeTeam.id, name: m.homeTeam.name, shortName: m.homeTeam.shortName, color: m.homeTeam.color },
+      homeTeam: m.homeTeam
+        ? { id: m.homeTeam.id, name: m.homeTeam.name, shortName: m.homeTeam.shortName, color: m.homeTeam.color }
+        : { id: "unknown", name: "Echipă Gazdă", shortName: "GAZ", color: "#64748b" },
       awayTeam: { id: team.id, name: team.name, shortName: team.shortName, color: team.color },
-      championship: m.championship ? { id: m.championship.id, name: m.championship.name, season: m.championship.season } : undefined,
+      championship: m.championship
+        ? { id: m.championship.id, name: m.championship.name, season: m.championship.season }
+        : undefined,
     })),
   };
 
   const settings = await prisma.systemSetting.findUnique({ where: { id: "default" } });
-  const teamCount = await prisma.team.count({ where: { managerId: userId } });
-  const managedTeams = await prisma.team.findMany({
-    where: { managerId: userId },
-    select: { id: true, name: true, shortName: true, color: true, logoUrl: true, subscriptionActive: true, subscriptionExpiresAt: true },
-  });
+  const teamCount = userId ? await prisma.team.count({ where: { managerId: userId } }) : 1;
+  const managedTeams = userId
+    ? await prisma.team.findMany({
+        where: { managerId: userId },
+        select: {
+          id: true,
+          name: true,
+          shortName: true,
+          color: true,
+          logoUrl: true,
+          subscriptionActive: true,
+          subscriptionExpiresAt: true,
+        },
+      })
+    : [];
 
   const formattedManagedTeams = managedTeams.map((t) => ({
     ...t,
@@ -172,35 +216,37 @@ export default async function TeamManagerDashboardPage(props: { searchParams?: P
     subscriptionExpiresAt: t.subscriptionExpiresAt ? t.subscriptionExpiresAt.toISOString() : null,
   }));
 
-  const invitations = await prisma.teamInvitation.findMany({
-    where: { inviteeEmail: user.email, status: "pending" },
-    include: {
-      championship: {
-        select: { id: true, name: true, sport: true, season: true, scope: true, county: true, city: true },
-      },
-      team: {
-        select: { id: true, name: true, shortName: true, color: true },
-      },
-      inviter: {
-        select: { id: true, name: true, email: true },
-      },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  const invitations = userEmail
+    ? await prisma.teamInvitation.findMany({
+        where: { inviteeEmail: userEmail, status: "pending" },
+        include: {
+          championship: {
+            select: { id: true, name: true, sport: true, season: true, scope: true, county: true, city: true },
+          },
+          team: {
+            select: { id: true, name: true, shortName: true, color: true },
+          },
+          inviter: {
+            select: { id: true, name: true, email: true },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      })
+    : [];
 
-   const playersCount = team.players.length;
-   const upcomingMatches = [...team.homeMatches, ...team.awayMatches].filter(
-     (m) => m.status === "scheduled" || m.status === "pending"
-   ).length;
-   const pendingInvites = invitations.filter((i) => i.status === "pending").length;
+  const playersCount = (team.players || []).length;
+  const upcomingMatches = [...(team.homeMatches || []), ...(team.awayMatches || [])].filter(
+    (m) => m.status === "scheduled" || m.status === "pending"
+  ).length;
+  const pendingInvites = invitations.filter((i) => i.status === "pending").length;
 
-   return (
+  return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
       <Sidebar teamTabCounts={{ roster: playersCount, calendar: upcomingMatches, invites: pendingInvites }} />
 
       <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
-          title="Consolă Manager Echipă &amp; Club"
+          title="Consolă Manager Echipă & Club"
           subtitle={`Gestiune lot, primul 11, invitații pe email, staff tehnic și calendar de deplasări`}
         />
 
@@ -212,9 +258,9 @@ export default async function TeamManagerDashboardPage(props: { searchParams?: P
             teamSubscriptionPrice={settings?.teamSubscriptionPrice ?? 60.0}
             freeTeamLimit={1}
             invitations={invitations}
-             currentUser={{ id: user.id, name: user.name, email: user.email, role: user.role }}
-             defaultTab={defaultTab}
-           />
+            currentUser={{ id: user.id || "", name: user.name, email: user.email, role: user.role }}
+            defaultTab={defaultTab}
+          />
         </main>
       </div>
     </div>

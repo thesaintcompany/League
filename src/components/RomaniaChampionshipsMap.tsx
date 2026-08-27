@@ -473,7 +473,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                               <span className="material-symbols-outlined text-sm">account_tree</span> Harta
                             </Link>
                             <Link
-                              href={`/campionat?id=${champ.id}`}
+                              href={`/clasamente?id=${champ.id}`}
                               className="px-3 py-1.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-black text-[10px] sm:text-[11px] uppercase font-headline shadow-sm transition flex items-center gap-1"
                             >
                               Clasament ↗

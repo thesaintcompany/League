@@ -49,6 +49,8 @@ export async function GET() {
       applePayEnabled: settings.applePayEnabled,
       googlePayEnabled: settings.googlePayEnabled,
       teamSubscriptionPrice: settings.teamSubscriptionPrice ?? 60.0,
+      seasonYear: settings.seasonYear,
+      seasonMode: settings.seasonMode || "auto",
     });
   }
 
@@ -110,6 +112,8 @@ export async function PUT(req: Request) {
       googlePayEnabled,
       payoutMinThreshold,
       teamSubscriptionPrice,
+      seasonYear,
+      seasonMode,
     } = body;
 
     const updated = await prisma.systemSetting.upsert({
@@ -135,6 +139,8 @@ export async function PUT(req: Request) {
         googlePayEnabled: googlePayEnabled !== undefined ? Boolean(googlePayEnabled) : undefined,
         payoutMinThreshold: typeof payoutMinThreshold === "number" ? payoutMinThreshold : undefined,
         teamSubscriptionPrice: typeof teamSubscriptionPrice === "number" ? teamSubscriptionPrice : undefined,
+        seasonYear: seasonYear !== undefined ? (seasonYear ? Number(seasonYear) : null) : undefined,
+        seasonMode: seasonMode !== undefined ? seasonMode : undefined,
       },
       create: {
         id: "default",
@@ -158,6 +164,8 @@ export async function PUT(req: Request) {
         googlePayEnabled: Boolean(googlePayEnabled),
         payoutMinThreshold: typeof payoutMinThreshold === "number" ? payoutMinThreshold : 100,
         teamSubscriptionPrice: typeof teamSubscriptionPrice === "number" ? teamSubscriptionPrice : 60.0,
+        seasonYear: seasonYear ? Number(seasonYear) : null,
+        seasonMode: seasonMode || "auto",
       },
     });
 

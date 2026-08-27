@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { appSignOut } from "@/lib/logout";
+import { getCurrentSeasonYear, getAutoSeasonYear } from "@/lib/season";
 
 interface SuperAdminProfileFormProps {
   initialUser: {
@@ -40,6 +41,8 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
     googlePayEnabled: initialSettings?.googlePayEnabled ?? true,
     payoutMinThreshold: initialSettings?.payoutMinThreshold ?? 100,
     teamSubscriptionPrice: initialSettings?.teamSubscriptionPrice ?? 60.0,
+    seasonYear: initialSettings?.seasonYear ?? 2027,
+    seasonMode: initialSettings?.seasonMode || "auto",
   });
 
   const [savingSettings, setSavingSettings] = useState(false);
@@ -79,6 +82,8 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
       });
       if (res.ok) {
         setSettingsSuccess(true);
+        const activeYear = getCurrentSeasonYear(settings.seasonYear, settings.seasonMode);
+        window.dispatchEvent(new CustomEvent("app-season-updated", { detail: { seasonYear: activeYear } }));
         setTimeout(() => setSettingsSuccess(false), 3500);
       }
     } catch (err) {
@@ -263,7 +268,114 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
         </div>
       </div>
 
-      {/* 3. Module de Plată (Stripe, Apple Pay, Google Pay, PayPal) */}
+      {/* 3. Configurare Sezon Competițional (Automat / Manual) */}
+      <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-lg shadow-sm">
+              <span className="material-symbols-outlined align-middle text-base">calendar_month</span>
+            </div>
+            <div>
+              <h3 className="font-headline font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase">
+                Sezon Competițional Național
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
+                Configurează modul de determinare a sezonului activ pe întreaga platformă.
+              </p>
+            </div>
+          </div>
+
+          <div className="px-3.5 py-1 rounded-full bg-slate-900 text-lime-400 font-black text-xs uppercase font-label border border-lime-400/40 shadow-sm flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+            <span>SEZON ACTIV LIVE: {getCurrentSeasonYear(settings.seasonYear, settings.seasonMode)}</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Opțiunea 1: Mod Automat */}
+          <div
+            onClick={() => setSettings({ ...settings, seasonMode: "auto" })}
+            className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${
+              settings.seasonMode === "auto"
+                ? "bg-lime-400/10 border-lime-400 shadow-md ring-2 ring-lime-400/40"
+                : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/80"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-lime-500 text-xl">schedule</span>
+                <span className="font-headline font-bold text-sm text-slate-900 dark:text-white">
+                  Mod Automat (După Timp)
+                </span>
+              </div>
+              <input
+                type="radio"
+                name="seasonMode"
+                checked={settings.seasonMode === "auto"}
+                onChange={() => setSettings({ ...settings, seasonMode: "auto" })}
+                className="text-lime-500 focus:ring-lime-400"
+              />
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-body leading-relaxed">
+              Calculează automat anul sezonului în funcție de data calendaristică. Trecerea la noul sezon (anul N+1) are loc automat în luna noiembrie a fiecărui an (Sezon calculat: <strong>{getAutoSeasonYear()}</strong>).
+            </p>
+          </div>
+
+          {/* Opțiunea 2: Mod Manual */}
+          <div
+            onClick={() => setSettings({ ...settings, seasonMode: "manual" })}
+            className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${
+              settings.seasonMode === "manual"
+                ? "bg-lime-400/10 border-lime-400 shadow-md ring-2 ring-lime-400/40"
+                : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/80"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-lime-500 text-xl">tune</span>
+                <span className="font-headline font-bold text-sm text-slate-900 dark:text-white">
+                  Mod Manual (Setare SuperAdmin)
+                </span>
+              </div>
+              <input
+                type="radio"
+                name="seasonMode"
+                checked={settings.seasonMode === "manual"}
+                onChange={() => setSettings({ ...settings, seasonMode: "manual" })}
+                className="text-lime-500 focus:ring-lime-400"
+              />
+            </div>
+
+            <div className="space-y-1.5" onClick={(e) => e.stopPropagation()}>
+              <label className="text-[10px] font-label font-bold uppercase text-slate-400 block">
+                Specifică Anul Sezonului (ex: 2026, 2027, 2028):
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min="2020"
+                  max="2099"
+                  value={settings.seasonYear}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      seasonMode: "manual",
+                      seasonYear: parseInt(e.target.value) || 2027,
+                    })
+                  }
+                  className="input text-xs font-mono font-bold w-36"
+                  placeholder="2027"
+                />
+                <span className="text-[11px] font-mono text-slate-400">
+                  (Forțează eticheta SEZON {settings.seasonYear || 2027})
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Module de Plată (Stripe, Apple Pay, Google Pay, PayPal) */}
       <div className="space-y-6">
         <div className="flex items-center gap-2">
           <span className="text-xl"><span className="material-symbols-outlined align-middle text-sm">credit_card</span></span>

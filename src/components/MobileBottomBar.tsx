@@ -13,7 +13,7 @@ export function MobileBottomBar() {
   }
 
   const navItems = [
-    { href: "/campionat", label: "Campionat", icon: "emoji_events", match: "/campionat" },
+    { href: "/clasamente", label: "Clasament", icon: "emoji_events", match: "/clasamente" },
     { href: "/harta-romaniei", label: "Harta RO", icon: "map", match: "/harta-romaniei" },
     { href: "/brackets", label: "Tablou", icon: "account_tree", match: "/brackets" },
     { href: "/teams", label: "Echipe", icon: "groups", match: "/teams" },

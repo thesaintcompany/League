@@ -11,7 +11,7 @@ import { SportSubHeader } from "./SportSubHeader";
 import { getCurrentSeasonYear } from "@/lib/season";
 
 interface PublicHeaderProps {
-  currentTab?: "campionat" | "romania-map" | "brackets" | "venues" | "players" | "referees" | "teams";
+  currentTab?: "clasamente" | "campionat" | "romania-map" | "brackets" | "venues" | "players" | "referees" | "teams";
   variant?: "default" | "dark";
 }
 
@@ -41,7 +41,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
   const navRef = useRef<HTMLElement | null>(null);
   const rightRef = useRef<HTMLDivElement | null>(null);
 
-  const isCampionat = currentTab === "campionat" || pathname === "/campionat" || pathname === "/liga";
+  const isClasamente = currentTab === "clasamente" || pathname === "/clasamente" || currentTab === "campionat" || pathname === "/campionat" || pathname === "/liga";
   const isRomaniaMap = currentTab === "romania-map" || pathname === "/harta-romaniei";
   const isBrackets = currentTab === "brackets" || pathname === "/matches" || pathname === "/brackets";
   const isVenues = currentTab === "venues" || pathname.startsWith("/venues");
@@ -53,7 +53,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
 
   const navLinks = [
     { href: "/harta-romaniei", label: "Campionate", active: isRomaniaMap, icon: "map" },
-    { href: "/campionat", label: "Clasament", active: isCampionat, icon: "emoji_events" },
+    { href: "/clasamente", label: "Clasament", active: isClasamente, icon: "emoji_events" },
     { href: "/matches", label: "Meciuri", active: isBrackets, icon: "account_tree" },
     { href: "/teams", label: "Echipe", active: isTeams, icon: "groups" },
     { href: "/sanctiuni", label: "Sancțiuni", active: isSanctiuni, icon: "gavel" },
@@ -63,7 +63,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
 
   const mobileBottomNav = [
     { href: "/harta-romaniei", label: "Harta", active: isRomaniaMap, icon: "map" },
-    { href: "/campionat", label: "Clasament", active: isCampionat, icon: "emoji_events" },
+    { href: "/clasamente", label: "Clasament", active: isClasamente, icon: "emoji_events" },
     { href: "/matches", label: "Meciuri", active: isBrackets, icon: "account_tree" },
     { href: "/sanctiuni", label: "Sancțiuni", active: isSanctiuni, icon: "gavel" },
     {
@@ -73,6 +73,27 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
       icon: "account_circle",
     },
   ];
+
+  const [seasonYear, setSeasonYear] = useState<number>(getCurrentSeasonYear());
+
+  useEffect(() => {
+    fetch("/api/settings/public")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.activeSeasonYear) {
+          setSeasonYear(data.activeSeasonYear);
+        }
+      })
+      .catch(() => {});
+
+    function onSeasonUpdated(e: CustomEvent) {
+      if (e.detail?.seasonYear) {
+        setSeasonYear(e.detail.seasonYear);
+      }
+    }
+    window.addEventListener("app-season-updated" as any, onSeasonUpdated);
+    return () => window.removeEventListener("app-season-updated" as any, onSeasonUpdated);
+  }, []);
 
   // Dynamic overlap collision detection: collapses to hamburger when elements would touch
   useEffect(() => {
@@ -133,7 +154,7 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
-            <span className="tracking-wide uppercase text-[10px]">{getCurrentSeasonYear()}</span>
+            <span className="tracking-wide uppercase text-[10px]">{seasonYear}</span>
           </div>
         </div>
 
