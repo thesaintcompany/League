@@ -218,7 +218,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
             <div className="flex flex-wrap gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-700/80 shrink-0">
               {[
                 { id: "all", label: "Toți (30)" },
-                { id: "rifa", label: "⭐ RIFA Elite" },
+                { id: "rifa", label: "RIFA Elite" },
                 { id: "liga1", label: "Liga 1 Pro" },
                 { id: "var", label: "VAR" },
                 { id: "asistent", label: "Asistenți" },

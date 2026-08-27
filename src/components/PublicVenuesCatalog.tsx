@@ -309,7 +309,7 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
           <div className="md:col-span-3">
             <div className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-between gap-1.5 text-xs text-slate-900 dark:text-white font-bold">
               <span className="flex items-center gap-1.5 truncate">
-                <span>{currentSportMeta.icon}</span>
+                <span className="material-symbols-outlined text-sm">{currentSportMeta.icon}</span>
                 <span className="truncate">{currentSportMeta.shortName}</span>
               </span>
               <span className="text-[9px] uppercase px-2 py-0.5 rounded-md bg-lime-400 text-slate-950 font-black shrink-0">

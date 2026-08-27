@@ -52,21 +52,21 @@ export const FOOTBALL_CATEGORIES = [
 ] as const;
 
 export const TENNIS_CATEGORIES = [
-  { value: "simplu_masculin", label: "🎾 Simplu Masculin (Singles Men)" },
-  { value: "simplu_feminin", label: "🎾 Simplu Feminin (Singles Women)" },
+  { value: "simplu_masculin", label: "Simplu Masculin (Singles Men)" },
+  { value: "simplu_feminin", label: "Simplu Feminin (Singles Women)" },
   { value: "dublu_masculin", label: "Dublu Masculin (Doubles Men)" },
   { value: "dublu_feminin", label: "Dublu Feminin (Doubles Women)" },
-  { value: "dublu_mixt", label: "✨ Dublu Mixt (Mixed Doubles)" },
-  { value: "juniori_tenis", label: "🌟 Juniori & Kids (U12, U14, U16)" },
+  { value: "dublu_mixt", label: "Dublu Mixt (Mixed Doubles)" },
+  { value: "juniori_tenis", label: "Juniori & Kids (U12, U14, U16)" },
 ] as const;
 
 export const PADEL_CATEGORIES = [
-  { value: "padel_masculin", label: "Dublu Masculin (Men Doubles)" },
-  { value: "padel_feminin", label: "Dublu Feminin (Women Doubles)" },
-  { value: "padel_mixt", label: "✨ Dublu Mixt (Mixed Doubles)" },
+  { value: "padel_masculin", label: "Dublu Masculin" },
+  { value: "padel_feminin", label: "Dublu Feminin" },
+  { value: "padel_mixt", label: "Dublu Mixt" },
   { value: "padel_pro", label: "Nivel Pro / Avansați (Nivel 1-2)" },
   { value: "padel_amatori", label: "Nivel Amatori / Intermediari (Nivel 3-5)" },
-  { value: "padel_open", label: "🎾 Open Padel (Toate Nivelurile)" },
+  { value: "padel_open", label: "Open Padel (Toate Nivelurile)" },
 ] as const;
 
 export const PINGPONG_CATEGORIES = [
@@ -79,11 +79,11 @@ export const PINGPONG_CATEGORIES = [
 ] as const;
 
 export const TENNIS_SURFACES = [
-  { value: "Zgură (Clay)", label: "🔴 Zgură (Clay • Roland Garros style)" },
-  { value: "Hard (Ciment)", label: "🔵 Hard / Ciment (US Open / Australian Open style)" },
-  { value: "Iarbă (Grass)", label: "🟢 Iarbă (Grass • Wimbledon style)" },
-  { value: "Sintetic Indoor", label: "🟡 Sintetic Indoor / Sală" },
-  { value: "Sticlă Panoramică & Gazon Padel", label: "🎾 Teren Padel Panoramic cu Gazon Sintetic" },
+  { value: "Zgură (Clay)", label: "Zgură (Clay • Roland Garros style)" },
+  { value: "Hard (Ciment)", label: "Hard / Ciment (US Open / Australian Open style)" },
+  { value: "Iarbă (Grass)", label: "Iarbă (Grass • Wimbledon style)" },
+  { value: "Sintetic Indoor", label: "Sintetic Indoor / Sală" },
+  { value: "Sticlă Panoramică & Gazon Padel", label: "Teren Padel Panoramic cu Gazon Sintetic" },
   { value: "Suprafață ITTF Lemn / Sintetic", label: "Măsură Competițională Omologată ITTF" },
 ] as const;
 

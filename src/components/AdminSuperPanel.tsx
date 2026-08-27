@@ -1986,10 +1986,10 @@ export function AdminSuperPanel() {
             <div className="flex flex-wrap items-center gap-2">
               {[
                 { id: "all", label: "Toate Disciplinele" },
-                { id: "fotbal", label: "⚽ Fotbal" },
-                { id: "baschet", label: "🏀 Baschet" },
-                { id: "volei", label: "🏐 Volei" },
-                { id: "multifunctional", label: "🏟️ Multifuncțional" },
+                { id: "fotbal", label: "Fotbal" },
+                { id: "baschet", label: "Baschet" },
+                { id: "volei", label: "Volei" },
+                { id: "multifunctional", label: "Multifuncțional" },
               ].map((s) => (
                 <button
                   key={s.id}
@@ -2327,10 +2327,10 @@ export function AdminSuperPanel() {
                     onChange={(e) => setForm({ ...form, sport: e.target.value })}
                     className="input text-sm"
                   >
-                    <option value="fotbal">⚽ Fotbal / Minifotbal</option>
-                    <option value="baschet">🏀 Baschet</option>
-                    <option value="volei">🏐 Volei</option>
-                    <option value="multifunctional">🏟️ Multifuncțional</option>
+                    <option value="fotbal">Fotbal / Minifotbal</option>
+                    <option value="baschet">Baschet</option>
+                    <option value="volei">Volei</option>
+                    <option value="multifunctional">Multifuncțional</option>
                   </select>
                 </div>
 

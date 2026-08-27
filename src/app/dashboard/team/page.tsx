@@ -10,7 +10,12 @@ import { isTeamLeader } from "@/lib/permissions";
 
 export const dynamic = "force-dynamic";
 
-export default async function TeamManagerDashboardPage() {
+export default async function TeamManagerDashboardPage(props: { searchParams?: Promise<{ tab?: string }> }) {
+  const searchParams: { tab?: string } = (await props.searchParams?.catch(() => ({}))) ?? {};
+  const tabParam = searchParams.tab;
+  const validTabs = ["roster", "tactics", "invites", "staff", "calendar", "matches", "payments"];
+  const defaultTab = validTabs.includes(tabParam || "") ? (tabParam as any) : "roster";
+
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/signin");
 
@@ -183,9 +188,15 @@ export default async function TeamManagerDashboardPage() {
     orderBy: { createdAt: "desc" },
   });
 
-  return (
+   const playersCount = team.players.length;
+   const upcomingMatches = [...team.homeMatches, ...team.awayMatches].filter(
+     (m) => m.status === "scheduled" || m.status === "pending"
+   ).length;
+   const pendingInvites = invitations.filter((i) => i.status === "pending").length;
+
+   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
-      <Sidebar />
+      <Sidebar teamTabCounts={{ roster: playersCount, calendar: upcomingMatches, invites: pendingInvites }} />
 
       <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
@@ -201,8 +212,9 @@ export default async function TeamManagerDashboardPage() {
             teamSubscriptionPrice={settings?.teamSubscriptionPrice ?? 60.0}
             freeTeamLimit={1}
             invitations={invitations}
-            currentUser={{ id: user.id, name: user.name, email: user.email, role: user.role }}
-          />
+             currentUser={{ id: user.id, name: user.name, email: user.email, role: user.role }}
+             defaultTab={defaultTab}
+           />
         </main>
       </div>
     </div>

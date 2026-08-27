@@ -17,9 +17,10 @@ interface NavItem {
 
 interface SidebarProps {
   variant?: "default" | "dark";
+  teamTabCounts?: { roster?: number; calendar?: number; invites?: number };
 }
 
-export function Sidebar({ variant }: SidebarProps) {
+export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentTab = searchParams?.get("tab");
@@ -84,20 +85,22 @@ export function Sidebar({ variant }: SidebarProps) {
       { name: "Meciuri & Panou Arbitraj", href: "/dashboard/referee", icon: "sports" },
       { name: "Profil & Setări Oficiale", href: "/profile", icon: "account_circle" },
       { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
-      { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
-      { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
-      { name: "Corp Arbitri", href: "/referees", icon: "badge" },
-      { name: "Arene", href: "/venues", icon: "domain" },
     ];
   } else if (role === "team_leader") {
+    const rosterCount = teamTabCounts.roster ?? 0;
+    const matchCount = teamTabCounts.calendar ?? 0;
+    const inviteCount = teamTabCounts.invites ?? 0;
     navItems = [
       { name: "Panou Manager Echipă", href: "/dashboard/team", icon: "badge" },
+      { name: "Lot Jucători", href: `/dashboard/team?tab=roster`, icon: "groups" },
+      { name: "Configurare Club & Tactică", href: `/dashboard/team?tab=tactics`, icon: "tune" },
+      { name: `Invitații pe Email${inviteCount ? ` (${inviteCount})` : ""}`, href: `/dashboard/team?tab=invites`, icon: "mail" },
+      { name: "Staff Tehnic & Antrenori", href: `/dashboard/team?tab=staff`, icon: "badge" },
+      { name: `Calendar & Traseu Meciuri${matchCount ? ` (${matchCount})` : ""}`, href: `/dashboard/team?tab=calendar`, icon: "calendar_month" },
+      { name: `Meciuri & Invitații${inviteCount ? ` (${inviteCount})` : ""}`, href: `/dashboard/team?tab=matches`, icon: "sports_soccer" },
+      { name: "Metode de Plată & Facturi", href: `/dashboard/team?tab=payments`, icon: "payments" },
       { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
       { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
-      { name: "Meciuri Programate", href: "/matches", icon: "account_tree" },
-      { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
-      { name: "Arene", href: "/venues", icon: "domain" },
-      { name: "Corp Arbitri", href: "/referees", icon: "sports" },
     ];
   } else if (role === "arena_owner") {
     navItems = [
@@ -111,10 +114,7 @@ export function Sidebar({ variant }: SidebarProps) {
   } else if (role === "player") {
     navItems = [
       { name: "Fișă Jucător & Carieră", href: "/profile", icon: "account_circle" },
-      { name: "Catalog Jucători", href: "/players", icon: "directions_run" },
       { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
-      { name: "Harta Meciuri", href: "/brackets", icon: "account_tree" },
-      { name: "Arene", href: "/venues", icon: "domain" },
     ];
   } else {
     // Organizer Menu
@@ -238,7 +238,6 @@ export function Sidebar({ variant }: SidebarProps) {
                     className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-lime-400/10 hover:bg-lime-400/20 text-lime-700 dark:text-lime-300 border border-lime-400/30 text-[10px] font-headline font-black truncate transition"
                     title={userChampionships[0].name}
                   >
-                    <span>🏆</span>
                     <span className="truncate">{userChampionships[0].name}</span>
                   </Link>
                 ) : (
@@ -256,7 +255,7 @@ export function Sidebar({ variant }: SidebarProps) {
                   >
                     {userChampionships.map((c) => (
                       <option key={c.id} value={c.id}>
-                        🏆 {c.name} ({c.sport})
+                        {c.name} ({c.sport})
                       </option>
                     ))}
                   </select>

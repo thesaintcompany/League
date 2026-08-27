@@ -44,6 +44,10 @@ export function OrganizerInvitationsModal({
   const [copiedLink, setCopiedLink] = useState(false);
   const [activeTab, setActiveTab] = useState<"invite" | "referees" | "dice_announcement">("invite");
 
+  // Mode Selection: true = individual (players), false = team leaders
+  // Default derived from sport, but organizatorul poate comuta explicit.
+  const [isIndividual, setIsIndividualMode] = useState(() => isIndividualSport(sport));
+
   // Competitor sub-tab: "db" | "email" | "link"
   const [competitorMode, setCompetitorMode] = useState<"db" | "email" | "link">("db");
   const [availableCompetitors, setAvailableCompetitors] = useState<CompetitorOption[]>([]);
@@ -63,8 +67,6 @@ export function OrganizerInvitationsModal({
   const [refereeCustomName, setRefereeCustomName] = useState("");
   const [refereeCustomEmail, setRefereeCustomEmail] = useState("");
   const [refereeInviteSent, setRefereeInviteSent] = useState(false);
-
-  const isIndividual = isIndividualSport(sport);
   const ajfInfo = getAjfUrlForCounty(county);
 
   // Load referees and competitors from database (excluding already enrolled competitors)
@@ -109,7 +111,7 @@ export function OrganizerInvitationsModal({
       }
     }
     loadData();
-  }, [isOpen, championshipId]);
+  }, [isOpen, championshipId, isIndividual]);
 
   // Dice Draw Announcement State
   const [drawDate, setDrawDate] = useState("2026-09-01");
@@ -133,21 +135,21 @@ export function OrganizerInvitationsModal({
   const bracketsUrl = `${origin}/brackets`;
 
   const inviteMessage = isIndividual
-    ? `🎾 Salut! Te invit să te înscrii ca jucător în turneul de tenis "${championshipName}". Înregistrează-te și confirmă prezența pe tablou aici: ${inviteUrl}`
-    : `🏆 Salut! Te invit să înscrii echipa pe platforma Ligue Pro pentru campionatul "${championshipName}". Înregistrează-te și creează-ți echipa aici: ${inviteUrl}`;
+    ? `Salut! Te invit să te înscrii ca jucător în turneul de tenis "${championshipName}". Înregistrează-te și confirmă prezența pe tablou aici: ${inviteUrl}`
+    : `Salut! Te invit să înscrii echipa pe platforma Ligue Pro pentru campionatul "${championshipName}". Înregistrează-te și creează-ți echipa aici: ${inviteUrl}`;
 
   const selectedRef = availableReferees.find((r) => r.id === selectedRefereeId);
   const refereeTargetEmail = refereeMode === "db" ? selectedRef?.email : refereeCustomEmail;
   const refereeTargetName = refereeMode === "db" ? selectedRef?.name : refereeCustomName;
 
-  const refereePersonalInviteMsg = `⚖️ Salut ${refereeTargetName || "Oficial"}! Te invităm să arbitrezi partidele din cadrul competiției "${championshipName}" (${sport}${county ? ` • Județul ${county}` : ""}). Creează-ți sau accesează panoul oficial de arbitru aici: ${refereeSignupUrl}`;
+  const refereePersonalInviteMsg = `Salut ${refereeTargetName || "Oficial"}! Te invităm să arbitrezi partidele din cadrul competiției "${championshipName}" (${sport}${county ? ` • Județul ${county}` : ""}). Creează-ți sau accesează panoul oficial de arbitru aici: ${refereeSignupUrl}`;
   
   const refereeEmailHref = `mailto:${refereeTargetEmail || ""}?subject=${encodeURIComponent(`Invitație Oficială Arbitraj - ${championshipName}`)}&body=${encodeURIComponent(refereePersonalInviteMsg)}`;
   const refereeWhatsappHref = `https://api.whatsapp.com/send?text=${encodeURIComponent(refereePersonalInviteMsg)}`;
 
   const diceAnnouncementMessage = isIndividual
-    ? `🎲🎾 ANUNȚ OFICIAL TABLOU: Tragerea la sorți a tabloului de meciuri pentru turneul "${championshipName}" va avea loc pe ${drawDate} la ora ${drawTime}. ${customNotes} Urmărește tabloul live aici: ${bracketsUrl}`
-    : `🎲 ANUNȚ OFICIAL: Aruncarea zarurilor și dispunerea meciurilor în brackets pentru "${championshipName}" va avea loc în data de ${drawDate} la ora ${drawTime}. ${customNotes} Urmărește tabloul meciurilor live aici: ${bracketsUrl}`;
+    ? `ANUNȚ OFICIAL TABLOU: Tragerea la sorți a tabloului de meciuri pentru turneul "${championshipName}" va avea loc pe ${drawDate} la ora ${drawTime}. ${customNotes} Urmărește tabloul live aici: ${bracketsUrl}`
+    : `ANUNȚ OFICIAL: Aruncarea zarurilor și dispunerea meciurilor în brackets pentru "${championshipName}" va avea loc în data de ${drawDate} la ora ${drawTime}. ${customNotes} Urmărește tabloul meciurilor live aici: ${bracketsUrl}`;
 
   const whatsappInviteUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(inviteMessage)}`;
   const emailInviteUrl = `mailto:?subject=${encodeURIComponent(
@@ -179,7 +181,7 @@ export function OrganizerInvitationsModal({
           <div>
             <div className="flex items-center gap-2">
               <span className="px-3 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
-                {isIndividual ? "🎾 TURNEU INDIVIDUAL TENIS" : "INSTRUMENTE ORGANIZATOR PRO"}
+                {isIndividual ? "TURNEU INDIVIDUAL TENIS" : "INSTRUMENTE ORGANIZATOR PRO"}
               </span>
               <span className="text-[10px] font-mono font-bold text-slate-400">{sport}</span>
             </div>
@@ -190,6 +192,35 @@ export function OrganizerInvitationsModal({
               {championshipName}
             </p>
           </div>
+
+            <div className="flex items-center gap-2 mt-2 px-1">
+              <button
+                type="button"
+                onClick={() => setIsIndividualMode(false)}
+                className={`px-3 py-1.5 rounded-xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-1.5 ${
+                  isIndividual
+                    ? "bg-slate-800 text-slate-400 border border-slate-700"
+                    : "bg-lime-400 text-slate-950 shadow-sm"
+                }`}
+                title="Comută la modul echipe"
+              >
+                <span className="material-symbols-outlined text-sm">groups_2</span>
+                <span>Echipe</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsIndividualMode(true)}
+                className={`px-3 py-1.5 rounded-xl font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-1.5 ${
+                  isIndividual
+                    ? "bg-lime-400 text-slate-950 shadow-sm"
+                    : "bg-slate-800 text-slate-400 border border-slate-700"
+                }`}
+                title="Comută la modul individual"
+              >
+                <span className="material-symbols-outlined text-sm">person</span>
+                <span>Individual</span>
+              </button>
+            </div>
 
           <button
             type="button"
@@ -401,8 +432,8 @@ export function OrganizerInvitationsModal({
                   const selectedComp = availableCompetitors.find((c) => c.id === selectedCompetitorId);
                   if (!selectedComp) return null;
                   const personalMsg = isIndividual
-                    ? `🎾 Salut ${selectedComp.name}! Te invităm oficial în turneul de ${sport} "${championshipName}". Înscrie-te și validează-ți prezența pe tablou aici: ${inviteUrl}`
-                    : `🏆 Salut ${selectedComp.name}! Te invităm să-ți înscrii echipa în campionatul de ${sport} "${championshipName}". Confirmă participarea aici: ${inviteUrl}`;
+                    ? `Salut ${selectedComp.name}! Te invităm oficial în turneul de ${sport} "${championshipName}". Înscrie-te și validează-ți prezența pe tablou aici: ${inviteUrl}`
+                    : `Salut ${selectedComp.name}! Te invităm să-ți înscrii echipa în campionatul de ${sport} "${championshipName}". Confirmă participarea aici: ${inviteUrl}`;
                   const waHref = `https://api.whatsapp.com/send?${selectedComp.phone ? `phone=${selectedComp.phone.replace(/\D/g, "")}&` : ""}text=${encodeURIComponent(personalMsg)}`;
                   const mailHref = `mailto:${selectedComp.email || ""}?subject=${encodeURIComponent(`Invitație Oficială - ${championshipName}`)}&body=${encodeURIComponent(personalMsg)}`;
 
@@ -500,7 +531,7 @@ export function OrganizerInvitationsModal({
 
                     <a
                       href={`https://api.whatsapp.com/send?${competitorCustomPhone ? `phone=${competitorCustomPhone.replace(/\D/g, "")}&` : ""}text=${encodeURIComponent(
-                        `🏆 Salut ${competitorCustomName || "Sportiv"}! Te invităm să participi la "${championshipName}" (${sport}). Confirmă prezența pe tablou aici: ${inviteUrl}`
+                        `Salut ${competitorCustomName || "Sportiv"}! Te invităm să participi la "${championshipName}" (${sport}). Confirmă prezența pe tablou aici: ${inviteUrl}`
                       )}`}
                       target="_blank"
                       rel="noreferrer"
@@ -753,7 +784,7 @@ export function OrganizerInvitationsModal({
               <div className="p-6 rounded-2xl bg-gradient-to-br from-lime-500/10 via-slate-50 dark:via-slate-900 to-emerald-500/10 border border-lime-400/40 dark:border-lime-500/30 space-y-4 text-center sm:text-left">
                 <div className="flex flex-col sm:flex-row items-center gap-4">
                   <div className="w-12 h-12 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-2xl shrink-0 shadow-md">
-                    🏛️
+                    <span className="material-symbols-outlined text-2xl">groups_2</span>
                   </div>
                   <div>
                     <span className="text-[10px] font-label font-bold uppercase tracking-widest text-lime-600 dark:text-lime-400">

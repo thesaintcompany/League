@@ -419,7 +419,7 @@ export default function NewChampionshipPage() {
                       }`}
                   >
                     <div className="flex items-center justify-between w-full">
-                      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-xl sm:text-2xl shadow-sm shrink-0">
+                      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-xl sm:text-2xl shadow-sm shrink-0 material-symbols-outlined">
                         {preset.icon}
                       </div>
                       {/* Checkmark indicator */}

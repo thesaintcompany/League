@@ -284,7 +284,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
               onChange={(e) => setSelectedChampionship(e.target.value)}
               className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition"
             >
-              <option value="all">🏆 Toate Campionatele</option>
+              <option value="all">Toate Campionatele</option>
               {championships.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name} ({c.sport})

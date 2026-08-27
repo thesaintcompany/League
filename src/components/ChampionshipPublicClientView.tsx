@@ -188,7 +188,7 @@ export function ChampionshipPublicClientView({
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-3">
             <span className="px-3 py-1 bg-lime-400 text-slate-950 text-[10px] font-black font-label rounded-full uppercase tracking-widest shadow-md flex items-center gap-1">
-              <span>{currentSportMeta.icon}</span>
+              <span className="material-symbols-outlined text-sm">{currentSportMeta.icon}</span>
               <span>{championship?.season ? `Sezon ${championship.season}` : "Sezon 2026"}</span>
             </span>
             <span className="text-slate-500 dark:text-slate-400 text-xs font-label uppercase tracking-widest font-bold">

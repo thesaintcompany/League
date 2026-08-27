@@ -221,7 +221,7 @@ export function OrganizerTeamsPanel() {
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-wider shadow-sm">
-                👔 PANOU EXCLUSIV ORGANIZATOR
+                PANOU EXCLUSIV ORGANIZATOR
               </span>
               <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-[10px] uppercase font-label border border-slate-200 dark:border-slate-700">
                 {isIndividual ? "Gestiune Invitații Competitori (Jucători / Echipe)" : "Gestiune Invitații Echipe"}
@@ -229,13 +229,13 @@ export function OrganizerTeamsPanel() {
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-black italic tracking-tight font-headline uppercase leading-tight text-slate-900 dark:text-white">
-              {isIndividual ? "Centrul de Invitații & Lansare Competitori 🎾" : "Centrul de Invitații & Lansare Echipe ⚽"}
+              {isIndividual ? "Centrul de Invitații & Lansare Competitori" : "Centrul de Invitații & Lansare Echipe"}
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl font-body">
               {isIndividual
-                ? "Înscrie competitori (jucători direct sau perechi/echipe) din catalogul platformei sau trimite invitații direct pe email/WhatsApp. Competitorii vor fi extrasi automat în sistemul de zaruri 🎲 pentru tablou!"
-                : "Adaugă echipe din catalogul platformei sau trimite invitații pe email managerilor noi. Echipele înscrise vor fi extrase automat în sistemul de zaruri 🎲 pentru perecherea în meciuri!"}
+                ? "Înscrie competitori (jucători direct sau perechi/echipe) din catalogul platformei sau trimite invitații direct pe email/WhatsApp. Competitorii vor fi extrasi automat în sistemul de zaruri pentru tablou!"
+                : "Adaugă echipe din catalogul platformei sau trimite invitații pe email managerilor noi. Echipele înscrise vor fi extrase automat în sistemul de zaruri pentru perecherea în meciuri!"}
             </p>
           </div>
 
@@ -251,7 +251,7 @@ export function OrganizerTeamsPanel() {
                   : "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed"
               }`}
             >
-              <span className="text-lg">🎲</span>
+              <span className="material-symbols-outlined text-lg">casino</span>
               <span>Lansează cu Zaruri ({teams.length} {isIndividual ? "Competitori" : "Echipe"})</span>
             </button>
           </div>
@@ -282,7 +282,7 @@ export function OrganizerTeamsPanel() {
       <div className="card p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-3">
         <div className="flex items-center justify-between px-1">
           <span className="text-xs font-headline font-black uppercase text-slate-900 dark:text-white flex items-center gap-1.5">
-            <span>🏆</span> Alege Campionatul de Gestionat:
+            <span className="material-symbols-outlined">emoji_events</span> Alege Campionatul de Gestionat:
           </span>
           <span className="text-[10px] text-slate-400 font-label font-bold uppercase">
             {championships.length} Competiții Deținute
@@ -344,7 +344,7 @@ export function OrganizerTeamsPanel() {
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                {isIndividual ? "✉️ Invitație Competitor (Jucător / Echipă)" : "✉️ Invitație Echipă Nouă"}
+                {isIndividual ? "Invitație Competitor (Jucător / Echipă)" : "Invitație Echipă Nouă"}
               </button>
               <button
                 type="button"
@@ -355,7 +355,7 @@ export function OrganizerTeamsPanel() {
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
-                {isIndividual ? `⚡ Competitor Existent (${availableTeams.length})` : `⚡ Echipă Existentă (${availableTeams.length})`}
+                {isIndividual ? `Competitor Existent (${availableTeams.length})` : `Echipă Existentă (${availableTeams.length})`}
               </button>
             </div>
 
@@ -438,14 +438,14 @@ export function OrganizerTeamsPanel() {
                   className="w-full py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md transition active:scale-95 flex items-center justify-center gap-2"
                 >
                   <span className="material-symbols-outlined text-sm">send</span>
-                  <span>{submitting ? "Se trimite..." : isIndividual ? "Adaugă Competitor & Generează Invitație 🚀" : "Adaugă Echipă & Generează Invitație 🚀"}</span>
+                  <span>{submitting ? "Se trimite..." : isIndividual ? "Adaugă Competitor & Generează Invitație" : "Adaugă Echipă & Generează Invitație"}</span>
                 </button>
 
                 {/* Invite Link Generated Card */}
                 {lastInviteLink && (
                   <div className="p-4 rounded-2xl bg-slate-950 text-white border border-lime-400/40 space-y-2.5 animate-in fade-in">
                     <div className="flex justify-between items-center text-[10px] font-label font-bold text-lime-400 uppercase">
-                      <span>🔗 Invitație Pregătită 1-Click</span>
+                      <span>Invitație Pregătită 1-Click</span>
                       <span>Link Unic</span>
                     </div>
                     <div className="flex gap-2">
@@ -478,7 +478,7 @@ export function OrganizerTeamsPanel() {
                       rel="noreferrer"
                       className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-black uppercase font-headline tracking-wider flex items-center justify-center gap-2 shadow"
                     >
-                      <span>💬</span> {isIndividual ? "Trimite pe WhatsApp Jucătorului" : "Trimite pe WhatsApp Managerului"}
+                      <span>{isIndividual ? "Trimite pe WhatsApp Jucătorului" : "Trimite pe WhatsApp Managerului"}</span>
                     </a>
                   </div>
                 )}
@@ -578,14 +578,17 @@ export function OrganizerTeamsPanel() {
               </div>
             ) : teams.length === 0 ? (
               <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-center space-y-3">
-                <span className="text-4xl block">{isIndividual ? "🎾" : "🛡️"}</span>
+                <span className="material-symbols-outlined text-4xl block text-slate-400 dark:text-slate-500">{isIndividual ? "directions_run" : "shield"}</span>
+
                 <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white uppercase">
                   {isIndividual ? "Niciun Competitor Înscris Încă" : "Nicio Echipă Înscrisă Încă"}
                 </h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto font-label">
-                  {isIndividual
-                    ? "Utilizează formularul din stânga pentru a adăuga primul competitor prin invitație directă sau din sistem!"
-                    : "Utilizează formularul din stânga pentru a adăuga prima echipă prin invitație email sau selectare din sistem!"}
+                  {activeChampId
+                    ? (isIndividual
+                      ? "Utilizează formularul din stânga pentru a adăuga primul competitor prin invitație directă sau din sistem!"
+                      : "Utilizează formularul din stânga pentru a adăuga prima echipă prin invitație email sau selectare din sistem!")
+                    : "Selectează un campionat în sus pentru a încărca echipele înscrise."}
                 </p>
               </div>
             ) : (
@@ -686,7 +689,7 @@ export function OrganizerTeamsPanel() {
             <div className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center text-xl font-bold">
-                  🎲
+                  <span className="material-symbols-outlined text-2xl">casino</span>
                 </div>
                 <div>
                   <h3 className="text-xl font-headline font-black uppercase text-slate-900 dark:text-white">

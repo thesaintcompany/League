@@ -66,7 +66,7 @@ export function SportSubHeader({ variant }: SportSubHeaderProps) {
                           : "bg-white dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 font-bold border border-slate-300 dark:border-slate-700/60"
                       }`}
                     >
-                      <span>{sport.icon}</span>
+                      <span className="material-symbols-outlined text-lg">{sport.icon}</span>
                       <span>{sport.shortName}</span>
                       {isActive && (
                         <span className="w-1.5 h-1.5 rounded-full bg-lime-400 dark:bg-slate-950 ml-0.5"></span>
@@ -82,7 +82,7 @@ export function SportSubHeader({ variant }: SportSubHeaderProps) {
           <div className="w-full flex items-center justify-between gap-2 text-xs">
             <div className="flex items-center gap-1.5 min-w-0">
               <span className="px-2.5 py-0.5 rounded-full bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 text-[10px] font-black uppercase font-label tracking-wider shadow-sm flex items-center gap-1 shrink-0">
-                <span>{currentSportMeta.icon}</span>
+                <span className="material-symbols-outlined text-[13px]">{currentSportMeta.icon}</span>
                 <span>{currentSportMeta.shortName}</span>
               </span>
               <span className="text-[11px] text-slate-500 dark:text-slate-400 truncate hidden sm:inline font-body">
@@ -130,8 +130,8 @@ export function SportSubHeader({ variant }: SportSubHeaderProps) {
                           : "bg-white/90 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800"
                       }`}
                     >
-                      <span>{cat.icon}</span>
-                      <span>{cat.shortName}</span>
+                       <span className="material-symbols-outlined text-base">{cat.icon}</span>
+                       <span>{cat.shortName}</span>
                     </button>
                   );
                 })}

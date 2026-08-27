@@ -67,6 +67,7 @@ interface TeamManagerPanelProps {
   freeTeamLimit?: number;
   invitations?: any[];
   currentUser?: { id: string; name?: string | null; email?: string | null; role?: string | null } | null;
+  defaultTab?: "roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "payments";
 }
 
 export function TeamManagerPanel({
@@ -77,9 +78,10 @@ export function TeamManagerPanel({
   freeTeamLimit = 1,
   invitations: initialInvitations = [],
   currentUser = null,
+  defaultTab = "roster",
 }: TeamManagerPanelProps) {
   const [team, setTeam] = useState<TeamData>(initialTeam);
-  const [activeTab, setActiveTab] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "payments">("roster");
+  const [activeTab, setActiveTab] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "payments">(defaultTab);
 
   // Edit Team State
   const [teamName, setTeamName] = useState(team.name);
@@ -863,11 +865,11 @@ export function TeamManagerPanel({
         {[
           { id: "roster", label: `Lot Jucători (${team.players.length})`, icon: "groups" },
           { id: "tactics", label: "Configurare Club & Tactică", icon: "tune" },
-          { id: "invites", label: "Invită Jucători pe Email ✉️", icon: "mail" },
-          { id: "staff", label: "Staff Tehnic & Antrenori 📋", icon: "badge" },
-          { id: "calendar", label: `Calendar & Traseu Meciuri (${allMatches.length}) 🗺️`, icon: "calendar_month" },
-          { id: "matches", label: "Meciuri & Invitații 📅", icon: "sports_soccer" },
-          { id: "payments", label: "Metode de Plată & Facturi 💳", icon: "payments" },
+          { id: "invites", label: "Invită Jucători pe Email", icon: "mail" },
+          { id: "staff", label: "Staff Tehnic & Antrenori", icon: "badge" },
+          { id: "calendar", label: `Calendar & Traseu Meciuri (${allMatches.length})`, icon: "calendar_month" },
+          { id: "matches", label: "Meciuri & Invitații", icon: "sports_soccer" },
+          { id: "payments", label: "Metode de Plată & Facturi", icon: "payments" },
         ].map((t) => (
           <button
             key={t.id}
