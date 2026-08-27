@@ -41,32 +41,6 @@ export default async function TeamManagerDashboardPage() {
   });
 
   if (!team) {
-    team = await prisma.team.findFirst({
-      include: {
-        championship: true,
-        players: {
-          orderBy: [{ isStarter: "desc" }, { number: "asc" }],
-        },
-        homeMatches: {
-          include: { awayTeam: true, championship: true },
-          orderBy: { scheduledAt: "asc" },
-        },
-        awayMatches: {
-          include: { homeTeam: true, championship: true },
-          orderBy: { scheduledAt: "asc" },
-        },
-      },
-    });
-
-    if (team) {
-      await prisma.team.update({
-        where: { id: team.id },
-        data: { managerId: userId },
-      });
-    }
-  }
-
-  if (!team) {
     let dbUser = userId ? await prisma.user.findUnique({ where: { id: userId } }) : null;
     if (!dbUser && user.email) {
       dbUser = await prisma.user.findUnique({ where: { email: user.email.toLowerCase().trim() } });
