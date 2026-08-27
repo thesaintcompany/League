@@ -1627,7 +1627,7 @@ export function AdminSuperPanel() {
                     : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
                     }`}
                 >
-                  👥 Reale ({users.filter((u) => !isDemoUser(u.email)).length})
+                  Reale ({users.filter((u) => !isDemoUser(u.email)).length})
                 </button>
                 <button
                   type="button"
@@ -1637,7 +1637,7 @@ export function AdminSuperPanel() {
                     : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
                     }`}
                 >
-                  🤖 Demo ({users.filter((u) => isDemoUser(u.email)).length})
+                  Demo ({users.filter((u) => isDemoUser(u.email)).length})
                 </button>
               </div>
 
@@ -1702,7 +1702,7 @@ export function AdminSuperPanel() {
                                 </p>
                                 {isDemoUser(u.email) && (
                                   <span className="px-1.5 py-0.2 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 text-[9px] font-black uppercase font-mono">
-                                    🤖 DEMO
+                                    DEMO
                                   </span>
                                 )}
                               </div>
@@ -2264,7 +2264,7 @@ export function AdminSuperPanel() {
 
               <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-black text-lg">
-                  👥
+
                 </div>
                 <div>
                   <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
@@ -2278,7 +2278,7 @@ export function AdminSuperPanel() {
 
               <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-black text-lg">
-                  🤖
+
                 </div>
                 <div>
                   <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">

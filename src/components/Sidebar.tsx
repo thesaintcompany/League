@@ -73,7 +73,7 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
   if (isSuperAdminRole) {
     navItems = [
       { name: "Setări", href: "/dashboard/admin?tab=branding", icon: "tune" },
-      { name: "API & Integrare Plăți", href: "/dashboard/admin?tab=api_integrations", icon: "key" },
+      { name: "API & Plăți", href: "/dashboard/admin?tab=api_integrations", icon: "key" },
       { name: "Utilizatori", href: "/dashboard/admin?tab=users", icon: "manage_accounts" },
       { name: "Statistici Utilizare", href: "/dashboard/admin?tab=analytics", icon: "analytics" },
       { name: "Istoric Login", href: "/dashboard/admin?tab=login_history", icon: "history" },

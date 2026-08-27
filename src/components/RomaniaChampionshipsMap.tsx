@@ -345,7 +345,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                 className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition fluid-press shrink-0"
               >
                 <span className="material-symbols-outlined text-base">add_circle</span>
-                + Adaugă Turneu
+                Adaugă Turneu
               </Link>
             </div>
 
