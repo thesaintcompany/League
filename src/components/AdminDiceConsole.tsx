@@ -256,7 +256,7 @@ export function AdminDiceConsole({
 
       {error && (
         <div className="p-4 bg-red-50 text-red-800 text-xs font-bold rounded-2xl border border-red-200">
-          ❌ {error}
+          <span className="material-symbols-outlined text-red-500">cancel</span> {error}
         </div>
       )}
 

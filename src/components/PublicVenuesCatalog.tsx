@@ -431,7 +431,7 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                   <h3 className="font-headline font-bold text-slate-900 dark:text-white text-base leading-tight">
                     {arena.name}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-label mt-0.5">📍 {arena.loc}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-label mt-0.5 flex items-center gap-1"><span className="material-symbols-outlined text-xs">location_on</span> {arena.loc}</p>
                 </div>
 
                 <p className="text-xs text-slate-600 dark:text-slate-300 font-body leading-relaxed border-t border-slate-100 dark:border-slate-800 pt-2">

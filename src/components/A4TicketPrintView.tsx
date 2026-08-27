@@ -259,7 +259,7 @@ function SingleTicketCard({
           {/* Match Schedule & Venue Info */}
           <div className="grid grid-cols-2 gap-3 pt-3 border-t border-slate-200 text-xs font-label">
             <div>
-              <span className="text-[9px] uppercase text-slate-400 font-bold block">📅 Data &amp; Ora Meciului</span>
+              <span className="text-[9px] uppercase text-slate-400 font-bold block flex items-center gap-1"><span className="material-symbols-outlined text-xs">calendar_month</span> Data &amp; Ora Meciului</span>
               <p className="font-bold text-slate-900 capitalize">{formattedDate}</p>
               <p className="text-lime-700 font-black text-sm">{formattedTime} (Ora României)</p>
             </div>

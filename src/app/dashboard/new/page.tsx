@@ -390,7 +390,7 @@ export default function NewChampionshipPage() {
                 },
                 {
                   id: "judetean" as const,
-                  icon: "📍",
+                  icon: "location_on",
                   title: "Ligă Județeană",
                   desc: "Arondată unui județ",
                 },
@@ -473,7 +473,7 @@ export default function NewChampionshipPage() {
                     onClick={() => update("name", getRandomShortName())}
                     className="text-[11px] font-label font-bold text-lime-600 dark:text-lime-400 hover:underline flex items-center gap-1"
                   >
-                    <span>🎲 Nume Scurt Aleatoriu</span>
+                    <span className="material-symbols-outlined text-sm">casino</span> Nume Scurt Aleatoriu
                   </button>
                 </div>
                 <div className="flex gap-2">
@@ -492,7 +492,7 @@ export default function NewChampionshipPage() {
                     className="px-3.5 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs shrink-0 flex items-center gap-1"
                     title="Generează alt nume scurt aleatoriu"
                   >
-                    <span>🎲</span>
+                    <span class="material-symbols-outlined">gl<</span>
                   </button>
                 </div>
               </div>
@@ -510,7 +510,7 @@ export default function NewChampionshipPage() {
                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                         }`}
                     >
-                      <span>1. 🖼️ Siglă  ă</span>
+                      <span>1. <span className="material-symbols-outlined text-xs align-middle">image</span> Siglă  ă</span>
                       {form.logoUrl && <span className="text-[10px]">✓</span>}
                     </button>
                     <button
@@ -779,7 +779,7 @@ export default function NewChampionshipPage() {
               {form.sport.toLowerCase().includes("fotbal") && (
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm">⚽</span>
+                    <span className="text-sm material-symbols-outlined">sports_soccer</span>
                     <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block">
                       Categorie Fotbal
                     </label>
@@ -992,7 +992,7 @@ export default function NewChampionshipPage() {
                     <div className="flex items-center justify-between gap-4">
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm">📍</span>
+                          <span className="text-sm material-symbols-outlined">location_on</span>
                           <span className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white">
                             Toate Meciurile se Dispută în Aceeași Locație / Arenă
                           </span>

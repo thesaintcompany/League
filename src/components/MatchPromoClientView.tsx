@@ -195,7 +195,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
               </div>
             ) : (
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-lime-400 text-slate-950 text-xs font-black uppercase tracking-wider font-label shadow-lg">
-                <span>🔥</span> MECIUL ETAPEI • {champName}
+                <span class="material-symbols-outlined">gl<</span> MECIUL ETAPEI • {champName}
               </div>
             )}
           </div>
@@ -321,7 +321,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
             )}
 
             <a
-              href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`🔥 Hai la meci! ${match.homeTeam.name} vs ${match.awayTeam.name} pe ${match.venue || "stadion"}! Bilete și detalii: ${shareUrl}`)}`}
+              href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`<span className="material-symbols-outlined text-xs align-middle">local_fire_department</span> Hai la meci! ${match.homeTeam.name} vs ${match.awayTeam.name} pe ${match.venue || "stadion"}! Bilete și detalii: ${shareUrl}`)}`}
               target="_blank"
               rel="noreferrer"
               className="p-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition"

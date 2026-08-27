@@ -604,7 +604,7 @@ function BracketMatchNode({
       {/* Top Meta Info */}
       <div className="flex justify-between items-center text-[10px] font-label text-slate-500 dark:text-slate-400 pb-2 mb-2 border-b border-slate-200 dark:border-slate-800/80 gap-2">
         <span className="truncate flex-1 min-w-0 flex items-center gap-1 font-medium">
-          <span>📍</span>
+          <span className="material-symbols-outlined">location_on</span>
           <span className="truncate">{match.venue || "Teren  "}</span>
         </span>
 

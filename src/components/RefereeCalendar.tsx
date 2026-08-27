@@ -180,7 +180,7 @@ export function RefereeCalendar({
                     {m.homeTeam} <span className="text-amber-500 font-black">VS</span> {m.awayTeam}
                   </h5>
                   <p className="text-xs font-label text-slate-500 dark:text-slate-400 mt-0.5">
-                    📍 {m.venue}
+                    <span className="flex items-center gap-1"><span className="material-symbols-outlined text-xs">location_on</span> {m.venue}</span>
                   </p>
                 </div>
               </div>
@@ -192,7 +192,7 @@ export function RefereeCalendar({
                   rel="noreferrer"
                   className="px-3 py-1.5 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 text-xs font-bold font-label flex items-center gap-1.5 transition active:scale-95"
                 >
-                  <span className="text-sm">📅</span>
+                  <span className="text-sm material-symbols-outlined">calendar_month</span>
                   <span>Google Calendar</span>
                 </a>
               </div>

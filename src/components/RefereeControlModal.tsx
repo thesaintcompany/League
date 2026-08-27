@@ -410,9 +410,7 @@ export function RefereeControlModal({
             {/* Match Date, Venue & Gate Scanner Controls */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1">
-                  📅 Data &amp; Ora Meciului
-                </label>
+                <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1 flex items-center gap-1"><span className="material-symbols-outlined text-xs">calendar_month</span> Data &amp; Ora Meciului</label>
                 <input
                   type="datetime-local"
                   value={scheduledAt}
@@ -422,9 +420,7 @@ export function RefereeControlModal({
               </div>
 
               <div>
-                <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1">
-                  📍 {isIndividual ? "Teren / Arenă de Tenis" : "Stadion / Arenă  ă"}
-                </label>
+                <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400 block mb-1 flex items-center gap-1"><span className="material-symbols-outlined text-xs">location_on</span> {isIndividual ? "Teren / Arenă de Tenis" : "Stadion / Arenă  ă"}</label>
                 <input
                   type="text"
                   value={venue}

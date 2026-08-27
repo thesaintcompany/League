@@ -67,7 +67,7 @@ export default function ContactPage() {
 
           <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-3 shadow-sm text-center">
             <div className="w-12 h-12 rounded-2xl bg-purple-500 text-white flex items-center justify-center text-2xl mx-auto">
-              📍
+              <span className="material-symbols-outlined">mail</span>
             </div>
             <h3 className="font-headline font-black uppercase text-slate-900 dark:text-white text-base">
               Acoperire

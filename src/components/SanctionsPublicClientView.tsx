@@ -115,7 +115,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                 <td><strong>${s.playerName}</strong> ${s.number ? `#${s.number}` : ""}</td>
                 <td>${s.teamName}</td>
                 <td>${s.championshipName}</td>
-                <td>🟨 ${s.yellowCards} | 🟥 ${s.redCards}</td>
+                <td><span className="material-symbols-outlined text-xs align-middle">warning</span> ${s.yellowCards} | <span className="material-symbols-outlined text-xs align-middle">cancel</span> ${s.redCards}</td>
                 <td>
                   ${s.isSuspended
               ? `<span class="badge-suspended">SUSPENDAT (${s.suspensionRounds || 1} ETAPĂ)</span>`
@@ -177,7 +177,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
               Cartonașe Galbene
             </span>
             <div className="w-7 h-7 rounded-xl bg-amber-400/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 font-bold">
-              🟨
+              <span className="material-symbols-outlined text-sm align-middle">warning</span>
             </div>
           </div>
           <div className="flex items-baseline gap-1.5">
@@ -198,7 +198,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
               Cartonașe Roșii
             </span>
             <div className="w-7 h-7 rounded-xl bg-red-500/15 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0 font-bold">
-              🟥
+              <span className="material-symbols-outlined text-sm align-middle">cancel</span>
             </div>
           </div>
           <div className="flex items-baseline gap-1.5">
@@ -247,7 +247,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-xl sm:text-2xl font-black font-headline text-slate-900 dark:text-white">
-              4 🟨
+              4 <span className="material-symbols-outlined text-xs align-middle">warning</span>
             </span>
             <span className="text-[10px] font-label font-bold text-lime-600 dark:text-lime-400">
               = 1 Etapă
@@ -322,7 +322,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                 : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
                 }`}
             >
-              <span>🟥</span> Roșii
+              <span className="flex items-center gap-1"><span className="material-symbols-outlined align-middle">cancel</span> Roșii</span>
             </button>
             <button
               type="button"
@@ -332,7 +332,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                 : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
                 }`}
             >
-              <span>🟨</span> Galbene
+              <span className="flex items-center gap-1"><span className="material-symbols-outlined align-middle">warning</span> Galbene</span>
             </button>
           </div>
         </div>
@@ -413,12 +413,12 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                         <div className="inline-flex items-center gap-1.5 font-mono font-bold text-[11px]">
                           {s.yellowCards > 0 && (
                             <span className="px-2 py-0.5 rounded bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40">
-                              🟨 {s.yellowCards}
+                              <span className="material-symbols-outlined text-sm align-middle">warning</span> {s.yellowCards}
                             </span>
                           )}
                           {s.redCards > 0 && (
                             <span className="px-2 py-0.5 rounded bg-red-600/20 text-red-700 dark:text-red-300 border border-red-500/40">
-                              🟥 {s.redCards}
+                              <span className="material-symbols-outlined text-sm align-middle">cancel</span> {s.redCards}
                             </span>
                           )}
                           {s.yellowCards === 0 && s.redCards === 0 && (
@@ -435,7 +435,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                           </span>
                         ) : s.yellowCards >= 3 ? (
                           <span className="px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1">
-                            <span>⚠️</span> Risc (3 🟨)
+                            <span className="material-symbols-outlined">warning</span> Risc (3 <span className="material-symbols-outlined text-xs">circle</span>)
                           </span>
                         ) : (
                           <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1">
@@ -497,7 +497,7 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                         </span>
                       ) : s.yellowCards >= 3 ? (
                         <span className="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40 text-[9px] font-bold uppercase tracking-wider flex items-center gap-0.5">
-                          <span>⚠️</span> RISC (3 🟨)
+                          <span className="material-symbols-outlined">warning</span> RISC (3 <span className="material-symbols-outlined text-xs">circle</span>)
                         </span>
                       ) : (
                         <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 text-[9px] font-bold uppercase tracking-wider flex items-center gap-0.5">
@@ -512,12 +512,12 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
                     <div className="inline-flex items-center gap-1 font-mono font-bold shrink-0">
                       {s.yellowCards > 0 && (
                         <span className="px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-800 dark:text-amber-300 border border-amber-400/40">
-                          🟨 {s.yellowCards}
+                          <span className="material-symbols-outlined text-sm align-middle">warning</span> {s.yellowCards}
                         </span>
                       )}
                       {s.redCards > 0 && (
                         <span className="px-1.5 py-0.2 rounded bg-red-600/20 text-red-700 dark:text-red-300 border border-red-500/40">
-                          🟥 {s.redCards}
+                          <span className="material-symbols-outlined text-sm align-middle">cancel</span> {s.redCards}
                         </span>
                       )}
                     </div>

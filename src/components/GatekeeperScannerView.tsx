@@ -222,8 +222,8 @@ export function GatekeeperScannerView({
           }`}
         >
           <div className="flex items-center gap-3">
-            <span className="text-3xl">
-              {scanResult.valid ? "✅" : scanResult.status === "already_used" ? "⚠️" : "❌"}
+              <span className="text-3xl material-symbols-outlined">
+                {scanResult.valid ? "check_circle" : scanResult.status === "already_used" ? "warning" : "cancel"}
             </span>
             <div>
               <h3 className="font-headline font-black text-sm uppercase tracking-wide">

@@ -226,7 +226,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
       <div className="card p-3 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-2">
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-1.5 text-xs font-headline font-black uppercase text-slate-900 dark:text-white">
-            <span>📍</span>
+            <span className="material-symbols-outlined text-sm">location_on</span>
             <span>Selector Rapid Județe (42 Regiuni)</span>
           </div>
           <span className="text-[10px] text-slate-400 font-label">Glisează orizontal ➔</span>
@@ -336,7 +336,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                 </div>
 
                 <h2 className="text-2xl sm:text-3xl font-black italic font-headline uppercase text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-                  <span>📍</span> {selectedCounty === "București" ? "București" : `Județul ${selectedCounty}`}
+                  <span className="material-symbols-outlined text-sm">location_on</span> {selectedCounty === "București" ? "București" : `Județul ${selectedCounty}`}
                 </h2>
               </div>
 
@@ -532,7 +532,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                           {v.name}
                         </h4>
                         <p className="text-xs text-slate-500 dark:text-slate-400 font-label flex items-center gap-1 mt-0.5">
-                          <span>📍</span> {v.location} {v.address ? `• ${v.address}` : ""}
+                          <span className="material-symbols-outlined text-sm">location_on</span> {v.location} {v.address ? `• ${v.address}` : ""}
                         </p>
                       </div>
 

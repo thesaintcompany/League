@@ -148,7 +148,7 @@ export default async function DashboardPage({
           <div className="card p-6 bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 text-white rounded-3xl border border-slate-800 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center text-2xl font-bold shrink-0">
-                👔
+                <span className="material-symbols-outlined">badge</span>
               </div>
               <div>
                 <h3 className="font-headline text-lg font-black uppercase text-white tracking-tight flex items-center gap-2">
@@ -240,7 +240,7 @@ export default async function DashboardPage({
                         href={`/dashboard/championships/${champ.id}`}
                         className="btn btn-primary flex-1 text-xs uppercase tracking-wider font-bold py-2.5 rounded-xl bg-slate-950 dark:bg-lime-400 text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-lime-300 text-center shadow-sm"
                       >
-                        Administrează ⚙️
+                        Administrează <span className="material-symbols-outlined">settings</span>
                       </Link>
                       <Link
                         href="/"

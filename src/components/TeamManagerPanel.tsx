@@ -568,7 +568,7 @@ export function TeamManagerPanel({
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="px-3 py-0.5 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label">
-                  👔 PANOU MANAGER ECHIPĂ
+                  <span className="material-symbols-outlined text-xs align-middle">work</span> PANOU MANAGER ECHIPĂ
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 text-xs font-label font-bold">
                   {team.players.length} Jucători în Lot
@@ -1954,8 +1954,8 @@ export function TeamManagerPanel({
                             </span>
                           </div>
                           <div className="flex flex-wrap gap-3 mt-1 text-xs font-label text-slate-400">
-                            <span>📅 Emisă: {new Date(inv.issueDate).toLocaleDateString("ro-RO")}</span>
-                            <span>📅 Scadentă: {new Date(inv.dueDate).toLocaleDateString("ro-RO")}</span>
+                            <span className="flex items-center gap-1"><span className="material-symbols-outlined text-xs">calendar_month</span> Emisă: {new Date(inv.issueDate).toLocaleDateString("ro-RO")}</span>
+                            <span className="flex items-center gap-1"><span className="material-symbols-outlined text-xs">calendar_month</span> Scadentă: {new Date(inv.dueDate).toLocaleDateString("ro-RO")}</span>
                             <span className={`font-bold ${inv.status === "paid" ? "text-emerald-400" : inv.status === "pending" ? "text-amber-400" : "text-red-400"
                               }`}>
                               {inv.status === "paid" ? "Plătită" : inv.status === "pending" ? "În Așteptare" : inv.status}

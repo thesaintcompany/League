@@ -272,9 +272,9 @@ export function AdminSuperPanel() {
     const isDeactivate = action === "deactivate";
     const confirmed = confirm(
       isDeactivate
-        ? "⚠️ Sigur dorești să DEZACTIVEZI toți utilizatorii demo?\n\n" +
+        ?          "Sigur dorești să DEZACTIVEZI toți utilizatorii demo?\n\n" +
         "Conturile demonstrative vor fi marcate ca DEZACTIVATE și nu se vor mai putea autentifica.\n\n" +
-        "🛡️ Utilizatorii reali și arenele NU sunt afectați!"
+        " Utilizatorii reali și arenele NU sunt afectați!"
         : "⚡ Sigur dorești să REACTIVEZI toți utilizatorii demo?"
     );
     if (!confirmed) return;
@@ -377,9 +377,9 @@ export function AdminSuperPanel() {
   async function handleToggleDemo(action: "activate" | "deactivate") {
     if (action === "deactivate") {
       const confirmed = confirm(
-        "⚠️ Sigur dorești să dezactivezi datele demo?\n\n" +
+        "Sigur dorești să dezactivezi datele demo?\n\n" +
         "Această acțiune va șterge campionatele, echipele și meciurile demonstrative.\n\n" +
-        "🛡️ GARANȚIE: La fiecare update se sterge baza de date, asadar datele demo se vor pierde automat!"
+        "GARANȚIE: La fiecare update se sterge baza de date, asadar datele demo se vor pierde automat!"
       );
       if (!confirmed) return;
     }
@@ -690,7 +690,7 @@ export function AdminSuperPanel() {
 
   async function handleDeleteUser(u: UserItem) {
     const confirmed = confirm(
-      `⚠️ ATENȚIE: Sigur dorești să ștergi definitiv utilizatorul "${u.email}" (${u.name || "Fără nume"})?\n\n` +
+       `Atenție: Sigur dorești să ștergi definitiv utilizatorul "${u.email}" (${u.name || "Fără nume"})?\n\n` +
       "Această acțiune este IREVERSIBILĂ ca în WordPress admin!"
     );
     if (!confirmed) return;
@@ -855,7 +855,7 @@ export function AdminSuperPanel() {
                 title: "Varianta 2 • Linii Drapel & Steel Chrome",
                 subtitle: "Ediția Tricolor & Finisaj Metalic",
                 url: "/images/logos/logo-2.png",
-                badge: "🇷🇴 Drapel Național",
+                badge: "<span className="material-symbols-outlined text-xs align-middle">flag</span> Drapel Național",
                 badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
                 description:
                   "Linii dinamice în culorile drapelului României cu minge de meci lucioasă și contur metalic robust.",
@@ -1414,7 +1414,7 @@ export function AdminSuperPanel() {
               {/* Modul 4: PayPal & Comisioane */}
               <div className="card p-6 bg-surface-container-lowest border border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
                 <div className="flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-                  <span className="text-2xl">🅿️</span>
+                  <span className="text-2xl material-symbols-outlined">payments</span>
                   <h3 className="font-headline font-black text-base text-slate-900 dark:text-white uppercase">
                     PayPal &amp; Comisioane Platformă
                   </h3>
@@ -1724,8 +1724,8 @@ export function AdminSuperPanel() {
                             <option value="super_admin"><span className="material-symbols-outlined">star</span> Super Administrator</option>
                             <option value="referee"><span className="material-symbols-outlined">gavel</span> Arbitru   (RIFA)</option>
                             <option value="arena_owner">Proprietar</option>
-                            <option value="team_leader">👔 Manager Echipă</option>
-                            <option value="player">⚽ Jucător</option>
+                            <option value="team_leader"><span className="material-symbols-outlined text-xs align-middle">work</span> Manager Echipă</option>
+                            <option value="player"><span className="material-symbols-outlined text-sm">sports_soccer</span> Jucător</option>
                           </select>
                         </td>
 
@@ -1752,7 +1752,7 @@ export function AdminSuperPanel() {
                         {/* Date & Signup IP */}
                         <td className="py-3.5 px-4 text-center">
                           <div className="font-mono text-[11px] text-slate-900 dark:text-white font-bold">
-                            📅 {new Date(u.createdAt).toLocaleDateString("ro-RO")} {new Date(u.createdAt).toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}
+                            <span className="material-symbols-outlined text-sm">calendar_month</span> {new Date(u.createdAt).toLocaleDateString("ro-RO")} {new Date(u.createdAt).toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}
                           </div>
                           <div className="font-mono text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
                             🌐 IP: <span className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 font-bold">{u.signupIp || "86.120.45.19"}</span>
@@ -1836,7 +1836,7 @@ export function AdminSuperPanel() {
 
             <div className="card p-6 bg-surface-container-lowest border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm">
               <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-400">
-                Terenuri Fotbal ⚽
+                Terenuri Fotbal <span className="material-symbols-outlined">sports_soccer</span>
               </span>
               <p className="text-3xl font-black data-font text-amber-500 mt-1">
                 {venues.filter((v) => v.sport === "fotbal").length}
@@ -1913,7 +1913,7 @@ export function AdminSuperPanel() {
               <div className="flex items-center gap-2">
                 {[
                   { id: "all", label: "Toate Jurnalele" },
-                  { id: "success", label: "✅ Reușite" },
+                  { id: "success", label: "Reușite" },
                   { id: "blocked", label: "⛔ Blocări WAF" },
                 ].map((item) => (
                   <button
@@ -2524,7 +2524,7 @@ export function AdminSuperPanel() {
               {/* Audit Registration Info */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div className="p-2.5 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700 text-[10px] font-mono">
-                  <span className="text-slate-400 font-bold block uppercase">📅 Data &amp; Ora Înregistrării</span>
+                  <span className="text-slate-400 font-bold block uppercase"><span className="material-symbols-outlined align-middle text-xs">calendar_month</span> Data &amp; Ora Înregistrării</span>
                   <span className="text-slate-900 dark:text-white font-bold text-xs">
                     {new Date(selectedUser.createdAt).toLocaleDateString("ro-RO")} {new Date(selectedUser.createdAt).toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}
                   </span>
@@ -2590,8 +2590,8 @@ export function AdminSuperPanel() {
                     <option value="super_admin"><span className="material-symbols-outlined">star</span> Super Administrator</option>
                     <option value="referee"><span className="material-symbols-outlined">gavel</span> Arbitru   (RIFA)</option>
                     <option value="arena_owner">Proprietar</option>
-                    <option value="team_leader">👔 Manager Echipă</option>
-                    <option value="player">⚽ Jucător</option>
+                    <option value="team_leader"><span className="material-symbols-outlined text-xs align-middle">work</span> Manager Echipă</option>
+                    <option value="player"><span className="material-symbols-outlined text-sm">sports_soccer</span> Jucător</option>
                   </select>
                 </div>
 
@@ -2716,7 +2716,7 @@ export function AdminSuperPanel() {
 
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
               <span className="text-[10px] font-label font-bold uppercase text-slate-400 tracking-widest block">
-                🔒 NOUA PAROLĂ PENTRU SUPERADMIN:
+                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-red-400 block">NOUA PAROLĂ PENTRU SUPERADMIN:
               </span>
               <div className="flex items-center justify-between bg-slate-900 px-3.5 py-2.5 rounded-xl border border-lime-500/40">
                 <code className="text-sm font-mono font-bold text-lime-400 select-all">
@@ -2734,7 +2734,7 @@ export function AdminSuperPanel() {
                 </button>
               </div>
               <p className="text-[11px] text-amber-300 font-body leading-relaxed pt-1">
-                ⚠️ SuperAdmin rămâne singurul cont activ. Salvează această nouă parolă într-un loc sigur pentru a te putea autentifica ulterior!
+                Atenție: SuperAdmin este singurul cont activ. Salvează această nouă parolă într-un loc sigur pentru autentificare ulterioară!
               </p>
             </div>
 

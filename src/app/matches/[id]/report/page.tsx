@@ -217,12 +217,12 @@ export default async function OfficialMatchReportPage({
                   <tr key={idx} className="hover:bg-slate-50">
                     <td className="p-2.5 font-bold font-mono">{ev.minute}&apos;</td>
                     <td className="p-2.5 font-bold">
-                      {ev.type === "goal" && "Gol"}
-                      {ev.type === "yellow_card" && "🟨 Cartonaș Galben"}
-                      {ev.type === "red_card" && "🟥 Cartonaș Roșu"}
-                      {ev.type === "penalty" && "🥅 Penalti"}
-                      {ev.type === "offside" && "🚩 Offside"}
-                      {ev.type === "sub" && "🔄 Schimbare"}
+                      {ev.type === "goal" && <><span className="material-symbols-outlined text-xs align-middle">sports_soccer</span> Gol</>}
+                      {ev.type === "yellow_card" && <><span className="material-symbols-outlined text-xs align-middle">warning</span> Cartonaș Galben</>}
+                      {ev.type === "red_card" && <><span className="material-symbols-outlined text-xs align-middle">cancel</span> Cartonaș Roșu</>}
+                      {ev.type === "penalty" && <><span className="material-symbols-outlined text-xs align-middle">sports_soccer</span> Penalti</>}
+                      {ev.type === "offside" && <><span className="material-symbols-outlined text-xs align-middle">flag</span> Offside</>}
+                      {ev.type === "sub" && <><span className="material-symbols-outlined text-xs align-middle">sync</span> Schimbare</>}
                     </td>
                     <td className="p-2.5 font-bold">{ev.team}</td>
                     <td className="p-2.5 text-slate-600">

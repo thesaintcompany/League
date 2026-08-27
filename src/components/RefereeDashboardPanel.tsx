@@ -369,7 +369,7 @@ export function RefereeDashboardPanel({
                   </span>
                 </div>
                 <p className="text-xs text-slate-400 font-label">
-                  📍 {upcomingMatch.venue || "Arena  ă"}
+                  <span className="flex items-center gap-1 text-xs text-slate-400"><span className="material-symbols-outlined text-xs">location_on</span> {upcomingMatch.venue || "Arena ă"}</span>
                 </p>
                 <p className="text-[11px] text-slate-500 font-label">
                   🕒 {new Date(upcomingMatch.scheduledAt).toLocaleString("ro-RO", { dateStyle: "medium", timeStyle: "short" })}
@@ -471,7 +471,7 @@ export function RefereeDashboardPanel({
                   </div>
 
                   <div className="text-[11px] text-slate-400 font-label flex items-center justify-between pt-1">
-                    <span>📍 {m.venue || "Arena  ă"}</span>
+                    <span className="flex items-center gap-1"><span className="material-symbols-outlined text-xs">location_on</span> {m.venue || "Arena ă"}</span>
                     <span>
                       {new Date(m.scheduledAt).toLocaleDateString("ro-RO", { dateStyle: "short" })}
                     </span>
@@ -689,8 +689,8 @@ export function RefereeDashboardPanel({
                 >
                   <option value="goal"><span className="material-symbols-outlined text-xs">sports_tennis</span> Gol</option>
                   <option value="yellow_card"><span className="material-symbols-outlined text-xs">warning</span> Cartonaș Galben</option>
-                  <option value="red_card">🟥 Cartonaș Roșu</option>
-                  <option value="penalty">🎯 Penalty</option>
+                  <option value="red_card"><span className="material-symbols-outlined text-xs">cancel</span> Cartonaș Roșu</option>
+                  <option value="penalty"><span className="material-symbols-outlined text-xs">sports_soccer</span> Penalty</option>
                 </select>
 
                 <select

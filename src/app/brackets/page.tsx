@@ -271,7 +271,7 @@ export default async function PublicBracketsPage({
               </span>
               {championship?.county && (
                 <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold text-xs font-label border border-slate-200 dark:border-slate-700">
-                  📍 {championship.county}{championship.city ? ` (${championship.city})` : ""}
+                  <span className="material-symbols-outlined text-sm mr-1">location_on</span> {championship.county}{championship.city ? ` (${championship.city})` : ""}
                 </span>
               )}
               {championship?.defaultVenue && (

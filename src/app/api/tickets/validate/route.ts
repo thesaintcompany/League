@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       return NextResponse.json({
         valid: false,
         status: "invalid",
-        error: "❌ Bilet inexistent sau cod invalid. Verificați autenticitatea biletului.",
+        error: "Bilet inexistent sau cod invalid. Verificați autenticitatea biletului.",
       }, { status: 404 });
     }
 
@@ -69,7 +69,7 @@ export async function POST(req: Request) {
       return NextResponse.json({
         valid: false,
         status: "already_used",
-        error: `⚠️ ATENȚIE: Acest bilet a fost DEJA SCANAT și utilizat la ora ${checkInTime} de ${ticket.checkedInBy || "alt steward"}!`,
+        error: `ATENȚIE: Acest bilet a fost DEJA SCANAT și utilizat la ora ${checkInTime} de ${ticket.checkedInBy || "alt steward"}!`,
         ticket: {
           ticketCode: ticket.ticketCode,
           buyerName: ticket.buyerName,
@@ -102,7 +102,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       valid: true,
       status: "access_granted",
-      message: "✅ ACCES PERMIS! Bilet validat cu succes.",
+        message: "ACCES PERMIS! Bilet validat cu succes.",
       ticket: {
         id: updated.id,
         ticketCode: updated.ticketCode,

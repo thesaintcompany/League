@@ -83,7 +83,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
 
   function shareX() {
     window.open(
-      `https://x.com/intent/post?text=${encodeURIComponent(`🔥 ${selectedMatch.homeTeam.name} vs ${selectedMatch.awayTeam.name} în ${championshipName}`)}&url=${encodeURIComponent(promoUrl)}`,
+      `https://x.com/intent/post?text=${encodeURIComponent(`<span className="material-symbols-outlined text-xs align-middle">local_fire_department</span> ${selectedMatch.homeTeam.name} vs ${selectedMatch.awayTeam.name} în ${championshipName}`)}&url=${encodeURIComponent(promoUrl)}`,
       "_blank",
       "noopener,noreferrer"
     );

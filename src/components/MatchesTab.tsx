@@ -146,7 +146,7 @@ export function MatchesTab({
           )}
           {singleVenueEnabled && defaultVenue && (
             <span className="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-800 dark:text-teal-300 font-label font-bold text-[10px] uppercase border border-teal-500/30">
-              📍 {defaultVenue}
+              <span className="flex items-center gap-1 text-xs text-slate-500"><span className="material-symbols-outlined text-xs">location_on</span> {defaultVenue}</span>
             </span>
           )}
         </div>

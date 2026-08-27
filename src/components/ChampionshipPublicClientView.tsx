@@ -193,8 +193,8 @@ export function ChampionshipPublicClientView({
             </span>
             <span className="text-slate-500 dark:text-slate-400 text-xs font-label uppercase tracking-widest font-bold">
               {championship?.scope === "national"
-                ? `🇷🇴 Divizia Națională • ${currentSportMeta.name}`
-                : `📍 Campionat Regional • ${championship?.county || "Timiș"}`}
+                ? `<span className="material-symbols-outlined text-xs align-middle">flag</span> Divizia Națională • ${currentSportMeta.name}`
+                : `Campionat Regional • ${championship?.county || "Timiș"}`}
             </span>
             <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-lime-600 dark:text-lime-400 font-mono text-xs font-bold">
               #{championship?.shareCode || "LP-2026"}
@@ -541,12 +541,12 @@ export function ChampionshipPublicClientView({
                       </div>
 
                       <div className="pt-2 border-t border-slate-200 dark:border-slate-800/80 flex justify-between items-center text-[10px] font-label">
-                        <span className="text-slate-500 truncate max-w-[120px]">📍 {m.venue}</span>
+                        <span className="text-slate-500 truncate max-w-[120px] flex items-center gap-1"><span className="material-symbols-outlined text-xs">location_on</span> {m.venue}</span>
                         <Link
                           href={`/matches/${m.id}/promo`}
                           className="text-lime-600 dark:text-lime-400 font-bold hover:underline"
                         >
-                          🎟️ Bilete &rarr;
+                          <span className="material-symbols-outlined text-sm">confirmation_number</span> Bilete &rarr;
                         </Link>
                       </div>
                     </div>
@@ -597,7 +597,7 @@ export function ChampionshipPublicClientView({
 
                     <div className="text-right">
                       <span className="text-sm font-black font-mono text-lime-600 dark:text-lime-400 block">
-                        {player.goals} ⚽
+                        {player.goals} <span className="material-symbols-outlined align-middle text-sm">sports_soccer</span>
                       </span>
                       <span className="text-[9px] font-label text-slate-400 uppercase">Goluri</span>
                     </div>

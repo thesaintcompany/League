@@ -178,7 +178,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
               30 Arbitri Licențiați
             </span>
             <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-[10px] uppercase font-label border border-lime-400/30">
-              🇷🇴 RIFA &amp; Ligue Pro România
+              <span className="material-symbols-outlined text-xs align-middle">flag</span> RIFA &amp; Ligue Pro România
             </span>
           </div>
 
@@ -312,7 +312,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                           {tel.yellowPerMatch}
                         </span>
                         <span className="text-[9px] font-label font-bold text-slate-500 dark:text-slate-400 block uppercase">
-                          🟨/Meci
+                          <span className="material-symbols-outlined text-xs align-middle">warning</span>/Meci
                         </span>
                       </div>
                       <div className="flex-1 px-1">
@@ -428,7 +428,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                           {tel.yellowPerMatch}
                         </span>
                         <span className="text-[9px] font-label font-bold text-slate-500 dark:text-slate-400 block uppercase">
-                          🟨/Meci
+                          <span className="material-symbols-outlined text-xs align-middle">warning</span>/Meci
                         </span>
                       </div>
                       <div className="flex-1 px-1">

@@ -88,7 +88,7 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
               Top 10 Golgheteri • Liga Pro
             </span>
             <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-[10px] uppercase font-label border border-lime-400/30">
-              🇷🇴 Sezonul de Aur 2025-2026
+              <span className="material-symbols-outlined text-xs align-middle">flag</span> Sezonul de Aur 2025-2026
             </span>
           </div>
 

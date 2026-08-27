@@ -201,7 +201,7 @@ export function VenueCalendar({
                 rel="noreferrer"
                 className="px-3 py-1.5 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 text-xs font-bold font-label flex items-center gap-1.5 transition active:scale-95"
               >
-                <span className="text-sm">📅</span>
+                <span className="text-sm material-symbols-outlined">calendar_month</span>
                 <span className="hidden sm:inline">Google</span>
               </a>
 

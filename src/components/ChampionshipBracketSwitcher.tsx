@@ -62,7 +62,7 @@ export function ChampionshipBracketSwitcher({
               {currentChampionshipName || active?.name}
               {currentCounty && (
                 <span className="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400">
-                  📍 {currentCounty}
+                  <span className="material-symbols-outlined text-xs">location_on</span> {currentCounty}
                 </span>
               )}
             </h2>

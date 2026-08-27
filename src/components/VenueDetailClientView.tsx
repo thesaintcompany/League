@@ -634,7 +634,7 @@ export function VenueDetailClientView({
                   className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-md space-y-2 border-l-4 border-l-lime-400"
                 >
                   <span className="text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase">
-                    📅 {ann.date}
+                    <span className="flex items-center gap-1"><span className="material-symbols-outlined text-xs">calendar_month</span> {ann.date}</span>
                   </span>
                   <h4 className="font-headline font-bold text-base text-slate-900 dark:text-white">
                     {ann.title}

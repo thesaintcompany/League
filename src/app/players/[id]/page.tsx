@@ -103,7 +103,7 @@ export default async function PublicPlayerDetailPage({
             </h1>
 
             <p className="text-slate-300 text-sm sm:text-base font-body flex items-center gap-2">
-              <span className="text-amber-400 font-bold">🇷🇴 România</span>
+              <span className="text-amber-400 font-bold"><span className="material-symbols-outlined text-xs align-middle">flag</span> România</span>
               <span>•</span>
               <span>{player.team?.championship?.name || "Liga Pro România"}</span>
               <span>•</span>

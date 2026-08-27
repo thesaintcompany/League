@@ -75,11 +75,11 @@ export default async function PublicRefereeDetailPage({
             </h1>
 
             <p className="text-slate-300 text-sm sm:text-base font-body flex items-center gap-2">
-              <span className="text-lime-400 font-bold">🇷🇴 România</span>
+              <span className="text-lime-400 font-bold"><span className="material-symbols-outlined text-xs align-middle">flag</span> România</span>
               <span>•</span>
               <span>Comisia Centrală a Arbitrilor</span>
               <span>•</span>
-              <span className="text-amber-400 font-bold">⭐ Notă Observatori: 9.6 / 10</span>
+              <span className="text-amber-400 font-bold flex items-center gap-1"><span className="material-symbols-outlined">star</span> Notă Observatori: 9.6 / 10</span>
             </p>
           </div>
 
@@ -169,7 +169,7 @@ export default async function PublicRefereeDetailPage({
                   Galbene / Meci
                 </span>
                 <span className="text-3xl sm:text-4xl font-black data-font text-amber-500 dark:text-amber-400 mt-1 block">
-                  3.2 🟨
+                  3.2 <span className="material-symbols-outlined text-sm align-middle">warning</span>
                 </span>
               </div>
 
@@ -178,7 +178,7 @@ export default async function PublicRefereeDetailPage({
                   Roșii / Sezon
                 </span>
                 <span className="text-3xl sm:text-4xl font-black data-font text-red-500 mt-1 block">
-                  4 🟥
+                  4 <span className="material-symbols-outlined text-sm align-middle">cancel</span>
                 </span>
               </div>
 
@@ -187,7 +187,7 @@ export default async function PublicRefereeDetailPage({
                   Scor Observatori
                 </span>
                 <span className="text-3xl sm:text-4xl font-black data-font text-lime-600 dark:text-lime-400 mt-1 block">
-                  9.6 ⭐
+                  <span className="flex items-center gap-1"><span className="material-symbols-outlined">star</span> 9.6</span>
                 </span>
               </div>
             </div>
