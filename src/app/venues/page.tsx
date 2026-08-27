@@ -32,7 +32,7 @@ export default async function PublicVenuesPage() {
         <div className="max-w-7xl mx-auto relative z-10 space-y-4 w-full">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[11px] uppercase font-label tracking-widest shadow-lg flex items-center gap-1.5">
-              <span>🏟️</span> ARENE &amp; SĂLI POLIVALENTE DIN ROMÂNIA
+              <span> </span> ARENE &amp; SĂLI POLIVALENTE DIN ROMÂNIA
             </span>
             <span className="px-3 py-1 rounded-full bg-slate-900/90 backdrop-blur-md text-white font-bold text-xs font-label border border-slate-700">
               59 de Arene &amp; Baze Sportive

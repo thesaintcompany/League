@@ -183,8 +183,8 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
               type="button"
               onClick={() => setIsOrganizerMode((v) => !v)}
               className={`px-4 py-2.5 rounded-2xl text-xs font-label font-black uppercase tracking-wider transition border shadow-md flex items-center gap-2 ${isOrganizerMode
-                  ? "bg-amber-400 text-slate-950 border-amber-400 scale-105"
-                  : "bg-slate-900 hover:bg-slate-800 text-slate-300 border-slate-700 hover:text-white"
+                ? "bg-amber-400 text-slate-950 border-amber-400 scale-105"
+                : "bg-slate-900 hover:bg-slate-800 text-slate-300 border-slate-700 hover:text-white"
                 }`}
             >
               <span className="material-symbols-outlined text-base">
@@ -363,7 +363,7 @@ export function MatchSponsorsSection({ matchId }: { matchId: string }) {
                   onChange={(e) => setNewSponsorCategory(e.target.value)}
                   className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-700 text-xs text-white font-bold focus:outline-none focus:border-lime-400"
                 >
-                  <option value="Sponsor Principal">🏆 Sponsor Principal</option>
+                  <option value="Sponsor Principal">  Sponsor Principal</option>
                   <option value="Sponsor  ">⭐ Sponsor  </option>
                   <option value="Partener Tehnic">⚙️ Partener Tehnic</option>
                   <option value="Partener Media">📺 Partener Media &amp; TV</option>

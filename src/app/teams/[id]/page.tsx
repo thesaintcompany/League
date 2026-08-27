@@ -99,7 +99,7 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
             )}
             {team.championship && (
               <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">
-                🏆 {team.championship.name}
+                {team.championship.name}
               </p>
             )}
           </div>

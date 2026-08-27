@@ -139,7 +139,7 @@ export default function NewChampionshipPage() {
 
   function handleSendVenueInviteWhatsApp() {
     const text = encodeURIComponent(
-      `🏆 Salut! Organizăm campionatul "${form.name || "Campionat  "}" (${form.sport || "Sport"}) și dorim să programăm meciurile la baza sportivă "${form.defaultVenue}".\n\nTe invităm să îți listezi și să îți revendici gratuit arena pe platforma  ă la: https://sp.buu.ro/venues`
+      `  Salut! Organizăm campionatul "${form.name || "Campionat  "}" (${form.sport || "Sport"}) și dorim să programăm meciurile la baza sportivă "${form.defaultVenue}".\n\nTe invităm să îți listezi și să îți revendici gratuit arena pe platforma  ă la: https://sp.buu.ro/venues`
     );
     const cleanPhone = venueOwnerPhone.replace(/\D/g, "");
     if (cleanPhone) {
@@ -378,13 +378,13 @@ export default function NewChampionshipPage() {
                 },
                 {
                   id: "pingpong_singles" as const,
-                  icon: "table_tennis",
+                  icon: " ",
                   title: "Ping-Pong",
                   desc: "Tenis de Masă Amatori",
                 },
                 {
                   id: "national" as const,
-                  icon: "🏆",
+                  icon: " ",
                   title: "Ligă Națională",
                   desc: "Vizibilă pe toată harta",
                 },
@@ -808,7 +808,7 @@ export default function NewChampionshipPage() {
                 const isPingPong = form.sport.toLowerCase().includes("ping") || form.sport.toLowerCase().includes("pong") || form.sport.toLowerCase().includes("masă") || form.sport.toLowerCase().includes("masa");
                 const activeCatList = isPadel ? PADEL_CATEGORIES : isPingPong ? PINGPONG_CATEGORIES : TENNIS_CATEGORIES;
                 const sportTitle = isPadel ? "Padel  " : isPingPong ? "Ping-Pong (Tenis de Masă)" : "Tenis de Câmp";
-                const sportIcon = isPadel ? "sports_tennis" : isPingPong ? "table_tennis" : "sports_tennis";
+                const sportIcon = isPadel ? "sports_tennis" : isPingPong ? " " : "sports_tennis";
 
                 // Default to amateur / entry level if none chosen or category does not match active sport
                 const defaultCategoryForSport = isPadel ? "padel_amatori" : isPingPong ? "pingpong_amatori" : "simplu_masculin";
@@ -1041,7 +1041,7 @@ export default function NewChampionshipPage() {
                             onClick={() => setShowVenueOwnerInvite((prev) => !prev)}
                             className="text-xs font-headline font-bold text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 hover:underline flex items-center gap-1.5 transition"
                           >
-                            <span className="text-sm">🏟️</span>
+                            <span className="text-sm"> </span>
                             <span>{showVenueOwnerInvite ? "Ascunde formularul de invitație" : "Invită Proprietarul Arenei în platformă"}</span>
                             <span className="text-[10px] font-mono">{showVenueOwnerInvite ? "▲" : "▼"}</span>
                           </button>
@@ -1052,7 +1052,7 @@ export default function NewChampionshipPage() {
                           <div className="p-3.5 rounded-2xl bg-teal-500/10 border border-teal-500/30 space-y-2.5 animate-in fade-in duration-150">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <span className="text-sm">🏟️</span>
+                                <span className="text-sm"> </span>
                                 <span className="text-xs font-bold font-headline uppercase text-teal-950 dark:text-teal-300">
                                   Invită Proprietarul Arenei să se Listeze pe Platformă
                                 </span>
@@ -1184,7 +1184,7 @@ export default function NewChampionshipPage() {
                   disabled={loading}
                   className="px-6 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md transition active:scale-95 flex items-center gap-2"
                 >
-                  <span>{loading ? "Se creează..." : existingCount >= 1 ? "Continuă la Plată (280 €) 💳" : "Lansează Campionatul (Gratuit) 🚀"}</span>
+                  <span>{loading ? "Se creează..." : existingCount >= 1 ? "Continuă la Plată (280 €) 💳" : "Lansează Campionatul (Gratuit)  "}</span>
                 </button>
               </div>
             </form>

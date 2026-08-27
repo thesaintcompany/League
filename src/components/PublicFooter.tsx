@@ -37,7 +37,7 @@ export function PublicFooter() {
                 href="/signup"
                 className="px-6 py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg transition active:scale-95 flex items-center gap-2"
               >
-                <span>Începe Acum 🚀</span>
+                <span>Începe Acum  </span>
               </Link>
               <Link
                 href="/harta-romaniei"

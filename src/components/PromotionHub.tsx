@@ -201,8 +201,8 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
                     key={m.id}
                     onClick={() => setSelectedMatchId(m.id)}
                     className={`p-3.5 rounded-2xl cursor-pointer transition border text-xs ${isSelected
-                        ? "bg-slate-900 text-white border-lime-400 shadow-md font-bold"
-                        : "bg-surface-container-low dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 border-transparent hover:bg-slate-100"
+                      ? "bg-slate-900 text-white border-lime-400 shadow-md font-bold"
+                      : "bg-surface-container-low dark:bg-slate-800/40 text-slate-700 dark:text-slate-300 border-transparent hover:bg-slate-100"
                       }`}
                   >
                     <div className="flex justify-between items-center text-[10px] text-slate-400 mb-1">
@@ -380,8 +380,8 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
               type="button"
               onClick={() => setFormat("story")}
               className={`px-6 py-2 rounded-full font-bold text-xs transition ${format === "story"
-                  ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm"
-                  : "text-slate-500"
+                ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm"
+                : "text-slate-500"
                 }`}
             >
               📱 Story (9:16)
@@ -390,8 +390,8 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
               type="button"
               onClick={() => setFormat("post")}
               className={`px-6 py-2 rounded-full font-bold text-xs transition ${format === "post"
-                  ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm"
-                  : "text-slate-500"
+                ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm"
+                : "text-slate-500"
                 }`}
             >
               🖼️ Post Pătrat (1:1)
@@ -483,7 +483,7 @@ export function PromotionHub({ matches, championshipName }: PromotionHubProps) {
                     )}
                     <div className="relative z-10">
                       <p className="text-[8px] font-label text-slate-300 uppercase font-bold">
-                        🏟️ ARENĂ
+                        ARENĂ
                       </p>
                       <p className="text-[10px] font-bold text-white truncate">
                         {selectedMatch.venue || "Arena Națională"}

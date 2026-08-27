@@ -261,8 +261,8 @@ export function ChampionshipPublicClientView({
             type="button"
             onClick={() => setActiveView("bracket")}
             className={`flex-1 sm:flex-initial px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2 ${activeView === "bracket"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
+              ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
               }`}
           >
             <span>🌳</span>
@@ -272,8 +272,8 @@ export function ChampionshipPublicClientView({
             type="button"
             onClick={() => setActiveView("standings")}
             className={`flex-1 sm:flex-initial px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2 ${activeView === "standings"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
+              ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
               }`}
           >
             <span>📊</span>
@@ -472,7 +472,7 @@ export function ChampionshipPublicClientView({
                       </div>
 
                       <div className="text-[10px] text-slate-500 font-label truncate text-center pt-1 border-t border-slate-200 dark:border-slate-900">
-                        🏟️ {m.venue}
+                        {m.venue}
                       </div>
                     </div>
                   ))}

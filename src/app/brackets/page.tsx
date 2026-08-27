@@ -237,7 +237,7 @@ export default async function PublicBracketsPage({
 
   const sportIcon = isIndividual
     ? championship?.sport?.toLowerCase().includes("ping") || championship?.sport?.toLowerCase().includes("masă")
-      ? "table_tennis"
+      ? " "
       : "sports_tennis"
     : "sports_soccer";
 

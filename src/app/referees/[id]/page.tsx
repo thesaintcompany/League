@@ -160,7 +160,7 @@ export default async function PublicRefereeDetailPage({
                   Partide Arbitrate
                 </span>
                 <span className="text-3xl sm:text-4xl font-black data-font text-slate-900 dark:text-white mt-1 block">
-                  {matches.length > 0 ? matches.length * 12 : 148} 🏟️
+                  {matches.length > 0 ? matches.length * 12 : 148}
                 </span>
               </div>
 
@@ -289,7 +289,7 @@ export default async function PublicRefereeDetailPage({
 
                       <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
                         <span className="text-[11px] text-slate-500 dark:text-slate-400 font-label">
-                          🏟️ {m.venue || "Arena  ă"}
+                          {m.venue || "Arena  ă"}
                         </span>
                         <Link
                           href={`/matches/${m.id}/report`}

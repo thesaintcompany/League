@@ -65,10 +65,10 @@ async function generateOgImage() {
       <!-- Key Features Pills -->
       <g transform="translate(0, 310)">
         <rect x="0" y="0" width="135" height="32" rx="10" fill="#020617" fill-opacity="0.8" stroke="#334155" />
-        <text x="14" y="21" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="12" fill="#94a3b8">🏆 8 Cluburi Pro</text>
+        <text x="14" y="21" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="12" fill="#94a3b8">  8 Cluburi Pro</text>
 
         <rect x="145" y="0" width="145" height="32" rx="10" fill="#020617" fill-opacity="0.8" stroke="#334155" />
-        <text x="159" y="21" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="12" fill="#94a3b8">🏟️ 59 Arene RO</text>
+        <text x="159" y="21" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="12" fill="#94a3b8">  59 Arene RO</text>
 
         <rect x="300" y="0" width="140" height="32" rx="10" fill="#020617" fill-opacity="0.8" stroke="#334155" />
         <text x="314" y="21" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="12" fill="#94a3b8">🥇 Golgheteri</text>
@@ -126,7 +126,7 @@ async function generateOgImage() {
         <g transform="translate(0, 344)">
           <!-- Organizator Pro -->
           <rect x="0" y="0" width="232" height="40" rx="12" fill="#ecfccb" stroke="#84cc16" stroke-width="1.5" />
-          <text x="16" y="25" font-family="'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="12" fill="#3f6212">🏆 Organizator Turnee</text>
+          <text x="16" y="25" font-family="'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="12" fill="#3f6212">  Organizator Turnee</text>
 
           <!-- Fotbalist Pro -->
           <rect x="248" y="0" width="232" height="40" rx="12" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5" />
@@ -138,7 +138,7 @@ async function generateOgImage() {
 
           <!-- Proprietar Arenă -->
           <rect x="248" y="48" width="232" height="40" rx="12" fill="#f3e8ff" stroke="#9333ea" stroke-width="1.5" />
-          <text x="264" y="73" font-family="'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="12" fill="#6b21a8">🏟️ Proprietar Arenă</text>
+          <text x="264" y="73" font-family="'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="12" fill="#6b21a8">  Proprietar Arenă</text>
         </g>
       </g>
     </g>

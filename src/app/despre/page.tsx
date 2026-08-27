@@ -45,7 +45,7 @@ export default function DesprePage() {
 
           <div className="card p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-3 shadow-sm">
             <div className="w-12 h-12 rounded-2xl bg-blue-500 text-white flex items-center justify-center text-2xl font-black">
-              🏟️
+
             </div>
             <h3 className="text-lg font-black font-headline uppercase text-slate-900 dark:text-white">
               59 Arene Naționale

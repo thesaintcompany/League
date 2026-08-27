@@ -244,19 +244,17 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                 key={cName}
                 type="button"
                 onClick={() => setSelectedCounty(cName)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-headline font-bold uppercase tracking-wider transition-all shrink-0 whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${
-                  isSel
-                    ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md ring-2 ring-lime-400/50 scale-105"
-                    : "bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 border border-slate-200 dark:border-slate-700/60"
-                }`}
+                className={`px-3 py-1.5 rounded-xl text-xs font-headline font-bold uppercase tracking-wider transition-all shrink-0 whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${isSel
+                  ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md ring-2 ring-lime-400/50 scale-105"
+                  : "bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 border border-slate-200 dark:border-slate-700/60"
+                  }`}
               >
                 <span>{cName}</span>
                 <span
-                  className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${
-                    isSel
-                      ? "bg-lime-400 text-slate-950 dark:bg-slate-900 dark:text-lime-400"
-                      : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
-                  }`}
+                  className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-bold ${isSel
+                    ? "bg-lime-400 text-slate-950 dark:bg-slate-900 dark:text-lime-400"
+                    : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
+                    }`}
                 >
                   {stats.championshipsCount}
                 </span>
@@ -363,7 +361,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                       : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                       }`}
                   >
-                    <span>🏆</span> Campionate ({filteredChampionships.length})
+                    <span> </span> Campionate ({filteredChampionships.length})
                   </button>
                   <button
                     type="button"
@@ -373,7 +371,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                       : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                       }`}
                   >
-                    <span>🏟️</span> Arene ({countyVenues.length})
+                    <span> </span> Arene ({countyVenues.length})
                   </button>
                 </div>
               </div>
@@ -398,7 +396,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
               <div className="space-y-3 sm:space-y-4 max-h-[580px] overflow-y-auto pr-1">
                 {filteredChampionships.length === 0 ? (
                   <div className="p-8 sm:p-10 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-center space-y-3">
-                    <span className="text-4xl block">🏟️</span>
+                    <span className="text-4xl block"> </span>
                     <h3 className="font-headline font-bold text-base text-slate-900 dark:text-white">
                       Niciun campionat găsit în Județul {selectedCounty}
                     </h3>
@@ -494,7 +492,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
               <div className="space-y-3 sm:space-y-4 max-h-[580px] overflow-y-auto pr-1">
                 {countyVenues.length === 0 ? (
                   <div className="p-8 sm:p-10 rounded-3xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-center space-y-3">
-                    <span className="text-4xl block">🏟️</span>
+                    <span className="text-4xl block"> </span>
                     <h3 className="font-headline font-bold text-base text-slate-900 dark:text-white">
                       Nu există baze sportive înregistrate în {selectedCounty}
                     </h3>

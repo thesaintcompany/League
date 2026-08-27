@@ -265,7 +265,7 @@ function SingleTicketCard({
             </div>
 
             <div>
-              <span className="text-[9px] uppercase text-slate-400 font-bold block">🏟️ Arenă &amp; Locație</span>
+              <span className="text-[9px] uppercase text-slate-400 font-bold block">  Arenă &amp; Locație</span>
               <p className="font-bold text-slate-900">{ticket.match.venue || "Arena  ă"}</p>
               <p className="text-slate-500 text-[10px]">Porțile se deschid cu 90 min înainte</p>
             </div>

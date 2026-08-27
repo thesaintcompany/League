@@ -378,7 +378,7 @@ export function TeamsTab({
                   disabled={busy || !customName}
                   className="px-6 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow-md active:scale-95"
                 >
-                  Salvează &amp; Înscrie 🚀
+                  Salvează &amp; Înscrie
                 </button>
               </div>
             </div>
@@ -473,8 +473,8 @@ export function TeamsTab({
               <div
                 key={item.name}
                 className={`p-3.5 rounded-2xl border flex items-center justify-between gap-2.5 transition ${enrolled
-                    ? "bg-slate-100 dark:bg-slate-800/40 border-slate-300 dark:border-slate-700 opacity-60"
-                    : "bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:border-lime-500 shadow-sm"
+                  ? "bg-slate-100 dark:bg-slate-800/40 border-slate-300 dark:border-slate-700 opacity-60"
+                  : "bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 hover:border-lime-500 shadow-sm"
                   }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -494,8 +494,8 @@ export function TeamsTab({
                   disabled={enrolled || busy}
                   onClick={() => handleAddTeam(item)}
                   className={`px-3 py-1 rounded-xl text-xs font-bold font-label uppercase tracking-wider shrink-0 transition ${enrolled
-                      ? "bg-slate-200 dark:bg-slate-700 text-slate-500 cursor-not-allowed"
-                      : "bg-lime-400 hover:bg-lime-300 text-slate-950 shadow-sm active:scale-95"
+                    ? "bg-slate-200 dark:bg-slate-700 text-slate-500 cursor-not-allowed"
+                    : "bg-lime-400 hover:bg-lime-300 text-slate-950 shadow-sm active:scale-95"
                     }`}
                 >
                   {enrolled ? "✓ Înscris" : "+ Înscrie"}

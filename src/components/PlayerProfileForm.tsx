@@ -32,7 +32,7 @@ const SPORT_OPTIONS = [
   { id: "fotbal", label: "Fotbal", icon: "sports_soccer" },
   { id: "tenis", label: "Tenis", icon: "sports_tennis" },
   { id: "padel", label: "Padel", icon: "sports_tennis" },
-  { id: "pingpong", label: "Ping-Pong", icon: "table_tennis" },
+  { id: "pingpong", label: "Ping-Pong", icon: " " },
   { id: "baschet", label: "Baschet", icon: "sports_basketball" },
   { id: "volei", label: "Volei", icon: "sports_volleyball" },
   { id: "handbal", label: "Handbal", icon: "sports_handball" },
@@ -456,8 +456,8 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
         {message && (
           <div
             className={`p-3.5 rounded-xl text-xs font-medium flex items-center gap-2 shadow-sm ${message.type === "success"
-                ? "bg-emerald-50 text-emerald-900 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
-                : "bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800"
+              ? "bg-emerald-50 text-emerald-900 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
+              : "bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800"
               }`}
           >
             <span className="material-symbols-outlined text-base">
@@ -498,8 +498,8 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
                   disabled={!isEditable}
                   onClick={() => handleSportChange(sp.id)}
                   className={`p-3 rounded-xl border text-left transition flex items-center gap-2.5 ${isSelected
-                      ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-900 dark:border-lime-400 font-semibold shadow-sm"
-                      : "bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:border-slate-400"
+                    ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-900 dark:border-lime-400 font-semibold shadow-sm"
+                    : "bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:border-slate-400"
                     }`}
                 >
                   <span className="material-symbols-outlined text-lg">

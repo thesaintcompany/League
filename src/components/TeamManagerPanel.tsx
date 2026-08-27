@@ -644,8 +644,8 @@ export function TeamManagerPanel({
               <div
                 key={t.id}
                 className={`p-4 rounded-2xl border text-left transition flex flex-col gap-2 ${t.id === team.id
-                    ? "border-lime-500 bg-lime-500/10 text-white shadow-md"
-                    : "border-slate-700 bg-slate-800/60 text-slate-300"
+                  ? "border-lime-500 bg-lime-500/10 text-white shadow-md"
+                  : "border-slate-700 bg-slate-800/60 text-slate-300"
                   }`}
               >
                 <div className="flex items-center gap-3">
@@ -760,8 +760,8 @@ export function TeamManagerPanel({
                       type="button"
                       onClick={() => setPaymentMethod(m.id as any)}
                       className={`p-3 rounded-2xl border text-left transition flex items-center gap-2.5 ${paymentMethod === m.id
-                          ? "border-lime-500 bg-lime-500/10 text-slate-900 dark:text-white"
-                          : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                        ? "border-lime-500 bg-lime-500/10 text-slate-900 dark:text-white"
+                        : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
                         }`}
                     >
                       <span className="material-symbols-outlined text-lg">{m.icon}</span>
@@ -1405,7 +1405,7 @@ export function TeamManagerPanel({
                     {copiedLink ? "Copiat! ✓" : "Copiază"}
                   </button>
                   <a
-                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`🏆 Ai fost invitat să faci parte din lotul ${team.name}! Înregistrează-ți contul de jucător aici: ${lastInviteLink}`)}`}
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`  Ai fost invitat să faci parte din lotul ${team.name}! Înregistrează-ți contul de jucător aici: ${lastInviteLink}`)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase flex items-center gap-1"
@@ -1571,11 +1571,11 @@ export function TeamManagerPanel({
 
                     <div className="space-y-2 text-xs font-label">
                       <div className="flex justify-between items-center text-slate-300">
-                        <span>🏟️ Arenă / Stadion:</span>
+                        <span>  Arenă / Stadion:</span>
                         <strong className="text-white">{venueName}</strong>
                       </div>
                       <div className="flex justify-between items-center text-slate-400">
-                        <span>🏆 Competiție:</span>
+                        <span>  Competiție:</span>
                         <span>{m.championship?.name || "Liga Pro România"}</span>
                       </div>
                     </div>
@@ -1744,7 +1744,7 @@ export function TeamManagerPanel({
                       </div>
 
                       <div className="text-xs text-slate-400">
-                        <span>🏟️ {m.venue || team.homeArena || "Stadionul Dan Păltinișanu"}</span> • <span>🏆 {m.championship?.name || "Campionat"}</span>
+                        <span>  {m.venue || team.homeArena || "Stadionul Dan Păltinișanu"}</span> • <span>  {m.championship?.name || "Campionat"}</span>
                       </div>
                     </div>
                   );

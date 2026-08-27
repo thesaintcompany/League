@@ -1337,7 +1337,7 @@ async function ensureVenues(arenaOwnerId) {
     });
 
     if (!existingVenue) {
-      await prisma.venue.create({ data: venueData });
+      await prisma.venue.create({ data: { ...venueData, isDemo: true } });
       createdCount++;
     }
   }

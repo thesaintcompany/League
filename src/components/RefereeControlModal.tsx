@@ -232,8 +232,8 @@ export function RefereeControlModal({
             type="button"
             onClick={() => setActiveTab("organizer")}
             className={`flex-1 py-2.5 rounded-xl text-xs font-headline font-black uppercase tracking-wider transition ${activeTab === "organizer"
-                ? "bg-lime-400 text-slate-950 shadow"
-                : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+              ? "bg-lime-400 text-slate-950 shadow"
+              : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
               }`}
           >
             {isIndividual ? "📋 Organizare & Arbitru Scaun" : "📋 Organizare & Arbitri"}
@@ -243,8 +243,8 @@ export function RefereeControlModal({
             type="button"
             onClick={() => setActiveTab("live_score")}
             className={`flex-1 py-2.5 rounded-xl text-xs font-headline font-black uppercase tracking-wider transition ${activeTab === "live_score"
-                ? "bg-lime-400 text-slate-950 shadow"
-                : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+              ? "bg-lime-400 text-slate-950 shadow"
+              : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
               }`}
           >
             {isIndividual ? "🎾 Scor Seturi & Puncte" : "⚽ Scor & Evenimente"}
@@ -254,8 +254,8 @@ export function RefereeControlModal({
             type="button"
             onClick={() => setActiveTab("report")}
             className={`flex-1 py-2.5 rounded-xl text-xs font-headline font-black uppercase tracking-wider transition ${activeTab === "report"
-                ? "bg-lime-400 text-slate-950 shadow"
-                : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+              ? "bg-lime-400 text-slate-950 shadow"
+              : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
               }`}
           >
             📄 Raport Tehnic
@@ -304,8 +304,8 @@ export function RefereeControlModal({
                 <div>
                   <div
                     className={`p-2.5 rounded-xl text-[11px] font-bold border flex items-center gap-2 ${isWithinDeadline
-                        ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-300"
-                        : "bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-300"
+                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-300"
+                      : "bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-300"
                       }`}
                   >
                     <span>{isWithinDeadline ? "✅" : "⚠️"}</span>
@@ -588,8 +588,8 @@ export function RefereeControlModal({
                     type="button"
                     onClick={() => setStatus(st.id as any)}
                     className={`py-2.5 px-3 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition ${status === st.id
-                        ? "bg-lime-400 text-slate-950 shadow-sm font-black"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                      ? "bg-lime-400 text-slate-950 shadow-sm font-black"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
                       }`}
                   >
                     {st.label}
@@ -691,7 +691,7 @@ export function RefereeControlModal({
                     <>
                       <option value="ace">🎾 As Serviciu (Ace)</option>
                       <option value="break">💥 Break de Serviciu</option>
-                      <option value="set_won">🏆 Set Câștigat</option>
+                      <option value="set_won">  Set Câștigat</option>
                       <option value="double_fault">❌ Dublă Greșeală</option>
                       <option value="warning">⚠️ Avertisment Conduită</option>
                     </>
@@ -809,7 +809,7 @@ export function RefereeControlModal({
               disabled={saving}
               className="btn bg-lime-400 hover:bg-lime-500 text-slate-950 font-black text-xs uppercase tracking-wider py-2.5 px-6 rounded-xl shadow-md transition"
             >
-              {saving ? "Se salvează..." : "Salvează Modificările 🚀"}
+              {saving ? "Se salvează..." : "Salvează Modificările  "}
             </button>
           </div>
         </div>

@@ -24,6 +24,7 @@ interface VenueItem {
   capacity: number;
   floodlights: boolean;
   isActive: boolean;
+  isDemo: boolean;
   pricePerHour?: number | null;
   imageUrl?: string | null;
 }
@@ -71,6 +72,7 @@ export function AdminSuperPanel() {
   const [userSearchQuery, setUserSearchQuery] = useState("");
   const [userRoleFilter, setUserRoleFilter] = useState("all");
   const [sportFilter, setSportFilter] = useState("all");
+  const [demoFilter, setDemoFilter] = useState<"all" | "demo" | "real">("all");
 
   // Logo & Branding State
   const [activeLogoUrl, setActiveLogoUrl] = useState<string>("/images/logos/logo-1.png");
@@ -519,6 +521,10 @@ export function AdminSuperPanel() {
   }
 
   async function handleDeleteVenue(v: VenueItem) {
+    if (v.isDemo) {
+      showToast(`Arena demo "${v.name}" este protejată de ștergere. Nu poate fi eliminată.`);
+      return;
+    }
     if (!confirm(`Sigur dorești să ștergi arena "${v.name}"? Această acțiune este ireversibilă.`)) return;
     try {
       const res = await fetch(`/api/admin/venues/${v.id}`, { method: "DELETE" });
@@ -528,6 +534,28 @@ export function AdminSuperPanel() {
       }
     } catch (err) {
       console.error(err);
+    }
+  }
+
+  async function handleResetDemoVenue(v: VenueItem) {
+    if (!v.isDemo) return;
+    if (!confirm(`Resetare arenă demo "${v.name}" la valorile implicite de bază? Pământul, specificațiile și setările vor reveni la starea inițială.`)) return;
+    try {
+      const res = await fetch(`/api/admin/venues/${v.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resetToDefaults: true }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        showToast(`Arena demo "${v.name}" a fost resetată.`);
+        setVenues(venues.map((item) => (item.id === v.id ? { ...item, ...data.venue } : item)));
+      } else {
+        showToast(data.error || "Eroare la resetarea arenei.");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Eroare de rețea la resetarea arenei.");
     }
   }
 
@@ -684,13 +712,17 @@ export function AdminSuperPanel() {
   // Filter venues
   const filteredVenues = venues.filter((v) => {
     const matchesSport = sportFilter === "all" || v.sport === sportFilter;
+    const matchesDemo =
+      demoFilter === "all" ||
+      (demoFilter === "demo" && v.isDemo) ||
+      (demoFilter === "real" && !v.isDemo);
     const q = searchQuery.toLowerCase();
     const matchesQuery =
       !q ||
       v.name.toLowerCase().includes(q) ||
       v.location.toLowerCase().includes(q) ||
       (v.address && v.address.toLowerCase().includes(q));
-    return matchesSport && matchesQuery;
+    return matchesSport && matchesQuery && matchesDemo;
   });
 
   // Filter users
@@ -1996,6 +2028,19 @@ export function AdminSuperPanel() {
               ))}
             </div>
 
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400">Tip:</span>
+              <select
+                value={demoFilter}
+                onChange={(e) => setDemoFilter(e.target.value as "all" | "demo" | "real")}
+                className="px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-label text-slate-900 dark:text-white focus:outline-none focus:border-lime-500"
+              >
+                <option value="all">Toate Arene</option>
+                <option value="demo">Doar Demo (protejate)</option>
+                <option value="real">Doar Reale</option>
+              </select>
+            </div>
+
             <div className="flex items-center gap-3">
               <input
                 type="text"
@@ -2060,6 +2105,11 @@ export function AdminSuperPanel() {
                               <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase text-slate-600 dark:text-slate-300 font-label inline-block mt-0.5">
                                 {v.sport}
                               </span>
+                              {v.isDemo && (
+                                <span className="px-1.5 py-0.5 ml-1.5 rounded-full bg-amber-400/10 text-amber-600 dark:text-amber-400 text-[8px] font-black uppercase font-label border border-amber-400/30 inline-flex items-center gap-0.5">
+                                  <span className="material-symbols-outlined text-[10px]">shield</span> Demo
+                                </span>
+                              )}
                             </div>
                           </div>
                         </td>
@@ -2108,11 +2158,22 @@ export function AdminSuperPanel() {
                             >
                               <span className="material-symbols-outlined text-[18px]">edit</span>
                             </button>
+                            {v.isDemo ? (
+                              <button
+                                type="button"
+                                onClick={() => handleResetDemoVenue(v)}
+                                className="p-1.5 rounded-lg text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40 transition"
+                                title="Resetează Arena Demo la valorile implicite (100% protejată)"
+                              >
+                                <span className="material-symbols-outlined text-[18px]">restore_page</span>
+                              </button>
+                            ) : null}
                             <button
                               type="button"
                               onClick={() => handleDeleteVenue(v)}
-                              className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 transition"
-                              title="Șterge"
+                              disabled={v.isDemo}
+                              className={`p-1.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 transition ${v.isDemo ? "opacity-50 cursor-not-allowed" : ""}`}
+                              title={v.isDemo ? "Protejat — arene demo nu pot fi șterse" : "Șterge"}
                             >
                               <span className="material-symbols-outlined text-[18px]">delete</span>
                             </button>
@@ -2189,7 +2250,7 @@ export function AdminSuperPanel() {
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
               <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-lime-400/10 text-lime-400 flex items-center justify-center font-black text-lg">
-                  🏟️
+
                 </div>
                 <div>
                   <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">

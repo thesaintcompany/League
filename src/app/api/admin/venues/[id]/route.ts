@@ -16,6 +16,7 @@ const updateVenueSchema = z.object({
   pricePerHour: z.number().int().min(0).optional().nullable(),
   isActive: z.boolean().optional(),
   imageUrl: z.string().optional().nullable(),
+  resetToDefaults: z.boolean().optional(),
 });
 
 import { isArenaAdmin, isSuperAdmin } from "@/lib/permissions";
@@ -62,6 +63,52 @@ export async function PATCH(
     );
   }
 
+  // Arena demo: protejată. Doar SuperAdmin poate reseta la valorile implicite.
+  const isSuperUser = user.role === "super_admin" || user.role === "superadmin";
+  if (parsed.data.resetToDefaults && !isSuperUser) {
+    return NextResponse.json(
+      { error: "Acces interzis: Doar SuperAdmin poate reseta arene demo." },
+      { status: 403 }
+    );
+  }
+
+  if (parsed.data.resetToDefaults) {
+    const existing = await prisma.venue.findUnique({ where: { id: ctx.params.id } });
+    if (!existing) {
+      return NextResponse.json({ error: "Arena nu a fost găsită" }, { status: 404 });
+    }
+    if (!existing.isDemo) {
+      return NextResponse.json(
+        { error: "Resetarea la valorile implicate este permisă doar pentru arene demo." },
+        { status: 400 }
+      );
+    }
+
+    const updated = await prisma.venue.update({
+      where: { id: ctx.params.id },
+      data: {
+        name: existing.name,
+        location: existing.location,
+        address: null,
+        specs: null,
+        sport: "fotbal",
+        surface: "Sintetic",
+        capacity: 100,
+        floodlights: true,
+        pricePerHour: null,
+        isActive: true,
+        imageUrl: null,
+        amenities: null,
+        announcements: null,
+        tickerText: null,
+        tickerActive: false,
+        tickerSpeed: 20,
+        isDemo: true,
+      },
+    });
+    return NextResponse.json({ venue: updated, reset: true });
+  }
+
   const updated = await prisma.venue.update({
     where: { id: ctx.params.id },
     data: parsed.data,
@@ -83,6 +130,19 @@ export async function DELETE(
   if (!isSuperAdmin(user) && !isArenaAdmin(user)) {
     return NextResponse.json(
       { error: "Acces interzis: Doar SuperAdmin sau Admin Arenă pot șterge arene." },
+      { status: 403 }
+    );
+  }
+
+  // Arena demo: protejată 100% — nu poate fi ștearsă decât de către SuperAdmin ( și cu confirmare explicită )
+  const existing = await prisma.venue.findUnique({ where: { id: ctx.params.id } });
+  if (!existing) {
+    return NextResponse.json({ error: "Arena nu a fost găsită" }, { status: 404 });
+  }
+
+  if (existing.isDemo && !isSuperAdmin(user)) {
+    return NextResponse.json(
+      { error: "Acces interzis: Arena demo este protejată de ștergere. Doar SuperAdmin poate șterge arene demo." },
       { status: 403 }
     );
   }

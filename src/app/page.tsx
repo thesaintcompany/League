@@ -149,7 +149,7 @@ function WelcomePortalForm() {
                 🗺️ Hartă
               </Link>
               <Link href="/venues" className="hover:text-lime-400 transition bg-white/5 hover:bg-white/10 py-1.5 px-1 rounded-lg truncate">
-                🏟️ Arene
+                Arene
               </Link>
               <Link href="/players" className="hover:text-lime-400 transition bg-white/5 hover:bg-white/10 py-1.5 px-1 rounded-lg truncate">
                 🥇 Golgheteri

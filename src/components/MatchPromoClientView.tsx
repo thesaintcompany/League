@@ -350,7 +350,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
             <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
               <span className="w-3 h-7 bg-lime-400 rounded-full"></span>
               <h3 className="text-lg font-bold font-headline uppercase text-slate-900 dark:text-white">
-                🏟️ Locație &amp; Acces Stadion
+                Locație &amp; Acces Stadion
               </h3>
             </div>
 
@@ -579,8 +579,8 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                       type="button"
                       onClick={() => setPaymentMethod("card")}
                       className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${paymentMethod === "card"
-                          ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
-                          : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
+                        ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
+                        : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
                         }`}
                     >
                       <span className="text-xl">💳</span>
@@ -591,8 +591,8 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                       type="button"
                       onClick={() => setPaymentMethod("apple_pay")}
                       className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${paymentMethod === "apple_pay"
-                          ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
-                          : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
+                        ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
+                        : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
                         }`}
                     >
                       <span className="text-xl">🍎</span>
@@ -603,8 +603,8 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                       type="button"
                       onClick={() => setPaymentMethod("google_pay")}
                       className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${paymentMethod === "google_pay"
-                          ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
-                          : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
+                        ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
+                        : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
                         }`}
                     >
                       <span className="text-xl">🟢</span>
@@ -615,8 +615,8 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                       type="button"
                       onClick={() => setPaymentMethod("paypal")}
                       className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1 shadow-sm ${paymentMethod === "paypal"
-                          ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
-                          : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
+                        ? "border-2 border-lime-500 bg-lime-500/15 text-slate-950 dark:text-white font-bold"
+                        : "border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400 dark:hover:border-slate-700"
                         }`}
                     >
                       <span className="text-xl">🅿️</span>

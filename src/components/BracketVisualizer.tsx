@@ -154,8 +154,8 @@ export function BracketVisualizer({
               onClick={togglePublish}
               disabled={loadingPublish}
               className={`w-full sm:w-auto px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-sm border ${published
-                  ? "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700"
-                  : "bg-amber-400 hover:bg-amber-300 text-slate-950 font-black border-amber-400"
+                ? "bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700"
+                : "bg-amber-400 hover:bg-amber-300 text-slate-950 font-black border-amber-400"
                 }`}
             >
               <span className="material-symbols-outlined text-base">
@@ -165,7 +165,7 @@ export function BracketVisualizer({
                 ? "Se actualizează..."
                 : published
                   ? "Treci pe Privat"
-                  : "Fă Publică 🚀"}
+                  : "Fă Publică  "}
             </button>
           )}
         </div>
@@ -177,8 +177,8 @@ export function BracketVisualizer({
           type="button"
           onClick={() => setMobileViewMode("tree")}
           className={`flex-1 py-2 rounded-xl text-[11px] font-headline font-black uppercase transition flex items-center justify-center gap-1.5 ${mobileViewMode === "tree"
-              ? "bg-lime-400 text-slate-950 shadow-sm"
-              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+            ? "bg-lime-400 text-slate-950 shadow-sm"
+            : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
         >
           <span>🌳</span> Mindmap Arbore
@@ -187,8 +187,8 @@ export function BracketVisualizer({
           type="button"
           onClick={() => setMobileViewMode("stages")}
           className={`flex-1 py-2 rounded-xl text-[11px] font-headline font-black uppercase transition flex items-center justify-center gap-1.5 ${mobileViewMode === "stages"
-              ? "bg-lime-400 text-slate-950 shadow-sm"
-              : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+            ? "bg-lime-400 text-slate-950 shadow-sm"
+            : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
         >
           <span>📑</span> Etape Separate
@@ -202,8 +202,8 @@ export function BracketVisualizer({
             type="button"
             onClick={() => setActiveMobileStage("quarters")}
             className={`flex-1 py-2 rounded-lg text-[10px] font-headline font-black uppercase transition ${activeMobileStage === "quarters"
-                ? "bg-slate-900 text-white dark:bg-slate-800 shadow"
-                : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              ? "bg-slate-900 text-white dark:bg-slate-800 shadow"
+              : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
               }`}
           >
             Sferturi ({quarterFinals.length})
@@ -212,8 +212,8 @@ export function BracketVisualizer({
             type="button"
             onClick={() => setActiveMobileStage("semis")}
             className={`flex-1 py-2 rounded-lg text-[10px] font-headline font-black uppercase transition ${activeMobileStage === "semis"
-                ? "bg-slate-900 text-white dark:bg-slate-800 shadow"
-                : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              ? "bg-slate-900 text-white dark:bg-slate-800 shadow"
+              : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
               }`}
           >
             Semifinale ({semiFinals.length})
@@ -222,8 +222,8 @@ export function BracketVisualizer({
             type="button"
             onClick={() => setActiveMobileStage("final")}
             className={`flex-1 py-2 rounded-lg text-[10px] font-headline font-black uppercase transition ${activeMobileStage === "final"
-                ? "bg-amber-400 text-slate-950 font-black shadow"
-                : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              ? "bg-amber-400 text-slate-950 font-black shadow"
+              : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
               }`}
           >
             Finala
@@ -249,21 +249,21 @@ export function BracketVisualizer({
       {/* On mobile in 'stages' mode: single active column */}
       <div
         className={`w-full max-w-full relative z-10 transition-all duration-300 ${mobileViewMode === "tree"
-            ? "overflow-x-auto pb-4 scroll-smooth scrollbar-thin snap-x overscroll-x-contain"
-            : "overflow-hidden"
+          ? "overflow-x-auto pb-4 scroll-smooth scrollbar-thin snap-x overscroll-x-contain"
+          : "overflow-hidden"
           }`}
       >
         <div
           className={`flex items-stretch gap-0 w-full ${mobileViewMode === "tree"
-              ? "min-w-[760px] lg:min-w-0"
-              : "flex-col md:flex-row"
+            ? "min-w-[760px] lg:min-w-0"
+            : "flex-col md:flex-row"
             }`}
         >
           {/* ================= COLUMN 1: SFERTURI DE FINALĂ (QUARTERS) ================= */}
           <div
             className={`flex-1 flex flex-col justify-between space-y-6 ${mobileViewMode === "stages" && activeMobileStage !== "quarters"
-                ? "hidden md:flex"
-                : "flex"
+              ? "hidden md:flex"
+              : "flex"
               }`}
           >
             {/* Column Header */}
@@ -361,8 +361,8 @@ export function BracketVisualizer({
           {/* ================= COLUMN 2: SEMIFINALE (SEMIS) ================= */}
           <div
             className={`flex-1 flex flex-col justify-between space-y-6 ${mobileViewMode === "stages" && activeMobileStage !== "semis"
-                ? "hidden md:flex"
-                : "flex"
+              ? "hidden md:flex"
+              : "flex"
               }`}
           >
             {/* Column Header */}
@@ -429,14 +429,14 @@ export function BracketVisualizer({
           {/* ================= COLUMN 3: MAREA FINALĂ (GRAND FINAL) ================= */}
           <div
             className={`flex-1 flex flex-col justify-between space-y-6 ${mobileViewMode === "stages" && activeMobileStage !== "final"
-                ? "hidden md:flex"
-                : "flex"
+              ? "hidden md:flex"
+              : "flex"
               }`}
           >
             {/* Column Header */}
             <div className="flex items-center justify-between px-3 py-2 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300/60 dark:border-amber-400/40 mb-2 shadow-sm">
               <div className="flex items-center gap-2">
-                <span className="text-sm">🏆</span>
+                <span className="text-sm"> </span>
                 <h3 className="text-xs font-black uppercase tracking-wider font-headline text-amber-800 dark:text-amber-300">
                   Marea Finală
                 </h3>
@@ -452,10 +452,10 @@ export function BracketVisualizer({
                 <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 via-lime-400 to-amber-500 rounded-3xl blur opacity-30 animate-pulse"></div>
                 <div className="relative">
                   <BracketMatchNode
-                    match={grandFinal || createPlaceholderMatch(7, "Marea Finală 🏆", "Câștigătoare Semifinala 1 vs Semifinala 2")}
+                    match={grandFinal || createPlaceholderMatch(7, "Marea Finală  ", "Câștigătoare Semifinala 1 vs Semifinala 2")}
                     onEdit={handleEdit}
                     isAdmin={isAdmin}
-                    stageLabel="Trofeul   🏆"
+                    stageLabel="Trofeul    "
                     isFinal={true}
                   />
                 </div>
@@ -595,10 +595,10 @@ function BracketMatchNode({
   const cardContent = (
     <div
       className={`rounded-2xl p-3.5 sm:p-4 transition-all duration-200 border relative group shadow-md hover:shadow-lg ${isFinal
-          ? "bg-amber-50/95 dark:bg-amber-950/40 border-amber-300 dark:border-amber-400/50 shadow-amber-500/10 hover:border-amber-400"
-          : isSemi
-            ? "bg-slate-50 dark:bg-slate-900/95 border-slate-200 dark:border-purple-500/30 hover:border-purple-400"
-            : "bg-slate-50 dark:bg-slate-900/90 border-slate-200 dark:border-slate-800/90 hover:border-lime-500/80"
+        ? "bg-amber-50/95 dark:bg-amber-950/40 border-amber-300 dark:border-amber-400/50 shadow-amber-500/10 hover:border-amber-400"
+        : isSemi
+          ? "bg-slate-50 dark:bg-slate-900/95 border-slate-200 dark:border-purple-500/30 hover:border-purple-400"
+          : "bg-slate-50 dark:bg-slate-900/90 border-slate-200 dark:border-slate-800/90 hover:border-lime-500/80"
         }`}
     >
       {/* Top Meta Info */}
@@ -652,8 +652,8 @@ function BracketMatchNode({
         {/* Home Team */}
         <div
           className={`flex items-center justify-between p-1.5 sm:p-2 rounded-xl transition ${homeWin
-              ? "bg-lime-500/15 text-slate-950 dark:text-white font-bold"
-              : "text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white"
+            ? "bg-lime-500/15 text-slate-950 dark:text-white font-bold"
+            : "text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white"
             }`}
         >
           <div className="flex items-center gap-2 min-w-0 flex-1 pr-2">
@@ -667,8 +667,8 @@ function BracketMatchNode({
           </div>
           <span
             className={`text-xs sm:text-sm font-mono font-black shrink-0 px-1.5 py-0.5 rounded-lg ${homeWin
-                ? "bg-lime-400/20 text-lime-600 dark:text-lime-400"
-                : "text-slate-500 dark:text-slate-400"
+              ? "bg-lime-400/20 text-lime-600 dark:text-lime-400"
+              : "text-slate-500 dark:text-slate-400"
               }`}
           >
             {match.homeScore !== null && match.homeScore !== undefined
@@ -680,8 +680,8 @@ function BracketMatchNode({
         {/* Away Team */}
         <div
           className={`flex items-center justify-between p-1.5 sm:p-2 rounded-xl transition ${awayWin
-              ? "bg-lime-500/15 text-slate-950 dark:text-white font-bold"
-              : "text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white"
+            ? "bg-lime-500/15 text-slate-950 dark:text-white font-bold"
+            : "text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white"
             }`}
         >
           <div className="flex items-center gap-2 min-w-0 flex-1 pr-2">
@@ -695,8 +695,8 @@ function BracketMatchNode({
           </div>
           <span
             className={`text-xs sm:text-sm font-mono font-black shrink-0 px-1.5 py-0.5 rounded-lg ${awayWin
-                ? "bg-lime-400/20 text-lime-600 dark:text-lime-400"
-                : "text-slate-500 dark:text-slate-400"
+              ? "bg-lime-400/20 text-lime-600 dark:text-lime-400"
+              : "text-slate-500 dark:text-slate-400"
               }`}
           >
             {match.awayScore !== null && match.awayScore !== undefined

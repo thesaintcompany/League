@@ -224,7 +224,7 @@ export function VenueDetailClientView({
                       : spLower === "padel"
                         ? "sports_tennis"
                         : spLower === "pingpong"
-                          ? "table_tennis"
+                          ? " "
                           : spLower === "baschet"
                             ? "sports_basketball"
                             : spLower === "volei"
