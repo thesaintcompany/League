@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export type SportType = "fotbal" | "tenis" | "padel" | "pingpong" | "baschet" | "volei" | "handbal";
+export type SportType = "fotbal" | "futsal" | "tenis" | "padel" | "pingpong" | "baschet" | "volei" | "handbal";
 export type FootballCategoryType = "all" | "masculin" | "feminin" | "futsal" | "juniori";
 
 export interface SportOption {
@@ -32,6 +32,15 @@ export const AVAILABLE_SPORTS: SportOption[] = [
     accentColor: "text-lime-400 border-lime-400 bg-lime-400/10",
     badgeBg: "bg-lime-400 text-slate-950",
     description: "Campionate județene și naționale: Masculin, Feminin, Futsal și Juniori.",
+  },
+  {
+    id: "futsal",
+    name: "Futsal & Minifotbal",
+    shortName: "Futsal",
+    icon: "sports_soccer",
+    accentColor: "text-indigo-400 border-indigo-400 bg-indigo-400/10",
+    badgeBg: "bg-indigo-400 text-slate-950",
+    description: "Campionate de Futsal (5v5), minifotbal (7v7) și turnee pe sintetic indoor.",
   },
   {
     id: "tenis",

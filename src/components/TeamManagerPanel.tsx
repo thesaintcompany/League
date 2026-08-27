@@ -14,6 +14,8 @@ interface Player {
   goals: number;
   assists: number;
   rating: number;
+  image?: string | null;
+  invitationToken?: string | null;
 }
 
 interface Match {
@@ -43,7 +45,8 @@ interface TeamData {
   fitnessCoach: string | null;
   formation: string | null;
   homeArena: string | null;
-  championship?: { id: string; name: string; season?: string | null };
+  sport?: string | null;
+  championship?: { id: string; name: string; season?: string | null; championshipId?: string };
   players: Player[];
   homeMatches: Match[];
   awayMatches: Match[];
@@ -517,6 +520,8 @@ export function TeamManagerPanel({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           teamId: team.id,
+          championshipId: team.championship?.id,
+          sport: team.sport,
           email: inviteEmail,
           name: inviteName,
           number: inviteNumber === "" ? null : Number(inviteNumber),
@@ -525,7 +530,7 @@ export function TeamManagerPanel({
       });
       if (res.ok) {
         const data = await res.json();
-        setLastInviteLink(data.inviteLink);
+        setLastInviteLink(data.acceptLink);
         setTeam((prev) => ({
           ...prev,
           players: [...prev.players, data.player],

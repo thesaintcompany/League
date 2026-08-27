@@ -1,17 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 
 export default function SignUpPage() {
   const router = useRouter();
+  const search = useSearchParams();
+  const inviteToken = search.get("invite") || search.get("offer") || undefined;
+  const isInvite = Boolean(inviteToken);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [selectedRole, setSelectedRole] = useState("organizer");
+  const [selectedRole, setSelectedRole] = useState("player");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +33,7 @@ export default function SignUpPage() {
     const res = await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password, role: selectedRole }),
+       body: JSON.stringify({ name, email, password, role: selectedRole, inviteToken }),
     });
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
@@ -46,6 +49,8 @@ export default function SignUpPage() {
     }
     router.push("/dashboard");
   }
+
+  const effectiveRole = selectedRole;
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 sm:p-6 relative overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-200">
@@ -109,34 +114,44 @@ export default function SignUpPage() {
             </header>
 
             <form onSubmit={onSubmit} className="space-y-4">
-              {/* Role Selection */}
-              <div>
-                <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
-                  Rol Principal
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-                  {[
-                    { id: "organizer", label: "Organizator", icon: "emoji_events" },
-                    { id: "team_leader", label: "Lider", icon: "groups" },
-                    { id: "player", label: "Jucător", icon: "sports_soccer" },
-                    { id: "referee", label: "Arbitru", icon: "sports" },
-                    { id: "arena_owner", label: "Proprietar", icon: "stadium" },
-                  ].map((r) => (
-                    <button
-                      key={r.id}
-                      type="button"
-                      onClick={() => setSelectedRole(r.id)}
-                      className={`p-2.5 rounded-xl border text-center transition flex flex-col items-center gap-1 ${
-                        selectedRole === r.id
-                          ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-transparent shadow-md font-bold"
-                          : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent hover:bg-slate-200 dark:hover:bg-slate-700"
-                      }`}
-                    >
-                      <span className="material-symbols-outlined text-lg">{r.icon}</span>
-                      <span className="text-[10px] font-bold font-label">{r.label}</span>
-                    </button>
-                  ))}
+              {isInvite ? (
+                <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl">
+                  <p className="text-xs font-label font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
+                    <span className="material-symbols-outlined text-sm">mail</span>
+                    Cont creat din invitație — rolul tău este <span className="text-emerald-600 dark:text-emerald-400">Jucător</span>.
+                  </p>
                 </div>
+              ) : (
+                <div>
+                  <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+                    Rol Principal
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                    {[
+                      { id: "organizer", label: "Organizator", icon: "emoji_events" },
+                      { id: "team_leader", label: "Lider", icon: "groups" },
+                      { id: "player", label: "Jucător", icon: "sports_soccer" },
+                      { id: "referee", label: "Arbitru", icon: "sports" },
+                      { id: "arena_owner", label: "Proprietar", icon: "stadium" },
+                    ].map((r) => (
+                      <button
+                        key={r.id}
+                        type="button"
+                        onClick={() => setSelectedRole(r.id)}
+                        className={`p-2.5 rounded-xl border text-center transition flex flex-col items-center gap-1 ${
+                          selectedRole === r.id
+                            ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-transparent shadow-md font-bold"
+                            : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent hover:bg-slate-200 dark:hover:bg-slate-700"
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-lg">{r.icon}</span>
+                        <span className="text-[10px] font-bold font-label">{r.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               </div>
 
               {/* Name */}

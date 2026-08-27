@@ -1,8 +1,6 @@
 export const SPORTS = [
   "Fotbal",
-  "Tenis",
-  "Padel",
-  "Tenis de Masă (Ping-Pong)",
+  "Futsal",
   "Baschet",
   "Handbal",
   "Volei",

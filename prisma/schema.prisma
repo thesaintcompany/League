@@ -36,6 +36,11 @@ model User {
   refereeBadge   String? // for referees ( , National, Regional)
   experienceYears Int?   // for referees
 
+  // Member card (physical card) fields populated via invite card flow
+  memberCardNumber String?
+  memberCardUrl    String?
+  memberCardExpires DateTime?
+
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -505,6 +510,15 @@ model ExternalInvite {
   @@index([token])
   @@index([acceptToken])
   @@index([accountOfferToken])
-  @@index([cardToken])
   @@index([inviteeEmail])
+}
+
+model EmailLog {
+  id        String   @id @default(cuid())
+  to        String
+  subject   String
+  html      String
+  text      String?
+  status    String   @default("queued") // queued | sent | failed | dev_logged
+  createdAt DateTime @default(now())
 }
