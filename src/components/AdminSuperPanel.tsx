@@ -227,8 +227,7 @@ export function AdminSuperPanel() {
   function isDemoUser(email: string) {
     return (
       email.endsWith("@leaguehub.local") ||
-      email.endsWith("@league.local") ||
-      ["arbitru@leaguehub.local", "jucator@leaguehub.local", "arena@leaguehub.local", "lider@leaguehub.local"].includes(email)
+      email.endsWith("@league.local")
     );
   }
 

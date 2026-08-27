@@ -43,7 +43,7 @@ npm run prisma:seed      # populează cu date demo
 npm run dev              # http://localhost:3000
 ```
 
-**Login demo:** `demo@leaguehub.local` / `demo12345`
+**Login admin:** `admin@leaguehub.local` / `superadmin12345`
 
 ## Build de producție
 

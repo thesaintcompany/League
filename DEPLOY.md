@@ -25,8 +25,7 @@ La prima pornire, aplicația creează automat două conturi de test:
 
 | Email | Parolă | Rol |
 |---|---|---|
-| `admin@leaguehub.local` | `Admin12345` | Administrator |
-| `demo@leaguehub.local` | `demo12345` | Utilizator Demo |
+| `admin@leaguehub.local` | `superadmin12345` | Administrator (Super Admin) |
 
 De asemenea, este creat campionatul demonstrativ **"Liga Demo 2026"** cu echipe și meciuri de start.
 

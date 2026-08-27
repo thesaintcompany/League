@@ -66,7 +66,6 @@ export async function PATCH(req: Request) {
               OR: [
                 { email: { endsWith: "@leaguehub.local" } },
                 { email: { endsWith: "@league.local" } },
-                { email: { in: ["demo@leaguehub.local", "arbitru@leaguehub.local", "jucator@leaguehub.local", "arena@leaguehub.local", "lider@leaguehub.local"] } },
               ],
             },
             { email: { notIn: ["admin@leaguehub.local", "superadmin@leaguehub.local"] } },
@@ -119,7 +118,6 @@ export async function PATCH(req: Request) {
               OR: [
                 { email: { endsWith: "@leaguehub.local" } },
                 { email: { endsWith: "@league.local" } },
-                { email: { in: ["arbitru@leaguehub.local", "jucator@leaguehub.local", "arena@leaguehub.local", "lider@leaguehub.local"] } },
               ],
             },
             { email: { not: "admin@leaguehub.local" } },
@@ -130,7 +128,7 @@ export async function PATCH(req: Request) {
       return NextResponse.json({
         success: true,
         count: result.count,
-        message: `${result.count} utilizatori demo au fost DEZACTIVAȚI cu succes! ✓`,
+        message: `${result.count} utilizatori demo au fost dezactivați!`,
       });
     }
 
@@ -142,7 +140,6 @@ export async function PATCH(req: Request) {
               OR: [
                 { email: { endsWith: "@leaguehub.local" } },
                 { email: { endsWith: "@league.local" } },
-                { email: { in: ["arbitru@leaguehub.local", "jucator@leaguehub.local", "arena@leaguehub.local", "lider@leaguehub.local"] } },
               ],
             },
             { email: { not: "admin@leaguehub.local" } },
@@ -153,7 +150,7 @@ export async function PATCH(req: Request) {
       return NextResponse.json({
         success: true,
         count: result.count,
-        message: `${result.count} utilizatori demo au fost REACTIVAȚI cu succes! ✓`,
+        message: `${result.count} utilizatori demo au fost reactivați!`,
       });
     }
 

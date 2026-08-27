@@ -4,14 +4,14 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  const email = "demo@leaguehub.local";
-  const password = "demo12345";
+  const email = "admin@leaguehub.local";
+  const password = "superadmin12345";
   const passwordHash = await bcrypt.hash(password, 10);
 
   const user = await prisma.user.upsert({
     where: { email },
     update: {},
-    create: { email, name: "Demo User", passwordHash },
+    create: { email, name: "Super Admin", passwordHash, role: "super_admin" },
   });
 
   // Clean any existing demo championship
@@ -20,12 +20,12 @@ async function main() {
   const champ = await prisma.championship.create({
     data: {
       ownerId: user.id,
-      name: "Liga Demo 2026",
+      name: "Liga Națională 2026",
       sport: "Fotbal",
       format: "round_robin",
       season: "2025-2026",
       startDate: new Date(),
-      description: "Campionat demonstrativ cu echipe și meciuri pre-populate.",
+      description: "Campionat național cu echipe și meciuri programate.",
     },
   });
 

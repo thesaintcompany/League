@@ -141,10 +141,10 @@ export default async function PublicRefereeDetailPage({
                     {referee.name}
                   </h3>
                   <p className="text-xs text-lime-400 font-label font-bold uppercase mt-0.5">
-                    {referee.refereeBadge || "  Pro Elite"}
+                    {referee.refereeBadge || "RIFA"}
                   </p>
                   <p className="text-[11px] text-slate-400 font-label mt-1">
-                    {referee.bio || "Arbitru atestat pentru ligile naționale și turnee de elită."}
+                    {referee.bio || "Arbitru profesionist pentru campionatele naționale."}
                   </p>
                 </div>
               </div>

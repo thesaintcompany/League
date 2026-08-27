@@ -25,8 +25,11 @@ export interface MatchOfficiatingItem {
   pitchCondition?: string | null;
   crowdConduct?: string | null;
   refereeNotes?: string | null;
-  signedBy?: string | null;
-  signedAt?: string | Date | null;
+   signedBy?: string | null;
+   signedAt?: string | Date | null;
+   refereeConfirmed?: boolean | null;
+   refereeConfirmedAt?: string | Date | null;
+   refereeDeclined?: boolean | null;
   homeTeam: {
     id: string;
     name: string;
@@ -87,6 +90,11 @@ export function RefereeDashboardPanel({
   const [homeOffsides, setHomeOffsides] = useState<number>(0);
   const [awayOffsides, setAwayOffsides] = useState<number>(0);
   const [pitchCondition, setPitchCondition] = useState<string>("Excelent");
+
+  // Match confirmation state
+  const [confirmingMatchId, setConfirmingMatchId] = useState<string | null>(null);
+  const [confirmAction, setConfirmAction] = useState<"accept" | "decline" | null>(null);
+  const [confirmError, setConfirmError] = useState<string | null>(null);
   const [crowdConduct, setCrowdConduct] = useState<string>("Sportivă / Fără incidente");
   const [refereeNotes, setRefereeNotes] = useState<string>("");
   const [signedBy, setSignedBy] = useState<string>(refereeUser.name || "Arbitru Oficial");
@@ -101,6 +109,40 @@ export function RefereeDashboardPanel({
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+
+  // Confirm or decline match attendance
+  async function handleConfirmMatch(matchId: string, action: "accept" | "decline") {
+    const confirmed = window.confirm(
+      action === "accept"
+        ? "Confirmi prezența ta ca arbitru la acest meci?\n\n După confirmare, organizatorul este notificat și nu poți renunța la meci."
+        : "Ești sigur că refuzi acest meci?\n\n Organizatorul va fi notificat că nu poți fi la acest meci."
+    );
+    if (!confirmed) return;
+
+    setConfirmingMatchId(matchId);
+    setConfirmError(null);
+    try {
+      const res = await fetch(`/api/matches/${matchId}/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setConfirmError(data.error || "Eroare la confirmare.");
+        return;
+      }
+
+      // Reîncărcăm datele pentru a reflecta starea nouă
+      router.refresh();
+    } catch {
+      setConfirmError("Eroare de rețea. Te rugăm să reîncerci.");
+    } finally {
+      setConfirmingMatchId(null);
+    }
+  }
 
   // Open Officiating Modal for a specific match
   const openOfficiatingModal = (match: MatchOfficiatingItem) => {
@@ -221,18 +263,20 @@ export function RefereeDashboardPanel({
           </div>
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
-                {refereeUser.refereeBadge || "  Pro Elite"}
-              </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 text-[10px] font-bold font-label">
-                Oficial Atestat
-              </span>
+                <span className="px-3 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
+                  {refereeUser.refereeBadge || "RIFA"}
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 text-[10px] font-bold font-label">
+                  Oficial Atestat
+                </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black font-headline text-white uppercase tracking-tight">
               {refereeUser.name}
             </h1>
             <p className="text-xs text-slate-400 font-label">
-              Experiență: {refereeUser.experienceYears || 12} ani • Delegat Oficial Ligue Pro
+              {refereeUser.experienceYears
+                ? `Experiență: ${refereeUser.experienceYears} ani`
+                : "Arbitru de Bază"} • <span className="text-lime-400">Delegat Oficial</span>
             </p>
           </div>
         </div>
@@ -779,6 +823,85 @@ export function RefereeDashboardPanel({
           </div>
         </div>
       )}
+
+      {/* SECTION: Meciurile mele — Confirmare prezență */}
+      <section className="space-y-6 mt-10">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold font-headline uppercase text-white flex items-center gap-2">
+            <span className="material-symbols-outlined text-lime-400">sports_soccer</span>
+            Meciurile Mele — Confirmă prezența
+          </h2>
+          {confirmError && (
+            <div className="p-2 rounded-xl bg-red-950/80 border border-red-500 text-red-300 text-xs font-bold">
+              ⚠️ {confirmError}
+            </div>
+          )}
+        </div>
+
+        {matchHistory.length > 0 ? (
+          <div className="space-y-3">
+            {matchHistory.map((m) => {
+              const isHome = m.homeTeam?.id === refereeUser?.id;
+              const dateObj = new Date(m.scheduledAt);
+              return (
+                <div
+                  key={m.id}
+                  className="p-4 rounded-2xl border border-slate-700 bg-slate-950 flex flex-col sm:flex-row items-start gap-4"
+                >
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 font-bold text-[10px]">
+                          {isHome ? "Acasă" : "Deplasare"}
+                        </span>
+                        <span className="text-sm font-headline font-bold text-white">
+                          {m.homeTeam?.name || "Echipa Locală"} vs {m.awayTeam?.name || "Echipa Oaspeților"}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-label text-slate-400">
+                        {dateObj.toLocaleDateString("ro-RO", { weekday: "short", day: "numeric", month: "short" })} • {dateObj.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-400">
+                      {m.venue || "Stadion necunoscut"} • {m.championship?.name || "Campionat"}
+                    </p>
+                    {m.refereeConfirmed && (
+                      <p className="text-xs text-emerald-400 font-bold">✓ Ai confirmat prezența</p>
+                    )}
+                    {m.refereeDeclined && (
+                      <p className="text-xs text-red-400 font-bold">Ai refuzat acest meci</p>
+                    )}
+                  </div>
+                  {!m.refereeConfirmed && !m.refereeDeclined && (
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => handleConfirmMatch(m.id, "accept")}
+                        disabled={confirmingMatchId === m.id}
+                        className="px-3 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase transition disabled:opacity-50"
+                      >
+                        {confirmingMatchId === m.id ? "Se trimite..." : "Confirmă"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleConfirmMatch(m.id, "decline")}
+                        disabled={confirmingMatchId === m.id}
+                        className="px-3 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-headline font-bold text-xs uppercase transition disabled:opacity-50"
+                      >
+                        Refuză
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="p-6 text-center text-sm text-slate-400 bg-slate-950 border border-slate-800 rounded-2xl italic">
+            Nu ai meciuri programate în acest moment.
+          </div>
+        )}
+      </section>
     </div>
   );
 }

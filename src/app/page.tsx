@@ -39,16 +39,16 @@ function WelcomePortalForm() {
       return;
     }
 
-    // Direct redirection based on user
-    if (cleanEmail === "admin@leaguehub.local" || cleanEmail === "superadmin@leaguehub.local") {
+    // Direct redirection based on role
+    if (selectedRole === "super_admin" || cleanEmail === "admin@leaguehub.local" || cleanEmail === "superadmin@leaguehub.local") {
       router.push("/dashboard/admin");
-    } else if (cleanEmail === "arbitru@leaguehub.local" || selectedRole === "referee") {
+    } else if (selectedRole === "referee") {
       router.push("/dashboard/referee");
-    } else if (cleanEmail === "arena@leaguehub.local" || selectedRole === "arena_owner") {
+    } else if (selectedRole === "arena_owner") {
       router.push("/dashboard/arena");
-    } else if (cleanEmail === "lider@leaguehub.local" || selectedRole === "team_leader") {
+    } else if (selectedRole === "team_leader") {
       router.push("/dashboard/team");
-    } else if (cleanEmail === "jucator@leaguehub.local" || selectedRole === "player") {
+    } else if (selectedRole === "player") {
       router.push("/profile");
     } else {
       router.push(callbackUrl || "/dashboard");

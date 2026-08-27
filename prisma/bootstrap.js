@@ -73,8 +73,8 @@ try {
 }
 
 const DEFAULT_HASHES = {
+  superadmin12345: "$2a$10$pt.uEyiSK9nqI.wmjVTzN.v0wp6SaXMXpA4M/o8vCt3trXV80I7CO",
   Admin12345: "$2a$10$pt.uEyiSK9nqI.wmjVTzN.v0wp6SaXMXpA4M/o8vCt3trXV80I7CO",
-  demo12345: "$2a$10$dENLUmMASeSpb4yXvMbdtOCHVittyfQ4m6WEZPZlip0NXmo.F0JH.",
 };
 
 async function hashPassword(password) {
@@ -92,57 +92,11 @@ const prisma = new PrismaClient();
 const SEEDS = [
   {
     email: (process.env.ADMIN_EMAIL || "admin@leaguehub.local").toLowerCase(),
-    name: process.env.ADMIN_NAME || "M. Oliver - Organizator",
-    password: process.env.ADMIN_PASSWORD || "Admin12345",
-    // This account is the installation administrator.  It must have the same
+    name: process.env.ADMIN_NAME || "Super Admin",
+    password: process.env.ADMIN_PASSWORD || "superadmin12345",
+    // This account is the installation administrator. It must have the same
     // role that the admin dashboard checks after a successful sign-in.
     role: "super_admin",
-  },
-  {
-    email: "arbitru@leaguehub.local",
-    name: "Cristian Balaj",
-    password: "demo12345",
-    role: "referee",
-    refereeBadge: "Pro Elite",
-    experienceYears: 14,
-  },
-  {
-    email: "kovacs@leaguehub.local",
-    name: "István Kovács",
-    password: "demo12345",
-    role: "referee",
-    refereeBadge: "RIFA Elite",
-    experienceYears: 12,
-  },
-  {
-    email: "jucator@leaguehub.local",
-    name: "Radu Drăgușin",
-    password: "demo12345",
-    role: "player",
-    position: "Fundaș Central",
-    jerseyNumber: 3,
-    preferredFoot: "Drept",
-  },
-  {
-    email: "florin.tanase@leaguehub.local",
-    name: "Florin Tănase",
-    password: "demo12345",
-    role: "player",
-    position: "Mijlocaș Ofensiv",
-    jerseyNumber: 10,
-    preferredFoot: "Drept",
-  },
-  {
-    email: "arena@leaguehub.local",
-    name: "Baza Sportivă Sud",
-    password: "demo12345",
-    role: "arena_owner",
-  },
-  {
-    email: "lider@leaguehub.local",
-    name: "Dan Petrescu",
-    password: "demo12345",
-    role: "team_leader",
   },
 ];
 
@@ -490,7 +444,7 @@ async function ensureReferees() {
     },
   ];
 
-  const defaultHash = await hashPassword("demo12345");
+  const defaultHash = await hashPassword("superadmin12345");
 
   for (const ref of REFEREES_30) {
     const existing = await prisma.user.findUnique({ where: { email: ref.email } });

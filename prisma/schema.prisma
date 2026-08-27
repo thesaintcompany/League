@@ -309,8 +309,11 @@ model Match {
   pitchCondition  String?  @default("Excelent")
   crowdConduct    String?  @default("Sportivă / Fără incidente")
   refereeNotes    String?  // Raportul oficial de meci și incidente
-  signedBy        String?  // Semnătura digitală a arbitrului
-  signedAt        DateTime?
+   signedBy        String?  // Semnătura digitală a arbitrului
+   signedAt        DateTime?
+   refereeConfirmed Boolean     @default(false) // Arbitrul a confirmat prezența
+   refereeConfirmedAt DateTime? // Când arbitrul a confirmat
+   refereeDeclined Boolean    @default(false) // Arbitrul a refuzat
   // Match promo, tickets, and sponsor ads
   ticketPrice     Int?     @default(25)
   ticketUrl       String?
