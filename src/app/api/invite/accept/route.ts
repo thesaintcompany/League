@@ -3,6 +3,45 @@ import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/email";
 import crypto from "crypto";
 
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const token = searchParams.get("token") || searchParams.get("offer") || searchParams.get("invite");
+    if (!token) {
+      return NextResponse.json({ error: "Token lipsă" }, { status: 400 });
+    }
+
+    const invite = await prisma.externalInvite.findFirst({
+      where: {
+        OR: [
+          { acceptToken: token },
+          { accountOfferToken: token },
+          { token: token },
+        ],
+      },
+      include: { team: true, championship: true },
+    });
+
+    if (!invite) {
+      return NextResponse.json({ error: "Invitația nu a fost găsită" }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      ok: true,
+      name: invite.inviteeName || "",
+      email: invite.inviteeEmail || "",
+      teamName: invite.team?.name || "",
+      championshipName: invite.championship?.name || "",
+      sport: invite.championship?.sport || invite.sport || "fotbal",
+      role: "player",
+      inviteToken: invite.accountOfferToken || invite.token || invite.acceptToken,
+    });
+  } catch (e) {
+    console.error("GET invite error", e);
+    return NextResponse.json({ error: "Eroare server" }, { status: 500 });
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();

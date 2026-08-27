@@ -48,12 +48,15 @@ const ROLES = [
 function SignUpForm() {
   const router = useRouter();
   const search = useSearchParams();
-  const inviteToken = search.get("invite") || search.get("offer") || undefined;
+  const inviteToken = search.get("invite") || search.get("offer") || search.get("token") || undefined;
   const roleParam = search.get("role") || undefined;
-  const isInvite = Boolean(inviteToken);
+  const emailParam = search.get("email") || undefined;
+  const nameParam = search.get("name") || search.get("userName") || undefined;
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const hasInviteContext = Boolean(inviteToken || emailParam || nameParam || (roleParam && roleParam !== "organizer"));
+
+  const [name, setName] = useState(nameParam || "");
+  const [email, setEmail] = useState(emailParam || "");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState(() => {
     if (roleParam && ROLES.some((r) => r.id === roleParam)) {
@@ -61,11 +64,42 @@ function SignUpForm() {
     }
     return "player";
   });
+  const [inviteDetails, setInviteDetails] = useState<{
+    teamName?: string;
+    sport?: string;
+    championshipName?: string;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [mobileView, setMobileView] = useState<"roles" | "form">(() =>
-    isInvite ? "form" : "roles"
+    hasInviteContext ? "form" : "roles"
   );
+
+  // Auto-fetch invite details if token is present
+  useEffect(() => {
+    if (inviteToken) {
+      setMobileView("form");
+      setSelectedRole("player");
+      fetch(`/api/invite/accept?token=${encodeURIComponent(inviteToken)}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.ok) {
+            if (data.name && !name) setName(data.name);
+            if (data.email && !email) setEmail(data.email);
+            setInviteDetails({
+              teamName: data.teamName,
+              sport: data.sport,
+              championshipName: data.championshipName,
+            });
+          }
+        })
+        .catch(() => {});
+    } else if (emailParam || nameParam) {
+      setMobileView("form");
+      if (emailParam && !email) setEmail(emailParam);
+      if (nameParam && !name) setName(nameParam);
+    }
+  }, [inviteToken, emailParam, nameParam]);
 
   useEffect(() => {
     if (roleParam && ROLES.some((r) => r.id === roleParam)) {
@@ -323,10 +357,10 @@ function SignUpForm() {
             <header className="mb-4 flex justify-between items-start">
               <div>
                 <h2 className="text-xl sm:text-2xl font-headline font-black uppercase text-slate-900 dark:text-white tracking-tight">
-                  Înregistrare Ligue
+                  {hasInviteContext ? "Finalizare Cont Invitație" : "Înregistrare Ligue"}
                 </h2>
                 <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 font-label">
-                  Completează datele pentru a începe
+                  {hasInviteContext ? "Datele tale sunt pregătite — setează doar o parolă" : "Completează datele pentru a începe"}
                 </p>
               </div>
               <div className="text-right hidden sm:block">
@@ -342,65 +376,71 @@ function SignUpForm() {
               </div>
             </header>
 
+            {/* Dedicated Invitation Banner when coming from an invite */}
+            {hasInviteContext && (
+              <div className="mb-3.5 p-3 rounded-2xl bg-lime-400/15 border-2 border-lime-400 text-slate-900 dark:text-white space-y-1 shadow-sm">
+                <div className="flex items-center gap-1.5 text-lime-700 dark:text-lime-400 font-bold text-xs">
+                  <span className="material-symbols-outlined text-base">verified</span>
+                  <span>Invitație Înregistrată{inviteDetails?.teamName ? ` • ${inviteDetails.teamName}` : ""}</span>
+                </div>
+                <p className="text-[11px] text-slate-600 dark:text-slate-300 font-body">
+                  {name ? `Salut, ${name}! ` : ""}Numele și emailul sunt deja completate. Alege o parolă și ești gata în lot!
+                </p>
+              </div>
+            )}
+
             {/* Form */}
             <form onSubmit={onSubmit} className="space-y-3.5">
               {/* Role Selection on Desktop: Standard Grid */}
-              <div className="hidden lg:block">
-                <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
-                  Rol Principal
-                </label>
-                <div className="grid grid-cols-5 gap-2">
-                  {ROLES.map((r) => (
-                    <button
-                      key={r.id}
-                      type="button"
-                      onClick={() => setSelectedRole(r.id)}
-                      className={`p-2.5 rounded-xl border text-center transition flex flex-col items-center gap-1 ${
-                        selectedRole === r.id
-                          ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-transparent shadow-md font-bold"
-                          : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent hover:bg-slate-200 dark:hover:bg-slate-700"
-                      }`}
-                    >
-                      <span className="material-symbols-outlined text-lg">{r.icon}</span>
-                      <span className="text-[10px] font-bold font-label">{r.label}</span>
-                    </button>
-                  ))}
+              {!hasInviteContext && (
+                <div className="hidden lg:block">
+                  <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+                    Rol Principal
+                  </label>
+                  <div className="grid grid-cols-5 gap-2">
+                    {ROLES.map((r) => (
+                      <button
+                        key={r.id}
+                        type="button"
+                        onClick={() => setSelectedRole(r.id)}
+                        className={`p-2.5 rounded-xl border text-center transition flex flex-col items-center gap-1 ${
+                          selectedRole === r.id
+                            ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-transparent shadow-md font-bold"
+                            : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent hover:bg-slate-200 dark:hover:bg-slate-700"
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-lg">{r.icon}</span>
+                        <span className="text-[10px] font-bold font-label">{r.label}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Role Selected Banner on Mobile */}
-              <div className="lg:hidden p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-lime-400 text-slate-950 flex items-center justify-center font-bold">
-                    <span className="material-symbols-outlined text-sm">{currentRole.icon}</span>
+              {!hasInviteContext && (
+                <div className="lg:hidden p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-lime-400 text-slate-950 flex items-center justify-center font-bold">
+                      <span className="material-symbols-outlined text-sm">{currentRole.icon}</span>
+                    </div>
+                    <div>
+                      <span className="text-[8.5px] font-black uppercase tracking-wider font-label text-slate-500 dark:text-slate-400 block">
+                        Rol Selectat
+                      </span>
+                      <span className="text-[11px] font-bold font-headline text-slate-900 dark:text-white">
+                        {currentRole.title}
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-[8.5px] font-black uppercase tracking-wider font-label text-slate-500 dark:text-slate-400 block">
-                      Rol Selectat
-                    </span>
-                    <span className="text-[11px] font-bold font-headline text-slate-900 dark:text-white">
-                      {currentRole.title}
-                    </span>
-                  </div>
-                </div>
 
-                <button
-                  type="button"
-                  onClick={() => setMobileView("roles")}
-                  className="text-[10px] font-bold text-lime-600 dark:text-lime-400 underline font-label"
-                >
-                  Schimbă
-                </button>
-              </div>
-
-              {isInvite && (
-                <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 rounded-xl flex items-center gap-2">
-                  <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-base">
-                    mail
-                  </span>
-                  <p className="text-xs font-label text-emerald-800 dark:text-emerald-300">
-                    Cont creat din invitație — rolul tău este <span className="font-bold">Jucător</span>.
-                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setMobileView("roles")}
+                    className="text-[10px] font-bold text-lime-600 dark:text-lime-400 underline font-label"
+                  >
+                    Schimbă
+                  </button>
                 </div>
               )}
 
@@ -414,7 +454,7 @@ function SignUpForm() {
               {/* Nume Complet */}
               <div className="space-y-1">
                 <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-                  Nume Complet
+                  Nume Complet {name ? "(precompletat)" : ""}
                 </label>
                 <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800 focus-within:border-lime-500 dark:focus-within:border-lime-400 transition">
                   <span className="material-symbols-outlined text-slate-400 text-base mr-2.5">
@@ -434,7 +474,7 @@ function SignUpForm() {
               {/* Email */}
               <div className="space-y-1">
                 <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-                  Adresă Email
+                  Adresă Email {email ? "(precompletat)" : ""}
                 </label>
                 <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800 focus-within:border-lime-500 dark:focus-within:border-lime-400 transition">
                   <span className="material-symbols-outlined text-slate-400 text-base mr-2.5">
@@ -453,19 +493,27 @@ function SignUpForm() {
 
               {/* Password */}
               <div className="space-y-1">
-                <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-                  Parolă
-                </label>
-                <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800 focus-within:border-lime-500 dark:focus-within:border-lime-400 transition">
-                  <span className="material-symbols-outlined text-slate-400 text-base mr-2.5">
+                <div className="flex items-center justify-between">
+                  <label className="block text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+                    Parolă
+                  </label>
+                  {hasInviteContext && (
+                    <span className="text-[10px] text-lime-600 dark:text-lime-400 font-bold font-label">
+                      Singurul pas rămas!
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center bg-slate-50 dark:bg-slate-950 rounded-xl px-3.5 py-2.5 border border-slate-200 dark:border-slate-800 focus-within:border-lime-500 dark:focus-within:border-lime-400 ring-2 ring-lime-400/30 transition">
+                  <span className="material-symbols-outlined text-lime-500 text-base mr-2.5">
                     lock
                   </span>
                   <input
                     type="password"
                     required
+                    autoFocus={hasInviteContext}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Minim 6 caractere"
+                    placeholder="Setează o parolă (minim 6 caractere)"
                     className="bg-transparent border-none p-0 w-full text-xs font-body focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-400 outline-none"
                   />
                 </div>
@@ -481,7 +529,7 @@ function SignUpForm() {
                   <span>Se creează contul...</span>
                 ) : (
                   <>
-                    <span>Creează Contul Pro</span>
+                    <span>{hasInviteContext ? "Activează Contul și Intră în Echipă" : "Creează Contul Pro"}</span>
                     <span className="material-symbols-outlined text-sm">arrow_forward</span>
                   </>
                 )}

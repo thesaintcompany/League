@@ -6,9 +6,9 @@ RUN apk add --no-cache libc6-compat openssl
 # Install dependencies
 FROM base AS deps
 WORKDIR /app
-COPY package.json package-lock.json* .npmrc* ./
+COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
-RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+RUN npm ci || npm install
 
 # Build Next.js
 FROM base AS builder
