@@ -45,9 +45,10 @@ model User {
    venues          Venue[]
    venueClaims     VenueClaim[]
    managedTeams    Team[]        @relation("ManagedTeams")
-   sentTeamInvitations TeamInvitation[] @relation("TeamInvitationInviter")
-   paymentMethods  PaymentMethod[]
-   invoices        Invoice[]
+    sentTeamInvitations TeamInvitation[] @relation("TeamInvitationInviter")
+    externalInvites ExternalInvite[]
+    paymentMethods  PaymentMethod[]
+    invoices        Invoice[]
 }
 
 model Account {
@@ -161,6 +162,7 @@ model Championship {
   teams   Team[]
   matches Match[]
   teamInvitations TeamInvitation[]
+  externalInvites ExternalInvite[]
 
   @@index([ownerId])
 }
@@ -194,8 +196,9 @@ model Team {
    players       Player[]
    homeMatches    Match[] @relation("HomeTeam")
    awayMatches    Match[] @relation("AwayTeam")
-   invitations   TeamInvitation[]
-   invoices      Invoice[]
+    invitations   TeamInvitation[]
+    externalInvites ExternalInvite[]
+    invoices      Invoice[]
 
    @@index([championshipId])
    @@index([managerId])
@@ -473,5 +476,35 @@ model TeamInvitation {
 
   @@index([teamId])
   @@index([championshipId])
+  @@index([inviteeEmail])
+}
+
+model ExternalInvite {
+  id              String   @id @default(cuid())
+  token           String   @unique
+  acceptToken     String?  @unique // for the pre-account info-collection step
+  accountOfferToken String? @unique // for the password-set-to-create-account step
+  cardToken       String?  @unique // for the member-card/photo upload step
+  teamId          String
+  championshipId  String
+  inviterId       String
+  sport           String
+  inviteeEmail    String
+  inviteeName     String?
+  stage           String   @default("pending") // pending | info_collected | confirmed | account_created | card_done
+  offerExpiresAt  DateTime?
+  accountOfferExpires DateTime?
+  cardTokenExpires DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  team        Team         @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  championship Championship @relation(fields: [championshipId], references: [id], onDelete: Cascade)
+  inviter     User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([acceptToken])
+  @@index([accountOfferToken])
+  @@index([cardToken])
   @@index([inviteeEmail])
 }
