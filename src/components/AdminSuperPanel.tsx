@@ -379,7 +379,7 @@ export function AdminSuperPanel() {
       const confirmed = confirm(
         "⚠️ Sigur dorești să dezactivezi datele demo?\n\n" +
         "Această acțiune va șterge campionatele, echipele și meciurile demonstrative.\n\n" +
-        "🛡️ GARANȚIE: Toate cele 59 de Arene Naționale și toți utilizatorii reali înregistrați sunt 100% PROTEJAȚI și NU vor fi șterși!"
+        "🛡️ GARANȚIE: La fiecare update se sterge baza de date, asadar datele demo se vor pierde automat!"
       );
       if (!confirmed) return;
     }
