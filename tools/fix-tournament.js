@@ -1,4 +1,6 @@
-"use client";
+import { writeFileSync } from "fs";
+const path = "F:/tmp/Rep/League/src/components/TournamentPhasesView.tsx";
+const content = `"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -132,3 +134,6 @@ export function TournamentPhasesView({
     </div>
   );
 }
+`;
+writeFileSync(path, content, "utf8");
+console.log("done");
