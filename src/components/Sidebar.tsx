@@ -82,9 +82,13 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
     ];
   } else if (role === "referee") {
     navItems = [
-      { name: "Meciuri & Panou Arbitraj", href: "/dashboard/referee", icon: "sports" },
-      { name: "Profil & Setări  e", href: "/profile", icon: "account_circle" },
-      { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
+      { name: "Panou Arbitraj", href: "/dashboard/referee", icon: "sports" },
+      { name: "Foaie Arbitraj Live", href: "/dashboard/referee?tab=live", icon: "scoreboard" },
+      { name: "Meciuri Viitoare", href: "/dashboard/referee?tab=upcoming", icon: "calendar_month" },
+      { name: "Invitații & Notificări", href: "/dashboard/referee?tab=invitations", icon: "mark_email_unread" },
+      { name: "Istoric & Foaie A4", href: "/dashboard/referee?tab=history", icon: "description" },
+      { name: "Profil & Date Contact", href: "/dashboard/referee?tab=profile", icon: "badge" },
+      { name: "Campionate & Arene", href: "/harta-romaniei", icon: "map" },
     ];
   } else if (role === "team_leader") {
     const rosterCount = teamTabCounts.roster ?? 0;
@@ -271,7 +275,7 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
             const itemTab = item.href.includes("?tab=") ? item.href.split("?tab=")[1] : null;
             const isTabMatch = itemTab
               ? currentTab === itemTab || (!currentTab && itemTab === "standings" && pathname.startsWith("/dashboard/championships/"))
-              : pathname === item.href;
+              : (pathname === item.href && (!currentTab || currentTab === "overview"));
             const isActive = isTabMatch;
 
             if (item.disabled) {
@@ -344,6 +348,17 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
             <span className="material-symbols-outlined text-sm">lock</span>
             Turneu Nou (Inactiv)
           </button>
+        )}
+
+        {role === "referee" && (
+          <Link
+            href="/dashboard/referee?tab=live"
+            onClick={() => setMobileOpen(false)}
+            className="w-full bg-lime-400 hover:bg-lime-300 text-slate-950 py-2.5 px-3 rounded-xl font-black flex items-center justify-center gap-2 shadow-sm transition-all active:scale-95 text-xs font-label uppercase tracking-wider"
+          >
+            <span className="material-symbols-outlined text-sm">scoreboard</span>
+            Foaie Meci Live
+          </Link>
         )}
 
         {session?.user && (

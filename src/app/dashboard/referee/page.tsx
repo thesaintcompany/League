@@ -8,21 +8,37 @@ import { RefereeDashboardPanel, MatchOfficiatingItem } from "@/components/Refere
 
 export const dynamic = "force-dynamic";
 
-export default async function RefereeDashboardPage() {
+export default async function RefereeDashboardPage(props: {
+  searchParams?: { tab?: string } | Promise<{ tab?: string }>;
+}) {
+  const rawParams = props.searchParams;
+  let searchParams: { tab?: string } = {};
+  if (rawParams) {
+    if (typeof (rawParams as any).then === "function") {
+      searchParams = (await (rawParams as Promise<{ tab?: string }>)) || {};
+    } else {
+      searchParams = (rawParams as { tab?: string }) || {};
+    }
+  }
+
+  const currentTab = searchParams.tab || "overview";
+
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/signin");
 
   const userId = (session.user as any).id;
-  const userRole = (session.user as any).role;
 
-  // Find the referee user profile
+  // Find the referee user profile with complete contact info
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
       id: true,
       name: true,
       email: true,
+      phone: true,
+      bio: true,
       role: true,
+      primarySport: true,
       refereeBadge: true,
       experienceYears: true,
       image: true,
@@ -33,7 +49,6 @@ export default async function RefereeDashboardPage() {
   if (!user) redirect("/signin");
 
   // Fetch matches assigned to this referee
-  // Or fallback to championship matches so the referee always has test assignments
   const assignedMatches = await prisma.match.findMany({
     where: {
       OR: [
@@ -65,18 +80,20 @@ export default async function RefereeDashboardPage() {
   });
 
   // Separate upcoming match from match history
-  const upcomingMatchRaw = assignedMatches.find((m) => m.status !== "finished") || assignedMatches[0] || null;
-  const matchHistoryRaw = assignedMatches.filter((m) => m.status === "finished" && m.id !== upcomingMatchRaw?.id);
+  const liveOrUpcomingMatch = assignedMatches.find((m) => m.status === "live") ||
+    assignedMatches.find((m) => m.status !== "finished") ||
+    assignedMatches[0] || null;
 
-  // All pending/unconfirmed matches for the referee confirmation panel
-  const pendingMatchesRaw = assignedMatches.filter((m) => m.status !== "finished");
+  const matchHistoryRaw = assignedMatches.filter((m) => m.status === "finished");
+  const upcomingMatchesRaw = assignedMatches.filter((m) => m.status !== "finished");
 
   // Convert Date objects to strings for serialization
-  const upcomingMatch: MatchOfficiatingItem | null = upcomingMatchRaw
+  const upcomingMatch: MatchOfficiatingItem | null = liveOrUpcomingMatch
     ? {
-      ...upcomingMatchRaw,
-      scheduledAt: upcomingMatchRaw.scheduledAt.toISOString(),
-      signedAt: upcomingMatchRaw.signedAt ? upcomingMatchRaw.signedAt.toISOString() : null,
+      ...liveOrUpcomingMatch,
+      scheduledAt: liveOrUpcomingMatch.scheduledAt.toISOString(),
+      signedAt: liveOrUpcomingMatch.signedAt ? liveOrUpcomingMatch.signedAt.toISOString() : null,
+      refereeConfirmedAt: liveOrUpcomingMatch.refereeConfirmedAt ? liveOrUpcomingMatch.refereeConfirmedAt.toISOString() : null,
     }
     : null;
 
@@ -84,12 +101,14 @@ export default async function RefereeDashboardPage() {
     ...m,
     scheduledAt: m.scheduledAt.toISOString(),
     signedAt: m.signedAt ? m.signedAt.toISOString() : null,
+    refereeConfirmedAt: m.refereeConfirmedAt ? m.refereeConfirmedAt.toISOString() : null,
   }));
 
-  const pendingMatches: MatchOfficiatingItem[] = pendingMatchesRaw.map((m) => ({
+  const pendingMatches: MatchOfficiatingItem[] = upcomingMatchesRaw.map((m) => ({
     ...m,
     scheduledAt: m.scheduledAt.toISOString(),
     signedAt: m.signedAt ? m.signedAt.toISOString() : null,
+    refereeConfirmedAt: m.refereeConfirmedAt ? m.refereeConfirmedAt.toISOString() : null,
   }));
 
   return (
@@ -100,16 +119,19 @@ export default async function RefereeDashboardPage() {
       {/* Main Content Area */}
       <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
-          title="Panou   de Arbitraj"
-          subtitle={`Bine ai venit, ${user.name || "Arbitru  "} (${user.refereeBadge || "RIFA"})!`}
+          title="Panou Oficial de Arbitraj"
+          subtitle={`Bine ai venit, ${user.name || "Arbitru Oficial"} (${user.refereeBadge || "RIFA"})`}
         />
 
         <main className="p-4 sm:p-8 space-y-6 sm:space-y-8 flex-1 max-w-7xl">
           <RefereeDashboardPanel
             refereeUser={{
               id: user.id,
-              name: user.name || "Arbitru  ",
+              name: user.name || "Arbitru Oficial",
               email: user.email,
+              phone: user.phone || "",
+              bio: user.bio || "",
+              primarySport: user.primarySport || "fotbal",
               refereeBadge: user.refereeBadge,
               experienceYears: user.experienceYears,
               image: user.image,
@@ -118,6 +140,7 @@ export default async function RefereeDashboardPage() {
             upcomingMatch={upcomingMatch}
             matchHistory={matchHistory}
             pendingMatches={pendingMatches}
+            initialTab={currentTab}
           />
         </main>
       </div>
