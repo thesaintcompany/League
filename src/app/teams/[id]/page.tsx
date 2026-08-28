@@ -773,12 +773,19 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
                     <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">Manager Oficial Echipă</span>
                     <p className="font-headline font-black text-sm text-white">{team.manager.name || "Manager Club"}</p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/50 font-black text-xs font-mono uppercase flex items-center gap-1.5 shadow-sm">
                       <span className="material-symbols-outlined text-sm">workspace_premium</span>
                       <span>{team.manager.managerBadge || "Manager Debutant"}</span>
                     </span>
                     <span className="text-xs font-mono text-slate-400 font-bold">{team.manager.managerXp || 0} XP</span>
+                    <Link
+                      href={`/managers/${team.manager.id}`}
+                      className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-lime-400 hover:text-slate-950 text-white font-headline font-bold text-xs uppercase tracking-wider transition border border-slate-700 flex items-center gap-1 shrink-0 ml-1"
+                    >
+                      <span>Profil Manager</span>
+                      <span className="material-symbols-outlined text-xs">arrow_forward</span>
+                    </Link>
                   </div>
                 </div>
               )}
