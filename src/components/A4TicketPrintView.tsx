@@ -36,7 +36,7 @@ export function A4TicketPrintView({ ticket }: { ticket: TicketData }) {
   const [accessQrUrl, setAccessQrUrl] = useState<string>("");
   const [promoQrUrl, setPromoQrUrl] = useState<string>("");
 
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://sp.  buu.ro";
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://spligue.ro";
   const promoUrl = `${origin}/matches/${ticket.match.id}/promo`;
 
   useEffect(() => {
@@ -319,7 +319,7 @@ function SingleTicketCard({
             Partener   &amp; Sponsor: <strong>{ticket.match.sponsorName || "Ligue Pro Energy"}</strong> • {ticket.match.sponsorTagline || "Performanță Sportivă"}
           </p>
           <p className="text-[9px] text-slate-400 font-mono">
-            Platformă securizată operată de <strong>  buu.ro</strong> • Toate drepturile aparțin <strong>  buu.ro</strong> • Asistență: <strong>contact@buu.ro</strong>
+            Platformă securizată operată de <strong>   ligue.ro</strong> • Toate drepturile aparțin <strong>   ligue.ro</strong> • Asistență: <strong>contact@ ligue.ro</strong>
           </p>
         </div>
 
@@ -332,7 +332,7 @@ function SingleTicketCard({
           <div className="text-left">
             <span className="text-[8px] font-black uppercase text-slate-400 block">PAGINĂ PROMO</span>
             <span className="text-[10px] font-bold text-slate-900 block">Scanează cu telefonul</span>
-            <span className="text-[8px] text-slate-500">  buu.ro • Live Telemetry</span>
+            <span className="text-[8px] text-slate-500">   ligue.ro • Live Telemetry</span>
           </div>
         </div>
       </div>

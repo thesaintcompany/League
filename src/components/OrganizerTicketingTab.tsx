@@ -87,7 +87,7 @@ export function OrganizerTicketingTab({
         accountHolder: activeMatch.organizerAccountHolder || "",
       });
 
-      const origin = typeof window !== "undefined" ? window.location.origin : "https://sp.  buu.ro";
+      const origin = typeof window !== "undefined" ? window.location.origin : "https://spligue.ro";
       const scannerActivationUrl = `${origin}/tickets/scanner?matchId=${activeMatch.id}&token=${activeMatch.gateAccessSecret || "SECRET"}`;
 
       QRCode.toDataURL(scannerActivationUrl, {
@@ -444,7 +444,7 @@ export function OrganizerTicketingTab({
                   </Link>
 
                   <a
-                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(` Link Scanner Porți Meci ${activeMatch?.homeTeam.name} vs ${activeMatch?.awayTeam.name}: https://sp.  buu.ro/tickets/scanner?matchId=${activeMatch?.id}&token=${activeMatch?.gateAccessSecret || "SECRET"}`)}`}
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(` Link Scanner Porți Meci ${activeMatch?.homeTeam.name} vs ${activeMatch?.awayTeam.name}: https://spligue.ro/tickets/scanner?matchId=${activeMatch?.id}&token=${activeMatch?.gateAccessSecret || "SECRET"}`)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold font-label text-xs uppercase rounded-2xl flex items-center justify-center gap-2 transition"

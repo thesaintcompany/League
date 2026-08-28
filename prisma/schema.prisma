@@ -353,11 +353,11 @@ model Match {
 model SystemSetting {
   id                    String   @id @default("default")
   activeLogoUrl         String   @default("/images/logos/logo-1.png") // Logo-ul principal activ selectat de SuperAdmin
-  companyName           String?  @default("buu.ro S.R.L.")
+  companyName           String?  @default(" ligue.ro S.R.L.")
   companyCui            String?  @default("RO12345678")
   companyRegCom         String?  @default("J35/123/2024")
   companyAddress        String?  @default("Timișoara, Județul Timiș, România")
-  companyEmail          String?  @default("contact@buu.ro")
+  companyEmail          String?  @default("contact@ ligue.ro")
   companyPhone          String?  @default("+40 700 000 000")
   platformFeePercent    Float    @default(10.0) // Comision platformă Super Admin %
   stripePublishableKey  String?

@@ -59,7 +59,7 @@ export function PublicFooter() {
             </p>
             <div className="pt-2 text-xs font-label space-y-1">
               <p className="text-slate-500 dark:text-slate-400">
-                Operator platformă: <strong className="text-slate-900 dark:text-white font-bold">BUU.RO</strong>
+                Operator platformă: <strong className="text-slate-900 dark:text-white font-bold"> ligue.ro</strong>
               </p>
               <p className="text-slate-400 dark:text-slate-500 text-[11px] font-mono">
                 CUI: 53063735 • J2025095153006
@@ -183,10 +183,10 @@ export function PublicFooter() {
               </li>
               <li className="pt-3">
                 <a
-                  href="mailto:contact@buu.ro"
+                  href="mailto:contact@ ligue.ro"
                   className="inline-block text-xs font-mono font-bold text-slate-900 dark:text-lime-400 hover:underline"
                 >
-                  contact@buu.ro
+                  contact@ ligue.ro
                 </a>
               </li>
             </ul>
@@ -198,12 +198,12 @@ export function PublicFooter() {
           <p>
             © {currentYear} PRO LIGUE • Operat de{" "}
             <a
-              href="https://buu.ro"
+              href="https:// ligue.ro"
               target="_blank"
               rel="noreferrer"
               className="font-bold text-slate-800 dark:text-slate-200 hover:underline"
             >
-              BUU.RO
+              ligue.ro
             </a>
             . Toate drepturile rezervate.
           </p>

@@ -389,7 +389,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
             <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
               <span className="w-3 h-7 bg-blue-500 rounded-full"></span>
               <h3 className="text-lg font-bold font-headline uppercase text-slate-900 dark:text-white">
-                 Documente &amp; Rapoarte Meci
+                Documente &amp; Rapoarte Meci
               </h3>
             </div>
 
@@ -463,7 +463,7 @@ export function MatchPromoClientView({ match }: MatchPromoProps) {
                   </Link>
 
                   <a
-                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Iată biletul meu la meciul ${match.homeTeam.name} vs ${match.awayTeam.name}: https://sp.  buu.ro/tickets/${purchasedTicket.id}/print`)}`}
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Iată biletul meu la meciul ${match.homeTeam.name} vs ${match.awayTeam.name}: https://spligue.ro/tickets/${purchasedTicket.id}/print`)}`}
                     target="_blank"
                     rel="noreferrer"
                     className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold font-label text-xs uppercase rounded-2xl flex items-center justify-center gap-2 transition"

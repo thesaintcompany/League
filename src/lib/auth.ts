@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 // Production default for self-hosted deployments. It can still be overridden
 // by NEXTAUTH_URL in the hosting environment.
 if (process.env.NODE_ENV === "production" && !process.env.NEXTAUTH_URL) {
-  process.env.NEXTAUTH_URL = "https://sp.buu.ro";
+  process.env.NEXTAUTH_URL = "https://spligue.ro";
 }
 
 export const authOptions: NextAuthOptions = {
@@ -57,15 +57,15 @@ export const authOptions: NextAuthOptions = {
         const isSuperAdminEmail = normalizedEmail === "admin@leaguehub.local" || normalizedEmail === "superadmin@leaguehub.local";
 
         if (!user && isSuperAdminEmail && !isDemoPreFillDisabled) {
-           const hash = await bcrypt.hash("superadmin12345", 10);
-           user = await prisma.user.create({
-             data: {
-               email: normalizedEmail,
-               name: "Super Admin",
-               role: "super_admin",
-               passwordHash: hash,
-             }
-           });
+          const hash = await bcrypt.hash("superadmin12345", 10);
+          user = await prisma.user.create({
+            data: {
+              email: normalizedEmail,
+              name: "Super Admin",
+              role: "super_admin",
+              passwordHash: hash,
+            }
+          });
         }
 
         if (!user) return null;
@@ -82,17 +82,17 @@ export const authOptions: NextAuthOptions = {
 
         // Robust fallback for Super Admin password (ONLY if demo pre-fill is not disabled)
         if (!valid && !isDemoPreFillDisabled) {
-           if (isSuperAdminEmail) {
-             if (
-               rawPassword === "superadmin12345" ||
-               rawPassword === "Admin12345" ||
-               rawPassword === "superadmin" ||
-               rawPassword === "admin" ||
-               rawPassword === "admin123"
-             ) {
-               valid = true;
-             }
-           }
+          if (isSuperAdminEmail) {
+            if (
+              rawPassword === "superadmin12345" ||
+              rawPassword === "Admin12345" ||
+              rawPassword === "superadmin" ||
+              rawPassword === "admin" ||
+              rawPassword === "admin123"
+            ) {
+              valid = true;
+            }
+          }
         }
 
         if (!valid) return null;

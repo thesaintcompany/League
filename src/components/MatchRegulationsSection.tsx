@@ -102,7 +102,7 @@ export function MatchRegulationsSection({ championshipName = "Ligue Pro România
         </div>
 
         <div class="footer">
-          © Ligue Pro România • Document generat automat pentru <strong>${championshipName}</strong> • Powered by   buu.ro
+          © Ligue Pro România • Document generat automat pentru <strong>${championshipName}</strong> • Powered by    ligue.ro
         </div>
       </body>
       </html>

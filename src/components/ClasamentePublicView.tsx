@@ -260,7 +260,7 @@ export function ClasamentePublicView({
 
           <div
             ref={storiesRef}
-            className="flex items-center gap-3.5 overflow-x-auto pb-2 scrollbar-none no-scrollbar scroll-smooth"
+            className="flex items-center gap-3.5 overflow-x-auto pt-3.5 pb-3 px-1 scrollbar-none no-scrollbar scroll-smooth"
           >
             {clubs.map((club) => {
               const isSelected = selectedClubId === club.id;
@@ -270,7 +270,7 @@ export function ClasamentePublicView({
                   key={club.id}
                   type="button"
                   onClick={() => handleClubClick(club)}
-                  className={`flex flex-col items-center gap-1.5 shrink-0 group focus:outline-none transition-transform duration-200 ${
+                  className={`relative flex flex-col items-center gap-1.5 shrink-0 group focus:outline-none transition-transform duration-200 ${
                     isSelected ? "scale-105" : "hover:scale-105"
                   }`}
                 >
@@ -302,15 +302,15 @@ export function ClasamentePublicView({
                       </div>
                     </div>
 
-                    {/* Top mini badge tag */}
+                    {/* Top mini badge tag - positioned in front layer (z-30) */}
                     {club.badgeTag && (
-                      <span className="absolute -top-1.5 -right-1 px-1.5 py-0.2 rounded-full bg-lime-400 text-slate-950 text-[8px] font-black uppercase font-label tracking-tighter shadow-md">
+                      <span className="absolute -top-2 -right-1 z-30 px-2 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[9px] font-black uppercase font-label tracking-tight shadow-lg border border-slate-950 ring-2 ring-slate-950 pointer-events-none whitespace-nowrap">
                         {club.badgeTag}
                       </span>
                     )}
                   </div>
 
-                  <span className="text-[10px] font-headline font-bold text-slate-300 group-hover:text-white max-w-[70px] truncate block text-center leading-tight">
+                  <span className="text-[10px] font-headline font-bold text-slate-300 group-hover:text-white max-w-[72px] truncate block text-center leading-tight">
                     {club.shortName || club.name}
                   </span>
                 </button>

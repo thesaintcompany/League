@@ -23,7 +23,7 @@ export default function ConfidentialitatePage() {
             Politica de Confidențialitate (GDPR)
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-            Protecția datelor dumneavoastră este prioritatea noastră • Operat de <strong>  buu.ro</strong>
+            Protecția datelor dumneavoastră este prioritatea noastră • Operat de <strong>   ligue.ro</strong>
           </p>
         </div>
       </section>
@@ -73,8 +73,8 @@ export default function ConfidentialitatePage() {
             </h2>
             <p>
               Pentru orice solicitare privind datele dumneavoastră cu caracter personal, vă rugăm să trimiteți un e-mail către responsabilul DPO la{" "}
-              <a href="mailto:contact@buu.ro" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
-                contact@buu.ro
+              <a href="mailto:contact@ ligue.ro" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
+                contact@ ligue.ro
               </a>.
             </p>
           </section>

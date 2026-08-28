@@ -93,7 +93,7 @@ function SignUpForm() {
             });
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     } else if (emailParam || nameParam) {
       setMobileView("form");
       if (emailParam && !email) setEmail(emailParam);
@@ -141,6 +141,12 @@ function SignUpForm() {
       return;
     }
 
+    const callbackUrl = search.get("callbackUrl");
+    if (callbackUrl) {
+      router.push(callbackUrl);
+      return;
+    }
+
     if (selectedRole === "organizer") {
       router.push("/dashboard");
     } else if (selectedRole === "team_leader") {
@@ -162,12 +168,11 @@ function SignUpForm() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/5 blur-[150px] rounded-full pointer-events-none"></div>
 
       <section className="w-full max-w-6xl bg-white dark:bg-slate-900/90 backdrop-blur-2xl rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_25px_70px_rgba(0,0,0,0.15)] dark:shadow-[0_25px_70px_rgba(0,0,0,0.6)] flex flex-col lg:flex-row overflow-hidden z-10 border border-slate-200 dark:border-slate-800/80 mb-6 lg:mb-0">
-        
+
         {/* Card 1 (Dark Side / Mobile Step 1): Visual Impact + 2-Column Compact Roles on Mobile */}
         <div
-          className={`w-full lg:w-5/12 bg-slate-950 p-5 sm:p-8 lg:p-12 flex-col justify-between relative overflow-hidden text-white min-h-[620px] sm:min-h-[680px] lg:min-h-[780px] ${
-            mobileView === "roles" ? "flex" : "hidden lg:flex"
-          }`}
+          className={`w-full lg:w-5/12 bg-slate-950 p-5 sm:p-8 lg:p-12 flex-col justify-between relative overflow-hidden text-white min-h-[620px] sm:min-h-[680px] lg:min-h-[780px] ${mobileView === "roles" ? "flex" : "hidden lg:flex"
+            }`}
         >
           {/* High-Impact Background Goal Action Photo */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -246,20 +251,17 @@ function SignUpForm() {
                     key={r.id}
                     type="button"
                     onClick={() => setSelectedRole(r.id)}
-                    className={`p-2 rounded-xl border text-left transition-all duration-200 flex items-center gap-2 relative overflow-hidden group ${
-                      isLastOdd ? "col-span-2" : ""
-                    } ${
-                      isSelected
+                    className={`p-2 rounded-xl border text-left transition-all duration-200 flex items-center gap-2 relative overflow-hidden group ${isLastOdd ? "col-span-2" : ""
+                      } ${isSelected
                         ? "bg-slate-900/95 border-lime-400 text-white shadow-lg shadow-lime-400/20 ring-1 ring-lime-400"
                         : "bg-slate-950/75 border-slate-800/80 text-slate-300 hover:bg-slate-900/90 hover:border-slate-700"
-                    } backdrop-blur-md`}
+                      } backdrop-blur-md`}
                   >
                     <div
-                      className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
-                        isSelected
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isSelected
                           ? "bg-lime-400 text-slate-950 font-bold"
                           : "bg-white/10 text-slate-200"
-                      }`}
+                        }`}
                     >
                       <span className="material-symbols-outlined text-base">{r.icon}</span>
                     </div>
@@ -323,9 +325,8 @@ function SignUpForm() {
 
         {/* Card 2 (Right Side / Mobile Step 2): Registration Form & Disabled Google Auth */}
         <div
-          className={`w-full lg:w-7/12 p-5 sm:p-8 lg:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 relative overflow-hidden min-h-[620px] sm:min-h-[680px] lg:min-h-[780px] ${
-            mobileView === "form" ? "flex" : "hidden lg:flex"
-          }`}
+          className={`w-full lg:w-7/12 p-5 sm:p-8 lg:p-12 bg-white dark:bg-slate-900 flex-col justify-between border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-800 relative overflow-hidden min-h-[620px] sm:min-h-[680px] lg:min-h-[780px] ${mobileView === "form" ? "flex" : "hidden lg:flex"
+            }`}
         >
           {/* Subtle Watermark */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-[0.04] dark:opacity-[0.06] z-0">
@@ -403,11 +404,10 @@ function SignUpForm() {
                         key={r.id}
                         type="button"
                         onClick={() => setSelectedRole(r.id)}
-                        className={`p-2.5 rounded-xl border text-center transition flex flex-col items-center gap-1 ${
-                          selectedRole === r.id
+                        className={`p-2.5 rounded-xl border text-center transition flex flex-col items-center gap-1 ${selectedRole === r.id
                             ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 border-transparent shadow-md font-bold"
                             : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-transparent hover:bg-slate-200 dark:hover:bg-slate-700"
-                        }`}
+                          }`}
                       >
                         <span className="material-symbols-outlined text-lg">{r.icon}</span>
                         <span className="text-[10px] font-bold font-label">{r.label}</span>
@@ -594,7 +594,7 @@ function SignUpForm() {
               </Link>
             </p>
             <p className="text-[9.5px] font-mono text-slate-400 dark:text-slate-500">
-              © {new Date().getFullYear()} buu.ro • Toate drepturile rezervate
+              © {new Date().getFullYear()}  ligue.ro • Toate drepturile rezervate
             </p>
           </footer>
         </div>

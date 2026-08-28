@@ -158,17 +158,17 @@ prisma/
 
 ## API Endpoints (rezumat)
 
-| Method | Path | Descriere |
-|---|---|---|
-| POST | `/api/auth/signup` | Creare cont |
-| GET/POST | `/api/championships` | Lista / creare campionate |
-| GET/DELETE | `/api/championships/:id` | Detalii / ștergere campionat |
-| POST | `/api/championships/:id/teams` | Adaugă echipă |
-| DELETE | `/api/championships/:id/teams/:teamId` | Șterge echipă |
-| POST | `/api/championships/:id/teams/:teamId/players` | Adaugă jucător |
-| GET/POST | `/api/championships/:id/matches` | Lista / creare meciuri |
-| PATCH/DELETE | `/api/championships/:id/matches/:matchId` | Update scor / ștergere |
-| GET | `/api/championships/:id/standings` | Clasament calculat |
+| Method       | Path                                           | Descriere                    |
+| ------------ | ---------------------------------------------- | ---------------------------- |
+| POST         | `/api/auth/signup`                             | Creare cont                  |
+| GET/POST     | `/api/championships`                           | Lista / creare campionate    |
+| GET/DELETE   | `/api/championships/:id`                       | Detalii / ștergere campionat |
+| POST         | `/api/championships/:id/teams`                 | Adaugă echipă                |
+| DELETE       | `/api/championships/:id/teams/:teamId`         | Șterge echipă                |
+| POST         | `/api/championships/:id/teams/:teamId/players` | Adaugă jucător               |
+| GET/POST     | `/api/championships/:id/matches`               | Lista / creare meciuri       |
+| PATCH/DELETE | `/api/championships/:id/matches/:matchId`      | Update scor / ștergere       |
+| GET          | `/api/championships/:id/standings`             | Clasament calculat           |
 
 ## Migrare la PostgreSQL (pentru producție serioasă)
 
@@ -180,8 +180,8 @@ SQLite e ok pentru 1-10 campionate mici. Dacă vrei multi-tenant sau volum mare:
 
 ## Date de Contact
 
-- **Email   & Suport:** `contact@buu.ro` (Datele de contact sunt exclusiv `contact@buu.ro` și nu se mai modifică)
-- **Website:** [https://sp.buu.ro](https://sp.buu.ro)
+- **Email   & Suport:** `contact@ ligue.ro` (Datele de contact sunt exclusiv `contact@ ligue.ro` și nu se mai modifică)
+- **Website:** [https://sp. ligue.ro](https://sp. ligue.ro)
 
 ## Licență
 

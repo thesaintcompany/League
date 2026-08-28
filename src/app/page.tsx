@@ -145,7 +145,7 @@ function WelcomePortalForm() {
 
             {/* Quick public navigation links (1 line, 1 word each) */}
             <div className="grid grid-cols-4 gap-1.5 text-[11px] font-label font-bold text-slate-300 pt-1 text-center">
-              <Link href="https://sp.buu.ro/harta-romaniei" className="hover:text-lime-400 transition bg-white/5 hover:bg-white/10 py-1.5 px-1 rounded-lg truncate">
+              <Link href="https://spligue.ro/harta-romaniei" className="hover:text-lime-400 transition bg-white/5 hover:bg-white/10 py-1.5 px-1 rounded-lg truncate">
                 <span className="material-symbols-outlined text-base">map</span> Hartă
               </Link>
               <Link href="/venues" className="hover:text-lime-400 transition bg-white/5 hover:bg-white/10 py-1.5 px-1 rounded-lg truncate">
@@ -315,10 +315,10 @@ function WelcomePortalForm() {
 
           <footer className="pt-6 mt-6 border-t border-slate-200 dark:border-slate-800 text-center space-y-1 relative z-10">
             <p className="text-[11px] font-label text-slate-600 dark:text-slate-400">
-              © {new Date().getFullYear()} <a href="https://  buu.ro" target="_blank" rel="noreferrer" className="font-bold text-slate-900 dark:text-lime-400 hover:underline">  buu.ro</a>. Toate drepturile aparțin <strong>  buu.ro</strong>.
+              © {new Date().getFullYear()} <a href="https://   ligue.ro" target="_blank" rel="noreferrer" className="font-bold text-slate-900 dark:text-lime-400 hover:underline">   ligue.ro</a>. Toate drepturile aparțin <strong>   ligue.ro</strong>.
             </p>
             <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
-              Contact  : <a href="mailto:contact@buu.ro" className="text-lime-600 dark:text-lime-400 hover:underline font-bold">contact@buu.ro</a>
+              Contact  : <a href="mailto:contact@ ligue.ro" className="text-lime-600 dark:text-lime-400 hover:underline font-bold">contact@ ligue.ro</a>
             </p>
           </footer>
         </div>

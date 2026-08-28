@@ -591,7 +591,7 @@ export function OrganizerTeamsPanel() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {teams.map((t, idx) => {
                   const roleParam = isIndividual ? "player" : "team_leader";
-                  const inviteUrl = `https://sp.  buu.ro/signup?role=${roleParam}&championshipId=${activeChampId}&teamId=${t.id}&email=${encodeURIComponent(t.managerEmail || "")}`;
+                  const inviteUrl = `https://spligue.ro/signup?role=${roleParam}&championshipId=${activeChampId}&teamId=${t.id}&email=${encodeURIComponent(t.managerEmail || "")}`;
 
                   return (
                     <div
@@ -666,7 +666,7 @@ export function OrganizerTeamsPanel() {
                           className="py-1.5 px-3 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl font-headline font-bold text-[10px] uppercase tracking-wider"
                           title="Copiază Link Invitație"
                         >
-                           Copiază
+                          Copiază
                         </button>
                       </div>
                     </div>

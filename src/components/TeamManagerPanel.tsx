@@ -1034,7 +1034,7 @@ export function TeamManagerPanel({
 
                   <div className="flex justify-between items-center pt-2 border-t border-slate-800 text-xs font-label">
                     <span className="px-2 py-0.5 rounded bg-lime-400/20 text-lime-400 font-bold text-[10px] uppercase">
-                      Titular 
+                      Titular
                     </span>
                     <button
                       type="button"
@@ -1999,7 +1999,7 @@ export function TeamManagerPanel({
               </div>
               <div>
                 <span className="text-slate-500">Companie:</span>
-                <span className="text-white font-bold ml-2">buu.ro S.R.L.</span>
+                <span className="text-white font-bold ml-2"> ligue.ro S.R.L.</span>
               </div>
               <div>
                 <span className="text-slate-500">Preț Abonament Echipă:</span>

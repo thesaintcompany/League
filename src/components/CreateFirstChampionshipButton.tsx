@@ -10,7 +10,7 @@ export function CreateFirstChampionshipButton() {
 
   function handleClick() {
     if (!session?.user) {
-      router.push("/signin?callbackUrl=/dashboard/new");
+      router.push("/signup?role=organizer&callbackUrl=/dashboard/new");
       return;
     }
 

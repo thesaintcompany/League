@@ -33,7 +33,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 # Defaults that bootstrap reads if Coolify didn't pass them.
 ENV DATABASE_URL=file:/app/data/league.db
-ENV NEXTAUTH_URL=https://sp.buu.ro
+ENV NEXTAUTH_URL=https://sp. ligue.ro
 ENV NEXTAUTH_SECRET=dev-secret-change-me-please-this-is-not-secure-change-in-production-min-32
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0

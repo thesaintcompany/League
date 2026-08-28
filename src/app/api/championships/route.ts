@@ -70,7 +70,7 @@ export async function POST(req: Request) {
       dbUser = await prisma.user.create({
         data: {
           ...(userId ? { id: userId } : {}),
-          email: userEmail ? userEmail.toLowerCase().trim() : `user_${Date.now()}@buu.ro`,
+          email: userEmail ? userEmail.toLowerCase().trim() : `user_${Date.now()}@ ligue.ro`,
           name: userName,
           role: userRole || "organizer",
         },

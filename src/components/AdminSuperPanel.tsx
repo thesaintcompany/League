@@ -97,11 +97,11 @@ export function AdminSuperPanel() {
 
   // Ticketing, Legal & Payment Settings State
   const [ticketSettings, setTicketSettings] = useState({
-    companyName: "TSC Q - BUU.RO",
+    companyName: "TSC Q -  ligue.ro",
     companyCui: "53063735",
     companyRegCom: "J2025095153006",
     companyAddress: "Timișoara, Județul Timiș, România",
-    companyEmail: "contact@buu.ro",
+    companyEmail: "contact@ ligue.ro",
     companyPhone: "+40 700 000 000",
     platformFeePercent: 10.0,
     stripePublishableKey: "",
@@ -275,7 +275,7 @@ export function AdminSuperPanel() {
     const isDeactivate = action === "deactivate";
     const confirmed = confirm(
       isDeactivate
-        ?          "Sigur dorești să DEZACTIVEZI toți utilizatorii demo?\n\n" +
+        ? "Sigur dorești să DEZACTIVEZI toți utilizatorii demo?\n\n" +
         "Conturile demonstrative vor fi marcate ca DEZACTIVATE și nu se vor mai putea autentifica.\n\n" +
         " Utilizatorii reali și arenele NU sunt afectați!"
         : "Sigur dorești să REACTIVEZI toți utilizatorii demo?"
@@ -714,7 +714,7 @@ export function AdminSuperPanel() {
 
   async function handleDeleteUser(u: UserItem) {
     const confirmed = confirm(
-       `Atenție: Sigur dorești să ștergi definitiv utilizatorul "${u.email}" (${u.name || "Fără nume"})?\n\n` +
+      `Atenție: Sigur dorești să ștergi definitiv utilizatorul "${u.email}" (${u.name || "Fără nume"})?\n\n` +
       "Această acțiune este IREVERSIBILĂ ca în WordPress admin!"
     );
     if (!confirmed) return;
@@ -891,11 +891,10 @@ export function AdminSuperPanel() {
                   const newMode = "auto";
                   handleSaveSeasonSettings(newMode, ticketSettings.seasonYear || 2027);
                 }}
-                className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${
-                  ticketSettings.seasonMode === "auto"
+                className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${ticketSettings.seasonMode === "auto"
                     ? "bg-lime-400/10 border-lime-400 shadow-md ring-2 ring-lime-400/40"
                     : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/80"
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
@@ -929,11 +928,10 @@ export function AdminSuperPanel() {
                     handleSaveSeasonSettings("manual", ticketSettings.seasonYear || 2027);
                   }
                 }}
-                className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${
-                  ticketSettings.seasonMode === "manual"
+                className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${ticketSettings.seasonMode === "manual"
                     ? "bg-lime-400/10 border-lime-400 shadow-md ring-2 ring-lime-400/40"
                     : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/80"
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
@@ -1174,7 +1172,7 @@ export function AdminSuperPanel() {
             </div>
           </div>
 
-          {/* Date Legale & Identitate Fiscală Operator (  buu.ro) */}
+          {/* Date Legale & Identitate Fiscală Operator (   ligue.ro) */}
           <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-3">
@@ -1183,7 +1181,7 @@ export function AdminSuperPanel() {
                 </div>
                 <div>
                   <h3 className="font-headline font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase">
-                    Date Legale &amp; Identitate Fiscală Operator (  buu.ro)
+                    Date Legale &amp; Identitate Fiscală Operator (   ligue.ro)
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
                     Informațiile  e ale entității juridice care operează platforma, facturile de ticketing și termenii legali.
@@ -1192,7 +1190,7 @@ export function AdminSuperPanel() {
               </div>
 
               <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-mono font-bold uppercase border border-blue-500/20">
-                Operator  :   buu.ro
+                Operator  :    ligue.ro
               </span>
             </div>
 
@@ -1204,10 +1202,10 @@ export function AdminSuperPanel() {
                   </label>
                   <input
                     type="text"
-                    value={ticketSettings.companyName || "TSC Q - BUU.RO"}
+                    value={ticketSettings.companyName || "TSC Q -  ligue.ro"}
                     onChange={(e) => setTicketSettings({ ...ticketSettings, companyName: e.target.value })}
                     className="input text-xs font-bold"
-                    placeholder="TSC Q - BUU.RO"
+                    placeholder="TSC Q -  ligue.ro"
                   />
                 </div>
 
@@ -1243,10 +1241,10 @@ export function AdminSuperPanel() {
                   </label>
                   <input
                     type="email"
-                    value={ticketSettings.companyEmail || "contact@buu.ro"}
+                    value={ticketSettings.companyEmail || "contact@ ligue.ro"}
                     onChange={(e) => setTicketSettings({ ...ticketSettings, companyEmail: e.target.value })}
                     className="input text-xs font-mono"
-                    placeholder="contact@buu.ro"
+                    placeholder="contact@ ligue.ro"
                   />
                 </div>
 
@@ -1478,7 +1476,7 @@ export function AdminSuperPanel() {
                         Domeniu Web Verificat:
                       </span>
                       <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
-                        sp.  buu.ro (Verificat)
+                        spligue.ro (Verificat)
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-500 font-body">
@@ -1628,13 +1626,13 @@ export function AdminSuperPanel() {
 
                 <div className="space-y-2 text-xs">
                   <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 font-mono text-[11px] flex justify-between items-center">
-                    <span className="truncate">https://sp.  buu.ro/api/webhooks/stripe</span>
+                    <span className="truncate">https://spligue.ro/api/webhooks/stripe</span>
                     <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
                       Stripe Live
                     </span>
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 font-mono text-[11px] flex justify-between items-center">
-                    <span className="truncate">https://sp.  buu.ro/api/webhooks/paypal</span>
+                    <span className="truncate">https://spligue.ro/api/webhooks/paypal</span>
                     <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-bold">
                       PayPal Live
                     </span>
@@ -2440,9 +2438,9 @@ export function AdminSuperPanel() {
               </div>
 
               <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-black text-lg">
-                    <span className="material-symbols-outlined">casino</span>
-                  </div>
+                <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-black text-lg">
+                  <span className="material-symbols-outlined">casino</span>
+                </div>
                 <div>
                   <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
                     Status Date Demo

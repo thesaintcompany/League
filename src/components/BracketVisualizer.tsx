@@ -86,7 +86,7 @@ export function BracketVisualizer({
   }
 
   // Get clean direct public URL
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://sp.  buu.ro";
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://spligue.ro";
   const publicShareUrl = `${origin}/brackets?code=${currentShareCode}`;
 
   function copyToClipboard(text: string, type: "link" | "code") {
@@ -191,7 +191,7 @@ export function BracketVisualizer({
             : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
         >
-              <span className="material-symbols-outlined text-sm">description</span> Etape Separate
+          <span className="material-symbols-outlined text-sm">description</span> Etape Separate
         </button>
       </div>
 

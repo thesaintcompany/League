@@ -3,7 +3,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
-import { RefereeBadgePill } from "@/components/PublicRefereesCatalog";
+import { RefereeBadgePill, getSafeRefereePhoto } from "@/components/PublicRefereesCatalog";
 
 export const dynamic = "force-dynamic";
 
@@ -30,18 +30,9 @@ export default async function PublicRefereeDetailPage({
     take: 6,
   });
 
-  const isStadium =
-    referee.coverPhotoUrl?.includes("photo-1508098682722") ||
-    referee.coverPhotoUrl?.includes("photo-1574629810360") ||
-    referee.coverPhotoUrl?.includes("photo-1522778119026") ||
-    referee.image?.includes("photo-1508098682722");
-
-  const humanPhoto =
-    (!isStadium && (referee.coverPhotoUrl || referee.image)) ||
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=80";
-
+  const humanPhoto = getSafeRefereePhoto(referee);
   const coverImg = humanPhoto;
-  const avatarImg = referee.image && !isStadium ? referee.image : humanPhoto;
+  const avatarImg = humanPhoto;
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col font-body text-white relative">

@@ -16,46 +16,36 @@ interface RefereeItem {
   coverPhotoUrl?: string | null;
 }
 
-// Fallback array of 30 genuine human referee & athletic portraits
-const REFEREE_HUMAN_FALLBACKS = [
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1519764622345-23439dd774f7?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1528892952291-009c663ce843?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1548142813-c348350df52b?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&auto=format&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800&auto=format&fit=crop&q=80",
+export const REFEREE_AUTHENTIC_UNIFORM_PHOTOS = [
+  "/images/referees/referee-2.jpg", // Black Elite Referee with RIFA/FIFA patch & whistle
+  "/images/referees/referee-1.jpg", // Cyan Blue VAR Elite with headset & whistle
+  "/images/referees/referee-5.jpg", // Neon Yellow Referee with Yellow Card
+  "/images/referees/referee-4.jpg", // Neon Lime Referee with earpiece
+  "/images/referees/referee-6.jpg", // Orange / Black Referee with Red Card
+  "/images/referees/referee-3.jpg", // Female Referee in official uniform & whistle
 ];
 
-function getSafeRefereePhoto(ref: RefereeItem, idx: number): string {
-  // If the photo is a stadium image or empty, fallback to curated human portraits
-  const isStadium =
-    ref.coverPhotoUrl?.includes("photo-1508098682722") ||
-    ref.coverPhotoUrl?.includes("photo-1574629810360") ||
-    ref.coverPhotoUrl?.includes("photo-1522778119026") ||
-    ref.image?.includes("photo-1508098682722");
+export function getSafeRefereePhoto(
+  ref: { name?: string | null; coverPhotoUrl?: string | null; image?: string | null },
+  idx: number = 0
+): string {
+  if (ref.coverPhotoUrl && ref.coverPhotoUrl.startsWith("/images/referees/")) return ref.coverPhotoUrl;
+  if (ref.image && ref.image.startsWith("/images/referees/")) return ref.image;
 
-  if (ref.coverPhotoUrl && !isStadium) return ref.coverPhotoUrl;
-  if (ref.image && !isStadium) return ref.image;
-  return REFEREE_HUMAN_FALLBACKS[idx % REFEREE_HUMAN_FALLBACKS.length];
+  // Female referee detection by name
+  const femaleNames = ["alina", "iuliana", "elena", "maria", "ana", "andreea", "mihaela", "diana", "roxana", "alexandra", "ioana", "peșu", "pesu", "demetrescu"];
+  const nameLower = (ref.name || "").toLowerCase();
+  const isFemale = femaleNames.some((n) => nameLower.includes(n));
+  if (isFemale) return "/images/referees/referee-3.jpg";
+
+  const malePhotos = [
+    "/images/referees/referee-2.jpg",
+    "/images/referees/referee-1.jpg",
+    "/images/referees/referee-5.jpg",
+    "/images/referees/referee-4.jpg",
+    "/images/referees/referee-6.jpg",
+  ];
+  return malePhotos[idx % malePhotos.length];
 }
 
 // Generate realistic referee officiating telemetry

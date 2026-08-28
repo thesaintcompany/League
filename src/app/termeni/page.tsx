@@ -23,7 +23,7 @@ export default function TermeniPage() {
             Termeni și Condiții de Utilizare
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-            Ultima actualizare: Sezon 2026 • Operat   de <strong>  buu.ro</strong>
+            Ultima actualizare: Sezon 2026 • Operat   de <strong>   ligue.ro</strong>
           </p>
         </div>
       </section>
@@ -36,7 +36,7 @@ export default function TermeniPage() {
               1. Acceptarea Termenilor
             </h2>
             <p>
-              Prin accesarea și utilizarea platformei <strong>PRO LIGUE</strong> (disponibilă pe domeniile  e operate de   buu.ro), confirmați că ați citit, înțeles și sunteți de acord să respectați acești Termeni și Condiții, precum și toate legile și reglementările românești aplicabile.
+              Prin accesarea și utilizarea platformei <strong>PRO LIGUE</strong> (disponibilă pe domeniile  e operate de    ligue.ro), confirmați că ați citit, înțeles și sunteți de acord să respectați acești Termeni și Condiții, precum și toate legile și reglementările românești aplicabile.
             </p>
           </section>
 
@@ -72,7 +72,7 @@ export default function TermeniPage() {
               5. Drepturi de Proprietate Intelectuală
             </h2>
             <p>
-              Toate mărcile, siglele (inclusiv sigla  ă PRO LIGUE ROMANIA), denumirile de arene, elementele grafice și codul sursă aparțin exclusiv <strong>  buu.ro</strong> și partenerilor afiliați. Este interzisă reproducerea neautorizată.
+              Toate mărcile, siglele (inclusiv sigla  ă PRO LIGUE ROMANIA), denumirile de arene, elementele grafice și codul sursă aparțin exclusiv <strong>   ligue.ro</strong> și partenerilor afiliați. Este interzisă reproducerea neautorizată.
             </p>
           </section>
 
@@ -82,8 +82,8 @@ export default function TermeniPage() {
             </h2>
             <p>
               Pentru orice întrebări sau clarificări legate de acești termeni, vă rugăm să ne contactați la adresa de e-mail{" "}
-              <a href="mailto:contact@buu.ro" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
-                contact@buu.ro
+              <a href="mailto:contact@ ligue.ro" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
+                contact@ ligue.ro
               </a>.
             </p>
           </section>

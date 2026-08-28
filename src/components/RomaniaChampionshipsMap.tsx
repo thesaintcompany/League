@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { ROMANIAN_COUNTIES } from "@/lib/constants";
 import { InteractiveRomaniaSvgMap } from "@/components/InteractiveRomaniaSvgMap";
 import { useSportContext } from "@/context/SportContext";
@@ -62,11 +63,16 @@ const ALL_COUNTIES = [
 ];
 
 export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = [] }: RomaniaMapProps) {
+  const { data: session } = useSession();
   const { selectedSport, selectedCategory, currentSportMeta, matchesCategoryFilter } = useSportContext();
   const [selectedCounty, setSelectedCounty] = useState<string>("Timiș");
   const [activeTab, setActiveTab] = useState<"championships" | "venues">("championships");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedScope, setSelectedScope] = useState<string>("all"); // "all" | "national" | "judetean" | "oras"
+
+  const createTournamentHref = session?.user
+    ? "/dashboard/new"
+    : "/signup?role=organizer&callbackUrl=/dashboard/new";
 
   // 1. Strict filtering by chosen global sport and category
   const sportChampionships = useMemo(() => {
@@ -341,7 +347,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
               </div>
 
               <Link
-                href="/dashboard/new"
+                href={createTournamentHref}
                 className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition fluid-press shrink-0"
               >
                 <span className="material-symbols-outlined text-base">add_circle</span>
@@ -404,7 +410,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                       Nu există încă turnee locale înregistrate pentru această selecție. Fii primul organizator care creează un campionat în {selectedCounty}!
                     </p>
                     <Link
-                      href="/dashboard/new"
+                      href={createTournamentHref}
                       className="px-5 py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider inline-flex items-center gap-1.5 shadow-md"
                     >
                       + Creează Primul Campionat

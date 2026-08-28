@@ -82,7 +82,7 @@ export async function POST(req: Request) {
     // tolerate if player exists; the ExternalInvite is the source of truth for the no-account flow
   }
 
-  const base = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://sp.buu.ro";
+  const base = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://spligue.ro";
   const acceptLink = `${base}/invite/accept?token=${encodeURIComponent(invite.acceptToken)}`;
 
   return NextResponse.json({

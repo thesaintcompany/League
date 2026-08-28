@@ -73,7 +73,7 @@ export async function POST(req: Request) {
       },
     });
 
-    const base = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://sp.buu.ro";
+    const base = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://spligue.ro";
     const offerLink = `${base}/invite/accept?offer=${offerToken}`;
     const cardLink = `${base}/invite/card?token=${offerToken}`;
     const sport = invite.championship?.sport || invite.sport || "campionat";

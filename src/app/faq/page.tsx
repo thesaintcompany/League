@@ -80,15 +80,15 @@ export default function FAQPage() {
             Nu ai găsit răspunsul căutat?
           </h3>
           <p className="text-xs text-slate-400 max-w-md mx-auto">
-            Echipa noastră de suport tehnic de la <strong>  buu.ro</strong> îți stă la dispoziție.
+            Echipa noastră de suport tehnic de la <strong>   ligue.ro</strong> îți stă la dispoziție.
           </p>
           <div className="pt-2">
             <a
-              href="mailto:contact@buu.ro"
+              href="mailto:contact@ ligue.ro"
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-sm hover:bg-lime-300 transition"
             >
               <span className="material-symbols-outlined">mail</span>
-              <span>Trimite un Email (contact@buu.ro)</span>
+              <span>Trimite un Email (contact@ ligue.ro)</span>
             </a>
           </div>
         </div>

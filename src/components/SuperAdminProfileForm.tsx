@@ -22,11 +22,11 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
 
   // System Legal & Payment Settings State
   const [settings, setSettings] = useState({
-    companyName: initialSettings?.companyName || "TSC Q - BUU.RO",
+    companyName: initialSettings?.companyName || "TSC Q -  ligue.ro",
     companyCui: initialSettings?.companyCui || "53063735",
     companyRegCom: initialSettings?.companyRegCom || "J2025095153006",
     companyAddress: initialSettings?.companyAddress || "Timișoara, Județul Timiș, România",
-    companyEmail: initialSettings?.companyEmail || "contact@buu.ro",
+    companyEmail: initialSettings?.companyEmail || "contact@ ligue.ro",
     companyPhone: initialSettings?.companyPhone || "+40 700 000 000",
     platformFeePercent: initialSettings?.platformFeePercent ?? 10.0,
     stripePublishableKey: initialSettings?.stripePublishableKey || "",
@@ -151,7 +151,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           <div className="sm:col-span-2 flex justify-end items-center gap-3 pt-2">
             {userSuccess && (
               <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-label">
-                Nume actualizat cu succes! 
+                Nume actualizat cu succes!
               </span>
             )}
             <button
@@ -165,7 +165,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
         </form>
       </div>
 
-      {/* 2. Date Legale & Identitate Fiscală Operator (  buu.ro) */}
+      {/* 2. Date Legale & Identitate Fiscală Operator (   ligue.ro) */}
       <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
         <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
@@ -174,7 +174,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
             </div>
             <div>
               <h3 className="font-headline font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase">
-                Date Legale &amp; Identitate Fiscală (  buu.ro)
+                Date Legale &amp; Identitate Fiscală (   ligue.ro)
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
                 Datele entității juridice care operează platforma, facturile de ticketing și termenii legali.
@@ -183,7 +183,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           </div>
 
           <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-mono font-bold uppercase border border-blue-500/20">
-            Operator:   buu.ro
+            Operator:    ligue.ro
           </span>
         </div>
 
@@ -197,7 +197,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
               value={settings.companyName}
               onChange={(e) => setSettings({ ...settings, companyName: e.target.value })}
               className="input text-xs font-bold"
-              placeholder="TSC Q - BUU.RO"
+              placeholder="TSC Q -  ligue.ro"
             />
           </div>
 
@@ -236,7 +236,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
               value={settings.companyEmail}
               onChange={(e) => setSettings({ ...settings, companyEmail: e.target.value })}
               className="input text-xs font-mono"
-              placeholder="contact@buu.ro"
+              placeholder="contact@ ligue.ro"
             />
           </div>
 
@@ -295,11 +295,10 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           {/* Opțiunea 1: Mod Automat */}
           <div
             onClick={() => setSettings({ ...settings, seasonMode: "auto" })}
-            className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${
-              settings.seasonMode === "auto"
+            className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${settings.seasonMode === "auto"
                 ? "bg-lime-400/10 border-lime-400 shadow-md ring-2 ring-lime-400/40"
                 : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/80"
-            }`}
+              }`}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -324,11 +323,10 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           {/* Opțiunea 2: Mod Manual */}
           <div
             onClick={() => setSettings({ ...settings, seasonMode: "manual" })}
-            className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${
-              settings.seasonMode === "manual"
+            className={`p-5 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 ${settings.seasonMode === "manual"
                 ? "bg-lime-400/10 border-lime-400 shadow-md ring-2 ring-lime-400/40"
                 : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/80"
-            }`}
+              }`}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -490,7 +488,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
                     Domeniu Web Verificat:
                   </span>
                   <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
-                    sp.  buu.ro (Verificat )
+                    spligue.ro (Verificat )
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 font-body">

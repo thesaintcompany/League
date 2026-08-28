@@ -13,7 +13,7 @@
    - `DATABASE_URL` = `file:/app/data/league.db` (setat automat implicit)
    - `ADMIN_EMAIL` = adresa ta de email (pentru contul de admin inițial)
    - `ADMIN_PASSWORD` = parola ta de admin (minim 8 caractere)
-   - `NEXTAUTH_URL` = `https://sp.buu.ro` (presetat implicit; fără `localhost`)
+   - `NEXTAUTH_URL` = `https://sp. ligue.ro` (presetat implicit; fără `localhost`)
    - `NEXTAUTH_SECRET` = un string secret aleatoriu de minim 32 caractere (ex: generat cu `openssl rand -base64 32`)
 7. Click pe **Deploy**.
 
@@ -23,8 +23,8 @@
 
 La prima pornire, aplicația creează automat două conturi de test:
 
-| Email | Parolă | Rol |
-|---|---|---|
+| Email                   | Parolă            | Rol                         |
+| ----------------------- | ----------------- | --------------------------- |
 | `admin@leaguehub.local` | `superadmin12345` | Administrator (Super Admin) |
 
 De asemenea, este creat campionatul demonstrativ **"Liga Demo 2026"** cu echipe și meciuri de start.
@@ -49,4 +49,4 @@ De asemenea, este creat campionatul demonstrativ **"Liga Demo 2026"** cu echipe 
 
 ## Contact & Suport
 
-- **Email  :** `contact@buu.ro` (Datele de contact sunt exclusiv `contact@buu.ro` și sunt definitive)
+- **Email  :** `contact@ ligue.ro` (Datele de contact sunt exclusiv `contact@ ligue.ro` și sunt definitive)

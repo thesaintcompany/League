@@ -71,7 +71,7 @@ export default async function TeamManagerDashboardPage(props: {
       dbUser = await prisma.user.create({
         data: {
           ...(userId ? { id: userId } : {}),
-          email: userEmail || `user_${Date.now()}@buu.ro`,
+          email: userEmail || `user_${Date.now()}@ ligue.ro`,
           name: user.name || "Manager Echipă",
           role: user.role || "team_leader",
         },
@@ -98,11 +98,11 @@ export default async function TeamManagerDashboardPage(props: {
         name: `${user.name || "Echipa Mea"} F.C.`,
         shortName: user.name
           ? user.name
-              .split(" ")
-              .map((w: string) => w[0])
-              .join("")
-              .substring(0, 3)
-              .toUpperCase()
+            .split(" ")
+            .map((w: string) => w[0])
+            .join("")
+            .substring(0, 3)
+            .toUpperCase()
           : "F.C.",
         color: "#581c87",
         description: `Echipa mea de fotbal – îți poți schimba numele, culoarea și sigla din panoul de configurare.`,
@@ -140,10 +140,10 @@ export default async function TeamManagerDashboardPage(props: {
     homeArena: team.homeArena,
     championship: team.championship
       ? {
-          id: team.championship.id,
-          name: team.championship.name,
-          season: team.championship.season,
-        }
+        id: team.championship.id,
+        name: team.championship.name,
+        season: team.championship.season,
+      }
       : undefined,
     players: (team.players || []).map((p) => ({
       id: p.id,
@@ -197,17 +197,17 @@ export default async function TeamManagerDashboardPage(props: {
   const teamCount = userId ? await prisma.team.count({ where: { managerId: userId } }) : 1;
   const managedTeams = userId
     ? await prisma.team.findMany({
-        where: { managerId: userId },
-        select: {
-          id: true,
-          name: true,
-          shortName: true,
-          color: true,
-          logoUrl: true,
-          subscriptionActive: true,
-          subscriptionExpiresAt: true,
-        },
-      })
+      where: { managerId: userId },
+      select: {
+        id: true,
+        name: true,
+        shortName: true,
+        color: true,
+        logoUrl: true,
+        subscriptionActive: true,
+        subscriptionExpiresAt: true,
+      },
+    })
     : [];
 
   const formattedManagedTeams = managedTeams.map((t) => ({
@@ -218,20 +218,20 @@ export default async function TeamManagerDashboardPage(props: {
 
   const invitations = userEmail
     ? await prisma.teamInvitation.findMany({
-        where: { inviteeEmail: userEmail, status: "pending" },
-        include: {
-          championship: {
-            select: { id: true, name: true, sport: true, season: true, scope: true, county: true, city: true },
-          },
-          team: {
-            select: { id: true, name: true, shortName: true, color: true },
-          },
-          inviter: {
-            select: { id: true, name: true, email: true },
-          },
+      where: { inviteeEmail: userEmail, status: "pending" },
+      include: {
+        championship: {
+          select: { id: true, name: true, sport: true, season: true, scope: true, county: true, city: true },
         },
-        orderBy: { createdAt: "desc" },
-      })
+        team: {
+          select: { id: true, name: true, shortName: true, color: true },
+        },
+        inviter: {
+          select: { id: true, name: true, email: true },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    })
     : [];
 
   const playersCount = (team.players || []).length;
