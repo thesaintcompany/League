@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { appSignOut } from "@/lib/logout";
 import { ThemeToggle } from "./ThemeToggle";
+import { NotificationBell } from "./NotificationBell";
 
 interface TopHeaderProps {
   title?: string;
@@ -76,6 +77,9 @@ export function TopHeader({ title = "Championship Pro", subtitle, action, varian
 
       <div className="flex items-center gap-2 sm:gap-3">
         {action}
+
+        {/* Notifications Dropdown */}
+        <NotificationBell />
 
         {/* Day / Night Toggle */}
         <ThemeToggle variant="compact" />

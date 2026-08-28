@@ -17,6 +17,9 @@ interface Player {
   rating: number;
   image?: string | null;
   invitationToken?: string | null;
+  yellowCards: number;
+  redCards: number;
+  suspensions: number;
 }
 
 interface Match {
@@ -39,6 +42,7 @@ interface TeamData {
   shortName: string | null;
   color: string | null;
   logoUrl?: string | null;
+  coverPhotoUrl?: string | null;
   description?: string | null;
   headCoach: string | null;
   assistantCoach: string | null;
@@ -103,6 +107,7 @@ export function TeamManagerPanel({
   const [shortName, setShortName] = useState(team.shortName || "");
   const [color, setColor] = useState(team.color || "#84cc16");
   const [logoUrl, setLogoUrl] = useState(team.logoUrl || "");
+  const [coverPhotoUrl, setCoverPhotoUrl] = useState(team.coverPhotoUrl || "");
   const [description, setDescription] = useState(team.description || "");
   const [formation, setFormation] = useState(team.formation || "4-3-3");
   const [homeArena, setHomeArena] = useState(team.homeArena || "Stadionul propriu");
@@ -123,6 +128,14 @@ export function TeamManagerPanel({
   const [newPlayerNumber, setNewPlayerNumber] = useState<number | "">("");
   const [newPlayerPosition, setNewPlayerPosition] = useState("Mijlocaș");
   const [newPlayerIsStarter, setNewPlayerIsStarter] = useState(true);
+
+  // Search Platform Players Modal State
+  const [showSearchModal, setShowSearchModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [addingPlayerId, setAddingPlayerId] = useState<string | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
 
   // Invite Form State
   const [inviteEmail, setInviteEmail] = useState("");
@@ -324,6 +337,43 @@ export function TeamManagerPanel({
     reader.readAsDataURL(file);
   }
 
+  async function handleCoverPhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      notify("Selectează o imagine validă.");
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      notify("Imaginea este prea mare. Folosește un fișier sub 8MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const result = event.target?.result as string;
+      if (!result) return;
+      try {
+        const res = await fetch("/api/team", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ teamId: team.id, coverPhotoUrl: result }),
+        });
+        if (res.ok) {
+          const data = await res.json().catch(() => ({}));
+          setTeam((prev) => ({ ...prev, coverPhotoUrl: data.team?.coverPhotoUrl || result }));
+          setCoverPhotoUrl(result);
+          notify(" Poza de grup / banner-ul echipei a fost actualizată!");
+        } else {
+          notify("Eroare la actualizarea imaginii de grup.");
+        }
+      } catch {
+        notify("Eroare de rețea la încărcarea imaginii.");
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
   useEffect(() => {
     async function loadInvitations() {
       try {
@@ -414,6 +464,8 @@ export function TeamManagerPanel({
           name: teamName,
           shortName,
           color,
+          logoUrl,
+          coverPhotoUrl,
           description,
           formation,
           homeArena,
@@ -500,6 +552,66 @@ export function TeamManagerPanel({
       notify("Eroare la adăugare.");
     } finally {
       setBusy(false);
+    }
+  }
+
+  // Search Platform Players
+  async function handleSearchPlatformPlayers(query: string) {
+    setIsSearching(true);
+    setHasSearched(true);
+    try {
+      const res = await fetch(`/api/players/search?q=${encodeURIComponent(query)}&teamId=${team.id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setSearchResults(data.results || []);
+      } else {
+        notify("Eroare la căutarea jucătorilor.");
+      }
+    } catch {
+      notify("Eroare de rețea la căutare.");
+    } finally {
+      setIsSearching(false);
+    }
+  }
+
+  // Add Found Platform Player to Team
+  async function handleAddPlatformPlayer(p: any, asStarter: boolean = true) {
+    setAddingPlayerId(p.id);
+    try {
+      const res = await fetch("/api/team/players", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          teamId: team.id,
+          name: p.name,
+          email: p.email || null,
+          number: p.number || null,
+          position: p.position || "Mijlocaș",
+          isStarter: asStarter,
+          image: p.image || null,
+          goals: p.stats?.goals || 0,
+          assists: p.stats?.assists || 0,
+          yellowCards: p.stats?.yellowCards || 0,
+          redCards: p.stats?.redCards || 0,
+          suspensions: 0,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.player) {
+        setTeam((prev) => ({
+          ...prev,
+          players: [...prev.players, data.player],
+        }));
+        notify(`Jucătorul "${p.name}" a fost adăugat în lot ca ${asStarter ? "TITULAR" : "REZERVĂ"}!`);
+        setSearchResults((prev) => prev.filter((item) => item.id !== p.id));
+      } else {
+        notify(`Eroare: ${data.error || "Nu s-a putut adăuga jucătorul"}`);
+      }
+    } catch {
+      notify("Eroare de rețea.");
+    } finally {
+      setAddingPlayerId(null);
     }
   }
 
@@ -680,16 +792,37 @@ export function TeamManagerPanel({
                     </div>
                   </div>
 
-                  {/* Logo upload */}
-                  <div className="flex items-center gap-3">
-                    <label className="px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-white cursor-pointer hover:border-lime-400 transition flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-sm">upload</span>
-                      {logoUrl ? "Schimba Logo" : "Incarca Logo"}
-                      <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
-                    </label>
-                    {logoUrl && (
-                      <span className="text-[10px] text-lime-400 font-label">Logo incarcat</span>
-                    )}
+                  {/* Media Uploads: Logo & Group Photo Cover */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+                      <label className="text-[10px] font-bold font-label text-slate-400 uppercase block">Siglă / Fanion Club</label>
+                      <label className="px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-white cursor-pointer hover:border-lime-400 transition flex items-center gap-1.5 w-fit">
+                        <span className="material-symbols-outlined text-sm">upload</span>
+                        {logoUrl ? "Schimbă Sigla" : "Încarcă Siglă"}
+                        <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
+                      </label>
+                      {logoUrl && (
+                        <div className="flex items-center gap-2">
+                          <img src={logoUrl} alt="Logo" className="w-8 h-8 rounded-lg object-contain bg-slate-900 border border-slate-700 p-0.5" />
+                          <span className="text-[10px] text-lime-400 font-label">Siglă activă</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+                      <label className="text-[10px] font-bold font-label text-slate-400 uppercase block">Poză de Grup cu Echipa / Banner</label>
+                      <label className="px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-white cursor-pointer hover:border-lime-400 transition flex items-center gap-1.5 w-fit">
+                        <span className="material-symbols-outlined text-sm">add_photo_alternate</span>
+                        {coverPhotoUrl ? "Schimbă Poza de Grup" : "Încarcă Poză de Grup"}
+                        <input type="file" accept="image/*" className="hidden" onChange={handleCoverPhotoUpload} />
+                      </label>
+                      {coverPhotoUrl && (
+                        <div className="flex items-center gap-2">
+                          <img src={coverPhotoUrl} alt="Group Cover" className="w-14 h-8 rounded-lg object-cover bg-slate-900 border border-slate-700" />
+                          <span className="text-[10px] text-lime-400 font-label">Poză de grup activă</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Save & Cancel */}
@@ -716,6 +849,7 @@ export function TeamManagerPanel({
                         setFormation(team.formation || "4-3-3");
                         setHomeArena(team.homeArena || "");
                         setLogoUrl(team.logoUrl || "");
+                        setCoverPhotoUrl(team.coverPhotoUrl || "");
                         setEditingHero(false);
                       }}
                       className="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase transition border border-slate-700"
@@ -738,6 +872,36 @@ export function TeamManagerPanel({
           </div>
 
           <div className="flex flex-wrap gap-2.5">
+            {/* View Public Team Page */}
+            <Link
+              href={`/teams/${team.id}`}
+              target="_blank"
+              className="px-4 py-2.5 rounded-2xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95"
+              title="Deschide pagina publică a echipei pentru vizitatori"
+            >
+              <span className="material-symbols-outlined text-base">visibility</span>
+              Pagina Publică ↗
+            </Link>
+
+            {/* Share Public Team Page Link */}
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  const url = `${window.location.origin}/teams/${team.id}`;
+                  if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url);
+                    notify(" Link-ul public al paginii echipei a fost copiat în clipboard!");
+                  }
+                }
+              }}
+              className="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase transition border border-slate-700 flex items-center gap-1.5 active:scale-95"
+              title="Copiază link-ul direct pentru a-l trimite suporterilor sau pe social media"
+            >
+              <span className="material-symbols-outlined text-base">share</span>
+              Distribuie
+            </button>
+
             {!editingHero && (
               <button
                 type="button"
@@ -745,7 +909,7 @@ export function TeamManagerPanel({
                 className="px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95"
               >
                 <span className="material-symbols-outlined text-base">edit</span>
-                Editeaza Date Club
+                Editează Date Club
               </button>
             )}
             <button
@@ -1038,18 +1202,31 @@ export function TeamManagerPanel({
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-label font-bold uppercase transition border border-slate-700 flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-label font-bold uppercase transition border border-slate-700 flex items-center gap-1.5 shadow-sm"
               >
-                <span className="material-symbols-outlined text-base">print</span>
+                <span className="material-symbols-outlined text-base text-amber-400">print</span>
                 Printează Foaie A4
               </button>
               <button
                 type="button"
+                onClick={() => {
+                  setShowSearchModal(true);
+                  if (searchResults.length === 0) {
+                    handleSearchPlatformPlayers("");
+                  }
+                }}
+                className="px-4 py-2 rounded-xl bg-sky-100 dark:bg-sky-950 hover:bg-sky-200 dark:hover:bg-sky-900 text-sky-800 dark:text-sky-300 text-xs font-label font-bold uppercase transition border border-sky-300 dark:border-sky-700/50 flex items-center gap-1.5 shadow-sm"
+              >
+                <span className="material-symbols-outlined text-base text-sky-600 dark:text-sky-400">person_search</span>
+                Caută în Platformă
+              </button>
+              <button
+                type="button"
                 onClick={() => setShowAddPlayer((s) => !s)}
-                className="px-4 py-2 rounded-xl bg-lime-100 dark:bg-slate-800 hover:bg-lime-200 dark:hover:bg-slate-700 text-lime-700 dark:text-lime-400 text-xs font-label font-bold uppercase transition border border-lime-300 dark:border-lime-400/30 flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-lime-100 dark:bg-slate-800 hover:bg-lime-200 dark:hover:bg-slate-700 text-lime-700 dark:text-lime-400 text-xs font-label font-bold uppercase transition border border-lime-300 dark:border-lime-400/30 flex items-center gap-1.5 shadow-sm"
               >
                 <span className="material-symbols-outlined text-base">person_add</span>
-                Adaugă Jucător în Lot
+                Adaugă Manual
               </button>
             </div>
           </div>
@@ -1174,6 +1351,21 @@ export function TeamManagerPanel({
                     </button>
                   </div>
 
+                  <div className="flex justify-around items-center pt-2 pb-1 border-t border-slate-800 text-xs">
+                    <div className="flex flex-col items-center" title="Cartonașe Galbene">
+                      <span className="text-[10px] text-yellow-500 font-bold uppercase">CG</span>
+                      <span className="font-bold text-white">{p.yellowCards || 0}</span>
+                    </div>
+                    <div className="flex flex-col items-center" title="Cartonașe Roșii">
+                      <span className="text-[10px] text-red-500 font-bold uppercase">CR</span>
+                      <span className="font-bold text-white">{p.redCards || 0}</span>
+                    </div>
+                    <div className="flex flex-col items-center" title="Suspendări (Etape)">
+                      <span className="text-[10px] text-orange-500 font-bold uppercase">Susp</span>
+                      <span className="font-bold text-white">{p.suspensions || 0}</span>
+                    </div>
+                  </div>
+
                   <div className="flex justify-between items-center pt-2 border-t border-slate-800 text-xs font-label">
                     <span className="px-2 py-0.5 rounded bg-lime-400/20 text-lime-400 font-bold text-[10px] uppercase">
                       Titular
@@ -1233,6 +1425,21 @@ export function TeamManagerPanel({
                       >
                         <span className="material-symbols-outlined text-sm">delete</span>
                       </button>
+                    </div>
+
+                    <div className="flex justify-around items-center pt-2 pb-1 border-t border-slate-800 text-xs">
+                      <div className="flex flex-col items-center" title="Cartonașe Galbene">
+                        <span className="text-[10px] text-yellow-500 font-bold uppercase">CG</span>
+                        <span className="font-bold text-white">{p.yellowCards || 0}</span>
+                      </div>
+                      <div className="flex flex-col items-center" title="Cartonașe Roșii">
+                        <span className="text-[10px] text-red-500 font-bold uppercase">CR</span>
+                        <span className="font-bold text-white">{p.redCards || 0}</span>
+                      </div>
+                      <div className="flex flex-col items-center" title="Suspendări (Etape)">
+                        <span className="text-[10px] text-orange-500 font-bold uppercase">Susp</span>
+                        <span className="font-bold text-white">{p.suspensions || 0}</span>
+                      </div>
                     </div>
 
                     <div className="flex justify-between items-center pt-2 border-t border-slate-800 text-xs font-label">
@@ -1595,24 +1802,24 @@ export function TeamManagerPanel({
       {activeTab === "calendar" && (
         <div className="space-y-6">
           <div className="pb-2 border-b border-slate-800">
-            <h3 className="text-xl font-bold font-headline uppercase text-white flex items-center gap-2">
-              <span className="material-symbols-outlined text-lime-400">route</span>
+            <h3 className="text-xl font-bold font-headline uppercase text-slate-900 dark:text-white flex items-center gap-2">
+              <span className="material-symbols-outlined text-lime-700 dark:text-lime-400">route</span>
               Calendar Meciuri &amp; Traseu Deplasare
             </h3>
-            <p className="text-xs text-slate-400 font-label">
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-label">
               Programul complet al evenimentelor viitoare cu arene, indicații GPS și traseu de călătorie
             </p>
           </div>
 
           {allMatches.length === 0 ? (
-            <div className="card p-12 text-center text-slate-400 bg-slate-900 border border-slate-800 rounded-3xl space-y-3">
-              <span className="material-symbols-outlined text-4xl text-slate-500 block">
+            <div className="card p-12 text-center text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-3xl space-y-3">
+              <span className="material-symbols-outlined text-4xl text-slate-400 dark:text-slate-500 block">
                 event_busy
               </span>
-              <p className="font-bold text-white text-sm">
+              <p className="font-bold text-slate-900 dark:text-white text-sm">
                 Nu există meciuri programate în acest moment pentru {team.name}.
               </p>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-600 dark:text-slate-400">
                 Organizatorul va stabili calendarul etapelor sau tragerile la sorți cu zaruri.
               </p>
             </div>
@@ -2110,61 +2317,291 @@ export function TeamManagerPanel({
         </div>
       )}
 
-      {/* Print-only View (A4 Match Sheet) */}
-      <div className="hidden print:block fixed inset-0 bg-white text-black z-[99999] p-8 overflow-auto font-sans">
+      {/* Search Platform Players Modal */}
+      {showSearchModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl space-y-4 p-6 sm:p-7 max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-sky-500/10 dark:bg-sky-500/20 text-sky-600 dark:text-sky-400 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-xl">person_search</span>
+                </div>
+                <div>
+                  <h3 className="font-headline font-black text-base sm:text-lg uppercase text-slate-900 dark:text-white">
+                    Caută &amp; Adaugă Jucători din Platformă
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Găsește jucători înregistrați sau din alte echipe după nume, email sau club
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSearchModal(false);
+                  setSearchQuery("");
+                }}
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+
+            {/* Search Input Bar */}
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">
+                search
+              </span>
+              <input
+                type="text"
+                placeholder="Caută după nume jucător, email sau nume de echipă..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  handleSearchPlatformPlayers(e.target.value);
+                }}
+                autoFocus
+                className="w-full pl-10 pr-10 py-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-500 transition shadow-inner"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    handleSearchPlatformPlayers("");
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                >
+                  <span className="material-symbols-outlined text-base">cancel</span>
+                </button>
+              )}
+            </div>
+
+            {/* Results List */}
+            <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 min-h-[220px]">
+              {isSearching ? (
+                <div className="p-8 text-center text-xs text-slate-500 flex flex-col items-center justify-center gap-2">
+                  <span className="material-symbols-outlined animate-spin text-2xl text-sky-500">progress_activity</span>
+                  <span>Se caută jucătorii în baza de date...</span>
+                </div>
+              ) : searchResults.length === 0 ? (
+                <div className="p-8 text-center text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-2xl space-y-2">
+                  <span className="material-symbols-outlined text-3xl text-slate-400 block">search_off</span>
+                  <p className="font-semibold text-slate-700 dark:text-slate-300">
+                    {hasSearched && searchQuery ? `Niciun jucător găsit pentru "${searchQuery}".` : "Nu există jucători de afișat."}
+                  </p>
+                  <p className="text-[11px] text-slate-400">
+                    Încearcă să cauți după numele întreg, o parte din nume, clubul actual sau adresa de email.
+                  </p>
+                </div>
+              ) : (
+                searchResults.map((p) => {
+                  const isAlreadyInTeam = team.players.some(
+                    (tp) => tp.name.toLowerCase() === p.name.toLowerCase() || (p.email && tp.email?.toLowerCase() === p.email.toLowerCase())
+                  );
+
+                  return (
+                    <div
+                      key={p.id}
+                      className="p-3.5 bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-sky-400/40 transition"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-slate-800 text-sky-400 font-black text-xs flex items-center justify-center font-mono shrink-0 border border-slate-700">
+                          {p.number ? `#${p.number}` : p.position?.substring(0, 2).toUpperCase() || "JU"}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+                              {p.name}
+                            </h4>
+                            <span className="px-2 py-0.5 rounded-md bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 font-bold text-[10px] uppercase border border-sky-200 dark:border-sky-800/60">
+                              {p.position || "Mijlocaș"}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-x-2 text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                            {p.teamName ? (
+                              <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-medium">
+                                <span className="material-symbols-outlined text-[13px] text-lime-500">shield</span>
+                                {p.teamName} {p.championshipName ? `(${p.championshipName})` : ""}
+                              </span>
+                            ) : (
+                              <span className="text-slate-400 italic">Jucător liber de contract / Profil utilizator</span>
+                            )}
+                            {p.email && <span className="text-slate-400">• {p.email}</span>}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                        {isAlreadyInTeam ? (
+                          <span className="px-3 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase flex items-center gap-1">
+                            <span className="material-symbols-outlined text-sm text-emerald-500">check</span>
+                            În Lotul Tău
+                          </span>
+                        ) : (
+                          <>
+                            <button
+                              type="button"
+                              disabled={addingPlayerId === p.id}
+                              onClick={() => handleAddPlatformPlayer(p, true)}
+                              className="px-3 py-1.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs uppercase shadow-sm transition flex items-center gap-1 disabled:opacity-50"
+                              title="Adaugă direct în Primul 11 (Titular)"
+                            >
+                              {addingPlayerId === p.id ? "Se adaugă..." : "+ Titular"}
+                            </button>
+                            <button
+                              type="button"
+                              disabled={addingPlayerId === p.id}
+                              onClick={() => handleAddPlatformPlayer(p, false)}
+                              className="px-3 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs uppercase transition disabled:opacity-50"
+                              title="Adaugă pe Banca de Rezerve"
+                            >
+                              + Rezervă
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500">
+              <span>Găsite: {searchResults.length} profiluri</span>
+              <button
+                type="button"
+                onClick={() => setShowSearchModal(false)}
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-slate-700 dark:text-slate-300 uppercase text-xs"
+              >
+                Închide
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Print-only View (A4 Match Sheet - Scaled & Color Optimized) */}
+      <div className="hidden print:block fixed inset-0 bg-white text-slate-900 z-[99999] overflow-hidden font-sans">
         <style>{`
+          @page {
+            size: A4 portrait;
+            margin: 6mm 8mm;
+          }
           @media print {
-            body * { visibility: hidden; }
-            #print-area, #print-area * { visibility: visible; }
-            #print-area { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+            html, body {
+              width: 210mm;
+              height: 297mm;
+              margin: 0 !important;
+              padding: 0 !important;
+              background: #ffffff !important;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+              color-adjust: exact !important;
+            }
+            body * { visibility: hidden !important; }
+            #print-area, #print-area * { visibility: visible !important; }
+            #print-area {
+              position: absolute !important;
+              left: 0 !important;
+              top: 0 !important;
+              width: 194mm !important;
+              max-width: 194mm !important;
+              box-sizing: border-box !important;
+              padding: 0 !important;
+              margin: 0 !important;
+            }
           }
         `}</style>
-        <div id="print-area" className="max-w-4xl mx-auto space-y-6">
-          <div className="flex justify-between items-center border-b-2 border-black pb-4">
-            <div className="flex items-center gap-4">
+        <div id="print-area" className="w-[194mm] space-y-3 text-slate-900">
+          {/* Header Banner with Team Color */}
+          <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-3 rounded-xl border-2 border-slate-800 flex justify-between items-center shadow-sm">
+            <div className="flex items-center gap-3">
               {team.logoUrl ? (
-                <img src={team.logoUrl} className="w-16 h-16 object-contain" alt="Logo" />
+                <img src={team.logoUrl} className="w-12 h-12 object-contain rounded-lg bg-white/10 p-1 border border-white/20" alt="Logo" />
               ) : (
-                <div className="w-16 h-16 border-2 border-black flex items-center justify-center font-bold text-2xl uppercase">
-                  {team.shortName || team.name.substring(0,3)}
+                <div className="w-12 h-12 rounded-lg bg-lime-400 text-slate-950 flex items-center justify-center font-black text-xl font-mono border border-lime-300">
+                  {team.shortName || team.name.substring(0, 3).toUpperCase()}
                 </div>
               )}
               <div>
-                <h1 className="text-2xl font-black uppercase tracking-tight m-0 leading-tight">{team.name}</h1>
-                <p className="text-sm m-0">Liga: {team.championship?.name || "Liga Pro"} • Arena: {team.homeArena || "-"}</p>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl font-black uppercase tracking-tight m-0 text-white leading-none">{team.name}</h1>
+                  <span className="bg-lime-400/20 text-lime-300 border border-lime-400/40 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">
+                    {team.formation || "4-3-3"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 text-[10px] text-slate-300 mt-1">
+                  <span><strong className="text-white">Competiție:</strong> {team.championship?.name || "Liga Pro România 2026"}</span>
+                  <span>•</span>
+                  <span><strong className="text-white">Arenă:</strong> {team.homeArena || "Stadion Principal"}</span>
+                </div>
               </div>
             </div>
-            <div className="text-right">
-              <h2 className="text-xl font-bold m-0 uppercase tracking-wide">Foaie de Joc / Lot Echipă</h2>
-              <p className="text-sm m-0 font-bold">Data: {new Date().toLocaleDateString("ro-RO")}</p>
+
+            <div className="text-right border-l border-slate-700 pl-3">
+              <div className="text-xs font-black uppercase tracking-wider text-lime-400">FOAIE OFICIALĂ DE JOC</div>
+              <div className="text-[10px] font-bold text-slate-300 mt-0.5">Data: {new Date().toLocaleDateString("ro-RO")}</div>
+              <div className="text-[9px] text-slate-400 uppercase">Sport: {team.sport || "Fotbal"} • {team.players.length} Jucători</div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8">
-            {/* Jucatori */}
-            <div>
-              <h3 className="text-lg font-bold border-b-2 border-black mb-2 uppercase tracking-tight">Lot Jucători</h3>
-              <table className="w-full text-sm text-left border-collapse">
+          {/* Two-Column Grid: Roster Table & Technical Staff */}
+          <div className="grid grid-cols-12 gap-3 items-start">
+            {/* Left Column: Player Roster (7 cols) */}
+            <div className="col-span-7 border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm">
+              <div className="bg-slate-900 text-white text-[10px] font-black uppercase px-2.5 py-1.5 flex justify-between items-center">
+                <span>Lot Jucători Oficial (Titulari &amp; Rezerve)</span>
+                <span className="text-lime-400 font-mono text-[9px]">{team.players.length} Înscriși</span>
+              </div>
+              <table className="w-full text-[9.5px] text-left border-collapse">
                 <thead>
-                  <tr className="border-b-2 border-black">
-                    <th className="py-1 w-10">Nr.</th>
-                    <th className="py-1">Nume Jucător</th>
-                    <th className="py-1 w-20">Statut</th>
+                  <tr className="bg-slate-100 text-slate-700 border-b border-slate-300 font-bold uppercase text-[8.5px]">
+                    <th className="py-1 px-1.5 w-6 text-center">Nr</th>
+                    <th className="py-1 px-1.5">Nume &amp; Prenume</th>
+                    <th className="py-1 px-1.5 w-16">Poziție</th>
+                    <th className="py-1 px-1.5 w-14 text-center">Statut</th>
+                    <th className="py-1 px-1.5 w-20 text-center">Sancțiuni</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-slate-200">
                   {team.players.map((p, idx) => (
-                    <tr key={p.id} className="border-b border-gray-400">
-                      <td className="py-1.5 font-bold">{p.number || "-"}</td>
-                      <td className="py-1.5">{p.name}</td>
-                      <td className="py-1.5 text-[10px] uppercase font-bold text-gray-600">{p.isStarter ? "Titular" : "Rezervă"}</td>
+                    <tr key={p.id} className={idx % 2 === 0 ? "bg-white" : "bg-slate-50/80"}>
+                      <td className="py-1 px-1.5 font-bold font-mono text-center text-slate-900">
+                        {p.number ?? "-"}
+                      </td>
+                      <td className="py-1 px-1.5 font-semibold text-slate-900 truncate max-w-[110px]">
+                        {p.name}
+                      </td>
+                      <td className="py-1 px-1.5 text-[8.5px] text-slate-600 font-medium truncate">
+                        {p.position || "Mijlocaș"}
+                      </td>
+                      <td className="py-1 px-1.5 text-center">
+                        <span
+                          className={`inline-block px-1.5 py-0.2 rounded text-[8px] font-bold uppercase border ${
+                            p.isStarter
+                              ? "bg-emerald-100 text-emerald-800 border-emerald-300"
+                              : "bg-amber-100 text-amber-800 border-amber-300"
+                          }`}
+                        >
+                          {p.isStarter ? "Titular" : "Rezervă"}
+                        </span>
+                      </td>
+                      <td className="py-1 px-1.5 text-center text-[8px]">
+                        {p.yellowCards > 0 && <span className="mr-0.5 font-bold text-amber-700 bg-amber-100 px-1 rounded">CG:{p.yellowCards}</span>}
+                        {p.redCards > 0 && <span className="mr-0.5 font-bold text-red-700 bg-red-100 px-1 rounded">CR:{p.redCards}</span>}
+                        {p.suspensions > 0 && <span className="font-bold text-orange-800 bg-orange-100 px-1 rounded">Susp:{p.suspensions}</span>}
+                        {!p.yellowCards && !p.redCards && !p.suspensions && <span className="text-slate-400">-</span>}
+                      </td>
                     </tr>
                   ))}
                   {/* Empty rows for manual writing */}
-                  {Array.from({ length: Math.max(0, 15 - team.players.length) }).map((_, i) => (
-                    <tr key={`empty-${i}`} className="border-b border-gray-400">
-                      <td className="py-3"></td>
-                      <td></td>
+                  {Array.from({ length: Math.max(0, 13 - team.players.length) }).map((_, i) => (
+                    <tr key={`empty-${i}`} className="h-5">
+                      <td className="border-r border-slate-200"></td>
+                      <td className="border-r border-slate-200"></td>
+                      <td className="border-r border-slate-200"></td>
+                      <td className="border-r border-slate-200"></td>
                       <td></td>
                     </tr>
                   ))}
@@ -2172,36 +2609,54 @@ export function TeamManagerPanel({
               </table>
             </div>
 
-            {/* Staff */}
-            <div>
-              <h3 className="text-lg font-bold border-b-2 border-black mb-3 uppercase tracking-tight">Staff Tehnic & Oficiali</h3>
-              <div className="space-y-4 text-sm">
-                <div>
-                  <span className="block text-[10px] font-bold text-gray-500 uppercase">Antrenor Principal</span>
-                  <div className="font-bold border-b border-gray-400 pb-1">{team.headCoach || "______________________________"}</div>
+            {/* Right Column: Staff Tehnic & Semnături (5 cols) */}
+            <div className="col-span-5 space-y-2.5">
+              {/* Technical Staff Card */}
+              <div className="border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm">
+                <div className="bg-slate-900 text-white text-[10px] font-black uppercase px-2.5 py-1.5 flex justify-between items-center">
+                  <span>Bancă Tehnică &amp; Oficiali</span>
+                  <span className="material-symbols-outlined text-xs text-lime-400">badge</span>
                 </div>
-                <div>
-                  <span className="block text-[10px] font-bold text-gray-500 uppercase">Antrenor Secund</span>
-                  <div className="font-bold border-b border-gray-400 pb-1">{team.assistantCoach || "______________________________"}</div>
-                </div>
-                <div>
-                  <span className="block text-[10px] font-bold text-gray-500 uppercase">Medic / Kinetoterapeut</span>
-                  <div className="font-bold border-b border-gray-400 pb-1">{team.medic || "______________________________"}</div>
-                </div>
-                <div>
-                  <span className="block text-[10px] font-bold text-gray-500 uppercase">Preparator Fizic</span>
-                  <div className="font-bold border-b border-gray-400 pb-1">{team.fitnessCoach || "______________________________"}</div>
-                </div>
-                <div className="pt-2">
-                  <span className="block text-[10px] font-bold text-gray-500 uppercase">Căpitan Echipă (Nr. tricou / Nume)</span>
-                  <div className="font-bold border-b border-gray-400 pb-1 text-transparent select-none">______________________________</div>
+                <div className="p-2 space-y-1.5 text-[9.5px]">
+                  <div className="border-l-3 border-sky-500 pl-2 bg-sky-50/50 py-0.5 rounded-r">
+                    <span className="block text-[8px] font-bold text-sky-800 uppercase">Antrenor Principal</span>
+                    <span className="font-bold text-slate-900">{team.headCoach || "_____________________"}</span>
+                  </div>
+                  <div className="border-l-3 border-teal-500 pl-2 bg-teal-50/50 py-0.5 rounded-r">
+                    <span className="block text-[8px] font-bold text-teal-800 uppercase">Antrenor Secund</span>
+                    <span className="font-bold text-slate-900">{team.assistantCoach || "_____________________"}</span>
+                  </div>
+                  <div className="border-l-3 border-rose-500 pl-2 bg-rose-50/50 py-0.5 rounded-r">
+                    <span className="block text-[8px] font-bold text-rose-800 uppercase">Medic / Kinetoterapeut</span>
+                    <span className="font-bold text-slate-900">{team.medic || "_____________________"}</span>
+                  </div>
+                  <div className="border-l-3 border-amber-500 pl-2 bg-amber-50/50 py-0.5 rounded-r">
+                    <span className="block text-[8px] font-bold text-amber-800 uppercase">Preparator Fizic</span>
+                    <span className="font-bold text-slate-900">{team.fitnessCoach || "_____________________"}</span>
+                  </div>
+                  <div className="border-l-3 border-purple-500 pl-2 bg-purple-50/50 py-0.5 rounded-r">
+                    <span className="block text-[8px] font-bold text-purple-800 uppercase">Căpitan Echipă (Nr. / Nume)</span>
+                    <span className="font-bold text-slate-900">_____________________</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-12 border-t-2 border-black pt-4 text-center">
-                <p className="font-bold text-sm uppercase">Semnătură Manager / Delegat Echipă</p>
-                <div className="h-20"></div>
-                <p className="text-[10px] text-gray-600 italic">Subsemnatul, delegat al echipei, confirm că toți jucătorii înscriși în tabel sunt prezenți și apți din punct de vedere medical pentru joc, conform regulamentului competiției.</p>
+              {/* Official Stamp & Signature Block */}
+              <div className="border border-slate-300 rounded-xl p-2 bg-slate-50 text-[8.5px] space-y-1.5">
+                <p className="text-slate-600 leading-tight italic text-[8px]">
+                  Subsemnatul, delegat al clubului, confirm că toți sportivii înscriși pe foaie sunt apți medical și legitimați conform regulamentului competiției.
+                </p>
+
+                <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-200">
+                  <div className="border border-dashed border-slate-400 rounded-lg p-1.5 text-center bg-white h-16 flex flex-col justify-between">
+                    <span className="font-bold uppercase text-[7.5px] text-slate-500">Semnătură Delegat</span>
+                    <div className="border-b border-slate-400 w-full mb-1"></div>
+                  </div>
+                  <div className="border border-dashed border-slate-400 rounded-lg p-1.5 text-center bg-white h-16 flex flex-col justify-between">
+                    <span className="font-bold uppercase text-[7.5px] text-slate-500">Ștampilă Club / Arbitru</span>
+                    <div className="border-b border-slate-400 w-full mb-1"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -54,6 +54,7 @@ model User {
     externalInvites ExternalInvite[]
     paymentMethods  PaymentMethod[]
     invoices        Invoice[]
+    notifications   Notification[]
 }
 
 model Account {
@@ -178,6 +179,7 @@ model Team {
   shortName       String? // 3-letter code
   color           String? // hex
   logoUrl         String?
+  coverPhotoUrl   String? // Poza de grup cu echipa / cover stadion
   championshipId  String
   managerId       String?
   managerEmail    String? // Emailul liderului/managerului invitat
@@ -280,6 +282,9 @@ model Player {
   matchesCount    Int      @default(0)
   assists         Int      @default(0)
   rating          Float    @default(8.5)
+  yellowCards     Int      @default(0)
+  redCards        Int      @default(0)
+  suspensions     Int      @default(0)
   image           String?
   teamId          String
   createdAt       DateTime @default(now())
@@ -561,5 +566,28 @@ model GdprRequest {
 
   @@index([userEmail])
   @@index([status])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String?
+  userEmail String?
+  type      String   // "team_invite" | "team_removed" | "team_joined" | "championship_invite" | "system"
+  title     String
+  message   String
+  link      String?
+  read      Boolean  @default(false)
+  teamId    String?
+  teamName  String?
+  teamLogo  String?
+  metadata  String?  // JSON string
+  createdAt DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userEmail])
+  @@index([read])
+  @@index([createdAt])
 }
 

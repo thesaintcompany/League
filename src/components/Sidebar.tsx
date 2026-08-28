@@ -111,7 +111,8 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
     ];
   } else if (role === "player") {
     navItems = [
-      { name: "Fișă Jucător & Carieră", href: "/profile", icon: "account_circle" },
+      { name: "Fișă Jucător", href: "/profile", icon: "account_circle" },
+      { name: "Notificări", href: "/profile?tab=notifications", icon: "notifications" },
       { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
     ];
   } else {

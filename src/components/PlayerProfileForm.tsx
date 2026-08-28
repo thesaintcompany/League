@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 interface UserProfile {
   id: string;
@@ -137,6 +138,82 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
+  // Tab & Notifications State
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState<"profile" | "notifications">(
+    searchParams?.get("tab") === "notifications" ? "notifications" : "profile"
+  );
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
+  const [loadingNotifications, setLoadingNotifications] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (searchParams?.get("tab") === "notifications") {
+      setActiveTab("notifications");
+    }
+  }, [searchParams]);
+
+  async function loadNotifications() {
+    setLoadingNotifications(true);
+    try {
+      const res = await fetch("/api/notifications");
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data.notifications || []);
+        setUnreadCount(data.unreadCount || 0);
+      }
+    } catch {
+      // silent
+    } finally {
+      setLoadingNotifications(false);
+    }
+  }
+
+  useEffect(() => {
+    loadNotifications();
+  }, []);
+
+  async function handleMarkAllAsRead() {
+    try {
+      await fetch("/api/notifications", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ markAllAsRead: true }),
+      });
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+      setUnreadCount(0);
+    } catch {
+      // silent
+    }
+  }
+
+  async function handleMarkAsRead(id: string) {
+    try {
+      await fetch("/api/notifications", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+      setUnreadCount((prev) => Math.max(0, prev - 1));
+    } catch {
+      // silent
+    }
+  }
+
+  async function handleDeleteNotification(id: string) {
+    try {
+      await fetch(`/api/notifications?id=${id}`, { method: "DELETE" });
+      const target = notifications.find((n) => n.id === id);
+      if (target && !target.read) {
+        setUnreadCount((prev) => Math.max(0, prev - 1));
+      }
+      setNotifications((prev) => prev.filter((n) => n.id !== id));
+    } catch {
+      // silent
+    }
+  }
+
   const currentPositions = SPORT_POSITIONS[primarySport] || SPORT_POSITIONS.fotbal;
 
   // Preset photos for quick demonstration
@@ -266,33 +343,224 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start relative">
-      {!isEditable && (
-        <div className="lg:col-span-12 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-medium flex items-center gap-2 shadow-sm">
-          <span className="material-symbols-outlined text-base text-amber-400">lock</span>
-          <span>
-            <strong>Mod Vizualizare:</strong> Acest profil poate fi editat doar de către sportivul însuși sau de managerul său de echipă.
-          </span>
+      {/* Top Tab Switcher for Player Profile & Notifications */}
+      <div className="lg:col-span-12 flex flex-wrap items-center gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
+        <button
+          type="button"
+          onClick={() => setActiveTab("profile")}
+          className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 ${
+            activeTab === "profile"
+              ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md"
+              : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
+          }`}
+        >
+          <span className="material-symbols-outlined text-base">account_circle</span>
+          <span>Fișă Jucător &amp; Date Personale</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setActiveTab("notifications");
+            loadNotifications();
+          }}
+          className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 ${
+            activeTab === "notifications"
+              ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md"
+              : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
+          }`}
+        >
+          <span className="material-symbols-outlined text-base">notifications</span>
+          <span>Notificări &amp; Invitații Echipă</span>
+          {unreadCount > 0 && (
+            <span className="px-2 py-0.5 rounded-full bg-rose-500 text-white text-[10px] font-black font-mono">
+              {unreadCount}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {activeTab === "notifications" ? (
+        <div className="lg:col-span-12 space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 p-5 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm">
+            <div>
+              <h3 className="text-lg font-bold font-headline uppercase text-slate-900 dark:text-white flex items-center gap-2">
+                <span className="material-symbols-outlined text-lime-600 dark:text-lime-400">mark_email_unread</span>
+                Centru de Notificări &amp; Invitații Echipă
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-label">
+                Aici primești invitații de transfer în echipe noi și ești înștiințat dacă ești adăugat sau eliminat dintr-un lot
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {unreadCount > 0 && (
+                <button
+                  type="button"
+                  onClick={handleMarkAllAsRead}
+                  className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 transition"
+                >
+                  Marchează toate citite
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={loadNotifications}
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition"
+                title="Reîmprospătează"
+              >
+                <span className="material-symbols-outlined text-base">refresh</span>
+              </button>
+            </div>
+          </div>
+
+          {loadingNotifications ? (
+            <div className="p-12 text-center text-xs text-slate-500 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl">
+              <span className="material-symbols-outlined animate-spin text-3xl text-lime-500 block mb-2">progress_activity</span>
+              Se încarcă notificările...
+            </div>
+          ) : notifications.length === 0 ? (
+            <div className="card p-12 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-3">
+              <div className="w-16 h-16 rounded-3xl bg-slate-100 dark:bg-slate-800 text-slate-400 mx-auto flex items-center justify-center">
+                <span className="material-symbols-outlined text-3xl">notifications_off</span>
+              </div>
+              <h4 className="font-bold text-base text-slate-900 dark:text-white">Nu ai nicio notificare în acest moment</h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+                Când un manager de echipă îți trimite o invitație pe platformă sau ești adăugat/eliminat dintr-o echipă, vei primi o alertă instantă aici.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {notifications.map((n) => {
+                let badgeClass = "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300";
+                let icon = "info";
+                let borderColor = "border-slate-200 dark:border-slate-800";
+
+                if (n.type === "team_invite") {
+                  badgeClass = "bg-lime-100 text-lime-800 dark:bg-lime-950 dark:text-lime-300 border border-lime-300 dark:border-lime-700/50";
+                  icon = "mail";
+                  borderColor = "border-lime-300 dark:border-lime-500/30";
+                } else if (n.type === "team_removed") {
+                  badgeClass = "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300 border border-rose-300 dark:border-rose-700/50";
+                  icon = "person_remove";
+                  borderColor = "border-rose-300 dark:border-rose-500/30";
+                } else if (n.type === "team_joined") {
+                  badgeClass = "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/50";
+                  icon = "how_to_reg";
+                  borderColor = "border-emerald-300 dark:border-emerald-500/30";
+                }
+
+                return (
+                  <div
+                    key={n.id}
+                    className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border ${borderColor} shadow-sm transition flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                      !n.read ? "ring-2 ring-lime-400/20" : "opacity-90"
+                    }`}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${badgeClass}`}>
+                        <span className="material-symbols-outlined text-xl">{icon}</span>
+                      </div>
+
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+                            {n.title}
+                          </h4>
+                          {!n.read && (
+                            <span className="px-2 py-0.5 rounded-full bg-lime-400 text-slate-950 font-black text-[9px] uppercase">
+                              Nou
+                            </span>
+                          )}
+                          <span className="text-[10px] text-slate-400 font-mono">
+                            {new Date(n.createdAt).toLocaleDateString("ro-RO", {
+                              day: "numeric",
+                              month: "long",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
+                        </div>
+
+                        <p className="text-xs text-slate-600 dark:text-slate-300">
+                          {n.message}
+                        </p>
+
+                        {n.teamName && (
+                          <div className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400 pt-1">
+                            <span className="material-symbols-outlined text-sm text-lime-500">shield</span>
+                            <span>Echipă: <strong>{n.teamName}</strong></span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                      {n.link && (
+                        <Link
+                          href={n.link}
+                          className="px-4 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs uppercase shadow-sm transition flex items-center gap-1"
+                        >
+                          <span>Răspunde / Vezi</span>
+                          <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                        </Link>
+                      )}
+
+                      {!n.read && (
+                        <button
+                          type="button"
+                          onClick={() => handleMarkAsRead(n.id)}
+                          className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold transition"
+                          title="Marchează ca citit"
+                        >
+                          <span className="material-symbols-outlined text-sm">done</span>
+                        </button>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteNotification(n.id)}
+                        className="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition"
+                        title="Șterge notificare"
+                      >
+                        <span className="material-symbols-outlined text-base">delete</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
-      )}
+      ) : (
+        <>
+          {!isEditable && (
+            <div className="lg:col-span-12 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-medium flex items-center gap-2 shadow-sm">
+              <span className="material-symbols-outlined text-base text-amber-400">lock</span>
+              <span>
+                <strong>Mod Vizualizare:</strong> Acest profil poate fi editat doar de către sportivul însuși sau de managerul său de echipă.
+              </span>
+            </div>
+          )}
 
-      {/* Hidden File Inputs */}
-      <input
-        type="file"
-        ref={coverFileInputRef}
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => handleFileUpload(e, "cover")}
-      />
-      <input
-        type="file"
-        ref={avatarFileInputRef}
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => handleFileUpload(e, "avatar")}
-      />
+          {/* Hidden File Inputs */}
+          <input
+            type="file"
+            ref={coverFileInputRef}
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => handleFileUpload(e, "cover")}
+          />
+          <input
+            type="file"
+            ref={avatarFileInputRef}
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => handleFileUpload(e, "avatar")}
+          />
 
-      {/* Left Column: Visual Assets (4 cols) */}
-      <div className="lg:col-span-4 space-y-6">
+          {/* Left Column: Visual Assets (4 cols) */}
+          <div className="lg:col-span-4 space-y-6">
         <div className="p-5 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden relative">
           <div className="flex justify-between items-center mb-3">
             <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">
@@ -769,8 +1037,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
           )}
         </div>
       </div>
+    </>
+  )}
 
-      {/* Double-Click Interactive Photo Change Modal */}
+  {/* Double-Click Interactive Photo Change Modal */}
       {activePhotoModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-5 shadow-2xl text-slate-900 dark:text-white">

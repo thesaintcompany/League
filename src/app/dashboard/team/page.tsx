@@ -156,6 +156,9 @@ export default async function TeamManagerDashboardPage(props: {
       goals: p.goals,
       assists: p.assists,
       rating: p.rating,
+      yellowCards: p.yellowCards,
+      redCards: p.redCards,
+      suspensions: p.suspensions,
     })),
     homeMatches: (team.homeMatches || []).map((m) => ({
       id: m.id,

@@ -91,6 +91,8 @@ export async function PUT(req: Request) {
       name: body.name !== undefined ? body.name : team.name,
       shortName: body.shortName !== undefined ? body.shortName : team.shortName,
       color: body.color !== undefined ? body.color : team.color,
+      logoUrl: body.logoUrl !== undefined ? body.logoUrl : team.logoUrl,
+      coverPhotoUrl: body.coverPhotoUrl !== undefined ? body.coverPhotoUrl : team.coverPhotoUrl,
       description: body.description !== undefined ? body.description : team.description,
       headCoach: body.headCoach !== undefined ? body.headCoach : team.headCoach,
       assistantCoach: body.assistantCoach !== undefined ? body.assistantCoach : team.assistantCoach,
