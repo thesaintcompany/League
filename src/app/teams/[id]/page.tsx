@@ -152,16 +152,18 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
       {/* Hero Banner Section with Team Group Photo */}
       <section className="relative w-full border-b border-slate-800 bg-slate-950 overflow-hidden">
         {/* Background Group Cover Photo */}
-        <div className="relative h-72 sm:h-96 lg:h-[420px] w-full">
+        <div className="relative h-72 sm:h-96 lg:h-[420px] w-full overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={coverImage}
             alt={`Poză de grup ${team.name}`}
-            className="w-full h-full object-cover object-center opacity-40 brightness-75 scale-105 transform hover:scale-100 transition duration-700"
+            className="w-full h-full object-cover object-center opacity-40 brightness-75 scale-105 transform hover:scale-100 transition duration-700 pointer-events-none select-none"
           />
           {/* Multi-layered Vignette Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-transparent to-slate-950/80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-transparent to-slate-950/90 pointer-events-none" />
+          {/* Deep Solid Bottom Fade to melt seamlessly into the background */}
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent pointer-events-none" />
         </div>
 
         {/* Hero Content Overlay */}
@@ -353,7 +355,7 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
               <p className="text-2xl sm:text-4xl font-black font-headline text-emerald-400 mt-2">
                 {wins}
               </p>
-              <span className="text-[10px] text-emerald-500/70 font-mono mt-1">{totalMatches > 0 ? `${Math.round((wins/totalMatches)*100)}% din total` : "0%"}</span>
+              <span className="text-[10px] text-emerald-500/70 font-mono mt-1">{totalMatches > 0 ? `${Math.round((wins / totalMatches) * 100)}% din total` : "0%"}</span>
             </div>
 
             {/* Draws */}
@@ -387,7 +389,7 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
                 {goalsScored}
               </p>
               <span className="text-[10px] text-lime-500/70 font-mono mt-1">
-                {totalMatches > 0 ? `${(goalsScored/totalMatches).toFixed(1)} / meci` : "0.0"}
+                {totalMatches > 0 ? `${(goalsScored / totalMatches).toFixed(1)} / meci` : "0.0"}
               </span>
             </div>
 
@@ -625,10 +627,10 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-headline font-black uppercase text-white tracking-tight flex items-center gap-2">
               <span className="material-symbols-outlined text-lime-400">campaign</span>
-              Feed Știri &amp; Comunicate Oficiale
+              Feed Știri
             </h2>
             <span className="text-xs text-slate-400 font-mono">
-              Actualizări Live pentru Părinți &amp; Suporteri
+              Actualizări Live
             </span>
           </div>
 

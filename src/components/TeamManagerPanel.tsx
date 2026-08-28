@@ -1000,102 +1000,38 @@ export function TeamManagerPanel({
               </div>
             </div>
 
-            {/* Bottom Actions Bar */}
-            <div className="pt-4 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={async (e) => {
-                    await handleSaveTeam(e as any);
-                    setEditingHero(false);
-                  }}
-                  className="px-6 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-xl shadow-lime-400/20 flex items-center gap-2 active:scale-95 disabled:opacity-50"
-                >
-                  <span className="material-symbols-outlined text-base">save</span>
-                  <span>{busy ? "Se salvează..." : "Salvează Modificările"}</span>
-                </button>
+            {/* Bottom Actions Bar (Clean & Focused: Only Save & Cancel) */}
+            <div className="pt-4 border-t border-slate-800 flex items-center gap-3">
+              <button
+                type="button"
+                disabled={busy}
+                onClick={async (e) => {
+                  await handleSaveTeam(e as any);
+                  setEditingHero(false);
+                }}
+                className="px-6 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-xl shadow-lime-400/20 flex items-center gap-2 active:scale-95 disabled:opacity-50"
+              >
+                <span className="material-symbols-outlined text-base">save</span>
+                <span>{busy ? "Se salvează..." : "Salvează"}</span>
+              </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTeamName(team.name);
-                    setShortName(team.shortName || "");
-                    setColor(team.color || "#84cc16");
-                    setDescription(team.description || "");
-                    setFormation(team.formation || "4-3-3");
-                    setHomeArena(team.homeArena || "");
-                    setLogoUrl(team.logoUrl || "");
-                    setCoverPhotoUrl(team.coverPhotoUrl || "");
-                    setEditingHero(false);
-                  }}
-                  className="px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-label font-bold text-xs uppercase transition border border-slate-700 active:scale-95"
-                >
-                  Anulează
-                </button>
-              </div>
-
-              {/* Quick Actions Ribbon */}
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowCheckInModal(true)}
-                  className={`px-3.5 py-2 rounded-xl font-headline font-black text-xs uppercase tracking-wider transition flex items-center gap-1.5 active:scale-95 ${
-                    team.checkInVerified
-                      ? "bg-sky-500 text-white hover:bg-sky-400"
-                      : "bg-slate-800 text-sky-400 hover:bg-slate-700 border border-sky-400/40"
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-sm">
-                    {team.checkInVerified ? "verified" : "where_to_vote"}
-                  </span>
-                  <span>{team.checkInVerified ? "Check-in Confirmat" : "Check-in la Stadion"}</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setShowTeamSheetModal(true)}
-                  className="px-3.5 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition flex items-center gap-1.5 active:scale-95"
-                >
-                  <span className="material-symbols-outlined text-sm">description</span>
-                  <span>Foaie de Meci Digitală</span>
-                </button>
-
-                <Link
-                  href={`/teams/${team.id}`}
-                  target="_blank"
-                  className="px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition flex items-center gap-1.5 active:scale-95"
-                >
-                  <span className="material-symbols-outlined text-sm">visibility</span>
-                  <span>Pagina Publică ↗</span>
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (typeof window !== "undefined") {
-                      const url = `${window.location.origin}/teams/${team.id}`;
-                      if (navigator.clipboard) {
-                        navigator.clipboard.writeText(url);
-                        notify("Link-ul public al paginii echipei a fost copiat!");
-                      }
-                    }
-                  }}
-                  className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase transition border border-slate-700 flex items-center gap-1.5 active:scale-95"
-                >
-                  <span className="material-symbols-outlined text-sm">share</span>
-                  <span>Distribuie</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveTab("invites")}
-                  className="px-3.5 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition flex items-center gap-1.5 active:scale-95"
-                >
-                  <span className="material-symbols-outlined text-sm">forward_to_inbox</span>
-                  <span>Invită Jucător pe Email</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setTeamName(team.name);
+                  setShortName(team.shortName || "");
+                  setColor(team.color || "#84cc16");
+                  setDescription(team.description || "");
+                  setFormation(team.formation || "4-3-3");
+                  setHomeArena(team.homeArena || "");
+                  setLogoUrl(team.logoUrl || "");
+                  setCoverPhotoUrl(team.coverPhotoUrl || "");
+                  setEditingHero(false);
+                }}
+                className="px-5 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-label font-bold text-xs uppercase transition border border-slate-700 active:scale-95"
+              >
+                Anulează
+              </button>
             </div>
           </div>
         ) : (
