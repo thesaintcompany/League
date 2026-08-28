@@ -24,7 +24,7 @@ export default async function TeamManagerDashboardPage(props: {
   }
 
   const tabParam = searchParams.tab;
-  const validTabs = ["roster", "tactics", "invites", "staff", "calendar", "matches", "payments"];
+  const validTabs = ["roster", "tactics", "invites", "staff", "calendar", "matches", "news", "payments"];
   const defaultTab = validTabs.includes(tabParam || "") ? (tabParam as any) : "roster";
 
   const session = await getServerSession(authOptions);
@@ -58,6 +58,9 @@ export default async function TeamManagerDashboardPage(props: {
       awayMatches: {
         include: { homeTeam: true, championship: true },
         orderBy: { scheduledAt: "asc" },
+      },
+      news: {
+        orderBy: { createdAt: "desc" },
       },
     },
   });
@@ -121,6 +124,9 @@ export default async function TeamManagerDashboardPage(props: {
         awayMatches: {
           include: { homeTeam: true, championship: true },
         },
+        news: {
+          orderBy: { createdAt: "desc" },
+        },
       },
     });
   }
@@ -131,13 +137,25 @@ export default async function TeamManagerDashboardPage(props: {
     shortName: team.shortName,
     color: team.color,
     logoUrl: team.logoUrl,
+    coverPhotoUrl: team.coverPhotoUrl,
     description: team.description,
+    sport: team.sport,
+    lastCheckInAt: team.lastCheckInAt ? team.lastCheckInAt.toISOString() : null,
+    checkInVenue: team.checkInVenue,
+    checkInLatitude: team.checkInLatitude,
+    checkInLongitude: team.checkInLongitude,
+    checkInVerified: team.checkInVerified,
+    attendanceReport: team.attendanceReport,
     headCoach: team.headCoach,
     assistantCoach: team.assistantCoach,
     medic: team.medic,
     fitnessCoach: team.fitnessCoach,
     formation: team.formation,
     homeArena: team.homeArena,
+    news: (team.news || []).map((n) => ({
+      ...n,
+      createdAt: n.createdAt ? n.createdAt.toISOString() : new Date().toISOString(),
+    })),
     championship: team.championship
       ? {
         id: team.championship.id,
@@ -242,6 +260,9 @@ export default async function TeamManagerDashboardPage(props: {
     (m) => m.status === "scheduled" || m.status === "pending"
   ).length;
   const pendingInvites = invitations.filter((i) => i.status === "pending").length;
+  const dbManager = userId
+    ? await prisma.user.findUnique({ where: { id: userId }, select: { managerXp: true, managerBadge: true } })
+    : (userEmail ? await prisma.user.findUnique({ where: { email: userEmail }, select: { managerXp: true, managerBadge: true } }) : null);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
@@ -261,7 +282,14 @@ export default async function TeamManagerDashboardPage(props: {
             teamSubscriptionPrice={settings?.teamSubscriptionPrice ?? 60.0}
             freeTeamLimit={1}
             invitations={invitations}
-            currentUser={{ id: user.id || "", name: user.name, email: user.email, role: user.role }}
+            currentUser={{
+              id: user.id || "",
+              name: user.name,
+              email: user.email,
+              role: user.role,
+              managerXp: dbManager?.managerXp || 0,
+              managerBadge: dbManager?.managerBadge || "Manager Debutant",
+            }}
             defaultTab={defaultTab}
           />
         </main>

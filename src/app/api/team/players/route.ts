@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createNotification } from "@/lib/notifications";
+import { awardManagerXp } from "@/lib/managerXp";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -53,6 +54,12 @@ export async function POST(req: Request) {
       teamLogo: team?.logoUrl || null,
       link: "/profile",
     });
+  }
+
+  // Award +10 XP if team roster reached 11+ players
+  const totalTeamPlayers = await prisma.player.count({ where: { teamId } });
+  if (totalTeamPlayers >= 11 && (session.user as any)?.id) {
+    await awardManagerXp((session.user as any).id, "roster_completed", { teamName: team?.name });
   }
 
   return NextResponse.json({ ok: true, player }, { status: 201 });

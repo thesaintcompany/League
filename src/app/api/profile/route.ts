@@ -24,6 +24,10 @@ const profileSchema = z.object({
   facebookUrl: z.string().max(100).optional().nullable(),
   refereeBadge: z.string().max(50).optional().nullable(),
   experienceYears: z.number().int().min(0).max(50).optional().nullable(),
+  coachingLicense: z.string().max(100).optional().nullable(),
+  companyName: z.string().max(150).optional().nullable(),
+  companyCui: z.string().max(50).optional().nullable(),
+  billingAddress: z.string().max(300).optional().nullable(),
 });
 
 export async function GET() {
@@ -54,6 +58,12 @@ export async function GET() {
       facebookUrl: true,
       refereeBadge: true,
       experienceYears: true,
+      managerXp: true,
+      managerBadge: true,
+      coachingLicense: true,
+      companyName: true,
+      companyCui: true,
+      billingAddress: true,
     },
   });
 

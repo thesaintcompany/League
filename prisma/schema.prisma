@@ -41,6 +41,15 @@ model User {
   memberCardUrl    String?
   memberCardExpires DateTime?
 
+  // Manager Gamification & Profile
+  managerXp        Int      @default(0)
+  managerBadge     String?  @default("Manager Debutant")
+  xpHistory        String?  // JSON string: [{ action, xp, timestamp, description }]
+  coachingLicense  String?  // Licență Antrenorat / Management (ex: UEFA B, UEFA A, Director Sportiv)
+  companyName      String?  // Nume Companie Facturare
+  companyCui       String?  // CUI / CIF Companie
+  billingAddress   String?  // Adresă de facturare
+
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -199,6 +208,16 @@ model Team {
   subscriptionStartAt   DateTime?
   subscriptionExpiresAt DateTime?
 
+  // GPS Stadium Check-in & Presence Report
+  lastCheckInAt       DateTime?
+  checkInVenue        String?
+  checkInLatitude     Float?
+  checkInLongitude    Float?
+  checkInVerified     Boolean   @default(false)
+  attendanceReport    String?   // JSON string: [{ id, name, number, present, checkedAt }]
+  fairPlayScore       Float?    @default(5.0)
+  fairPlayReportsCount Int      @default(0)
+
    championship Championship @relation(fields: [championshipId], references: [id], onDelete: Cascade)
    players       Player[]
    homeMatches    Match[] @relation("HomeTeam")
@@ -206,6 +225,7 @@ model Team {
     invitations   TeamInvitation[]
     externalInvites ExternalInvite[]
     invoices      Invoice[]
+    news          TeamNews[]
 
    @@index([championshipId])
    @@index([managerId])
@@ -588,6 +608,24 @@ model Notification {
   @@index([userId])
   @@index([userEmail])
   @@index([read])
+  @@index([createdAt])
+}
+
+model TeamNews {
+  id        String   @id @default(cuid())
+  teamId    String
+  title     String
+  content   String
+  category  String   @default("breaking") // "breaking" | "transfer" | "comunicat" | "match" | "attendance"
+  badge     String?  @default("BREAKING NEWS")
+  author    String?  @default("Departamentul Media & Părinți")
+  imageUrl  String?
+  pinned    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
   @@index([createdAt])
 }
 

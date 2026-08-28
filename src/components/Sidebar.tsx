@@ -97,6 +97,7 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
       { name: "Tactică", href: `/dashboard/team?tab=tactics`, icon: "sports" },
       { name: "Staff", href: `/dashboard/team?tab=staff`, icon: "badge" },
       { name: `Calendar${matchCount ? ` (${matchCount})` : ""}`, href: `/dashboard/team?tab=calendar`, icon: "calendar_month" },
+      { name: "Știri", href: `/dashboard/team?tab=news`, icon: "campaign" },
       { name: "Finanțe", href: `/dashboard/team?tab=payments`, icon: "payments" },
       { name: "Setări", href: "/profile", icon: "account_circle" },
     ];

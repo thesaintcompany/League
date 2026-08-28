@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 import { TeamShareButton } from "@/components/TeamShareButton";
+import { TeamNewsFeed } from "@/components/TeamNewsFeed";
+import { generateClubNewsFeed } from "@/lib/teamNewsGenerator";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,6 +26,12 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
       awayMatches: {
         include: { homeTeam: true, championship: true, awayTeam: true },
         orderBy: { scheduledAt: "desc" },
+      },
+      news: {
+        orderBy: { createdAt: "desc" },
+      },
+      manager: {
+        select: { id: true, name: true, managerXp: true, managerBadge: true },
       },
     },
   });
@@ -102,6 +110,9 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
   const starters = team.players.filter((p) => p.isStarter);
   const reserves = team.players.filter((p) => !p.isStarter);
 
+  // Generate automated & manual club news feed
+  const newsFeed = generateClubNewsFeed(team);
+
   // Fallback cover if team manager didn't upload one
   const coverImage =
     team.coverPhotoUrl ||
@@ -177,11 +188,28 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
                   )}
                 </div>
 
-                <h1 className="text-3xl sm:text-5xl font-black font-headline uppercase tracking-tight text-white">
-                  {team.name}
-                </h1>
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                  <h1 className="text-3xl sm:text-5xl font-black font-headline uppercase tracking-tight text-white">
+                    {team.name}
+                  </h1>
+                  {team.checkInVerified && (
+                    <div
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-sky-500 text-white font-black text-[11px] font-mono uppercase shadow-lg border border-sky-400"
+                      title={`Check-in la stadion confirmat prin GPS la ${team.checkInVenue || "teren"}`}
+                    >
+                      <span className="material-symbols-outlined text-sm font-black">verified</span>
+                      <span>Check-in Teren</span>
+                    </div>
+                  )}
+                </div>
 
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-slate-400">
+                  {team.checkInVerified && team.lastCheckInAt && (
+                    <div className="flex items-center gap-1 text-sky-400 font-bold">
+                      <span className="material-symbols-outlined text-sm">where_to_vote</span>
+                      <span>Prezență Teren Confirmată ({new Date(team.lastCheckInAt).toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })})</span>
+                    </div>
+                  )}
                   {team.homeArena && (
                     <div className="flex items-center gap-1.5 text-slate-300">
                       <span className="material-symbols-outlined text-lime-400 text-sm">stadium</span>
@@ -565,7 +593,27 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
           )}
         </section>
 
-        {/* 5. TEAM ROSTER (STARTERS & RESERVES) */}
+        {/* 5. FEED ȘTIRI & COMUNICATE (PENTRU COPII ȘI PĂRINȚI) */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-headline font-black uppercase text-white tracking-tight flex items-center gap-2">
+              <span className="material-symbols-outlined text-lime-400">campaign</span>
+              Feed Știri &amp; Comunicate Oficiale
+            </h2>
+            <span className="text-xs text-slate-400 font-mono">
+              Actualizări Live pentru Părinți &amp; Suporteri
+            </span>
+          </div>
+
+          <TeamNewsFeed
+            news={newsFeed}
+            teamId={team.id}
+            teamName={team.name}
+            isManager={false}
+          />
+        </section>
+
+        {/* 6. TEAM ROSTER (STARTERS & RESERVES) */}
         <section className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-headline font-black uppercase text-white tracking-tight flex items-center gap-2">
@@ -718,6 +766,22 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
                 <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">Preparator Fizic</span>
                 <p className="font-headline font-black text-sm text-white">{team.fitnessCoach || "Nespecificat"}</p>
               </div>
+
+              {team.manager && (
+                <div className="p-4 rounded-2xl bg-slate-950 border-l-4 border-l-amber-400 border border-slate-800 space-y-1 sm:col-span-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">Manager Oficial Echipă</span>
+                    <p className="font-headline font-black text-sm text-white">{team.manager.name || "Manager Club"}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/50 font-black text-xs font-mono uppercase flex items-center gap-1.5 shadow-sm">
+                      <span className="material-symbols-outlined text-sm">workspace_premium</span>
+                      <span>{team.manager.managerBadge || "Manager Debutant"}</span>
+                    </span>
+                    <span className="text-xs font-mono text-slate-400 font-bold">{team.manager.managerXp || 0} XP</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

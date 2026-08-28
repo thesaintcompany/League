@@ -7,6 +7,7 @@ import { TopHeader } from "@/components/TopHeader";
 import { PlayerProfileForm } from "@/components/PlayerProfileForm";
 import { RefereeProfileForm } from "@/components/RefereeProfileForm";
 import { SuperAdminProfileForm } from "@/components/SuperAdminProfileForm";
+import { ManagerProfileForm } from "@/components/ManagerProfileForm";
 import { GdprDeleteAccountCard } from "@/components/GdprDeleteAccountCard";
 import Link from "next/link";
 import { canEditPlayerProfile, isTeamLeader } from "@/lib/permissions";
@@ -29,6 +30,12 @@ export default async function ProfilePage({
     include: {
       championships: true,
       venues: true,
+      managedTeams: {
+        include: {
+          players: true,
+          championship: true,
+        },
+      },
     },
   });
 
@@ -129,13 +136,24 @@ export default async function ProfilePage({
                 >
                   Corp Arbitri ↗
                 </Link>
+              ) : currentRole === "team_leader" ? (
+                <Link
+                  href="/dashboard/team"
+                  className="px-4 py-2.5 rounded-xl bg-lime-400 text-slate-950 hover:bg-lime-300 font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition"
+                >
+                  <span className="material-symbols-outlined text-sm">dashboard</span> Consolă Manager ↗
+                </Link>
               ) : null}
             </div>
           </div>
 
-          {/* SUPER ADMIN SPECIFIC VIEW: Direct in-place configuration */}
+          {/* Role-Adaptive Profile View */}
           {isSuperAdminUser ? (
+            /* SUPER ADMIN SPECIFIC VIEW */
             <SuperAdminProfileForm initialUser={user} initialSettings={systemSettings} />
+          ) : currentRole === "team_leader" ? (
+            /* Dedicated Manager Profile Form */
+            <ManagerProfileForm initialUser={user} />
           ) : currentRole === "referee" ? (
             /* Role-Adaptive Form for Referees */
             <RefereeProfileForm initialUser={user} />

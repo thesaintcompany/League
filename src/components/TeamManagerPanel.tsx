@@ -2,6 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { DigitalTeamSheetModal } from "./DigitalTeamSheetModal";
+import { CheckInModal } from "./CheckInModal";
+import { TeamNewsFeed } from "./TeamNewsFeed";
+import { generateClubNewsFeed } from "@/lib/teamNewsGenerator";
+import { ManagerGamificationWidget } from "./ManagerGamificationWidget";
 // next/navigation not needed: tab switching is client-side with window.history.replaceState
 
 interface Player {
@@ -51,10 +56,17 @@ interface TeamData {
   formation: string | null;
   homeArena: string | null;
   sport?: string | null;
+  lastCheckInAt?: string | Date | null;
+  checkInVenue?: string | null;
+  checkInLatitude?: number | null;
+  checkInLongitude?: number | null;
+  checkInVerified?: boolean;
+  attendanceReport?: string | null;
   championship?: { id: string; name: string; season?: string | null; championshipId?: string };
   players: Player[];
   homeMatches: Match[];
   awayMatches: Match[];
+  news?: any[];
 }
 
 interface ManagedTeamSummary {
@@ -74,8 +86,15 @@ interface TeamManagerPanelProps {
   teamSubscriptionPrice?: number;
   freeTeamLimit?: number;
   invitations?: any[];
-  currentUser?: { id: string; name?: string | null; email?: string | null; role?: string | null } | null;
-  defaultTab?: "roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "payments";
+  currentUser?: {
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    role?: string | null;
+    managerXp?: number;
+    managerBadge?: string | null;
+  } | null;
+  defaultTab?: "roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "news" | "payments";
 }
 
 export function TeamManagerPanel({
@@ -89,7 +108,7 @@ export function TeamManagerPanel({
   defaultTab = "roster",
 }: TeamManagerPanelProps) {
   const [team, setTeam] = useState<TeamData>(initialTeam);
-  const [activeTab, setActiveTabState] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "payments">(defaultTab);
+  const [activeTab, setActiveTabState] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "news" | "payments">(defaultTab);
 
   // Sync activeTab when sidebar navigation causes a full page re-render (defaultTab changes)
   useEffect(() => {
@@ -150,6 +169,8 @@ export function TeamManagerPanel({
 
   // Inline hero editing state
   const [editingHero, setEditingHero] = useState(false);
+  const [showTeamSheetModal, setShowTeamSheetModal] = useState(false);
+  const [showCheckInModal, setShowCheckInModal] = useState(false);
 
   // Team creation state
   const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
@@ -860,11 +881,25 @@ export function TeamManagerPanel({
                 </div>
               ) : (
                 <>
-                  <h1 className="text-2xl sm:text-4xl font-black font-headline uppercase tracking-tight text-white mt-1">
-                    {team.name}
-                  </h1>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h1 className="text-2xl sm:text-4xl font-black font-headline uppercase tracking-tight text-white mt-1">
+                      {team.name}
+                    </h1>
+                    {team.checkInVerified && (
+                      <span
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-sky-500 text-white font-black text-[10px] uppercase font-mono shadow-md border border-sky-400 mt-1"
+                        title={`Check-in GPS validat la ${team.checkInVenue || "teren"}`}
+                      >
+                        <span className="material-symbols-outlined text-xs">verified</span>
+                        <span>Verificat pe Teren</span>
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-slate-400 font-label">
                     Arena Gazda: <strong className="text-slate-200">{team.homeArena || "Alege un stadion"}</strong> • Formatie: <strong className="text-lime-400">{team.formation || "4-3-3"}</strong>
+                    {team.checkInVerified && team.lastCheckInAt && (
+                      <span className="text-sky-400 ml-2 font-bold">• Check-in: {new Date(team.lastCheckInAt).toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}</span>
+                    )}
                   </p>
                 </>
               )}
@@ -872,6 +907,34 @@ export function TeamManagerPanel({
           </div>
 
           <div className="flex flex-wrap gap-2.5">
+            {/* GPS Stadium Check-in */}
+            <button
+              type="button"
+              onClick={() => setShowCheckInModal(true)}
+              className={`px-4 py-2.5 rounded-2xl font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95 ${
+                team.checkInVerified
+                  ? "bg-sky-500 text-white hover:bg-sky-400"
+                  : "bg-slate-800 text-sky-400 hover:bg-slate-700 border border-sky-400/40"
+              }`}
+              title="Realizează check-in prin GPS pe terenul de joc și generează raportul de prezență al copiilor"
+            >
+              <span className="material-symbols-outlined text-base">
+                {team.checkInVerified ? "verified" : "where_to_vote"}
+              </span>
+              <span>{team.checkInVerified ? "Check-in Confirmat" : "Check-in la Stadion"}</span>
+            </button>
+
+            {/* Digital Team Sheet & Validation */}
+            <button
+              type="button"
+              onClick={() => setShowTeamSheetModal(true)}
+              className="px-4 py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95"
+              title="Validează lotul pentru meci și generează foaia de meci digitală sau PDF"
+            >
+              <span className="material-symbols-outlined text-base">description</span>
+              Foaie de Meci Digitală
+            </button>
+
             {/* View Public Team Page */}
             <Link
               href={`/teams/${team.id}`}
@@ -938,6 +1001,17 @@ export function TeamManagerPanel({
         )}
       </div>
 
+      {/* Manager Gamification & XP System */}
+      <ManagerGamificationWidget
+        managerXp={currentUser?.managerXp || 0}
+        managerBadge={currentUser?.managerBadge}
+        teamId={team.id}
+        teamName={team.name}
+        playersCount={team.players.length}
+        checkInVerified={team.checkInVerified}
+        matches={[...(team.homeMatches || []), ...(team.awayMatches || [])]}
+      />
+
       {/* Team Management Section */}
       <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -957,9 +1031,15 @@ export function TeamManagerPanel({
               setShowCreateTeamModal(true);
             }}
             className="px-5 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2 active:scale-95"
+            title="Adaugă o altă echipă atașată clubului"
           >
             <span className="material-symbols-outlined text-base">add_circle</span>
-            {teamCount >= freeTeamLimit ? "Creează Echipă (Plătită)" : "Creează Echipă Gratuită"}
+            <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
+              <span>Adaugă</span>
+              <span className="text-[10px] font-mono font-bold text-slate-800 normal-case">
+                (o altă echipă atașată clubului)
+              </span>
+            </div>
           </button>
         </div>
 
@@ -2059,7 +2139,33 @@ export function TeamManagerPanel({
         </div>
       )}
 
-      {/* 8. TAB 7: Metode de Plată & Facturi */}
+      {/* 8. TAB 6: Știri & Comunicate Oficiale */}
+      {activeTab === "news" && (
+        <div className="space-y-6">
+          <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+              <div>
+                <h3 className="text-xl font-bold font-headline uppercase text-white flex items-center gap-2">
+                  <span className="material-symbols-outlined text-lime-400">campaign</span>
+                  Gestiune Știri &amp; Comunicate Oficiale
+                </h3>
+                <p className="text-xs text-slate-400 font-label mt-1">
+                  Feed generat automat cu știri, transferuri și comunicate oficiale pentru părinți și copii
+                </p>
+              </div>
+            </div>
+
+            <TeamNewsFeed
+              news={generateClubNewsFeed(team)}
+              teamId={team.id}
+              teamName={team.name}
+              isManager={true}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* 9. TAB 7: Metode de Plată & Facturi */}
       {activeTab === "payments" && (
         <div className="space-y-8">
           <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-6">
@@ -2481,20 +2587,171 @@ export function TeamManagerPanel({
         </div>
       )}
 
-      {/* Print-only View (A4 Match Sheet - Scaled & Color Optimized) */}
+      {/* Create / Add Team Modal */}
+      {showCreateTeamModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl space-y-4 p-6 sm:p-7 max-h-[90vh] flex flex-col text-slate-900 dark:text-white">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-bold">
+                  <span className="material-symbols-outlined text-xl">group_add</span>
+                </div>
+                <div>
+                  <h3 className="font-headline font-black text-base sm:text-lg uppercase">
+                    Adaugă Echipă Nouă
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    O altă echipă atașată clubului tău
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowCreateTeamModal(false)}
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 transition"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (!newTeamName.trim()) return;
+                setBusy(true);
+                try {
+                  const res = await fetch("/api/team/create", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      name: newTeamName.trim(),
+                      shortName: newTeamShortName.trim() || undefined,
+                      color: newTeamColor,
+                      description: newTeamDescription.trim() || undefined,
+                    }),
+                  });
+                  const data = await res.json();
+                  if (res.ok) {
+                    notify("Echipa a fost creată cu succes!");
+                    setShowCreateTeamModal(false);
+                    window.location.reload();
+                  } else {
+                    notify(data.error || "Eroare la crearea echipei");
+                  }
+                } catch {
+                  notify("Eroare de rețea");
+                } finally {
+                  setBusy(false);
+                }
+              }}
+              className="space-y-4 text-xs"
+            >
+              <div className="space-y-1">
+                <label className="font-bold uppercase text-[10px] text-slate-500 dark:text-slate-400">
+                  Nume Echipă Nouă *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="ex: FC Juniori U17, Echipa B, etc."
+                  value={newTeamName}
+                  onChange={(e) => setNewTeamName(e.target.value)}
+                  className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-400"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="font-bold uppercase text-[10px] text-slate-500 dark:text-slate-400">
+                    Abreviere (3 litere)
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={5}
+                    placeholder="ex: JUN, FCB"
+                    value={newTeamShortName}
+                    onChange={(e) => setNewTeamShortName(e.target.value)}
+                    className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white uppercase font-mono focus:outline-none focus:border-lime-400"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold uppercase text-[10px] text-slate-500 dark:text-slate-400">
+                    Culoare Principală
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={newTeamColor}
+                      onChange={(e) => setNewTeamColor(e.target.value)}
+                      className="w-10 h-10 rounded-xl cursor-pointer bg-transparent border-0 p-0"
+                    />
+                    <span className="font-mono text-xs text-slate-400">{newTeamColor}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-bold uppercase text-[10px] text-slate-500 dark:text-slate-400">
+                  Descriere Scurtă (Opțional)
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="Descrierea echipei sau a grupei de vârstă..."
+                  value={newTeamDescription}
+                  onChange={(e) => setNewTeamDescription(e.target.value)}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-lime-400"
+                />
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400">
+                <p>
+                  Această echipă va fi administrată din același cont de manager de club.
+                  {teamCount >= freeTeamLimit && (
+                    <span className="block mt-1 text-amber-500 font-bold">
+                      Abonament: {teamSubscriptionPrice} EUR / an conform setărilor de club.
+                    </span>
+                  )}
+                </p>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateTeamModal(false)}
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold uppercase"
+                >
+                  Anulează
+                </button>
+                <button
+                  type="submit"
+                  disabled={busy || !newTeamName.trim()}
+                  className="px-5 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow disabled:opacity-50 flex items-center gap-1.5"
+                >
+                  <span className="material-symbols-outlined text-base">add_circle</span>
+                  <span>{busy ? "Se creează..." : "Creează Echipă"}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Print-only View (A4 Match Sheet - Centered & Scaled with App Logo) */}
       <div className="hidden print:block fixed inset-0 bg-white text-slate-900 z-[99999] overflow-hidden font-sans">
         <style>{`
           @page {
             size: A4 portrait;
-            margin: 6mm 8mm;
+            margin: 6mm auto;
           }
           @media print {
             html, body {
-              width: 210mm;
-              height: 297mm;
-              margin: 0 !important;
+              width: 210mm !important;
+              min-height: 297mm !important;
+              margin: 0 auto !important;
               padding: 0 !important;
               background: #ffffff !important;
+              display: block !important;
               -webkit-print-color-adjust: exact !important;
               print-color-adjust: exact !important;
               color-adjust: exact !important;
@@ -2502,18 +2759,42 @@ export function TeamManagerPanel({
             body * { visibility: hidden !important; }
             #print-area, #print-area * { visibility: visible !important; }
             #print-area {
-              position: absolute !important;
-              left: 0 !important;
-              top: 0 !important;
-              width: 194mm !important;
-              max-width: 194mm !important;
+              position: relative !important;
+              left: auto !important;
+              right: auto !important;
+              top: auto !important;
+              margin: 0 auto !important;
+              width: 190mm !important;
+              max-width: 190mm !important;
               box-sizing: border-box !important;
               padding: 0 !important;
-              margin: 0 !important;
             }
           }
         `}</style>
-        <div id="print-area" className="w-[194mm] space-y-3 text-slate-900">
+        <div id="print-area" className="w-[190mm] mx-auto space-y-2.5 text-slate-900">
+          {/* Official App Logo & Platform Header */}
+          <div className="flex items-center justify-between pb-2 border-b-2 border-slate-900 mb-1">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-base shadow-sm border border-lime-300">
+                <span className="material-symbols-outlined text-lg">bolt</span>
+              </div>
+              <div>
+                <span className="text-base font-black italic tracking-tight uppercase font-headline block leading-none text-slate-950">
+                  PRO LIGUE ROMÂNIA
+                </span>
+                <span className="text-[7.5px] font-mono font-bold tracking-widest uppercase text-lime-800">
+                  PLATFORMĂ OFICIALĂ DE MANAGEMENT SPORTIV • LIGUE.RO
+                </span>
+              </div>
+            </div>
+            <div className="text-right">
+              <span className="px-2 py-0.5 rounded bg-slate-900 text-lime-400 text-[8px] font-mono font-black uppercase tracking-wider">
+                DOCUMENT OFICIAL VERIFICAT
+              </span>
+              <span className="block text-[7.5px] text-slate-500 font-mono mt-0.5">GENERAT AUTOMAT • {new Date().toLocaleDateString("ro-RO")}</span>
+            </div>
+          </div>
+
           {/* Header Banner with Team Color */}
           <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-3 rounded-xl border-2 border-slate-800 flex justify-between items-center shadow-sm">
             <div className="flex items-center gap-3">
@@ -2662,6 +2943,23 @@ export function TeamManagerPanel({
           </div>
         </div>
       </div>
+
+      {/* Digital Team Sheet Validation Modal */}
+      {showTeamSheetModal && (
+        <DigitalTeamSheetModal
+          team={team}
+          onClose={() => setShowTeamSheetModal(false)}
+        />
+      )}
+
+      {/* GPS Stadium Check-In Modal */}
+      {showCheckInModal && (
+        <CheckInModal
+          team={team}
+          onClose={() => setShowCheckInModal(false)}
+          onCheckInSuccess={(updated) => setTeam((prev) => ({ ...prev, ...updated }))}
+        />
+      )}
     </div>
   );
 }
