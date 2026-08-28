@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { TournamentPhasesView } from "@/components/TournamentPhasesView";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -148,19 +149,90 @@ export default async function ClasamentePage({
     }));
   }
 
-  const championshipTitle = championship?.name || "Dumbravița Generation Cup";
+  const championshipTitle = championship?.name || "Clasament Platformă";
+
+  let allChampionships: any[] = [];
+  if (!championship) {
+    allChampionships = await prisma.championship.findMany({
+      include: {
+        teams: true,
+        matches: true,
+      },
+      orderBy: { startDate: "desc" },
+    });
+  }
 
   return (
-    <div className="min-h-screen bg-[#0f1217] font-body text-slate-100 flex flex-col transition-colors duration-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-body text-slate-900 dark:text-white flex flex-col transition-colors duration-200">
       <PublicHeader currentTab="clasamente" showSportSubHeader={true} />
 
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        <TournamentPhasesView
-          championshipName={championshipTitle}
-          sport={championship?.sport || "fotbal"}
-          initialStandings={initialStandings}
-          matches={formattedMatches}
-        />
+        {championship ? (
+          <TournamentPhasesView
+            championshipName={championshipTitle}
+            sport={championship.sport || "fotbal"}
+            initialStandings={initialStandings}
+            matches={formattedMatches}
+          />
+        ) : (
+          <div>
+            <h1 className="text-2xl font-headline font-black text-blue-950 dark:text-white mb-6">
+              Clasament Platformă
+            </h1>
+            {allChampionships.length === 0 ? (
+              <div className="text-center py-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <span className="material-symbols-outlined text-4xl text-slate-400 mb-3">emoji_events</span>
+                <p className="text-slate-500 dark:text-slate-400 text-lg font-label">
+                  Nu sunt turnee disponibile în platformă momentan.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {allChampionships.map((c) => {
+                  const initials = (c.name || "CP")
+                    .trim()
+                    .replace(/\b(202\d|203\d)\b/g, "")
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .map((w: string) => w[0])
+                    .join("")
+                    .toUpperCase()
+                    .slice(0, 3) || "CP";
+
+                  return (
+                    <Link
+                      key={c.id}
+                      href={`/clasamente?id=${c.id}`}
+                      className="block p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-lime-400 to-emerald-600 flex items-center justify-center text-white font-black text-sm shadow-md shrink-0">
+                          {c.logoUrl ? (
+                            <img src={c.logoUrl} alt={c.name} className="w-full h-full object-cover rounded-full" />
+                          ) : (
+                            initials
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-headline font-bold text-blue-950 dark:text-white truncate">
+                            {c.name}
+                          </h3>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 font-label uppercase tracking-wider">
+                            {c.sport} • {c.scope === "national" ? "Național" : c.scope === "judetean" ? "Județean" : "Orășenesc"}
+                          </p>
+                          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                            {c.teams?.length || 0} echipe • {c.matches?.length || 0} meciuri
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
       </main>
 
       <PublicFooter />
