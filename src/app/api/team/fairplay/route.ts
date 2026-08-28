@@ -17,6 +17,7 @@ export async function POST(req: Request) {
     const {
       teamId,
       matchId,
+      refereeName,
       fairPlayRating, // 1 - 5
       parentConductRating, // 1 - 5
       refereeRating, // 1 - 5
@@ -37,6 +38,22 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Echipa nu a fost găsită" }, { status: 404 });
     }
 
+    // If matchId provided, verify it has started or finished
+    if (matchId) {
+      const match = await prisma.match.findUnique({
+        where: { id: matchId },
+      });
+      if (match) {
+        const isStarted = match.status === "live" || match.status === "finished" || new Date(match.scheduledAt).getTime() <= Date.now();
+        if (!isStarted) {
+          return NextResponse.json(
+            { error: "Raportul de fair-play poate fi completat doar în timpul sau după desfășurarea meciului!" },
+            { status: 400 }
+          );
+        }
+      }
+    }
+
     const ratingVal = Number(fairPlayRating) || 5;
     const currentScore = team.fairPlayScore || 5.0;
     const currentCount = team.fairPlayReportsCount || 0;
@@ -53,7 +70,7 @@ export async function POST(req: Request) {
 
     // Update match scores if provided
     let scoreAwarded = false;
-    if (matchId && homeScore !== undefined && awayScore !== undefined) {
+    if (matchId && homeScore !== undefined && awayScore !== undefined && homeScore !== null && awayScore !== null) {
       await prisma.match.update({
         where: { id: matchId },
         data: {
@@ -75,12 +92,12 @@ export async function POST(req: Request) {
     const xpResult = await awardManagerXp((session.user as any).id, "fair_play_report", {
       teamName: team.name,
       matchId: matchId || undefined,
-      notes: comments || undefined,
+      notes: `Arbitru: ${refereeName || "Oficial"} • Notă: ${refereeRating || 5}/5 • Observații: ${comments || "Fără incidente"}`,
     });
 
     return NextResponse.json({
       ok: true,
-      message: `Raportul Fair-Play a fost înregistrat cu succes! Ai primit +50 XP${scoreAwarded ? " și +20 XP pentru scor" : ""}!`,
+      message: `Raportul Fair-Play pentru meci și arbitru (${refereeName || "Oficial"}) a fost înregistrat cu succes! Ai primit +50 XP${scoreAwarded ? " și +20 XP pentru scor" : ""}!`,
       xpResult,
       fairPlayScore: newAvgScore,
     });

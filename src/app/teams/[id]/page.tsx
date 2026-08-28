@@ -4,6 +4,7 @@ import { PublicFooter } from "@/components/PublicFooter";
 import { TeamShareButton } from "@/components/TeamShareButton";
 import { TeamNewsFeed } from "@/components/TeamNewsFeed";
 import { generateClubNewsFeed } from "@/lib/teamNewsGenerator";
+import { SportsBackgroundSilhouette } from "@/components/SportsBackgroundSilhouette";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,7 +16,13 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
   const team = await prisma.team.findUnique({
     where: { id },
     include: {
-      championship: true,
+      championship: {
+        include: {
+          owner: {
+            select: { id: true, name: true, email: true, phone: true },
+          },
+        },
+      },
       players: {
         orderBy: [{ isStarter: "desc" }, { number: "asc" }],
       },
@@ -31,16 +38,29 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
         orderBy: { createdAt: "desc" },
       },
       manager: {
-        select: { id: true, name: true, managerXp: true, managerBadge: true },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          managerXp: true,
+          managerBadge: true,
+          companyName: true,
+          instagramUrl: true,
+          facebookUrl: true,
+        },
       },
     },
   });
 
   if (!team) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200">
-        <PublicHeader currentTab="teams" />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 flex-1 text-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-body text-slate-900 dark:text-white transition-colors duration-200 relative overflow-x-hidden">
+        <SportsBackgroundSilhouette />
+        <div className="relative z-10">
+          <PublicHeader currentTab="teams" />
+        </div>
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 flex-1 text-center relative z-10">
           <div className="w-20 h-20 rounded-3xl bg-slate-100 dark:bg-slate-800 text-slate-400 mx-auto flex items-center justify-center mb-4">
             <span className="material-symbols-outlined text-4xl">shield</span>
           </div>
@@ -54,7 +74,9 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
             <span>Catalog Echipe</span>
           </Link>
         </main>
-        <PublicFooter />
+        <div className="relative z-10">
+          <PublicFooter />
+        </div>
       </div>
     );
   }
@@ -119,8 +141,13 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
     "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1600&auto=format&fit=crop&q=80";
 
   return (
-    <div className="min-h-screen bg-slate-950 font-body text-slate-100 flex flex-col transition-colors duration-200">
-      <PublicHeader currentTab="teams" />
+    <div className="min-h-screen bg-slate-950 font-body text-slate-100 flex flex-col transition-colors duration-200 relative overflow-x-hidden">
+      {/* Dynamic Athletic Player Shadow & Stadium Lights */}
+      <SportsBackgroundSilhouette />
+
+      <div className="relative z-10">
+        <PublicHeader currentTab="teams" />
+      </div>
 
       {/* Hero Banner Section with Team Group Photo */}
       <section className="relative w-full border-b border-slate-800 bg-slate-950 overflow-hidden">
@@ -808,6 +835,172 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
             <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
               <span>Membru din:</span>
               <strong className="text-white font-mono">{new Date(team.createdAt).getFullYear()}</strong>
+            </div>
+          </div>
+        </section>
+
+        {/* 7. CONTACT ORGANIZATOR COMPETIȚII, RELAȚII CLUB & WEB MARKETING */}
+        <section className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950/40 to-slate-900 border-2 border-slate-800 shadow-2xl space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-6 bg-lime-400 rounded-full" />
+                <h3 className="text-xl font-headline font-black uppercase text-white tracking-tight flex items-center gap-2">
+                  <span className="material-symbols-outlined text-lime-400">contact_phone</span>
+                  Contact Oficial Organizator &amp; Relații Club
+                </h3>
+              </div>
+              <p className="text-xs text-slate-400 mt-1">
+                Linii directe de comunicare cu organizatorul competiției, conducerea clubului și departamentul de marketing / presă
+              </p>
+            </div>
+            <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 border border-lime-400/40 text-xs font-mono font-bold uppercase self-start sm:self-auto">
+              Informații Verificate
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Card 1: Organizator Competiție */}
+            <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-sky-400 font-bold flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm">emoji_events</span>
+                    Organizator Competiție
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-500">Oficial</span>
+                </div>
+
+                <h4 className="font-headline font-black text-base text-white">
+                  {team.championship?.owner?.name || "Comitetul de Organizare LIGUE.RO"}
+                </h4>
+                <p className="text-xs text-slate-400 font-label">
+                  {team.championship?.name || "Campionat Oficial"}
+                </p>
+              </div>
+
+              <div className="space-y-2 pt-3 border-t border-slate-850">
+                <div className="flex items-center gap-2 text-xs text-slate-300">
+                  <span className="material-symbols-outlined text-sm text-lime-400">call</span>
+                  <span className="font-mono">{team.championship?.owner?.phone || "+40 700 000 000"}</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-slate-300">
+                  <span className="material-symbols-outlined text-sm text-lime-400">mail</span>
+                  <span className="font-mono truncate">{team.championship?.owner?.email || "organizator@ligue.ro"}</span>
+                </div>
+
+                <div className="pt-2 flex items-center gap-2">
+                  <a
+                    href={`tel:${(team.championship?.owner?.phone || "+40700000000").replace(/\s+/g, "")}`}
+                    className="flex-1 py-2 px-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-headline font-bold text-xs uppercase tracking-wider text-center transition flex items-center justify-center gap-1"
+                  >
+                    <span className="material-symbols-outlined text-sm">call</span>
+                    <span>Sună</span>
+                  </a>
+                  <a
+                    href={`mailto:${team.championship?.owner?.email || "organizator@ligue.ro"}?subject=Solicitare%20Competitie%20${encodeURIComponent(team.championship?.name || "")}`}
+                    className="py-2 px-3 rounded-xl bg-slate-850 hover:bg-slate-800 text-white font-headline font-bold text-xs uppercase tracking-wider border border-slate-700 transition flex items-center justify-center"
+                    title="Trimite Email Organizator"
+                  >
+                    <span className="material-symbols-outlined text-sm">mail</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2: Conducere & Relații Club */}
+            <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-lime-400 font-bold flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm">shield</span>
+                    Secretariat &amp; Relații Club
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-500">Sediu</span>
+                </div>
+
+                <h4 className="font-headline font-black text-base text-white">
+                  {team.name}
+                </h4>
+                <p className="text-xs text-slate-400 font-label">
+                  Manager: <strong className="text-white">{team.manager?.name || "Manager Club"}</strong>
+                </p>
+              </div>
+
+              <div className="space-y-2 pt-3 border-t border-slate-850">
+                <div className="flex items-center gap-2 text-xs text-slate-300">
+                  <span className="material-symbols-outlined text-sm text-lime-400">mail</span>
+                  <span className="font-mono truncate">{team.managerEmail || team.manager?.email || "contact@club.ro"}</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-slate-300">
+                  <span className="material-symbols-outlined text-sm text-lime-400">phone_iphone</span>
+                  <span className="font-mono">{team.manager?.phone || "+40 722 000 000"}</span>
+                </div>
+
+                <div className="pt-2 flex items-center gap-2">
+                  <a
+                    href={`mailto:${team.managerEmail || team.manager?.email || "contact@club.ro"}?subject=Inscriere%20/%20Informatii%20Echipa%20${encodeURIComponent(team.name)}`}
+                    className="flex-1 py-2 px-3 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider text-center transition flex items-center justify-center gap-1"
+                  >
+                    <span className="material-symbols-outlined text-sm">send</span>
+                    <span>Email Club</span>
+                  </a>
+                  {team.manager?.id && (
+                    <Link
+                      href={`/managers/${team.manager.id}`}
+                      className="py-2 px-3 rounded-xl bg-slate-850 hover:bg-slate-800 text-white font-headline font-bold text-xs uppercase tracking-wider border border-slate-700 transition flex items-center justify-center"
+                      title="Profil Manager"
+                    >
+                      <span className="material-symbols-outlined text-sm">badge</span>
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3: Web Marketing, Presă & Parteneriate */}
+            <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 flex flex-col justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 font-bold flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm">campaign</span>
+                    Web Marketing &amp; Sponsori
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-500">Media</span>
+                </div>
+
+                <h4 className="font-headline font-black text-base text-white">
+                  Parteneriate &amp; Vizibilitate
+                </h4>
+                <p className="text-xs text-slate-400 font-label">
+                  Oportunități de promovare, branding echipament și presă
+                </p>
+              </div>
+
+              <div className="space-y-2 pt-3 border-t border-slate-850">
+                <div className="flex items-center gap-2 text-xs text-slate-300">
+                  <span className="material-symbols-outlined text-sm text-amber-400">language</span>
+                  <span className="font-mono text-sky-400">ligue.ro/teams/{team.id}</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-slate-300">
+                  <span className="material-symbols-outlined text-sm text-amber-400">handshake</span>
+                  <span className="font-mono">marketing@ligue.ro</span>
+                </div>
+
+                <div className="pt-2 flex items-center gap-2">
+                  <a
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                      `Buna ziua, doresc informatii despre parteneriate si marketing pentru echipa ${team.name} pe platforma Pro Ligue Romania.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex-1 py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-headline font-black text-xs uppercase tracking-wider text-center transition flex items-center justify-center gap-1"
+                  >
+                    <span className="material-symbols-outlined text-sm">chat</span>
+                    <span>WhatsApp Marketing</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </section>

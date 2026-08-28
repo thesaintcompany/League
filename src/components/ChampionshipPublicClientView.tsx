@@ -7,6 +7,7 @@ import { BracketVisualizer } from "./BracketVisualizer";
 import { MatchData } from "./MatchCard";
 import { useSportContext } from "@/context/SportContext";
 import { ChampionshipLogoBadge } from "./ChampionshipLogoBadge";
+import { TournamentPhasesView } from "./TournamentPhasesView";
 
 interface Standing {
   position: number;
@@ -91,7 +92,7 @@ export function ChampionshipPublicClientView({
 }) {
   const router = useRouter();
   const { selectedSport, selectedCategory, currentSportMeta, matchesCategoryFilter } = useSportContext();
-  const [activeView, setActiveView] = useState<"bracket" | "standings">("bracket");
+  const [activeView, setActiveView] = useState<"bracket" | "standings" | "phases">("standings");
   const [showShareModal, setShowShareModal] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -277,7 +278,18 @@ export function ChampionshipPublicClientView({
               }`}
           >
             <span className="material-symbols-outlined">bar_chart</span>
-            <span className="truncate">Clasament</span>
+            <span className="truncate">Clasament General</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveView("phases")}
+            className={`flex-1 sm:flex-initial px-3.5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-headline text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 sm:gap-2 ${activeView === "phases"
+              ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md scale-100"
+              : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
+              }`}
+          >
+            <span className="material-symbols-outlined">view_carousel</span>
+            <span className="truncate">Turneu pe Faze &amp; Grupe</span>
           </button>
         </div>
       </div>
@@ -292,6 +304,27 @@ export function ChampionshipPublicClientView({
             matches={bracketMatches}
             isPublished={true}
             isAdmin={false}
+          />
+        </div>
+      ) : activeView === "phases" ? (
+        <div className="space-y-6 animate-in fade-in">
+          <TournamentPhasesView
+            championshipName={championship?.name}
+            sport={championship?.sport}
+            initialStandings={standings.map((s) => ({
+              id: s.teamId,
+              name: s.teamName,
+              shortName: s.shortName,
+              color: s.color,
+              points: s.points,
+              goalsFor: s.goalsFor,
+              goalsAgainst: s.goalsAgainst,
+              goalDiff: s.goalDiff,
+              won: s.won,
+              drawn: s.drawn,
+              lost: s.lost,
+            }))}
+            matches={allMatches || []}
           />
         </div>
       ) : (

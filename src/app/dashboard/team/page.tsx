@@ -261,8 +261,36 @@ export default async function TeamManagerDashboardPage(props: {
   ).length;
   const pendingInvites = invitations.filter((i) => i.status === "pending").length;
   const dbManager = userId
-    ? await prisma.user.findUnique({ where: { id: userId }, select: { managerXp: true, managerBadge: true } })
-    : (userEmail ? await prisma.user.findUnique({ where: { email: userEmail }, select: { managerXp: true, managerBadge: true } }) : null);
+    ? await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          managerXp: true,
+          managerBadge: true,
+          companyName: true,
+          companyCui: true,
+          billingAddress: true,
+        },
+      })
+    : userEmail
+    ? await prisma.user.findUnique({
+        where: { email: userEmail },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          managerXp: true,
+          managerBadge: true,
+          companyName: true,
+          companyCui: true,
+          billingAddress: true,
+        },
+      })
+    : null;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex font-body transition-colors duration-200">
@@ -283,12 +311,16 @@ export default async function TeamManagerDashboardPage(props: {
             freeTeamLimit={1}
             invitations={invitations}
             currentUser={{
-              id: user.id || "",
-              name: user.name,
-              email: user.email,
+              id: dbManager?.id || user.id || "",
+              name: dbManager?.name || user.name,
+              email: dbManager?.email || user.email,
+              phone: dbManager?.phone || "",
               role: user.role,
               managerXp: dbManager?.managerXp || 0,
               managerBadge: dbManager?.managerBadge || "Manager Debutant",
+              companyName: dbManager?.companyName || "",
+              companyCui: dbManager?.companyCui || "",
+              billingAddress: dbManager?.billingAddress || "",
             }}
             defaultTab={defaultTab}
           />

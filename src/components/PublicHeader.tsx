@@ -13,9 +13,10 @@ import { getCurrentSeasonYear } from "@/lib/season";
 interface PublicHeaderProps {
   currentTab?: "clasamente" | "campionat" | "romania-map" | "brackets" | "venues" | "players" | "referees" | "teams";
   variant?: "default" | "dark";
+  showSportSubHeader?: boolean;
 }
 
-export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
+export function PublicHeader({ currentTab, variant, showSportSubHeader }: PublicHeaderProps) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const role = (session?.user as any)?.role || "";
@@ -50,6 +51,25 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
   const isSanctiuni = pathname.startsWith("/sanctiuni");
   const isSignIn = pathname === "/signin" || pathname === "/signup";
   const isDashboardOrProfile = pathname.startsWith("/dashboard") || pathname === "/profile";
+
+  const isTeamOrManagerPage =
+    pathname.startsWith("/teams") ||
+    pathname.startsWith("/echipe") ||
+    pathname.startsWith("/managers") ||
+    currentTab === "teams";
+
+  const shouldRenderSubHeader =
+    showSportSubHeader !== undefined
+      ? showSportSubHeader
+      : !isTeamOrManagerPage &&
+        !pathname.startsWith("/dashboard") &&
+        !pathname.startsWith("/profile") &&
+        !pathname.startsWith("/signin") &&
+        !pathname.startsWith("/signup") &&
+        !pathname.startsWith("/confidentialitate") &&
+        !pathname.startsWith("/termeni") &&
+        !pathname.startsWith("/contact") &&
+        !pathname.startsWith("/despre");
 
   const navLinks = [
     { href: "/harta-romaniei", label: "Campionate", active: isRomaniaMap, icon: "map" },
@@ -234,8 +254,8 @@ export function PublicHeader({ currentTab, variant }: PublicHeaderProps) {
         </div>
       </header>
 
-      {/* Sub Header for Sport Selection & Context Filter */}
-      <SportSubHeader variant={variant} />
+      {/* Sub Header for Sport Selection & Context Filter (Hidden on Team & Manager Pages) */}
+      {shouldRenderSubHeader && <SportSubHeader variant={variant} />}
 
       {/* Slide-Out Navigation Drawer (Shown whenever mobileMenuOpen is true) */}
       {mobileMenuOpen && (

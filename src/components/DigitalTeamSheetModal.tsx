@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface Player {
   id: string;
@@ -71,6 +71,20 @@ export function DigitalTeamSheetModal({ team, onClose }: DigitalTeamSheetModalPr
     team.championship?.name || "Youth Champions League"
   );
   const [customHeader, setCustomHeader] = useState<string>("");
+  const [appLogoUrl, setAppLogoUrl] = useState<string>("/images/logos/logo-1.png");
+
+  useEffect(() => {
+    async function loadAppLogo() {
+      try {
+        const res = await fetch("/api/settings/public");
+        const data = await res.json();
+        if (data?.activeLogoUrl) {
+          setAppLogoUrl(data.activeLogoUrl);
+        }
+      } catch (err) {}
+    }
+    loadAppLogo();
+  }, []);
 
   // Squad Validation State: player id -> { validated: boolean, isStarter: boolean, isCaptain: boolean, number: number | null, position: string }
   const [squadState, setSquadState] = useState<
@@ -509,12 +523,15 @@ export function DigitalTeamSheetModal({ team, onClose }: DigitalTeamSheetModalPr
               <div id="digital-team-sheet-print" className="p-6 rounded-3xl bg-white text-slate-900 border-2 border-slate-300 shadow-xl space-y-4 font-sans max-w-[190mm] mx-auto">
                 {/* Official Platform Logo Header */}
                 <div className="flex items-center justify-between pb-2 border-b-2 border-slate-900 mb-1">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-base shadow-sm border border-lime-300">
-                      <span className="material-symbols-outlined text-lg">bolt</span>
-                    </div>
-                    <div>
-                      <span className="text-base font-black italic tracking-tight uppercase font-headline block leading-none text-slate-950">
+                  <div className="flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={appLogoUrl}
+                      alt="Pro Ligue România"
+                      className="h-10 w-auto max-w-[190px] object-contain object-left"
+                    />
+                    <div className="border-l border-slate-300 pl-3">
+                      <span className="text-sm font-black italic tracking-tight uppercase font-headline block leading-none text-slate-950">
                         PRO LIGUE ROMÂNIA
                       </span>
                       <span className="text-[7.5px] font-mono font-bold tracking-widest uppercase text-lime-800">
@@ -717,15 +734,15 @@ export function DigitalTeamSheetModal({ team, onClose }: DigitalTeamSheetModalPr
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
-            {/* Share to Parents & Friends */}
+            {/* Share */}
             <button
               type="button"
               onClick={handleShareWithParents}
               className="px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-headline font-black text-xs uppercase tracking-wider transition shadow-md flex items-center gap-2 active:scale-95"
-              title="Trimite foaia de meci părinților și prietenilor pe WhatsApp / rețele"
+              title="Trimite foaia de meci"
             >
               <span className="material-symbols-outlined text-base">send</span>
-              <span>Trimite la Părinți / Prieteni</span>
+              <span>Trimite</span>
             </button>
 
             {/* Print A4 PDF */}

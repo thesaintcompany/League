@@ -34,6 +34,7 @@ interface Match {
   stage?: string | null;
   round: number;
   status: string;
+  referee?: string | null;
   homeScore?: number | null;
   awayScore?: number | null;
   homeTeam: { id: string; name: string; shortName?: string | null; color?: string | null };
@@ -90,9 +91,13 @@ interface TeamManagerPanelProps {
     id: string;
     name?: string | null;
     email?: string | null;
+    phone?: string | null;
     role?: string | null;
     managerXp?: number;
     managerBadge?: string | null;
+    companyName?: string | null;
+    companyCui?: string | null;
+    billingAddress?: string | null;
   } | null;
   defaultTab?: "roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "news" | "payments";
 }
@@ -130,6 +135,20 @@ export function TeamManagerPanel({
   const [description, setDescription] = useState(team.description || "");
   const [formation, setFormation] = useState(team.formation || "4-3-3");
   const [homeArena, setHomeArena] = useState(team.homeArena || "Stadionul propriu");
+  const [appLogoUrl, setAppLogoUrl] = useState<string>("/images/logos/logo-1.png");
+
+  useEffect(() => {
+    async function loadAppLogo() {
+      try {
+        const res = await fetch("/api/settings/public");
+        const data = await res.json();
+        if (data?.activeLogoUrl) {
+          setAppLogoUrl(data.activeLogoUrl);
+        }
+      } catch (err) {}
+    }
+    loadAppLogo();
+  }, []);
 
   // Invitations State
   const [invitations, setInvitations] = useState<any[]>(initialInvitations);
@@ -1000,17 +1019,6 @@ export function TeamManagerPanel({
           </div>
         )}
       </div>
-
-      {/* Manager Gamification & XP System */}
-      <ManagerGamificationWidget
-        managerXp={currentUser?.managerXp || 0}
-        managerBadge={currentUser?.managerBadge}
-        teamId={team.id}
-        teamName={team.name}
-        playersCount={team.players.length}
-        checkInVerified={team.checkInVerified}
-        matches={[...(team.homeMatches || []), ...(team.awayMatches || [])]}
-      />
 
       {/* Team Management Section */}
       <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-5">
@@ -2388,35 +2396,79 @@ export function TeamManagerPanel({
             )}
           </div>
 
-          {/* Payment Info Panel */}
-          <div className="card p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-4">
-            <h3 className="text-lg font-bold font-headline uppercase text-white">
-              Informații de Facturare ale Contului
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs font-label">
-              <div>
-                <span className="text-slate-500">Nume Cont Manager:</span>
-                <span className="text-white font-bold ml-2">{currentUser?.name || "N/A"}</span>
+          {/* Payment Info Panel - Synchronized with Manager Profile */}
+          <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-bold">
+                  <span className="material-symbols-outlined text-base">receipt_long</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold font-headline uppercase text-white">
+                    Informații de Facturare ale Contului
+                  </h3>
+                  <span className="text-[10px] text-slate-400 font-mono">
+                    Sincronizate automat din profilul tău de manager
+                  </span>
+                </div>
               </div>
-              <div>
-                <span className="text-slate-500">Email:</span>
-                <span className="text-white font-bold ml-2">{currentUser?.email || "N/A"}</span>
+              <Link
+                href="/profile"
+                className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-lime-400 hover:text-slate-950 text-white font-headline font-bold text-xs uppercase tracking-wider transition border border-slate-700 flex items-center gap-1 shrink-0 self-start sm:self-auto"
+              >
+                <span>Editează în Profil</span>
+                <span className="material-symbols-outlined text-xs">arrow_forward</span>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-label">
+              <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+                <span className="text-slate-500 text-[10px] font-mono uppercase block">Denumire Firmă / Club</span>
+                <span className="text-white font-bold text-sm block truncate">
+                  {currentUser?.companyName || "Persoană Fizică"}
+                </span>
               </div>
-              <div>
-                <span className="text-slate-500">Companie:</span>
-                <span className="text-white font-bold ml-2"> ligue.ro S.R.L.</span>
+
+              <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+                <span className="text-slate-500 text-[10px] font-mono uppercase block">Cod Fiscal / CUI</span>
+                <span className="text-white font-mono font-bold text-sm block">
+                  {currentUser?.companyCui || "Necompletat"}
+                </span>
               </div>
-              <div>
-                <span className="text-slate-500">Preț Abonament Echipă:</span>
-                <span className="text-lime-400 font-bold ml-2">{teamSubscriptionPrice} EUR / an</span>
+
+              <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+                <span className="text-slate-500 text-[10px] font-mono uppercase block">Reprezentant Legal / Manager</span>
+                <span className="text-white font-bold text-sm block truncate">
+                  {currentUser?.name || "N/A"}
+                </span>
               </div>
-              <div>
-                <span className="text-slate-500">Echipe Gratuite:</span>
-                <span className="text-white font-bold ml-2">{freeTeamLimit}</span>
+
+              <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+                <span className="text-slate-500 text-[10px] font-mono uppercase block">Email Facturare</span>
+                <span className="text-sky-400 font-mono font-bold text-sm block truncate">
+                  {currentUser?.email || "N/A"}
+                </span>
               </div>
-              <div>
-                <span className="text-slate-500">Echipe Create:</span>
-                <span className="text-white font-bold ml-2">{teamCount}</span>
+
+              <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+                <span className="text-slate-500 text-[10px] font-mono uppercase block">Telefon Facturare</span>
+                <span className="text-white font-mono font-bold text-sm block">
+                  {currentUser?.phone || "Necompletat"}
+                </span>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+                <span className="text-slate-500 text-[10px] font-mono uppercase block">Preț Abonament Echipă</span>
+                <span className="text-lime-400 font-headline font-black text-sm block">
+                  {teamSubscriptionPrice} EUR / an ({freeTeamLimit} gratuită)
+                </span>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1 sm:col-span-2 lg:col-span-3">
+                <span className="text-slate-500 text-[10px] font-mono uppercase block">Adresă Sediu Social &amp; Facturare</span>
+                <span className="text-slate-300 font-body text-xs block">
+                  {currentUser?.billingAddress || "Nu a fost configurată o adresă de facturare în profil."}
+                </span>
               </div>
             </div>
           </div>
@@ -2737,6 +2789,19 @@ export function TeamManagerPanel({
         </div>
       )}
 
+      {/* Manager Gamification & XP System (Positioned at bottom of page above footer) */}
+      <div className="pt-2">
+        <ManagerGamificationWidget
+          managerXp={currentUser?.managerXp || 0}
+          managerBadge={currentUser?.managerBadge}
+          teamId={team.id}
+          teamName={team.name}
+          playersCount={team.players.length}
+          checkInVerified={team.checkInVerified}
+          matches={[...(team.homeMatches || []), ...(team.awayMatches || [])]}
+        />
+      </div>
+
       {/* Print-only View (A4 Match Sheet - Centered & Scaled with App Logo) */}
       <div className="hidden print:block fixed inset-0 bg-white text-slate-900 z-[99999] overflow-hidden font-sans">
         <style>{`
@@ -2774,12 +2839,15 @@ export function TeamManagerPanel({
         <div id="print-area" className="w-[190mm] mx-auto space-y-2.5 text-slate-900">
           {/* Official App Logo & Platform Header */}
           <div className="flex items-center justify-between pb-2 border-b-2 border-slate-900 mb-1">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-base shadow-sm border border-lime-300">
-                <span className="material-symbols-outlined text-lg">bolt</span>
-              </div>
-              <div>
-                <span className="text-base font-black italic tracking-tight uppercase font-headline block leading-none text-slate-950">
+            <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={appLogoUrl}
+                alt="Pro Ligue România"
+                className="h-10 w-auto max-w-[190px] object-contain object-left"
+              />
+              <div className="border-l border-slate-300 pl-3">
+                <span className="text-sm font-black italic tracking-tight uppercase font-headline block leading-none text-slate-950">
                   PRO LIGUE ROMÂNIA
                 </span>
                 <span className="text-[7.5px] font-mono font-bold tracking-widest uppercase text-lime-800">

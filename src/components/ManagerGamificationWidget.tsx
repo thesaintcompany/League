@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { getBadgeForXp, getBadgeColor } from "@/lib/managerXp";
 
-interface Match {
+export interface GamificationMatch {
   id: string;
-  scheduledAt: string;
+  scheduledAt: string | Date;
   venue?: string | null;
+  status: string; // "scheduled" | "live" | "finished"
+  referee?: string | null;
+  homeScore?: number | null;
+  awayScore?: number | null;
   homeTeam: { id: string; name: string };
   awayTeam: { id: string; name: string };
 }
@@ -18,7 +22,7 @@ interface ManagerGamificationWidgetProps {
   teamName: string;
   playersCount: number;
   checkInVerified?: boolean;
-  matches?: Match[];
+  matches?: GamificationMatch[];
   onXpUpdated?: (newXp: number, newBadge: string) => void;
 }
 
@@ -36,11 +40,12 @@ export function ManagerGamificationWidget({
   const currentBadge = managerBadge || getBadgeForXp(xp);
   const badgeStyle = getBadgeColor(currentBadge);
 
-  // Target goals
-  const isGold = xp >= 150;
-  const isSilver = xp >= 80;
-  const isBronze = xp >= 30;
+  // Sync xp if prop changes
+  useEffect(() => {
+    setXp(managerXp);
+  }, [managerXp]);
 
+  // Target goals
   let nextTargetXp = 30;
   let nextBadgeName = "Manager de Bronz";
   if (xp >= 150) {
@@ -56,20 +61,88 @@ export function ManagerGamificationWidget({
 
   const progressPercent = Math.min(100, Math.round((xp / nextTargetXp) * 100));
 
-  // Fair-Play Modal State
+  // Reported matches tracking via localStorage
+  const [reportedMatchIds, setReportedMatchIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(`fairplay_reported_${teamId}`);
+      if (stored) {
+        setReportedMatchIds(JSON.parse(stored));
+      }
+    } catch {
+      // Ignore localStorage read errors
+    }
+  }, [teamId]);
+
+  // 1. Filter matches that are ELIGIBLE for reporting (Live or Finished, or scheduledAt in the past)
+  const eligibleMatches = useMemo(() => {
+    const now = Date.now();
+    return matches.filter((m) => {
+      const matchTime = new Date(m.scheduledAt).getTime();
+      return m.status === "live" || m.status === "finished" || matchTime <= now;
+    });
+  }, [matches]);
+
+  // 2. Filter matches that are eligible AND not yet reported
+  const unreportedEligibleMatches = useMemo(() => {
+    return eligibleMatches.filter((m) => !reportedMatchIds.includes(m.id));
+  }, [eligibleMatches, reportedMatchIds]);
+
+  // 3. Find next upcoming future match
+  const nextUpcomingMatch = useMemo(() => {
+    const now = Date.now();
+    const futureMatches = matches
+      .filter((m) => new Date(m.scheduledAt).getTime() > now && m.status === "scheduled")
+      .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime());
+    return futureMatches[0] || null;
+  }, [matches]);
+
+  // Modal State
   const [showFairPlayModal, setShowFairPlayModal] = useState(false);
-  const [selectedMatchId, setSelectedMatchId] = useState<string>(matches.length > 0 ? matches[0].id : "");
+  const [selectedMatchId, setSelectedMatchId] = useState<string>("");
+
+  useEffect(() => {
+    if (unreportedEligibleMatches.length > 0) {
+      setSelectedMatchId(unreportedEligibleMatches[0].id);
+    } else if (eligibleMatches.length > 0) {
+      setSelectedMatchId(eligibleMatches[0].id);
+    }
+  }, [unreportedEligibleMatches, eligibleMatches]);
+
+  const activeMatch = useMemo(() => {
+    return matches.find((m) => m.id === selectedMatchId) || unreportedEligibleMatches[0] || eligibleMatches[0] || null;
+  }, [matches, selectedMatchId, unreportedEligibleMatches, eligibleMatches]);
+
+  // Ratings
   const [fairPlayStars, setFairPlayStars] = useState(5);
   const [parentStars, setParentStars] = useState(5);
   const [refereeStars, setRefereeStars] = useState(5);
+  const [assistantStars, setAssistantStars] = useState(5);
+  const [refereeNameInput, setRefereeNameInput] = useState("");
   const [comments, setComments] = useState("");
   const [homeScore, setHomeScore] = useState<string>("");
   const [awayScore, setAwayScore] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
   const [successToast, setSuccessToast] = useState<string | null>(null);
 
+  // Sync referee name when active match changes
+  useEffect(() => {
+    if (activeMatch?.referee) {
+      setRefereeNameInput(activeMatch.referee);
+    } else {
+      setRefereeNameInput("Arbitru Oficial Delegat");
+    }
+  }, [activeMatch]);
+
+  const canReport = unreportedEligibleMatches.length > 0;
+
   async function handleFairPlaySubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!selectedMatchId) {
+      alert("Selectează un meci valid desfășurat.");
+      return;
+    }
     setSubmitting(true);
     try {
       const res = await fetch("/api/team/fairplay", {
@@ -77,11 +150,12 @@ export function ManagerGamificationWidget({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           teamId,
-          matchId: selectedMatchId || null,
+          matchId: selectedMatchId,
+          refereeName: refereeNameInput || "Arbitru Oficial Delegat",
           fairPlayRating: fairPlayStars,
           parentConductRating: parentStars,
           refereeRating: refereeStars,
-          comments,
+          comments: `Central (${refereeStars}/5 stele), Asistenți (${assistantStars}/5 stele) - ${comments}`,
           homeScore: homeScore !== "" ? Number(homeScore) : undefined,
           awayScore: awayScore !== "" ? Number(awayScore) : undefined,
         }),
@@ -94,19 +168,28 @@ export function ManagerGamificationWidget({
         const newBadgeCalculated = data.xpResult?.badge || getBadgeForXp(newTotal);
 
         setXp(newTotal);
-        setSuccessToast(`+${gained} XP Acordate! ${data.message || ""}`);
+        setSuccessToast(`+${gained} XP Acordate! Raportul a fost înregistrat.`);
         setShowFairPlayModal(false);
+
+        // Mark match as reported in local storage
+        const updated = [...reportedMatchIds, selectedMatchId];
+        setReportedMatchIds(updated);
+        try {
+          localStorage.setItem(`fairplay_reported_${teamId}`, JSON.stringify(updated));
+        } catch {
+          // Ignore
+        }
 
         if (onXpUpdated) {
           onXpUpdated(newTotal, newBadgeCalculated);
         }
 
-        setTimeout(() => setSuccessToast(null), 5000);
+        setTimeout(() => setSuccessToast(null), 6000);
       } else {
-        alert(data.error || "Eroare la trimitere");
+        alert(data.error || "Eroare la trimiterea raportului");
       }
     } catch {
-      alert("Eroare de rețea");
+      alert("Eroare de rețea la transmiterea raportului");
     } finally {
       setSubmitting(false);
     }
@@ -126,7 +209,7 @@ export function ManagerGamificationWidget({
         </div>
       )}
 
-      {/* Main Gamification Banner */}
+      {/* Main Gamification Banner (Positioned above footer) */}
       <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 border border-slate-800 shadow-xl text-white space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
@@ -149,15 +232,48 @@ export function ManagerGamificationWidget({
             </div>
           </div>
 
-          {/* Fair-Play Action Button */}
-          <button
-            type="button"
-            onClick={() => setShowFairPlayModal(true)}
-            className="px-4 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 shrink-0 active:scale-95"
-          >
-            <span className="material-symbols-outlined text-base">military_tech</span>
-            <span>Raport Fair-Play (+50 XP)</span>
-          </button>
+          {/* Fair-Play Action Button with Match Timing Restrictions */}
+          <div className="flex flex-col items-start sm:items-end gap-1 shrink-0">
+            {canReport ? (
+              <button
+                type="button"
+                onClick={() => setShowFairPlayModal(true)}
+                className="px-5 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg shadow-amber-400/20 flex items-center gap-2 active:scale-95 animate-pulse"
+              >
+                <span className="material-symbols-outlined text-base">military_tech</span>
+                <span>Raport Arbitraj &amp; Fair-Play (+50 XP)</span>
+              </button>
+            ) : (
+              <div className="space-y-1 text-left sm:text-right">
+                <button
+                  type="button"
+                  disabled
+                  className="px-4 py-2.5 rounded-2xl bg-slate-800 text-slate-400 font-headline font-bold text-xs uppercase tracking-wider border border-slate-700 cursor-not-allowed opacity-80 flex items-center gap-1.5"
+                  title="Raportul se activează doar în timpul sau după meciul echipei."
+                >
+                  <span className="material-symbols-outlined text-base text-slate-500">lock_clock</span>
+                  <span>Raport Trimis / În Așteptare Meci</span>
+                </button>
+                <p className="text-[10px] font-mono text-slate-400">
+                  {nextUpcomingMatch ? (
+                    <>
+                      Se reactivează la meciul din{" "}
+                      <strong className="text-amber-400">
+                        {new Date(nextUpcomingMatch.scheduledAt).toLocaleDateString("ro-RO", {
+                          day: "numeric",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </strong>
+                    </>
+                  ) : (
+                    "Se reactivează în ziua următorului meci oficial."
+                  )}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Progress Bar towards Gold Manager */}
@@ -226,22 +342,32 @@ export function ManagerGamificationWidget({
 
           {/* 4. Fair-Play Assessment (+50 XP) */}
           <div
-            onClick={() => setShowFairPlayModal(true)}
-            className="p-3 rounded-2xl border bg-amber-500/10 border-amber-500/40 text-amber-300 flex items-center justify-between gap-2 cursor-pointer hover:bg-amber-500/20 transition"
+            onClick={() => {
+              if (canReport) setShowFairPlayModal(true);
+            }}
+            className={`p-3 rounded-2xl border flex items-center justify-between gap-2 transition ${
+              canReport
+                ? "bg-amber-500/15 border-amber-500/50 text-amber-300 cursor-pointer hover:bg-amber-500/25"
+                : "bg-slate-900/80 border-slate-800 text-slate-500 cursor-not-allowed"
+            }`}
           >
             <div>
               <div className="flex items-center gap-1">
-                <strong className="text-amber-300">+50 XP</strong>
+                <strong className={canReport ? "text-amber-300" : "text-slate-400"}>+50 XP</strong>
                 <span className="text-[10px] font-mono uppercase">Raport Arbitraj</span>
               </div>
-              <p className="text-[10px] text-amber-400/80 mt-0.5">Fair-play &amp; Arbitru</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">
+                {canReport ? "Meci disponibil" : "Așteaptă meci"}
+              </p>
             </div>
-            <span className="material-symbols-outlined text-lg text-amber-400 font-bold">stars</span>
+            <span className={`material-symbols-outlined text-lg ${canReport ? "text-amber-400 font-bold" : "text-slate-600"}`}>
+              stars
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Fair-Play Assessment Modal (+50 XP / +20 XP) */}
+      {/* Fair-Play Assessment Modal */}
       {showFairPlayModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
           <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl p-6 space-y-5 animate-in fade-in zoom-in-95 text-slate-900 dark:text-white max-h-[90vh] overflow-y-auto">
@@ -270,64 +396,105 @@ export function ManagerGamificationWidget({
             </div>
 
             <form onSubmit={handleFairPlaySubmit} className="space-y-4 text-xs">
-              {/* Match selector */}
-              {matches.length > 0 && (
-                <div className="space-y-1">
-                  <label className="font-bold text-[10px] uppercase text-slate-500 dark:text-slate-400">
-                    Meciul Evaluat
-                  </label>
-                  <select
-                    value={selectedMatchId}
-                    onChange={(e) => setSelectedMatchId(e.target.value)}
-                    className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-900 dark:text-white"
-                  >
-                    {matches.map((m) => (
-                      <option key={m.id} value={m.id}>
-                        {m.homeTeam.name} vs {m.awayTeam.name} ({new Date(m.scheduledAt).toLocaleDateString("ro-RO")})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              {/* Match Selector (Only Live or Finished Matches) */}
+              <div className="space-y-1">
+                <label className="font-bold text-[10px] uppercase text-slate-500 dark:text-slate-400 flex items-center justify-between">
+                  <span>Meciul Desfășurat</span>
+                  <span className="text-emerald-500 text-[9px] font-mono">În desfășurare / Finalizat</span>
+                </label>
+                <select
+                  value={selectedMatchId}
+                  onChange={(e) => setSelectedMatchId(e.target.value)}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-900 dark:text-white"
+                >
+                  {unreportedEligibleMatches.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.homeTeam.name} vs {m.awayTeam.name} (
+                      {new Date(m.scheduledAt).toLocaleDateString("ro-RO", {
+                        day: "numeric",
+                        month: "short",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                      ) • {m.status === "live" ? "LIVE" : "Finalizat"}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-              {/* Optional Quick Match Score Upload (+20 XP) */}
-              <div className="p-3 rounded-2xl bg-lime-400/10 border border-lime-400/30 space-y-2">
+              {/* Designated Referee Card */}
+              <div className="p-3.5 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold uppercase text-lime-400 font-mono">
-                    Scor Final Meci (+20 XP opțional)
+                  <span className="text-[10px] font-mono font-bold uppercase text-indigo-400 flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">sports</span>
+                    Brigada de Arbitri Desemnată la Meci
                   </span>
+                  <span className="text-[9px] font-mono text-slate-400">Oficial</span>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[10px] text-slate-400 block mb-1">Goluri Gazde</label>
-                    <input
-                      type="number"
-                      min={0}
-                      placeholder="Scor Gazde"
-                      value={homeScore}
-                      onChange={(e) => setHomeScore(e.target.value)}
-                      className="w-full p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-mono font-bold text-center"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-slate-400 block mb-1">Goluri Oaspeți</label>
-                    <input
-                      type="number"
-                      min={0}
-                      placeholder="Scor Oaspeți"
-                      value={awayScore}
-                      onChange={(e) => setAwayScore(e.target.value)}
-                      className="w-full p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-mono font-bold text-center"
-                    />
-                  </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] text-slate-400 block">Nume Arbitru Principal / Delegat</label>
+                  <input
+                    type="text"
+                    value={refereeNameInput}
+                    onChange={(e) => setRefereeNameInput(e.target.value)}
+                    placeholder="ex: Andrei Popescu (Arbitru Central)"
+                    className="w-full p-2 rounded-xl bg-slate-950 border border-slate-700 text-xs font-bold text-white"
+                  />
                 </div>
               </div>
 
-              {/* Fair-Play Star Ratings */}
-              <div className="space-y-3">
-                {/* Team & Opponent Fair Play */}
+              {/* Star Ratings Grid */}
+              <div className="space-y-2.5">
+                {/* 1. Referee Decision Rating */}
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                  <span className="font-bold text-slate-700 dark:text-slate-300">Conduită &amp; Respect Adversar</span>
+                  <div>
+                    <span className="font-bold text-slate-700 dark:text-slate-300 block">Arbitru Central (Decizii &amp; Autoritate)</span>
+                    <span className="text-[10px] text-slate-400">Corectitudine și gestionare joc</span>
+                  </div>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRefereeStars(star)}
+                        className={`text-lg transition ${
+                          star <= refereeStars ? "text-amber-400" : "text-slate-300 dark:text-slate-700"
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-base">star</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 2. Assistant Referees Rating */}
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                  <div>
+                    <span className="font-bold text-slate-700 dark:text-slate-300 block">Arbitri Asistenți (Tușieri)</span>
+                    <span className="text-[10px] text-slate-400">Semnalizări ofsaid și aut</span>
+                  </div>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setAssistantStars(star)}
+                        className={`text-lg transition ${
+                          star <= assistantStars ? "text-amber-400" : "text-slate-300 dark:text-slate-700"
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-base">star</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 3. Team & Opponent Fair Play */}
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                  <div>
+                    <span className="font-bold text-slate-700 dark:text-slate-300 block">Conduită &amp; Respect Adversar</span>
+                    <span className="text-[10px] text-slate-400">Fair-play pe teren</span>
+                  </div>
                   <div className="flex gap-1">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
@@ -344,9 +511,12 @@ export function ManagerGamificationWidget({
                   </div>
                 </div>
 
-                {/* Parent & Supporter Conduct */}
+                {/* 4. Parent & Supporter Conduct */}
                 <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                  <span className="font-bold text-slate-700 dark:text-slate-300">Comportament Părinți &amp; Galerie</span>
+                  <div>
+                    <span className="font-bold text-slate-700 dark:text-slate-300 block">Comportament Părinți &amp; Galerie</span>
+                    <span className="text-[10px] text-slate-400">Atitudine în tribune</span>
+                  </div>
                   <div className="flex gap-1">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
@@ -362,23 +532,35 @@ export function ManagerGamificationWidget({
                     ))}
                   </div>
                 </div>
+              </div>
 
-                {/* Referee Assessment */}
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
-                  <span className="font-bold text-slate-700 dark:text-slate-300">Arbitraj &amp; Luare Decizii</span>
-                  <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() => setRefereeStars(star)}
-                        className={`text-lg transition ${
-                          star <= refereeStars ? "text-amber-400" : "text-slate-300 dark:text-slate-700"
-                        }`}
-                      >
-                        <span className="material-symbols-outlined text-base">star</span>
-                      </button>
-                    ))}
+              {/* Optional Quick Match Score Upload (+20 XP) */}
+              <div className="p-3 rounded-2xl bg-lime-400/10 border border-lime-400/30 space-y-2">
+                <span className="text-[10px] font-bold uppercase text-lime-400 font-mono block">
+                  Scor Final Meci (+20 XP opțional)
+                </span>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[10px] text-slate-400 block mb-1">Goluri Gazde</label>
+                    <input
+                      type="number"
+                      min={0}
+                      placeholder="Gazde"
+                      value={homeScore}
+                      onChange={(e) => setHomeScore(e.target.value)}
+                      className="w-full p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs font-mono font-bold text-center"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-slate-400 block mb-1">Goluri Oaspeți</label>
+                    <input
+                      type="number"
+                      min={0}
+                      placeholder="Oaspeți"
+                      value={awayScore}
+                      onChange={(e) => setAwayScore(e.target.value)}
+                      className="w-full p-2 rounded-xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-xs font-mono font-bold text-center"
+                    />
                   </div>
                 </div>
               </div>
@@ -386,13 +568,13 @@ export function ManagerGamificationWidget({
               {/* Comments */}
               <div className="space-y-1">
                 <label className="font-bold text-[10px] uppercase text-slate-500 dark:text-slate-400">
-                  Observații Meci &amp; Fair-Play
+                  Observații Meci &amp; Incident Arbitraj
                 </label>
                 <textarea
-                  rows={3}
+                  rows={2}
                   value={comments}
                   onChange={(e) => setComments(e.target.value)}
-                  placeholder="Notează aspectele pozitive sau incidentele din timpul jocului..."
+                  placeholder="Notează prestația arbitrului sau incidentele din timpul jocului..."
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-white"
                 />
               </div>
@@ -411,7 +593,7 @@ export function ManagerGamificationWidget({
                   className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <span className="material-symbols-outlined text-base">send</span>
-                  <span>{submitting ? "Se trimite..." : "Trimite & Încasează +50 XP"}</span>
+                  <span>{submitting ? "Se trimite..." : "Trimite Raport (+50 XP)"}</span>
                 </button>
               </div>
             </form>
