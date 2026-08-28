@@ -84,3 +84,47 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ venue }, { status: 201 });
 }
+
+export async function PATCH(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json({ error: "Autentificare necesară" }, { status: 401 });
+  }
+
+  const user = session.user as any;
+  if (!isArenaAdmin(user)) {
+    return NextResponse.json({ error: "Acces interzis" }, { status: 403 });
+  }
+
+  const body = await req.json();
+  const { action } = body;
+
+  if (action === "activate_all") {
+    const updated = await prisma.venue.updateMany({
+      data: {
+        isActive: true,
+        status: "activ",
+      },
+    });
+    return NextResponse.json({
+      success: true,
+      message: `Toate cele ${updated.count} arene au fost activate și sunt acum 100% vizibile pe platformă!`,
+      count: updated.count,
+    });
+  }
+
+  if (action === "deactivate_all") {
+    const updated = await prisma.venue.updateMany({
+      data: {
+        isActive: false,
+      },
+    });
+    return NextResponse.json({
+      success: true,
+      message: `${updated.count} arene au fost dezactivate.`,
+      count: updated.count,
+    });
+  }
+
+  return NextResponse.json({ error: "Acțiune invalidă" }, { status: 400 });
+}

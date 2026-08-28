@@ -74,6 +74,7 @@ export function AdminSuperPanel() {
   const [userRoleFilter, setUserRoleFilter] = useState("all");
   const [sportFilter, setSportFilter] = useState("all");
   const [demoFilter, setDemoFilter] = useState<"all" | "demo" | "real">("all");
+  const [activatingVenues, setActivatingVenues] = useState(false);
 
   // Logo & Branding State
   const [activeLogoUrl, setActiveLogoUrl] = useState<string>("/images/logos/logo-1.png");
@@ -580,6 +581,30 @@ export function AdminSuperPanel() {
     } catch (err) {
       console.error(err);
       showToast("Eroare de rețea la resetarea arenei.");
+    }
+  }
+
+  async function handleBulkActivateVenues() {
+    if (!confirm("Sigur dorești să activezi și să faci 100% vizibile toate arenele din platformă?")) return;
+    setActivatingVenues(true);
+    try {
+      const res = await fetch("/api/admin/venues", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "activate_all" }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message || "Toate arenele au fost activate și făcute vizibile!");
+        setVenues((prev) => prev.map((v) => ({ ...v, isActive: true })));
+      } else {
+        showToast(data.error || "Eroare la activarea arenelor.");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Eroare de rețea la activarea arenelor.");
+    } finally {
+      setActivatingVenues(false);
     }
   }
 
@@ -2178,18 +2203,28 @@ export function AdminSuperPanel() {
               </select>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <input
                 type="text"
                 placeholder="Caută arenă, adresă sau oraș..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="input text-xs w-full sm:w-64"
+                className="input text-xs w-full sm:w-56"
               />
               <button
                 type="button"
+                disabled={activatingVenues}
+                onClick={handleBulkActivateVenues}
+                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition active:scale-95 shrink-0"
+                title="Activează toate arenele pentru a fi vizibile pe hartă și în catalog"
+              >
+                <span className="material-symbols-outlined text-[18px]">visibility</span>
+                <span>{activatingVenues ? "Se activează..." : "Activează Arenele"}</span>
+              </button>
+              <button
+                type="button"
                 onClick={openCreateModal}
-                className="px-5 py-2.5 bg-lime-400 hover:bg-lime-300 text-slate-950 rounded-xl font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition active:scale-95 shrink-0"
+                className="px-4 py-2.5 bg-lime-400 hover:bg-lime-300 text-slate-950 rounded-xl font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition active:scale-95 shrink-0"
               >
                 <span className="material-symbols-outlined text-[18px]">add_circle</span>
                 <span>Adaugă Arenă</span>
@@ -2387,15 +2422,26 @@ export function AdminSuperPanel() {
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
               <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-lime-400/10 text-lime-400 flex items-center justify-center font-black text-lg">
-
+                  <span className="material-symbols-outlined">stadium</span>
                 </div>
-                <div>
+                <div className="flex-1">
                   <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
                     Arene Naționale (Permanent)
                   </span>
-                  <span className="font-bold text-white text-xs">
-                    59 Arene •
-                  </span>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="font-bold text-white text-xs">
+                      {venues.length} Arene
+                    </span>
+                    <button
+                      type="button"
+                      disabled={activatingVenues}
+                      onClick={handleBulkActivateVenues}
+                      className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 text-[10px] font-bold border border-emerald-500/30 transition"
+                      title="Activează și fă vizibile toate arenele"
+                    >
+                      {activatingVenues ? "..." : "Activează Toate"}
+                    </button>
+                  </div>
                 </div>
               </div>
 
