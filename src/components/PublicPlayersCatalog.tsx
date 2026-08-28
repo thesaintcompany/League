@@ -82,22 +82,22 @@ export function PublicPlayersCatalog({ initialPlayers }: { initialPlayers: Playe
         <div className="relative z-10 max-w-4xl space-y-4">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-lg flex items-center gap-1.5">
-              <span className="material-symbols-outlined">star</span> EA FC /   ULTIMATE EDITION
+              <span className="material-symbols-outlined text-sm">star</span> EA FC • ULTIMATE EDITION
             </span>
             <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-[10px] uppercase font-label">
-              Top 10 Golgheteri • Liga Pro
+              Top Golgheteri • Liga Pro
             </span>
-            <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-[10px] uppercase font-label border border-lime-400/30">
-              <span className="material-symbols-outlined text-xs align-middle">flag</span> Sezonul de Aur 2025-2026
+            <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-[10px] uppercase font-label border border-lime-400/30 flex items-center gap-1">
+              <span className="material-symbols-outlined text-xs">flag</span> Sezon 2025 - 2026
             </span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-none text-white drop-shadow-md">
-            Golgheteri &amp; Legende ale Terenului
+            Golgheterii &amp; Starurile Ligii
           </h1>
 
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl font-body">
-            Carduri profesionale de performanță atletică inspirate din cele mai mari meciuri mondiale. Caută fotbalistul favorit, verifică atributele tehnice (PAC, SHO, PAS, DRI) și numărul de goluri înscrise.
+            Carduri profesionale de performanță atletică inspirate din marile competiții. Caută orice jucător după nume sau club pentru a verifica atributele tehnice (PAC, SHO, PAS, DRI) și numărul de goluri înscrise.
           </p>
 
           {/* Search & Filters */}

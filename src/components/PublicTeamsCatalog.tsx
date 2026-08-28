@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { getCurrentSeasonLabel } from "@/lib/season";
+import { useSportContext } from "@/context/SportContext";
 
 interface TeamPlayer {
   id: string;
@@ -53,6 +54,7 @@ export function PublicTeamsCatalog({
   initialTeams: TeamItem[];
   activeSeason?: string;
 }) {
+  const { selectedSport } = useSportContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSportFilter, setSelectedSportFilter] = useState<string>("all");
 
@@ -85,17 +87,22 @@ export function PublicTeamsCatalog({
     return [...dbTeams, ...nonDuplicatePresets];
   }, [initialTeams, seasonDisplay]);
 
-  // Filter by sport
+  // Filter by sport (synced with header selectedSport or local filter)
+  const activeSport = selectedSportFilter !== "all" ? selectedSportFilter : (selectedSport || "all");
+
   const sportFilteredTeams = useMemo(() => {
-    if (selectedSportFilter === "all") return allTeams;
+    if (activeSport === "all") return allTeams;
     return allTeams.filter((t) => {
       const s = (t.sport || t.championship?.sport || "fotbal").toLowerCase();
-      if (selectedSportFilter === "fotbal") {
+      if (activeSport === "fotbal") {
         return s.includes("fotbal") || s.includes("minifotbal") || s.includes("futsal") || !t.sport;
       }
-      return s.includes(selectedSportFilter.toLowerCase());
+      if (activeSport === "pingpong") {
+        return s.includes("ping") || s.includes("pong") || s.includes("masă") || s.includes("masa");
+      }
+      return s.includes(activeSport.toLowerCase());
     });
-  }, [allTeams, selectedSportFilter]);
+  }, [allTeams, activeSport]);
 
   // Filter by search query
   const filteredTeams = useMemo(() => {

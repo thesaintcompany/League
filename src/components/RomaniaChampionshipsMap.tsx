@@ -89,6 +89,9 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
     }
   };
 
+  const userRole = (session?.user as any)?.role?.toLowerCase() || "";
+  const isTeamManager = userRole === "team_leader" || userRole === "team_manager";
+
   const createTournamentHref = session?.user
     ? "/dashboard/new"
     : "/signup?role=organizer&callbackUrl=/dashboard/new";
@@ -365,13 +368,25 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                 </h2>
               </div>
 
-              <Link
-                href={createTournamentHref}
-                className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition fluid-press shrink-0"
-              >
-                <span className="material-symbols-outlined text-base">add_circle</span>
-                Adaugă Turneu
-              </Link>
+              {isTeamManager ? (
+                <button
+                  type="button"
+                  disabled
+                  title="Managerii de echipă nu au permisiunea de a crea turnee (doar organizatorii)"
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 font-headline font-bold text-xs uppercase tracking-wider border border-slate-300 dark:border-slate-700 flex items-center gap-1.5 cursor-not-allowed opacity-60 shrink-0"
+                >
+                  <span className="material-symbols-outlined text-base">lock</span>
+                  Adaugă Turneu (Inactiv)
+                </button>
+              ) : (
+                <Link
+                  href={createTournamentHref}
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl sm:rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition fluid-press shrink-0"
+                >
+                  <span className="material-symbols-outlined text-base">add_circle</span>
+                  Adaugă Turneu
+                </Link>
+              )}
             </div>
 
             {/* County Selector Tabs & Mobile-Enabled Search Bar */}
@@ -428,12 +443,24 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                     <p className="text-xs text-slate-500 dark:text-slate-400 font-label max-w-sm mx-auto">
                       Nu există încă turnee locale înregistrate pentru această selecție. Fii primul organizator care creează un campionat în {selectedCounty}!
                     </p>
-                    <Link
-                      href={createTournamentHref}
-                      className="px-5 py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider inline-flex items-center gap-1.5 shadow-md"
-                    >
-                      + Creează Primul Campionat
-                    </Link>
+                    {isTeamManager ? (
+                      <button
+                        type="button"
+                        disabled
+                        title="Managerii de echipă nu pot crea campionate (doar organizatorii)"
+                        className="px-5 py-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 font-headline font-bold text-xs uppercase tracking-wider border border-slate-300 dark:border-slate-700 inline-flex items-center gap-1.5 cursor-not-allowed opacity-60 shadow-none"
+                      >
+                        <span className="material-symbols-outlined text-sm">lock</span>
+                        + Creează Primul Campionat (Inactiv)
+                      </button>
+                    ) : (
+                      <Link
+                        href={createTournamentHref}
+                        className="px-5 py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider inline-flex items-center gap-1.5 shadow-md"
+                      >
+                        + Creează Primul Campionat
+                      </Link>
+                    )}
                   </div>
                 ) : (
                   filteredChampionships.map((champ) => {

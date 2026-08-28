@@ -334,6 +334,18 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
           </Link>
         )}
 
+        {(role === "team_leader" || role === "team_manager") && (
+          <button
+            type="button"
+            disabled
+            title="Managerii de echipă nu pot crea turnee (doar organizatorii)"
+            className="w-full bg-slate-100 dark:bg-slate-800/80 text-slate-400 dark:text-slate-500 py-2.5 px-3 rounded-xl font-bold flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700/60 text-xs font-label uppercase tracking-wider cursor-not-allowed opacity-60"
+          >
+            <span className="material-symbols-outlined text-sm">lock</span>
+            Turneu Nou (Inactiv)
+          </button>
+        )}
+
         {session?.user && (
           <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
             {/* User Profile Card */}

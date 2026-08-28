@@ -5,40 +5,46 @@ import { PublicFooter } from "@/components/PublicFooter";
 
 export const metadata = {
   title: "Cum Funcționează • PRO LIGUE ROMÂNIA",
-  description: "Ghid pas cu pas despre cum funcționează organizarea campionatelor, tragerea la sorți cu zaruri, cumpărarea biletelor și arbitrajul  .",
+  description: "Ghid pas cu pas despre organizarea campionatelor, managementul echipelor, tragerea la sorți cu zaruri, bilete electronice și arbitraj digital în timp real.",
 };
 
 export default function CumFunctioneazaPage() {
   const steps = [
     {
       num: "01",
-      title: "Crearea Competiției & Înscrierea Echipelor",
-      desc: "Organizatorul alege sportul (Fotbal, Baschet, Volei, Handbal, Tenis), categoria (Masculin, Feminin, Futsal, Juniori) și aria de acoperire (Național, Județean sau Local). Echipele își configurează lotul și staff-ul tehnic.",
-      icon: "add_circle",
+      title: "Crearea Competiției & Harta Națională pe Județe",
+      desc: "Organizatorul configurează campionatul alegând sportul (Fotbal, Minifotbal, Baschet, Tenis, Ping-Pong, Padel, Volei, Handbal), categoria (Masculin, Feminin, Dublu, Amatori, Elită) și nivelul teritorial (Național, Județean sau Municipal). Competiția este indexată automat pe Harta celor 41 de județe + București.",
+      icon: "map",
     },
     {
       num: "02",
-      title: "Tragerea la Sorți cu Zaruri (Dice Roll)",
-      desc: "Sistemul generează automat tabloul eliminatoriu prin aruncarea zarurilor 3D. Pentru a asigura corectitudinea, organizatorul are la dispoziție maxim 3 aruncări înainte ca arborele meciurilor să fie publicat  .",
-      icon: "casino",
+      title: "Management de Club, Lot & Check-in la Stadion",
+      desc: "Managerii de echipă își configurează identitatea clubului (siglă, culori, formație tactică, arenă gazdă), trimit invitații securizate pe email jucătorilor și confirmă prezența la meci prin modulul de Check-in digital GPS.",
+      icon: "groups",
     },
     {
       num: "03",
-      title: "Tabloul Interactiv & Arborele de Meciuri",
-      desc: "Fiecare campionat primește un cod public (ex: LP-2026) și un arbore eliminatoriu tip Mindmap cu linii fine de conexiune între Sferturi, Semifinale și Marea Finală direct în secțiunea Meciuri.",
-      icon: "account_tree",
+      title: "Tragerea la Sorți cu Zaruri 3D (Dice Roll)",
+      desc: "Sistemul generează automat și transparent tabloul meciurilor prin aruncarea zarurilor 3D animate. Pentru corectitudine deplină, organizatorul are la dispoziție maximum 3 aruncări înainte ca arborele competițional să fie blocat și publicat oficial.",
+      icon: "casino",
     },
     {
       num: "04",
-      title: "Bilete Electronice & Plăți Securizate",
-      desc: "Suporterii pot achiziționa bilete online prin Stripe, Apple Pay, Google Pay sau PayPal. Fiecare bilet conține un cod QR unic și oferă acces rapid la arenă.",
-      icon: "confirmation_number",
+      title: "Tabloul Interactiv & Arborele de Meciuri (Brackets)",
+      desc: "Fiecare campionat primește un cod unic de partajare (ex: #LP-2026) și un arbore eliminatoriu dinamic tip Mindmap cu linii de conexiune între Sferturi, Semifinale și Marea Finală, accesibil direct în secțiunea Meciuri.",
+      icon: "account_tree",
     },
     {
       num: "05",
-      title: "Arbitraj   RIFA & Statistici Live",
-      desc: "Arbitrii omologați completează rapoartele de meci, cartonașele și golurile în timp real. Clasamentele și clasamentele golgheterilor se actualizează automat.",
-      icon: "sports",
+      title: "Bilete Electronice & Validare la Arenă prin QR",
+      desc: "Suporterii pot achiziționa bilete online securizate (General, VIP), descărcabile cu cod QR unic pe telefon. La intrarea pe stadion sau arenă, organizatorii validează tichetele în fracțiuni de secundă folosind scannerul mobil integrat.",
+      icon: "confirmation_number",
+    },
+    {
+      num: "06",
+      title: "Arbitraj Digital, Rapoarte Live & Clasamente",
+      desc: "Arbitrii omologați completează scorul, marcatorii, cartonașele și foaia de meci în timp real. Clasamentele, golaverajul, punctele și topul golgheterilor (carduri de performanță Ultimate Edition) se recalculează automat la fluierul final.",
+      icon: "sports_score",
     },
   ];
 
@@ -68,13 +74,14 @@ export default function CumFunctioneazaPage() {
             key={step.num}
             className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-6"
           >
-            <div className="w-14 h-14 rounded-2xl bg-slate-950 text-lime-400 dark:bg-lime-400 dark:text-slate-950 font-black text-2xl flex items-center justify-center shrink-0 shadow-md">
+            <div className="w-14 h-14 rounded-2xl bg-slate-950 text-lime-400 dark:bg-lime-400 dark:text-slate-950 font-black text-xl flex items-center justify-center shrink-0 shadow-md font-mono">
               {step.num}
             </div>
 
             <div className="space-y-1.5 flex-1">
-              <h3 className="text-lg font-black font-headline uppercase text-slate-900 dark:text-white">
-                {step.title}
+              <h3 className="text-base sm:text-lg font-black font-headline uppercase text-slate-900 dark:text-white flex items-center gap-2">
+                <span className="material-symbols-outlined text-lime-600 dark:text-lime-400 text-xl shrink-0">{step.icon}</span>
+                <span>{step.title}</span>
               </h3>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-body">
                 {step.desc}

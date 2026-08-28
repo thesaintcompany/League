@@ -53,16 +53,15 @@ export function PublicHeader({ currentTab, variant, showSportSubHeader }: Public
   const isSignIn = pathname === "/signin" || pathname === "/signup";
   const isDashboardOrProfile = pathname.startsWith("/dashboard") || pathname === "/profile";
 
-  const isTeamOrManagerPage =
-    pathname.startsWith("/teams") ||
-    pathname.startsWith("/echipe") ||
-    pathname.startsWith("/managers") ||
-    currentTab === "teams";
+  const isSingleTeamPage =
+    (pathname.startsWith("/teams/") && pathname !== "/teams") ||
+    (pathname.startsWith("/echipe/") && pathname !== "/echipe") ||
+    pathname.startsWith("/managers/");
 
   const shouldRenderSubHeader =
     showSportSubHeader !== undefined
       ? showSportSubHeader
-      : !isTeamOrManagerPage &&
+      : !isSingleTeamPage &&
         !pathname.startsWith("/dashboard") &&
         !pathname.startsWith("/profile") &&
         !pathname.startsWith("/signin") &&

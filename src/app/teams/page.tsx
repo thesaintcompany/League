@@ -30,7 +30,7 @@ export default async function PublicTeamsPage() {
 
       {/* Top Navbar */}
       <div className="relative z-10">
-        <PublicHeader currentTab="teams" />
+        <PublicHeader currentTab="teams" showSportSubHeader={true} />
       </div>
 
       {/* Teams Catalog with Search */}

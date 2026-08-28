@@ -55,8 +55,13 @@ export default function NewChampionshipPage() {
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/signup?role=organizer&callbackUrl=/dashboard/new");
+    } else if (status === "authenticated" && session?.user) {
+      const role = (session.user as any)?.role?.toLowerCase();
+      if (role === "team_leader" || role === "team_manager") {
+        router.push("/dashboard/team");
+      }
     }
-  }, [status, router]);
+  }, [status, session, router]);
 
   useEffect(() => {
     async function loadChampionshipCount() {
