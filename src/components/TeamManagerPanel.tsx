@@ -1026,10 +1026,10 @@ export function TeamManagerPanel({
         <div className="space-y-8">
           <div className="flex justify-between items-center pb-2 border-b border-slate-800">
             <div>
-              <h3 className="text-xl font-bold font-headline uppercase text-white">
+              <h3 className="text-xl font-bold font-headline uppercase text-slate-900 dark:text-white">
                 Gestiune Titulari &amp; Rezerve
               </h3>
-              <p className="text-xs text-slate-400 font-label">
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-label">
                 Treci jucătorii între primul 11 și banca de rezerve cu un singur click
               </p>
             </div>
@@ -1046,7 +1046,7 @@ export function TeamManagerPanel({
               <button
                 type="button"
                 onClick={() => setShowAddPlayer((s) => !s)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-lime-400 text-xs font-label font-bold uppercase transition border border-lime-400/30 flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-lime-100 dark:bg-slate-800 hover:bg-lime-200 dark:hover:bg-slate-700 text-lime-700 dark:text-lime-400 text-xs font-label font-bold uppercase transition border border-lime-300 dark:border-lime-400/30 flex items-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-base">person_add</span>
                 Adaugă Jucător în Lot
@@ -1137,8 +1137,8 @@ export function TeamManagerPanel({
           {/* Section: Titulari (Starting XI) */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
-              <h4 className="text-base font-bold font-headline uppercase text-lime-400 tracking-wide">
+              <span className="w-2.5 h-2.5 rounded-full bg-lime-600 dark:bg-lime-400 animate-pulse"></span>
+              <h4 className="text-base font-bold font-headline uppercase text-lime-700 dark:text-lime-400 tracking-wide">
                 Titulari (Primul 11) - {starters.length} Jucători
               </h4>
             </div>
@@ -1194,8 +1194,8 @@ export function TeamManagerPanel({
           {/* Section: Banca de Rezerve */}
           <div className="space-y-4 pt-4 border-t border-slate-800">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-              <h4 className="text-base font-bold font-headline uppercase text-amber-300 tracking-wide">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 dark:bg-amber-400"></span>
+              <h4 className="text-base font-bold font-headline uppercase text-amber-600 dark:text-amber-300 tracking-wide">
                 Banca de Rezerve - {reserves.length} Jucători
               </h4>
             </div>

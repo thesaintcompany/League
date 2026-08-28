@@ -91,14 +91,14 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
     const matchCount = teamTabCounts.calendar ?? 0;
     const inviteCount = teamTabCounts.invites ?? 0;
     navItems = [
-      { name: "Panou General Club", href: "/dashboard/team", icon: "dashboard" },
-      { name: `Lot Jucători & Numere${rosterCount ? ` (${rosterCount})` : ""}`, href: `/dashboard/team?tab=roster`, icon: "groups" },
-      { name: `Invitații Campionate${inviteCount ? ` (${inviteCount})` : ""}`, href: `/dashboard/team?tab=invites`, icon: "mark_email_unread" },
-      { name: "Tactică & Primul 11", href: `/dashboard/team?tab=tactics`, icon: "sports" },
-      { name: "Staff Tehnic & Antrenori", href: `/dashboard/team?tab=staff`, icon: "badge" },
-      { name: `Program & Traseu Meciuri${matchCount ? ` (${matchCount})` : ""}`, href: `/dashboard/team?tab=calendar`, icon: "calendar_month" },
-      { name: "Finanțe & Facturi", href: `/dashboard/team?tab=payments`, icon: "payments" },
-      { name: "Profil & Setări Manager", href: "/profile", icon: "account_circle" },
+      { name: "Panou Club", href: "/dashboard/team", icon: "dashboard" },
+      { name: `Lot Jucători${rosterCount ? ` (${rosterCount})` : ""}`, href: `/dashboard/team?tab=roster`, icon: "groups" },
+      { name: `Invitații${inviteCount ? ` (${inviteCount})` : ""}`, href: `/dashboard/team?tab=invites`, icon: "mark_email_unread" },
+      { name: "Tactică", href: `/dashboard/team?tab=tactics`, icon: "sports" },
+      { name: "Staff", href: `/dashboard/team?tab=staff`, icon: "badge" },
+      { name: `Calendar${matchCount ? ` (${matchCount})` : ""}`, href: `/dashboard/team?tab=calendar`, icon: "calendar_month" },
+      { name: "Finanțe", href: `/dashboard/team?tab=payments`, icon: "payments" },
+      { name: "Setări", href: "/profile", icon: "account_circle" },
     ];
   } else if (role === "arena_owner") {
     navItems = [
