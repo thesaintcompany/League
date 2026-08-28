@@ -76,8 +76,11 @@ interface ManagedTeamSummary {
   shortName: string | null;
   color: string | null;
   logoUrl?: string | null;
+  sport?: string | null;
   subscriptionActive: boolean;
   subscriptionExpiresAt: string | null;
+  championship?: { id: string; name: string } | null;
+  playersCount?: number;
 }
 
 interface TeamManagerPanelProps {
@@ -1178,63 +1181,160 @@ export function TeamManagerPanel({
         )}
       </div>
 
-      {/* Team Management Section */}
-      <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="font-headline font-black text-lg sm:text-xl uppercase text-white tracking-tight">
-              Echipele Mele
-            </h2>
-            <p className="text-[11px] sm:text-xs text-slate-400 font-label mt-1">
-              {teamCount}/{freeTeamLimit} echipă gratuită • Următoarele: {teamSubscriptionPrice} EUR / an
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              setPaymentRequired(false);
-              setPaymentError(null);
-              setShowCreateTeamModal(true);
-            }}
-            className="px-5 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2 active:scale-95"
-            title="Adaugă o altă echipă atașată clubului"
-          >
-            <span className="material-symbols-outlined text-base">add_circle</span>
-            <div className="flex flex-col sm:flex-row sm:items-baseline gap-1">
-              <span>Adaugă</span>
-              <span className="text-[10px] font-mono font-bold text-slate-800 normal-case">
-                (o altă echipă atașată clubului)
+      {/* Team Management Section — Hub Multi-Echipă Club */}
+      <div className="card p-4 sm:p-7 bg-slate-900/95 border border-slate-800 rounded-3xl shadow-xl space-y-4 sm:space-y-5">
+        {/* Header Ribbon with Stats and Add Button */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-2 border-b border-slate-800/80">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-lime-400/10 text-lime-400 text-[10px] font-mono font-black uppercase tracking-wider border border-lime-400/20">
+                <span className="material-symbols-outlined text-[13px]">domain</span>
+                HUB CLUB
+              </span>
+              <span className="text-[11px] font-mono text-slate-400">
+                {teamCount}/{freeTeamLimit} gratuit • Extra: {teamSubscriptionPrice} EUR/an
               </span>
             </div>
-          </button>
+            <h2 className="font-headline font-black text-lg sm:text-xl uppercase text-white tracking-tight flex items-center gap-2">
+              <span>Echipele Tale din Club</span>
+              <span className="text-xs font-mono font-normal text-slate-500">
+                ({managedTeams.length > 0 ? managedTeams.length : 1})
+              </span>
+            </h2>
+          </div>
+
+          <div className="relative group/addteam self-start sm:self-auto">
+            <button
+              type="button"
+              onClick={() => {
+                setPaymentRequired(false);
+                setPaymentError(null);
+                setShowCreateTeamModal(true);
+              }}
+              className="px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-2 active:scale-95 cursor-pointer"
+              title="Adaugă o altă echipă atașată clubului"
+            >
+              <span className="material-symbols-outlined text-base">add_circle</span>
+              <span>Adaugă</span>
+            </button>
+
+            {/* Hover Tooltip Toggle */}
+            <div className="pointer-events-none absolute bottom-full right-0 sm:left-1/2 sm:-translate-x-1/2 mb-2 hidden group-hover/addteam:flex items-center px-3 py-1.5 rounded-xl bg-slate-950 text-white text-[11px] font-label font-bold border border-slate-700 shadow-2xl whitespace-nowrap z-30 transition-all duration-200">
+              <span>(o altă echipă atașată clubului)</span>
+              <span className="absolute top-full right-4 sm:left-1/2 sm:-translate-x-1/2 -mt-1 border-4 border-transparent border-t-slate-950" />
+            </div>
+          </div>
         </div>
 
+        {/* Managed Teams Grid */}
         {managedTeams.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {managedTeams.map((t) => (
-              <div
-                key={t.id}
-                className={`p-4 rounded-2xl border text-left transition flex flex-col gap-2 ${t.id === team.id
-                  ? "border-lime-500 bg-lime-500/10 text-white shadow-md"
-                  : "border-slate-700 bg-slate-800/60 text-slate-300"
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {managedTeams.map((t) => {
+              const isCurrentActive = t.id === team.id;
+              return (
+                <div
+                  key={t.id}
+                  className={`p-4 rounded-2xl border transition-all duration-200 flex flex-col justify-between gap-3 relative overflow-hidden ${
+                    isCurrentActive
+                      ? "border-lime-400 bg-slate-900/90 shadow-lg shadow-lime-500/10 ring-1 ring-lime-400/40"
+                      : "border-slate-800 bg-slate-950/60 hover:border-slate-700 text-slate-300"
                   }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-xs font-black text-white shadow-md uppercase shrink-0 border border-white/10"
-                    style={{ backgroundColor: t.color || "#84cc16" }}
-                  >
-                    {t.shortName?.substring(0, 3) || t.name.substring(0, 3).toUpperCase()}
+                >
+                  {/* Top Badge: Active vs Inactive */}
+                  <div className="flex items-center justify-between gap-2">
+                    {isCurrentActive ? (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 font-headline font-black text-[10px] uppercase tracking-wider shadow-sm">
+                        <span className="material-symbols-outlined text-[12px]">check_circle</span>
+                        ACTIVĂ ÎN PANOU
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-headline font-bold text-[10px] uppercase tracking-wider">
+                        <span className="material-symbols-outlined text-[12px]">radio_button_unchecked</span>
+                        Echipă din Club
+                      </span>
+                    )}
+
+                    <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">
+                      {t.subscriptionActive ? "Abonament Activ" : "Inclus Gratuit"}
+                    </span>
                   </div>
-                  <div className="min-w-0">
-                    <p className="font-headline font-bold text-sm leading-tight truncate">{t.name}</p>
-                    <p className="text-[10px] font-label text-slate-400 uppercase">
-                      {t.subscriptionActive ? `Abonament activ • ${t.subscriptionExpiresAt ? new Date(t.subscriptionExpiresAt).toLocaleDateString("ro-RO") : ""}` : "Plan gratuit"}
-                    </p>
+
+                  {/* Team Identification */}
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center text-xs font-black text-white shadow-md uppercase shrink-0 border border-white/10 relative overflow-hidden"
+                      style={{ backgroundColor: t.color || "#84cc16" }}
+                    >
+                      {t.logoUrl ? (
+                        <img src={t.logoUrl} alt={t.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span>{t.shortName?.substring(0, 3) || t.name.substring(0, 3).toUpperCase()}</span>
+                      )}
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-baseline gap-1.5">
+                        <h4 className="font-headline font-black text-sm text-white leading-tight truncate">
+                          {t.name}
+                        </h4>
+                        {t.shortName && (
+                          <span className="text-[10px] font-mono font-bold text-lime-400 shrink-0">
+                            {t.shortName}
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="text-[11px] text-slate-400 font-label truncate mt-0.5 flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[13px] text-slate-500">
+                          {t.sport === "baschet" ? "sports_basketball" : t.sport === "tenis" ? "sports_tennis" : "sports_soccer"}
+                        </span>
+                        <span>{t.championship?.name || "Fără campionat activ"}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Micro Info Row */}
+                  <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                    <span className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[13px] text-slate-500">groups</span>
+                      <span>{t.playersCount || 0} Jucători</span>
+                    </span>
+
+                    {/* Action Button */}
+                    {isCurrentActive ? (
+                      <Link
+                        href={`/teams/${t.id}`}
+                        target="_blank"
+                        className="px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-lime-400 font-headline font-bold text-[11px] uppercase tracking-wider flex items-center gap-1 transition active:scale-95"
+                      >
+                        <span className="material-symbols-outlined text-[13px]">visibility</span>
+                        <span>Public ↗</span>
+                      </Link>
+                    ) : (
+                      <Link
+                        href={`/dashboard/team?teamId=${t.id}`}
+                        className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-lime-400 hover:text-slate-950 text-white font-headline font-bold text-[11px] uppercase tracking-wider flex items-center gap-1 transition active:scale-95 shadow-sm"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">swap_horiz</span>
+                        <span>Comută</span>
+                      </Link>
+                    )}
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
+          </div>
+        )}
+
+        {/* Informative Helper for Single-Team Managers */}
+        {managedTeams.length <= 1 && (
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-slate-950 to-slate-900/90 border border-slate-800/80 flex items-start sm:items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-lime-400/10 text-lime-400 flex items-center justify-center shrink-0 border border-lime-400/20">
+              <span className="material-symbols-outlined text-base">lightbulb</span>
+            </div>
+            <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed font-body">
+              Poți administra mai multe echipe în cadrul aceluiași club (ex: <strong className="text-slate-200">Echipa a II-a</strong>, <strong className="text-slate-200">Tineret</strong> sau <strong className="text-slate-200">Old-Boys</strong>). Apasă pe butonul <strong className="text-lime-400">Adaugă</strong> pentru a înscrie o echipă secundară.
+            </p>
           </div>
         )}
       </div>

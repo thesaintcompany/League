@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { PublicStandingsView } from "@/components/PublicStandingsView";
+import { TournamentPhasesView } from "@/components/TournamentPhasesView";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 
@@ -8,12 +8,12 @@ export const dynamic = "force-dynamic";
 export default async function ClasamentePage({
   searchParams,
 }: {
-  searchParams?: { id?: string; code?: string; sport?: string; county?: string };
+  searchParams?: { id?: string; code?: string; sport?: string };
 }) {
   const rawId = searchParams?.id?.trim();
   const rawCode = searchParams?.code?.trim();
 
-  // 1. Fetch targeted championship or fallback to latest available
+  // If specific ID or code passed, query championship
   let championship = null;
   if (rawId) {
     championship = await prisma.championship.findFirst({
@@ -60,220 +60,106 @@ export default async function ClasamentePage({
     });
   }
 
-  if (!championship) {
-    championship = await prisma.championship.findFirst({
-      include: {
-        teams: {
-          include: { players: true },
-          orderBy: { name: "asc" },
-        },
-        matches: {
-          include: {
-            homeTeam: true,
-            awayTeam: true,
-          },
-          orderBy: [{ round: "asc" }, { scheduledAt: "asc" }],
-        },
-      },
-      orderBy: [{ updatedAt: "desc" }],
-    });
-  }
+  // Format real standings & matches if targeted championship exists and has at least 4 teams
+  let initialStandings: any[] = [];
+  let formattedMatches: any[] = [];
 
-  // 2. Fetch all championships for switcher
-  const rawChampionships = await prisma.championship.findMany({
-    include: {
-      teams: { select: { id: true } },
-    },
-    orderBy: { name: "asc" },
-  });
-
-  const allChampionships = rawChampionships.map((c) => ({
-    id: c.id,
-    name: c.name,
-    sport: c.sport || "Fotbal",
-    season: c.season || "2025-2026",
-    format: c.format || "round_robin",
-    teamsCount: c.teams.length,
-  }));
-
-  // 3. Compute standings
-  let standings: any[] = [];
-  let finishedMatches: any[] = [];
-  let upcomingMatches: any[] = [];
-  let allMatchesList: any[] = [];
-  let topScorers: any[] = [];
-
-  if (championship) {
-    const teams = championship.teams || [];
+  if (championship && championship.teams && championship.teams.length >= 4) {
+    const teams = championship.teams;
     const matches = championship.matches || [];
+    const half = Math.ceil(teams.length / 2);
 
-    allMatchesList = matches.map((m) => ({
+    initialStandings = teams.map((t, idx) => ({
+      id: t.id,
+      name: t.name,
+      shortName: t.shortName,
+      color: t.color,
+      logoUrl: t.logoUrl,
+      points: 0,
+      goalsFor: 0,
+      goalsAgainst: 0,
+      goalDiff: 0,
+      won: 0,
+      drawn: 0,
+      lost: 0,
+      group: idx < half ? "A" : "B",
+    }));
+
+    const standingsMap = new Map(initialStandings.map((s) => [s.id, s]));
+    matches.forEach((m) => {
+      if (m.status === "finished" || m.status === "completed") {
+        const home = standingsMap.get(m.homeTeamId);
+        const away = standingsMap.get(m.awayTeamId);
+        const hs = Number(m.homeScore) || 0;
+        const as = Number(m.awayScore) || 0;
+        if (home) {
+          home.goalsFor += hs;
+          home.goalsAgainst += as;
+          if (hs > as) {
+            home.won += 1;
+            home.points += 3;
+          } else if (hs === as) {
+            home.drawn += 1;
+            home.points += 1;
+          } else {
+            home.lost += 1;
+          }
+          home.goalDiff = home.goalsFor - home.goalsAgainst;
+        }
+        if (away) {
+          away.goalsFor += as;
+          away.goalsAgainst += hs;
+          if (as > hs) {
+            away.won += 1;
+            away.points += 3;
+          } else if (as === hs) {
+            away.drawn += 1;
+            away.points += 1;
+          } else {
+            away.lost += 1;
+          }
+          away.goalDiff = away.goalsFor - away.goalsAgainst;
+        }
+      }
+    });
+
+    formattedMatches = matches.map((m) => ({
       id: m.id,
-      round: m.round,
-      scheduledAt: m.scheduledAt ? new Date(m.scheduledAt).toISOString() : new Date().toISOString(),
-      venue: m.venue || "",
-      status: m.status,
-      stage: m.stage || "Grupe",
-      homeScore: m.homeScore,
-      awayScore: m.awayScore,
       homeTeam: {
-        id: m.homeTeam?.id || "home-tbd",
+        id: m.homeTeam?.id || "h",
         name: m.homeTeam?.name || "Echipă Gazdă",
-        shortName: m.homeTeam?.shortName || (m.homeTeam?.name ? m.homeTeam.name.substring(0, 3).toUpperCase() : "GAZ"),
-        color: m.homeTeam?.color || "#1e293b",
+        shortName: m.homeTeam?.shortName,
+        color: m.homeTeam?.color,
         logoUrl: m.homeTeam?.logoUrl,
       },
       awayTeam: {
-        id: m.awayTeam?.id || "away-tbd",
+        id: m.awayTeam?.id || "a",
         name: m.awayTeam?.name || "Echipă Oaspete",
-        shortName: m.awayTeam?.shortName || (m.awayTeam?.name ? m.awayTeam.name.substring(0, 3).toUpperCase() : "OAS"),
-        color: m.awayTeam?.color || "#1e293b",
+        shortName: m.awayTeam?.shortName,
+        color: m.awayTeam?.color,
         logoUrl: m.awayTeam?.logoUrl,
       },
+      homeScore: m.homeScore,
+      awayScore: m.awayScore,
+      status: m.status,
+      group: m.stage?.includes("B") ? "B" : "A",
+      stage: m.stage || "Faza 1",
+      scheduledAt: m.scheduledAt ? new Date(m.scheduledAt).toISOString() : undefined,
     }));
-
-    finishedMatches = allMatchesList.filter(
-      (m) => m.status === "finished" || m.status === "completed"
-    );
-
-    upcomingMatches = allMatchesList.filter(
-      (m) => m.status === "scheduled" || m.status === "live" || m.status === "in_progress"
-    );
-
-    // Compute team standings
-    const standingsMap = new Map<string, any>();
-
-    teams.forEach((t) => {
-      standingsMap.set(t.id, {
-        teamId: t.id,
-        teamName: t.name,
-        shortName: t.shortName || t.name.substring(0, 3).toUpperCase(),
-        color: t.color || "#84cc16",
-        logoUrl: t.logoUrl,
-        played: 0,
-        won: 0,
-        drawn: 0,
-        lost: 0,
-        goalsFor: 0,
-        goalsAgainst: 0,
-        goalDiff: 0,
-        points: 0,
-        form: [] as string[],
-      });
-    });
-
-    finishedMatches.forEach((m) => {
-      const home = m.homeTeam?.id ? standingsMap.get(m.homeTeam.id) : null;
-      const away = m.awayTeam?.id ? standingsMap.get(m.awayTeam.id) : null;
-      const hs = Number(m.homeScore) || 0;
-      const as = Number(m.awayScore) || 0;
-
-      if (home) {
-        home.played += 1;
-        home.goalsFor += hs;
-        home.goalsAgainst += as;
-        if (hs > as) {
-          home.won += 1;
-          home.points += 3;
-          home.form.push("W");
-        } else if (hs === as) {
-          home.drawn += 1;
-          home.points += 1;
-          home.form.push("D");
-        } else {
-          home.lost += 1;
-          home.form.push("L");
-        }
-      }
-
-      if (away) {
-        away.played += 1;
-        away.goalsFor += as;
-        away.goalsAgainst += hs;
-        if (as > hs) {
-          away.won += 1;
-          away.points += 3;
-          away.form.push("W");
-        } else if (as === hs) {
-          away.drawn += 1;
-          away.points += 1;
-          away.form.push("D");
-        } else {
-          away.lost += 1;
-          away.form.push("L");
-        }
-      }
-    });
-
-    standings = Array.from(standingsMap.values())
-      .map((s, idx) => ({
-        ...s,
-        position: idx + 1,
-        goalDiff: s.goalsFor - s.goalsAgainst,
-        form: s.form.slice(-5),
-      }))
-      .sort((a, b) => {
-        if (b.points !== a.points) return b.points - a.points;
-        if (b.goalDiff !== a.goalDiff) return b.goalDiff - a.goalDiff;
-        return b.goalsFor - a.goalsFor;
-      })
-      .map((s, idx) => ({
-        ...s,
-        position: idx + 1,
-      }));
-
-    // Top scorers from players
-    const allPlayers: any[] = [];
-    teams.forEach((t) => {
-      (t.players || []).forEach((p: any) => {
-        if (p.goals > 0) {
-          allPlayers.push({
-            id: p.id,
-            name: p.name,
-            number: p.number,
-            teamName: t.name,
-            teamColor: t.color,
-            teamLogo: t.logoUrl,
-            goals: p.goals,
-            assists: p.assists,
-            yellowCards: p.yellowCards,
-            redCards: p.redCards,
-            photoUrl: p.image,
-          });
-        }
-      });
-    });
-
-    topScorers = allPlayers.sort((a, b) => b.goals - a.goals).slice(0, 10);
   }
 
-  const championshipInfo = championship
-    ? {
-        id: championship.id,
-        name: championship.name,
-        sport: championship.sport || "Fotbal",
-        season: championship.season || "2025-2026",
-        scope: championship.scope || "national",
-        county: championship.county,
-        city: championship.city,
-        logoUrl: championship.logoUrl,
-        shareCode: championship.shareCode || championship.id,
-        description: championship.description,
-      }
-    : null;
+  const championshipTitle = championship?.name || "Dumbravița Generation Cup";
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-body text-slate-900 dark:text-white flex flex-col transition-colors duration-200">
-      <PublicHeader currentTab="clasamente" showSportSubHeader={false} />
+    <div className="min-h-screen bg-[#0f1217] font-body text-slate-100 flex flex-col transition-colors duration-200">
+      <PublicHeader currentTab="clasamente" showSportSubHeader={true} />
 
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        <PublicStandingsView
-          currentChampionship={championshipInfo}
-          allChampionships={allChampionships}
-          standings={standings}
-          finishedMatches={finishedMatches}
-          upcomingMatches={upcomingMatches}
-          topScorers={topScorers}
+      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <TournamentPhasesView
+          championshipName={championshipTitle}
+          sport={championship?.sport || "fotbal"}
+          initialStandings={initialStandings}
+          matches={formattedMatches}
         />
       </main>
 

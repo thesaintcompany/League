@@ -38,32 +38,51 @@ export default async function TeamManagerDashboardPage(props: {
   const userId = user.id;
   const userEmail = user.email ? user.email.toLowerCase().trim() : "";
 
+  const targetTeamId = (searchParams as any)?.teamId;
+  const teamInclude = {
+    championship: true,
+    players: {
+      orderBy: [{ isStarter: "desc" as const }, { number: "asc" as const }],
+    },
+    homeMatches: {
+      include: { awayTeam: true, championship: true },
+      orderBy: { scheduledAt: "asc" as const },
+    },
+    awayMatches: {
+      include: { homeTeam: true, championship: true },
+      orderBy: { scheduledAt: "asc" as const },
+    },
+    news: {
+      orderBy: { createdAt: "desc" as const },
+    },
+  };
+
   // Find team managed by this user or fallback to first available team in DB
-  let team = await prisma.team.findFirst({
-    where: {
-      OR: [
-        ...(userId ? [{ managerId: userId }] : []),
-        ...(userEmail ? [{ managerEmail: userEmail }] : []),
-      ],
-    },
-    include: {
-      championship: true,
-      players: {
-        orderBy: [{ isStarter: "desc" }, { number: "asc" }],
+  let team = null;
+  if (targetTeamId) {
+    team = await prisma.team.findFirst({
+      where: {
+        id: targetTeamId,
+        OR: [
+          ...(userId ? [{ managerId: userId }] : []),
+          ...(userEmail ? [{ managerEmail: userEmail }] : []),
+        ],
       },
-      homeMatches: {
-        include: { awayTeam: true, championship: true },
-        orderBy: { scheduledAt: "asc" },
+      include: teamInclude,
+    });
+  }
+
+  if (!team) {
+    team = await prisma.team.findFirst({
+      where: {
+        OR: [
+          ...(userId ? [{ managerId: userId }] : []),
+          ...(userEmail ? [{ managerEmail: userEmail }] : []),
+        ],
       },
-      awayMatches: {
-        include: { homeTeam: true, championship: true },
-        orderBy: { scheduledAt: "asc" },
-      },
-      news: {
-        orderBy: { createdAt: "desc" },
-      },
-    },
-  });
+      include: teamInclude,
+    });
+  }
 
   if (!team) {
     let dbUser = userId ? await prisma.user.findUnique({ where: { id: userId } }) : null;
@@ -225,9 +244,13 @@ export default async function TeamManagerDashboardPage(props: {
         shortName: true,
         color: true,
         logoUrl: true,
+        sport: true,
         subscriptionActive: true,
         subscriptionExpiresAt: true,
+        championship: { select: { id: true, name: true } },
+        _count: { select: { players: true } },
       },
+      orderBy: { createdAt: "asc" },
     })
     : [];
 
@@ -235,6 +258,7 @@ export default async function TeamManagerDashboardPage(props: {
     ...t,
     logoUrl: t.logoUrl || null,
     subscriptionExpiresAt: t.subscriptionExpiresAt ? t.subscriptionExpiresAt.toISOString() : null,
+    playersCount: t._count?.players || 0,
   }));
 
   const invitations = userEmail
