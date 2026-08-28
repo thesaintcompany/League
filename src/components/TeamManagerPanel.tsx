@@ -1034,14 +1034,24 @@ export function TeamManagerPanel({
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setShowAddPlayer((s) => !s)}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-lime-400 text-xs font-label font-bold uppercase transition border border-lime-400/30 flex items-center gap-1.5"
-            >
-              <span className="material-symbols-outlined text-base">person_add</span>
-              Adaugă Jucător în Lot
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-label font-bold uppercase transition border border-slate-700 flex items-center gap-1.5"
+              >
+                <span className="material-symbols-outlined text-base">print</span>
+                Printează Foaie A4
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAddPlayer((s) => !s)}
+                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-lime-400 text-xs font-label font-bold uppercase transition border border-lime-400/30 flex items-center gap-1.5"
+              >
+                <span className="material-symbols-outlined text-base">person_add</span>
+                Adaugă Jucător în Lot
+              </button>
+            </div>
           </div>
 
           {showAddPlayer && (
@@ -2099,6 +2109,104 @@ export function TeamManagerPanel({
           </div>
         </div>
       )}
+
+      {/* Print-only View (A4 Match Sheet) */}
+      <div className="hidden print:block fixed inset-0 bg-white text-black z-[99999] p-8 overflow-auto font-sans">
+        <style>{`
+          @media print {
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+          }
+        `}</style>
+        <div id="print-area" className="max-w-4xl mx-auto space-y-6">
+          <div className="flex justify-between items-center border-b-2 border-black pb-4">
+            <div className="flex items-center gap-4">
+              {team.logoUrl ? (
+                <img src={team.logoUrl} className="w-16 h-16 object-contain" alt="Logo" />
+              ) : (
+                <div className="w-16 h-16 border-2 border-black flex items-center justify-center font-bold text-2xl uppercase">
+                  {team.shortName || team.name.substring(0,3)}
+                </div>
+              )}
+              <div>
+                <h1 className="text-2xl font-black uppercase tracking-tight m-0 leading-tight">{team.name}</h1>
+                <p className="text-sm m-0">Liga: {team.championship?.name || "Liga Pro"} • Arena: {team.homeArena || "-"}</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <h2 className="text-xl font-bold m-0 uppercase tracking-wide">Foaie de Joc / Lot Echipă</h2>
+              <p className="text-sm m-0 font-bold">Data: {new Date().toLocaleDateString("ro-RO")}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-8">
+            {/* Jucatori */}
+            <div>
+              <h3 className="text-lg font-bold border-b-2 border-black mb-2 uppercase tracking-tight">Lot Jucători</h3>
+              <table className="w-full text-sm text-left border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-black">
+                    <th className="py-1 w-10">Nr.</th>
+                    <th className="py-1">Nume Jucător</th>
+                    <th className="py-1 w-20">Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {team.players.map((p, idx) => (
+                    <tr key={p.id} className="border-b border-gray-400">
+                      <td className="py-1.5 font-bold">{p.number || "-"}</td>
+                      <td className="py-1.5">{p.name}</td>
+                      <td className="py-1.5 text-[10px] uppercase font-bold text-gray-600">{p.isStarter ? "Titular" : "Rezervă"}</td>
+                    </tr>
+                  ))}
+                  {/* Empty rows for manual writing */}
+                  {Array.from({ length: Math.max(0, 15 - team.players.length) }).map((_, i) => (
+                    <tr key={`empty-${i}`} className="border-b border-gray-400">
+                      <td className="py-3"></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Staff */}
+            <div>
+              <h3 className="text-lg font-bold border-b-2 border-black mb-3 uppercase tracking-tight">Staff Tehnic & Oficiali</h3>
+              <div className="space-y-4 text-sm">
+                <div>
+                  <span className="block text-[10px] font-bold text-gray-500 uppercase">Antrenor Principal</span>
+                  <div className="font-bold border-b border-gray-400 pb-1">{team.headCoach || "______________________________"}</div>
+                </div>
+                <div>
+                  <span className="block text-[10px] font-bold text-gray-500 uppercase">Antrenor Secund</span>
+                  <div className="font-bold border-b border-gray-400 pb-1">{team.assistantCoach || "______________________________"}</div>
+                </div>
+                <div>
+                  <span className="block text-[10px] font-bold text-gray-500 uppercase">Medic / Kinetoterapeut</span>
+                  <div className="font-bold border-b border-gray-400 pb-1">{team.medic || "______________________________"}</div>
+                </div>
+                <div>
+                  <span className="block text-[10px] font-bold text-gray-500 uppercase">Preparator Fizic</span>
+                  <div className="font-bold border-b border-gray-400 pb-1">{team.fitnessCoach || "______________________________"}</div>
+                </div>
+                <div className="pt-2">
+                  <span className="block text-[10px] font-bold text-gray-500 uppercase">Căpitan Echipă (Nr. tricou / Nume)</span>
+                  <div className="font-bold border-b border-gray-400 pb-1 text-transparent select-none">______________________________</div>
+                </div>
+              </div>
+
+              <div className="mt-12 border-t-2 border-black pt-4 text-center">
+                <p className="font-bold text-sm uppercase">Semnătură Manager / Delegat Echipă</p>
+                <div className="h-20"></div>
+                <p className="text-[10px] text-gray-600 italic">Subsemnatul, delegat al echipei, confirm că toți jucătorii înscriși în tabel sunt prezenți și apți din punct de vedere medical pentru joc, conform regulamentului competiției.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
