@@ -6,9 +6,9 @@ RUN apk add --no-cache libc6-compat openssl
 # Install dependencies
 FROM base AS deps
 WORKDIR /app
-COPY package.json package-lock.json* .npmrc* ./
+COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
-RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+RUN npm ci || npm install
 
 # Build Next.js
 FROM base AS builder
@@ -32,11 +32,11 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Defaults that bootstrap reads if Coolify didn't pass them.
-ENV DATABASE_URL="file:/app/data/league.db"
-ENV NEXTAUTH_URL="https://ligue.ro"
-ENV NEXTAUTH_SECRET="dev-secret-change-me-please-this-is-not-secure-change-in-production-min-32"
-ENV PORT="3000"
-ENV HOSTNAME="0.0.0.0"
+ENV DATABASE_URL=file:/app/data/league.db
+ENV NEXTAUTH_URL=https://sp.buu.ro
+ENV NEXTAUTH_SECRET=dev-secret-change-me-please-this-is-not-secure-change-in-production-min-32
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs

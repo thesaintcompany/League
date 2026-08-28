@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 // Production default for self-hosted deployments. It can still be overridden
 // by NEXTAUTH_URL in the hosting environment.
 if (process.env.NODE_ENV === "production" && !process.env.NEXTAUTH_URL) {
-  process.env.NEXTAUTH_URL = "https://ligue.ro";
+  process.env.NEXTAUTH_URL = "https://spligue.ro";
 }
 
 export const authOptions: NextAuthOptions = {
@@ -140,27 +140,6 @@ export const authOptions: NextAuthOptions = {
         (session.user as any).role = token.role || "organizer";
       }
       return session;
-    },
-  },
-  events: {
-    async signIn({ user }) {
-      try {
-        await prisma.auditLog.create({
-          data: {
-            userId: user.id,
-            userEmail: user.email ? user.email.toLowerCase().trim() : null,
-            userName: user.name || "Utilizator",
-            userRole: (user as any).role || "user",
-            action: "AUTH_LOGIN",
-            details: `Autentificare cu succes în platformă (${(user as any).role || "user"})`,
-            entityType: "user",
-            entityId: user.id,
-            status: "success",
-          },
-        });
-      } catch (e) {
-        console.error("Failed to log signIn event:", e);
-      }
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
