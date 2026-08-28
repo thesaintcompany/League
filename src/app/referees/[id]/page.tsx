@@ -3,7 +3,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
-import { RefereeBadgePill, getSafeRefereePhoto } from "@/components/PublicRefereesCatalog";
+import { RefereeBadgePill } from "@/components/RefereeBadgePill";
+import { getSafeRefereePhoto } from "@/lib/referees";
 
 export const dynamic = "force-dynamic";
 
@@ -12,27 +13,31 @@ export default async function PublicRefereeDetailPage({
 }: {
   params: { id: string };
 }) {
+  if (!params?.id) notFound();
+
   const referee = await prisma.user.findUnique({
     where: { id: params.id },
   });
 
-  if (!referee || referee.role !== "referee") notFound();
+  if (!referee || referee.role.toLowerCase() !== "referee") notFound();
 
   // Find matches officiated by this referee
-  const matches = await prisma.match.findMany({
-    where: {
-      referee: {
-        contains: referee.name || "",
-      },
-    },
-    include: { homeTeam: true, awayTeam: true, championship: true },
-    orderBy: { scheduledAt: "desc" },
-    take: 6,
-  });
+  const matches = referee.name
+    ? await prisma.match.findMany({
+        where: {
+          referee: {
+            contains: referee.name,
+          },
+        },
+        include: { homeTeam: true, awayTeam: true, championship: true },
+        orderBy: { scheduledAt: "desc" },
+        take: 6,
+      })
+    : [];
 
   const humanPhoto = getSafeRefereePhoto(referee);
-  const coverImg = humanPhoto;
-  const avatarImg = humanPhoto;
+  const coverImg = referee.coverPhotoUrl && referee.coverPhotoUrl.trim() !== "" ? referee.coverPhotoUrl : humanPhoto;
+  const avatarImg = referee.image && referee.image.trim() !== "" ? referee.image : humanPhoto;
 
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col font-body text-white relative">
@@ -52,8 +57,8 @@ export default async function PublicRefereeDetailPage({
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-                <span className="material-symbols-outlined text-sm">gavel</span>   ATESTAT   / LIGUE PRO
+              <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md flex items-center gap-1">
+                <span className="material-symbols-outlined text-sm">gavel</span> ATESTAT LIGUE PRO
               </span>
               <RefereeBadgePill badge={referee.refereeBadge} />
               <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-300 font-bold text-xs font-label border border-lime-400/30">
@@ -66,11 +71,15 @@ export default async function PublicRefereeDetailPage({
             </h1>
 
             <p className="text-slate-300 text-sm sm:text-base font-body flex items-center gap-2">
-              <span className="text-lime-400 font-bold"><span className="material-symbols-outlined text-xs align-middle">flag</span> România</span>
+              <span className="text-lime-400 font-bold flex items-center gap-1">
+                <span className="material-symbols-outlined text-xs align-middle">flag</span> România
+              </span>
               <span>•</span>
               <span>Comisia Centrală a Arbitrilor</span>
               <span>•</span>
-              <span className="text-amber-400 font-bold flex items-center gap-1"><span className="material-symbols-outlined">star</span> Notă Observatori: 9.6 / 10</span>
+              <span className="text-amber-400 font-bold flex items-center gap-1">
+                <span className="material-symbols-outlined">star</span> Notă Observatori: 9.6 / 10
+              </span>
             </p>
           </div>
 
@@ -96,7 +105,7 @@ export default async function PublicRefereeDetailPage({
                   Fișă Arbitru Omologat
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
-                  DISPONIBIL PENTRU MECIURI 
+                  DISPONIBIL PENTRU MECIURI
                 </span>
               </div>
 
@@ -105,18 +114,18 @@ export default async function PublicRefereeDetailPage({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={coverImg}
-                  alt={referee.name || "Arbitru  "}
+                  alt={referee.name || "Arbitru Oficial"}
                   className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-5">
                   <span className="text-[10px] font-label font-bold text-lime-400 uppercase tracking-widest">
-                    Poză în picioare (9:16)
+                    Poză oficială brigadă
                   </span>
                   <h2 className="font-headline font-black text-white text-2xl uppercase tracking-tight leading-tight">
                     {referee.name}
                   </h2>
                   <p className="text-xs text-slate-300 font-label">
-                    {referee.refereeBadge || "  Pro"} • {referee.experienceYears || 12} ani experiență
+                    {referee.refereeBadge || "Pro"} • {referee.experienceYears || 12} ani experiență
                   </p>
                 </div>
               </div>
@@ -125,7 +134,7 @@ export default async function PublicRefereeDetailPage({
               <div className="flex items-center gap-4 pt-2">
                 <div className="w-16 h-16 rounded-2xl border-2 border-lime-400 overflow-hidden shadow-lg relative bg-slate-800 shrink-0">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={avatarImg} alt={referee.name || "Arbitru  "} className="w-full h-full object-cover" />
+                  <img src={avatarImg} alt={referee.name || "Arbitru Oficial"} className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <h3 className="font-headline font-bold text-base text-white leading-tight">
@@ -178,7 +187,7 @@ export default async function PublicRefereeDetailPage({
                   Scor Observatori
                 </span>
                 <span className="text-3xl sm:text-4xl font-black data-font text-lime-600 dark:text-lime-400 mt-1 block">
-                  <span className="flex items-center gap-1"><span className="material-symbols-outlined">star</span> 9.6</span>
+                  <span className="flex items-center gap-1 justify-center"><span className="material-symbols-outlined">star</span> 9.6</span>
                 </span>
               </div>
             </div>
@@ -194,7 +203,7 @@ export default async function PublicRefereeDetailPage({
                     Parametri de Evaluare &amp; Conducere a Jocului
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                    Statistici  e monitorizate de observatorii Ligue Pro
+                    Statistici monitorizate de observatorii Ligue Pro
                   </p>
                 </div>
               </div>
@@ -266,28 +275,28 @@ export default async function PublicRefereeDetailPage({
                       className="card p-5 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-2xl space-y-3 shadow-md hover:border-lime-400/60 hover:shadow-lg transition"
                     >
                       <div className="flex justify-between items-center text-[10px] font-label font-bold text-slate-500 dark:text-slate-400 uppercase">
-                        <span>{m.championship?.name}</span>
+                        <span>{m.championship?.name || "Campionat"}</span>
                         <span>Etapa {m.round}</span>
                       </div>
 
                       <div className="flex justify-between items-center font-bold text-sm text-slate-900 dark:text-white font-headline">
-                        <span className="truncate">{m.homeTeam.name}</span>
+                        <span className="truncate">{m.homeTeam?.name || "Gazde"}</span>
                         <span className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 font-black data-font text-lime-600 dark:text-lime-400 border border-slate-200 dark:border-slate-700">
-                          {m.status === "finished" ? `${m.homeScore} - ${m.awayScore}` : "VS"}
+                          {m.status === "finished" ? `${m.homeScore ?? 0} - ${m.awayScore ?? 0}` : "VS"}
                         </span>
-                        <span className="truncate">{m.awayTeam.name}</span>
+                        <span className="truncate">{m.awayTeam?.name || "Oaspeți"}</span>
                       </div>
 
                       <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
                         <span className="text-[11px] text-slate-500 dark:text-slate-400 font-label">
-                          {m.venue || "Arena  ă"}
+                          {m.venue || "Arenă Oficială"}
                         </span>
                         <Link
                           href={`/matches/${m.id}/report`}
                           target="_blank"
                           className="text-[11px] font-bold text-lime-600 dark:text-lime-400 hover:underline font-label flex items-center gap-0.5"
                         >
-                          <span>Raport   PDF</span>
+                          <span>Raport Oficial PDF</span>
                           <span className="material-symbols-outlined text-[12px]">open_in_new</span>
                         </Link>
                       </div>

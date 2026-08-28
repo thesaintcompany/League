@@ -16,100 +16,19 @@ interface RefereeItem {
   coverPhotoUrl?: string | null;
 }
 
-export const REFEREE_AUTHENTIC_UNIFORM_PHOTOS = [
-  "/images/referees/referee-2.jpg", // Black Elite Referee with RIFA/FIFA patch & whistle
-  "/images/referees/referee-1.jpg", // Cyan Blue VAR Elite with headset & whistle
-  "/images/referees/referee-5.jpg", // Neon Yellow Referee with Yellow Card
-  "/images/referees/referee-4.jpg", // Neon Lime Referee with earpiece
-  "/images/referees/referee-6.jpg", // Orange / Black Referee with Red Card
-  "/images/referees/referee-3.jpg", // Female Referee in official uniform & whistle
-];
+import {
+  REFEREE_AUTHENTIC_UNIFORM_PHOTOS,
+  getSafeRefereePhoto,
+  getRefereeTelemetry,
+} from "@/lib/referees";
+import { RefereeBadgePill } from "@/components/RefereeBadgePill";
 
-export function getSafeRefereePhoto(
-  ref: { name?: string | null; coverPhotoUrl?: string | null; image?: string | null },
-  idx: number = 0
-): string {
-  if (ref.coverPhotoUrl && ref.coverPhotoUrl.startsWith("/images/referees/")) return ref.coverPhotoUrl;
-  if (ref.image && ref.image.startsWith("/images/referees/")) return ref.image;
-
-  // Female referee detection by name
-  const femaleNames = ["alina", "iuliana", "elena", "maria", "ana", "andreea", "mihaela", "diana", "roxana", "alexandra", "ioana", "peșu", "pesu", "demetrescu"];
-  const nameLower = (ref.name || "").toLowerCase();
-  const isFemale = femaleNames.some((n) => nameLower.includes(n));
-  if (isFemale) return "/images/referees/referee-3.jpg";
-
-  const malePhotos = [
-    "/images/referees/referee-2.jpg",
-    "/images/referees/referee-1.jpg",
-    "/images/referees/referee-5.jpg",
-    "/images/referees/referee-4.jpg",
-    "/images/referees/referee-6.jpg",
-  ];
-  return malePhotos[idx % malePhotos.length];
-}
-
-// Generate realistic referee officiating telemetry
-function getRefereeTelemetry(ref: RefereeItem, idx: number) {
-  const years = ref.experienceYears || 10;
-  const isElite = ref.refereeBadge?.includes(" ") || ref.refereeBadge?.includes("Elite");
-  const matchesCount = isElite ? Math.round(years * 14 + (idx % 10) * 8) : Math.round(years * 11 + (idx % 8) * 6);
-  const yellowPerMatch = (3.2 + (idx % 5) * 0.25).toFixed(1);
-  const redCards = Math.round(years * 1.8 + (idx % 4));
-  const penalties = Math.round(years * 2.2 + (idx % 6));
-  const rating = (8.8 + ((idx % 7) * 0.15)).toFixed(1);
-
-  return {
-    matchesCount,
-    yellowPerMatch,
-    redCards,
-    penalties,
-    rating: Math.min(9.8, parseFloat(rating)),
-  };
-}
-
-/**
- * Smart Badge Component:
- * - If badge has <= 2 words: Renders compact stylish badge
- * - If badge has > 2 words: Renders a glowing dot + 2 words, and full text on hover tooltip!
- */
-export function RefereeBadgePill({ badge }: { badge?: string | null }) {
-  if (!badge) {
-    return (
-      <span className="px-2.5 py-0.5 rounded-full bg-slate-900/80 text-slate-300 text-[10px] font-bold font-label uppercase border border-slate-700">
-        FRF
-      </span>
-    );
-  }
-
-  const words = badge.trim().split(/\s+/);
-  const isLong = words.length > 2;
-
-  if (!isLong) {
-    return (
-      <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label shadow-sm">
-        {badge}
-      </span>
-    );
-  }
-
-  // Long badge (> 2 words): Show a sleek glowing dot + 2-word preview, and full text tooltip on mouseover!
-  const shortText = `${words[0]} ${words[1]}`;
-
-  return (
-    <div className="group/badge relative inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/90 backdrop-blur-md text-lime-400 text-[10px] font-black uppercase font-label border border-lime-400/40 cursor-help shadow-lg">
-      <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse shrink-0"></span>
-      <span className="truncate max-w-[90px]">{shortText}</span>
-
-      {/* Hover Floating Tooltip */}
-      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 hidden group-hover/badge:flex flex-col items-center z-50 pointer-events-none min-w-[180px] animate-in fade-in zoom-in-95">
-        <span className="bg-slate-900 text-white text-[10px] font-bold py-1.5 px-3 rounded-xl border border-lime-400/50 shadow-2xl text-center leading-tight whitespace-nowrap">
-          {badge}
-        </span>
-        <span className="w-2 h-2 bg-slate-900 rotate-45 -mt-1 border-r border-b border-lime-400/50"></span>
-      </div>
-    </div>
-  );
-}
+export {
+  REFEREE_AUTHENTIC_UNIFORM_PHOTOS,
+  getSafeRefereePhoto,
+  getRefereeTelemetry,
+  RefereeBadgePill,
+};
 
 export function PublicRefereesCatalog({ initialReferees }: { initialReferees: RefereeItem[] }) {
   const [searchQuery, setSearchQuery] = useState("");
