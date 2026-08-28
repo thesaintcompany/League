@@ -177,8 +177,8 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
 
   return (
     <div className="space-y-6 sm:space-y-8 font-body">
-      {/* Hero Header */}
-      <section className="bg-white dark:bg-slate-950 text-slate-900 dark:text-white rounded-3xl p-5 sm:p-8 lg:p-10 relative overflow-hidden shadow-sm border border-slate-200 dark:border-lime-400/30 transition-colors duration-200">
+      {/* Hero Header (Hidden on Mobile) */}
+      <section className="hidden md:block bg-white dark:bg-slate-950 text-slate-900 dark:text-white rounded-3xl p-5 sm:p-8 lg:p-10 relative overflow-hidden shadow-sm border border-slate-200 dark:border-lime-400/30 transition-colors duration-200">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-lime-400/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -228,8 +228,8 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
         </div>
       </section>
 
-      {/* Smooth Horizontal Touch Carousel of all 42 Counties */}
-      <div className="card p-3 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-2">
+      {/* Smooth Horizontal Touch Carousel of all 42 Counties (Hidden on Mobile) */}
+      <div className="hidden md:block card p-3 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-2">
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-1.5 text-xs font-headline font-black uppercase text-slate-900 dark:text-white">
             <span className="material-symbols-outlined text-sm">location_on</span>
