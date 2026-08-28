@@ -7,6 +7,7 @@ import { TopHeader } from "@/components/TopHeader";
 import { PlayerProfileForm } from "@/components/PlayerProfileForm";
 import { RefereeProfileForm } from "@/components/RefereeProfileForm";
 import { SuperAdminProfileForm } from "@/components/SuperAdminProfileForm";
+import { GdprDeleteAccountCard } from "@/components/GdprDeleteAccountCard";
 import Link from "next/link";
 import { canEditPlayerProfile, isTeamLeader } from "@/lib/permissions";
 
@@ -142,6 +143,12 @@ export default async function ProfilePage({
             /* Role-Adaptive Form for Players / Organizers */
             <PlayerProfileForm initialUser={user} isEditable={isEditable} />
           )}
+
+          {/* GDPR Account Deletion Card */}
+          <GdprDeleteAccountCard
+            isSuperAdmin={isSuperAdminUser}
+            userEmail={user.email}
+          />
         </main>
       </div>
     </div>

@@ -137,70 +137,14 @@ export function AdminSuperPanel() {
   const [savingSettings, setSavingSettings] = useState(false);
   const [showSecretKey, setShowSecretKey] = useState(false);
 
-  // Audit Logs State
-  const [logFilter, setLogFilter] = useState("all");
-  const [loginLogs] = useState<LoginLogItem[]>([
-    {
-      id: "log-1",
-      userName: "Super Administrator",
-      userEmail: "admin@league.ro",
-      role: "super_admin",
-      ip: "86.120.45.19",
-      location: "Timișoara, RO",
-      device: "Chrome 122 (Windows 11)",
-      timestamp: "2026-08-26 12:35",
-      status: "success",
-      action: "Autentificare Sesiune Master SuperAdmin",
-    },
-    {
-      id: "log-2",
-      userName: "Bogdan Stanciu",
-      userEmail: "bogdan.ref@league.ro",
-      role: "referee",
-      ip: "188.24.112.5",
-      location: "București, RO",
-      device: "Safari 17 (iPhone 15 Pro)",
-      timestamp: "2026-08-26 11:42",
-      status: "success",
-      action: "Validare Raport Meci (VAR & Arbitraj)",
-    },
-    {
-      id: "log-3",
-      userName: "Radu Popa",
-      userEmail: "radu.popa@gmail.com",
-      role: "organizer",
-      ip: "82.77.190.22",
-      location: "Cluj-Napoca, RO",
-      device: "Firefox 123 (macOS)",
-      timestamp: "2026-08-26 10:15",
-      status: "success",
-      action: "Generare Arbore Eliminatoriu cu Zaruri",
-    },
-    {
-      id: "log-4",
-      userName: "Necunoscut (Robot)",
-      userEmail: "bot@security-crawler.test",
-      role: "guest",
-      ip: "45.134.21.99",
-      location: "Frankfurt, DE",
-      device: "Python-requests/2.31",
-      timestamp: "2026-08-26 09:04",
-      status: "blocked",
-      action: "Tentativă acces neautorizat blocată de WAF",
-    },
-    {
-      id: "log-5",
-      userName: "Alexandru Munteanu",
-      userEmail: "alex.arena@arena-timis.ro",
-      role: "arena_owner",
-      ip: "86.120.10.88",
-      location: "Timișoara, RO",
-      device: "Edge 122 (Windows 10)",
-      timestamp: "2026-08-26 08:20",
-      status: "success",
-      action: "Actualizare Tarif Nocturnă Arenă",
-    },
-  ]);
+  // Audit Logs & GDPR State (100% Real Live DB Data)
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [auditStats, setAuditStats] = useState({ totalCount: 0, loginCount: 0, modificationCount: 0, gdprCount: 0 });
+  const [auditFilter, setAuditFilter] = useState<"all" | "logins" | "modifications" | "gdpr" | "security">("all");
+  const [auditSearch, setAuditSearch] = useState("");
+  const [loadingAudit, setLoadingAudit] = useState(false);
+  const [gdprRequests, setGdprRequests] = useState<any[]>([]);
+  const [processingGdprId, setProcessingGdprId] = useState<string | null>(null);
 
   // Edit / Create Modal State
   const [modalOpen, setModalOpen] = useState(false);
@@ -357,10 +301,87 @@ export function AdminSuperPanel() {
         setDemoStats(dData);
       }
       loadFakePlayersStats();
+      loadAuditLogs();
+      loadGdprRequests();
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function loadAuditLogs(filter = auditFilter, search = auditSearch) {
+    setLoadingAudit(true);
+    try {
+      const q = new URLSearchParams({ filter, search }).toString();
+      const res = await fetch(`/api/admin/audit-logs?${q}`);
+      const data = await res.json();
+      if (res.ok) {
+        setAuditLogs(data.logs || []);
+        if (data.stats) setAuditStats(data.stats);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingAudit(false);
+    }
+  }
+
+  async function loadGdprRequests() {
+    try {
+      const res = await fetch("/api/admin/gdpr");
+      const data = await res.json();
+      if (res.ok) {
+        setGdprRequests(data.requests || []);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function handleProcessGdprRequest(requestId: string, status: string, notes?: string) {
+    setProcessingGdprId(requestId);
+    try {
+      const res = await fetch("/api/admin/gdpr", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requestId, status, notes }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(`Cererea GDPR a fost marcată ca "${status}".`);
+        loadGdprRequests();
+        loadAuditLogs();
+      } else {
+        showToast(data.error || "Eroare la actualizarea cererii.");
+      }
+    } catch {
+      showToast("Eroare de rețea.");
+    } finally {
+      setProcessingGdprId(null);
+    }
+  }
+
+  async function handleDeleteGdprUser(requestId: string, email: string) {
+    if (!confirm(`CONFIRMARE GDPR: Ești sigur că dorești să ȘTERGI DEFINITIV contul și datele utilizatorului ${email}?`)) return;
+    setProcessingGdprId(requestId);
+    try {
+      const res = await fetch(`/api/admin/gdpr?requestId=${requestId}&email=${encodeURIComponent(email)}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message || "Datele utilizatorului au fost șterse definitiv!");
+        loadGdprRequests();
+        loadAuditLogs();
+        loadData();
+      } else {
+        showToast(data.error || "Eroare la ștergerea datelor.");
+      }
+    } catch {
+      showToast("Eroare de rețea.");
+    } finally {
+      setProcessingGdprId(null);
     }
   }
 
@@ -861,11 +882,6 @@ export function AdminSuperPanel() {
       u.email.toLowerCase().includes(q) ||
       u.role.toLowerCase().includes(q);
     return matchesRole && matchesType && matchesQuery;
-  });
-
-  const filteredLogs = loginLogs.filter((log) => {
-    if (logFilter === "all") return true;
-    return log.status === logFilter;
   });
 
   return (
@@ -2127,50 +2143,192 @@ export function AdminSuperPanel() {
       )}
 
       {/* ========================================================================= */}
-      {/* 5. LOGIN HISTORY & AUDIT LOGS TAB */}
+      {/* 5. LOGIN HISTORY & AUDIT LOGS TAB (REAL LIVE DB DATA & GDPR) */}
       {/* ========================================================================= */}
       {activeTab === "login_history" && (
         <div className="space-y-6 animate-in fade-in">
-          {/* Header Card */}
-          <div className="card p-6 bg-slate-950 text-white border-2 border-lime-400/40 rounded-3xl shadow-xl space-y-4">
+          {/* Header Card with Real Statistics */}
+          <div className="card p-6 bg-slate-950 text-white border-2 border-lime-400/40 rounded-3xl shadow-xl space-y-5">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800">
-              <div>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400 block mb-1">
-                  SUPERADMIN AUDIT • JURNAL SECURITATE &amp; LOGIN
-                </span>
-                <h2 className="text-xl font-black font-headline uppercase text-white">
-                  Istoric Conectări &amp; Activitate Administratori
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400">
+                    SUPERADMIN AUDIT • JURNAL SECURITATE, ACTIVITATE LIVE &amp; GDPR (DATE REALE)
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black font-headline uppercase text-white tracking-tight">
+                  Istoric Conectări, Activitate Utilizatori &amp; Cereri GDPR
                 </h2>
+                <p className="text-xs text-slate-300 font-body max-w-2xl">
+                  Înregistrări 100% reale din baza de date: fiecare autentificare, creare/modificare de turnee, echipe, meciuri și solicitările oficiale de ștergere a datelor (Dreptul de a fi Uitat).
+                </p>
               </div>
 
-              {/* Status Filter */}
-              <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  loadAuditLogs(auditFilter, auditSearch);
+                  loadGdprRequests();
+                }}
+                className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-lime-400 rounded-xl text-xs font-bold font-label uppercase transition border border-lime-400/30 flex items-center gap-1.5 shrink-0 shadow-sm"
+              >
+                <span className="material-symbols-outlined text-[18px]">sync</span>
+                <span>Reîmprospătează Jurnalul</span>
+              </button>
+            </div>
+
+            {/* Live Stats Badges */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800">
+                <span className="text-[10px] font-mono uppercase text-slate-400 block font-bold">Total Evenimente</span>
+                <span className="text-xl font-black text-white">{auditStats.totalCount}</span>
+              </div>
+              <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800">
+                <span className="text-[10px] font-mono uppercase text-lime-400 block font-bold">Conectări Reale</span>
+                <span className="text-xl font-black text-lime-400">{auditStats.loginCount}</span>
+              </div>
+              <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800">
+                <span className="text-[10px] font-mono uppercase text-blue-400 block font-bold">Modificări în App</span>
+                <span className="text-xl font-black text-blue-400">{auditStats.modificationCount}</span>
+              </div>
+              <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800">
+                <span className="text-[10px] font-mono uppercase text-amber-400 block font-bold">Cereri GDPR</span>
+                <span className="text-xl font-black text-amber-400">{gdprRequests.length}</span>
+              </div>
+            </div>
+
+            {/* Filters Bar & Search */}
+            <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 pt-2">
+              <div className="flex flex-wrap items-center gap-1.5">
                 {[
-                  { id: "all", label: "Toate Jurnalele" },
-                  { id: "success", label: "Reușite" },
-                  { id: "blocked", label: "Blocări WAF" },
+                  { id: "all", label: "Toate Activitățile", count: auditStats.totalCount },
+                  { id: "logins", label: "Conectări (Login)", count: auditStats.loginCount },
+                  { id: "modifications", label: "Modificări în App", count: auditStats.modificationCount },
+                  { id: "gdpr", label: `Cereri GDPR (${gdprRequests.length})`, count: gdprRequests.length },
+                  { id: "security", label: "Securitate & Alerte", count: 0 },
                 ].map((item) => (
                   <button
                     key={item.id}
                     type="button"
-                    onClick={() => setLogFilter(item.id)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${logFilter === item.id
-                      ? "bg-lime-400 text-slate-950 font-black"
-                      : "bg-slate-900 text-slate-400 hover:text-white"
-                      }`}
+                    onClick={() => {
+                      setAuditFilter(item.id as any);
+                      loadAuditLogs(item.id as any, auditSearch);
+                    }}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold transition ${
+                      auditFilter === item.id
+                        ? "bg-lime-400 text-slate-950 font-black shadow-sm"
+                        : "bg-slate-900 text-slate-400 hover:text-white border border-slate-800"
+                    }`}
                   >
                     {item.label}
                   </button>
                 ))}
               </div>
-            </div>
 
-            <p className="text-xs text-slate-300">
-              Monitorizează sesiunile active, adresele IP, dispozitivele de autentificare și acțiunile administrative pentru conformitate și securitate maximă.
-            </p>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Caută după email, utilizator, acțiune sau IP..."
+                  value={auditSearch}
+                  onChange={(e) => {
+                    setAuditSearch(e.target.value);
+                    loadAuditLogs(auditFilter, e.target.value);
+                  }}
+                  className="px-3.5 py-2 pl-9 bg-slate-900 border border-slate-700 rounded-xl text-xs text-white placeholder:text-slate-500 w-full sm:w-80 focus:outline-none focus:border-lime-400"
+                />
+                <span className="material-symbols-outlined text-slate-400 text-base absolute left-2.5 top-2.5">
+                  search
+                </span>
+              </div>
+            </div>
           </div>
 
-          {/* Audit Logs Table */}
+          {/* GDPR Section (if filter === 'gdpr' or if there are requests) */}
+          {(auditFilter === "gdpr" || gdprRequests.length > 0) && (
+            <div className="card p-6 bg-slate-950 text-white border border-amber-500/40 rounded-3xl space-y-4 shadow-lg">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div className="flex items-center gap-2 text-amber-400">
+                  <span className="material-symbols-outlined text-xl">policy</span>
+                  <h3 className="font-headline font-black text-sm uppercase tracking-wider text-white">
+                    Registru Solicitări Ștergere Date GDPR (Dreptul de a fi Uitat)
+                  </h3>
+                </div>
+                <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-mono font-bold">
+                  {gdprRequests.filter((r) => r.status === "pending").length} În Așteptare
+                </span>
+              </div>
+
+              {gdprRequests.length === 0 ? (
+                <p className="text-xs text-slate-400 font-body py-4 text-center">
+                  Nu există nicio solicitare de ștergere GDPR înregistrată în baza de date.
+                </p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="font-label text-[10px] text-slate-400 uppercase tracking-widest border-b border-slate-800">
+                        <th className="py-2.5 px-3">Email &amp; Utilizator</th>
+                        <th className="py-2.5 px-3">Rol</th>
+                        <th className="py-2.5 px-3">Motiv Invocat</th>
+                        <th className="py-2.5 px-3">Data Cererii</th>
+                        <th className="py-2.5 px-3 text-center">Status</th>
+                        <th className="py-2.5 px-3 text-right">Acțiune</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60 font-body">
+                      {gdprRequests.map((r) => (
+                        <tr key={r.id} className="hover:bg-slate-900/60 transition">
+                          <td className="py-3 px-3">
+                            <span className="font-bold text-white block">{r.userName || "Utilizator"}</span>
+                            <span className="font-mono text-[11px] text-lime-400">{r.userEmail}</span>
+                          </td>
+                          <td className="py-3 px-3">
+                            <span className="px-2 py-0.5 rounded bg-slate-800 text-[10px] font-mono">
+                              {r.userRole || "user"}
+                            </span>
+                          </td>
+                          <td className="py-3 px-3 text-slate-300 max-w-xs truncate">
+                            {r.reason || "Fără motiv specificat"}
+                          </td>
+                          <td className="py-3 px-3 text-slate-400 font-mono text-[11px]">
+                            {new Date(r.requestedAt).toLocaleString("ro-RO")}
+                          </td>
+                          <td className="py-3 px-3 text-center">
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                                r.status === "completed"
+                                  ? "bg-emerald-500/20 text-emerald-400"
+                                  : r.status === "pending"
+                                  ? "bg-amber-500/20 text-amber-400 animate-pulse"
+                                  : "bg-slate-800 text-slate-400"
+                              }`}
+                            >
+                              {r.status === "completed" ? "Șters" : r.status === "pending" ? "În Așteptare" : r.status}
+                            </span>
+                          </td>
+                          <td className="py-3 px-3 text-right space-x-2">
+                            {r.status !== "completed" && (
+                              <button
+                                type="button"
+                                disabled={processingGdprId === r.id}
+                                onClick={() => handleDeleteGdprUser(r.id, r.userEmail)}
+                                className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded-lg text-[10px] font-bold font-headline uppercase tracking-wider transition disabled:opacity-50"
+                              >
+                                {processingGdprId === r.id ? "..." : "Șterge Definitiv"}
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Audit Logs Table (Live DB Actions) */}
           <div className="card bg-surface-container-lowest border-slate-200/60 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
@@ -2178,54 +2336,73 @@ export function AdminSuperPanel() {
                   <tr className="font-label text-[10px] text-slate-400 uppercase tracking-widest bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800">
                     <th className="py-4 px-4">Utilizator &amp; Email</th>
                     <th className="py-4 px-4">Rol</th>
-                    <th className="py-4 px-4">Adresă IP &amp; Locație</th>
-                    <th className="py-4 px-4">Dispozitiv / Browser</th>
-                    <th className="py-4 px-4">Acțiune Înregistrată</th>
+                    <th className="py-4 px-4">Eveniment / Acțiune</th>
+                    <th className="py-4 px-4">Detalii Modificare în App</th>
+                    <th className="py-4 px-4">Adresă IP / Client</th>
                     <th className="py-4 px-4 text-center">Status</th>
                     <th className="py-4 px-4 text-right">Data &amp; Ora</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-body">
-                  {filteredLogs.map((log) => (
-                    <tr key={log.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
-                      <td className="py-3.5 px-4 font-bold text-slate-900 dark:text-white">
-                        <div>
-                          <span>{log.userName}</span>
-                          <span className="text-[11px] text-slate-500 font-mono block">{log.userEmail}</span>
-                        </div>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-mono font-bold">
-                          {log.role}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 font-mono text-slate-700 dark:text-slate-300">
-                        <div>
-                          <span>{log.ip}</span>
-                          <span className="text-[10px] text-slate-500 block">{log.location}</span>
-                        </div>
-                      </td>
-                      <td className="py-3.5 px-4 text-slate-600 dark:text-slate-400">
-                        {log.device}
-                      </td>
-                      <td className="py-3.5 px-4 font-medium text-slate-800 dark:text-slate-200">
-                        {log.action}
-                      </td>
-                      <td className="py-3.5 px-4 text-center">
-                        <span
-                          className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${log.status === "success"
-                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
-                            : "bg-red-500/10 text-red-500 border border-red-500/20"
-                            }`}
-                        >
-                          {log.status === "success" ? "Succes" : "Blocat"}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 text-right text-slate-500 font-mono text-[11px]">
-                        {log.timestamp}
+                  {loadingAudit ? (
+                    <tr>
+                      <td colSpan={7} className="py-8 text-center text-slate-400">
+                        Se încarcă jurnalele live din baza de date...
                       </td>
                     </tr>
-                  ))}
+                  ) : auditLogs.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="py-8 text-center text-slate-400">
+                        Nu a fost găsit niciun eveniment pentru filtrul selectat.
+                      </td>
+                    </tr>
+                  ) : (
+                    auditLogs.map((log) => (
+                      <tr key={log.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition">
+                        <td className="py-3.5 px-4 font-bold text-slate-900 dark:text-white">
+                          <div>
+                            <span>{log.userName}</span>
+                            <span className="text-[11px] text-slate-500 font-mono block">{log.userEmail}</span>
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-mono font-bold">
+                            {log.role}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4">
+                          <span className="px-2 py-0.5 rounded bg-lime-400/10 text-lime-600 dark:text-lime-400 font-mono font-bold text-[10px] uppercase border border-lime-400/20">
+                            {log.action}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-slate-700 dark:text-slate-300 max-w-xs font-mono text-[11px]">
+                          {log.details}
+                        </td>
+                        <td className="py-3.5 px-4 font-mono text-slate-600 dark:text-slate-400 text-[11px]">
+                          <div>
+                            <span>{log.ip}</span>
+                            <span className="text-[10px] text-slate-500 block truncate max-w-[140px]">{log.device}</span>
+                          </div>
+                        </td>
+                        <td className="py-3.5 px-4 text-center">
+                          <span
+                            className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${
+                              log.status === "success"
+                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                                : log.status === "warning"
+                                ? "bg-amber-500/10 text-amber-500 border border-amber-500/20"
+                                : "bg-red-500/10 text-red-500 border border-red-500/20"
+                            }`}
+                          >
+                            {log.status === "success" ? "Succes" : log.status === "warning" ? "Atenție" : "Blocat"}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-4 text-right text-slate-500 font-mono text-[11px] whitespace-nowrap">
+                          {new Date(log.timestamp).toLocaleString("ro-RO")}
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

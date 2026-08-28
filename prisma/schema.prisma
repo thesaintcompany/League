@@ -524,3 +524,42 @@ model EmailLog {
   status    String   @default("queued") // queued | sent | failed | dev_logged
   createdAt DateTime @default(now())
 }
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  userEmail   String?
+  userName    String?
+  userRole    String?
+  action      String   // AUTH_LOGIN, AUTH_SIGNUP, CHAMPIONSHIP_CREATE, MATCH_UPDATE, VENUE_UPDATE, PLAYER_ADD, GDPR_DELETE_REQUEST, etc.
+  details     String?  // Description of changes or payload
+  ipAddress   String?
+  userAgent   String?
+  entityType  String?  // user, championship, match, venue, team, gdpr
+  entityId    String?
+  status      String   @default("success") // success | warning | error | blocked
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([userEmail])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model GdprRequest {
+  id          String   @id @default(cuid())
+  userId      String?
+  userEmail   String
+  userName    String?
+  userRole    String?
+  reason      String?
+  status      String   @default("pending") // pending | approved | completed | rejected
+  requestedAt DateTime @default(now())
+  processedAt DateTime?
+  processedBy String?
+  notes       String?
+
+  @@index([userEmail])
+  @@index([status])
+}
+

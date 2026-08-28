@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { logAuditAction } from "@/lib/audit";
 
 const schema = z.object({
   name: z.string().min(2).max(60),
@@ -64,6 +65,18 @@ export async function POST(req: Request) {
         signupIp: clientIp,
       },
       select: { id: true, email: true, name: true, signupIp: true },
+    });
+
+    await logAuditAction({
+      userId: user.id,
+      userEmail: email,
+      userName: user.name,
+      userRole: roleToCreate,
+      action: "AUTH_SIGNUP",
+      details: `Înregistrare cont nou cu rolul "${roleToCreate}". IP: ${clientIp}`,
+      ipAddress: clientIp,
+      entityType: "user",
+      entityId: user.id,
     });
 
     // If invited, wire the user into the team + championship

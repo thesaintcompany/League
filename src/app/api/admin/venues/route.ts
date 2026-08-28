@@ -19,6 +19,7 @@ const venueSchema = z.object({
 });
 
 import { isArenaAdmin } from "@/lib/permissions";
+import { logAuditAction } from "@/lib/audit";
 
 export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
@@ -82,6 +83,17 @@ export async function POST(req: Request) {
     },
   });
 
+  await logAuditAction({
+    userId: user.id,
+    userEmail: session.user.email,
+    userName: session.user.name,
+    userRole: user.role || "arena_owner",
+    action: "VENUE_CREATE",
+    details: `A fost adăugată arena "${venue.name}" (${venue.location}, sport: ${venue.sport})`,
+    entityType: "venue",
+    entityId: venue.id,
+  });
+
   return NextResponse.json({ venue }, { status: 201 });
 }
 
@@ -106,6 +118,17 @@ export async function PATCH(req: Request) {
         status: "activ",
       },
     });
+
+    await logAuditAction({
+      userId: user.id,
+      userEmail: session.user.email,
+      userName: session.user.name,
+      userRole: user.role || "super_admin",
+      action: "VENUE_BULK_ACTIVATE",
+      details: `Au fost activate și făcute vizibile live toate cele ${updated.count} arene din baza de date.`,
+      entityType: "venue",
+    });
+
     return NextResponse.json({
       success: true,
       message: `Toate cele ${updated.count} arene au fost activate și sunt acum 100% vizibile pe platformă!`,
@@ -119,6 +142,17 @@ export async function PATCH(req: Request) {
         isActive: false,
       },
     });
+
+    await logAuditAction({
+      userId: user.id,
+      userEmail: session.user.email,
+      userName: session.user.name,
+      userRole: user.role || "super_admin",
+      action: "VENUE_BULK_DEACTIVATE",
+      details: `Au fost dezactivate ${updated.count} arene.`,
+      entityType: "venue",
+    });
+
     return NextResponse.json({
       success: true,
       message: `${updated.count} arene au fost dezactivate.`,

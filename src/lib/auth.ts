@@ -142,5 +142,26 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  events: {
+    async signIn({ user }) {
+      try {
+        await prisma.auditLog.create({
+          data: {
+            userId: user.id,
+            userEmail: user.email ? user.email.toLowerCase().trim() : null,
+            userName: user.name || "Utilizator",
+            userRole: (user as any).role || "user",
+            action: "AUTH_LOGIN",
+            details: `Autentificare cu succes în platformă (${(user as any).role || "user"})`,
+            entityType: "user",
+            entityId: user.id,
+            status: "success",
+          },
+        });
+      } catch (e) {
+        console.error("Failed to log signIn event:", e);
+      }
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET,
 };
