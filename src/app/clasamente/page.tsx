@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { ChampionshipPublicClientView } from "@/components/ChampionshipPublicClientView";
+import { PublicStandingsView } from "@/components/PublicStandingsView";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 
@@ -264,14 +264,13 @@ export default async function ClasamentePage({
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-body text-slate-900 dark:text-white flex flex-col transition-colors duration-200">
-      <PublicHeader currentTab="clasamente" />
+      <PublicHeader currentTab="clasamente" showSportSubHeader={false} />
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        <ChampionshipPublicClientView
-          championship={championshipInfo}
+        <PublicStandingsView
+          currentChampionship={championshipInfo}
           allChampionships={allChampionships}
           standings={standings}
-          allMatches={allMatchesList}
           finishedMatches={finishedMatches}
           upcomingMatches={upcomingMatches}
           topScorers={topScorers}
