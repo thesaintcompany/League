@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { TournamentPhasesView } from "@/components/TournamentPhasesView";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
-import Link from "next/link";
+import { ClasamenteListingView, type ChampionshipCard, type TopTeamItem, type LiveMatchItem } from "@/components/ClasamenteListingView";
 
 export const dynamic = "force-dynamic";
 
@@ -128,14 +128,14 @@ export default async function ClasamentePage({
       id: m.id,
       homeTeam: {
         id: m.homeTeam?.id || "h",
-        name: m.homeTeam?.name || "Echipă Gazdă",
+        name: m.homeTeam?.name || "Echipa Gazda",
         shortName: m.homeTeam?.shortName,
         color: m.homeTeam?.color,
         logoUrl: m.homeTeam?.logoUrl,
       },
       awayTeam: {
         id: m.awayTeam?.id || "a",
-        name: m.awayTeam?.name || "Echipă Oaspete",
+        name: m.awayTeam?.name || "Echipa Oaspete",
         shortName: m.awayTeam?.shortName,
         color: m.awayTeam?.color,
         logoUrl: m.awayTeam?.logoUrl,
@@ -149,24 +149,106 @@ export default async function ClasamentePage({
     }));
   }
 
-  const championshipTitle = championship?.name || "Clasament Platformă";
+  const championshipTitle = championship?.name || "Clasament Platforma";
 
-  let allChampionships: any[] = [];
+  /* ─── Build listing data when no specific championship is selected ─── */
+  let allChampionships: ChampionshipCard[] = [];
+  let topTeams: TopTeamItem[] = [];
+  let liveMatches: LiveMatchItem[] = [];
+
   if (!championship) {
-    allChampionships = await prisma.championship.findMany({
+    const rawChampionships = await prisma.championship.findMany({
       include: {
         teams: true,
         matches: true,
       },
       orderBy: { startDate: "desc" },
     });
+
+    allChampionships = rawChampionships.map((c) => ({
+      id: c.id,
+      name: c.name,
+      sport: c.sport || "fotbal",
+      scope: c.scope || "national",
+      county: c.county,
+      city: c.city,
+      logoUrl: c.logoUrl,
+      season: c.season,
+      format: c.format,
+      teamsCount: c.teams?.length || 0,
+      matchesCount: c.matches?.length || 0,
+      finishedCount: (c.matches || []).filter(
+        (m) => m.status === "finished" || m.status === "completed"
+      ).length,
+    }));
+
+    /* ─── Top Teams: most active teams with logos ─── */
+    const rawTeams = await prisma.team.findMany({
+      include: {
+        championship: { select: { name: true, sport: true } },
+        homeMatches: { select: { id: true } },
+        awayMatches: { select: { id: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    topTeams = rawTeams
+      .map((t) => ({
+        id: t.id,
+        name: t.name,
+        shortName: t.shortName || undefined,
+        color: t.color || undefined,
+        logoUrl: t.logoUrl || undefined,
+        championshipName: t.championship?.name || "",
+        sport: t.championship?.sport || "fotbal",
+        matchCount: (t.homeMatches?.length || 0) + (t.awayMatches?.length || 0),
+      }))
+      .sort((a, b) => b.matchCount - a.matchCount)
+      .slice(0, 20);
+
+    /* ─── Live Matches ─── */
+    const rawLive = await prisma.match.findMany({
+      where: { status: "live" },
+      include: {
+        homeTeam: { select: { id: true, name: true, shortName: true, color: true, logoUrl: true } },
+        awayTeam: { select: { id: true, name: true, shortName: true, color: true, logoUrl: true } },
+        championship: { select: { name: true, sport: true } },
+      },
+      orderBy: { scheduledAt: "desc" },
+      take: 10,
+    });
+
+    liveMatches = rawLive.map((m) => ({
+      id: m.id,
+      homeTeam: {
+        id: m.homeTeam?.id || "",
+        name: m.homeTeam?.name || "Echipa Gazda",
+        shortName: m.homeTeam?.shortName || undefined,
+        color: m.homeTeam?.color || undefined,
+        logoUrl: m.homeTeam?.logoUrl || undefined,
+      },
+      awayTeam: {
+        id: m.awayTeam?.id || "",
+        name: m.awayTeam?.name || "Echipa Oaspete",
+        shortName: m.awayTeam?.shortName || undefined,
+        color: m.awayTeam?.color || undefined,
+        logoUrl: m.awayTeam?.logoUrl || undefined,
+      },
+      homeScore: m.homeScore ?? 0,
+      awayScore: m.awayScore ?? 0,
+      stage: m.stage || "Etapa",
+      venue: m.venue || undefined,
+      championshipName: m.championship?.name || "",
+      sport: m.championship?.sport || "fotbal",
+      scheduledAt: m.scheduledAt ? new Date(m.scheduledAt).toISOString() : undefined,
+    }));
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-body text-slate-900 dark:text-white flex flex-col transition-colors duration-200">
+    <div className="min-h-screen bg-slate-950 font-body text-white flex flex-col transition-colors duration-200">
       <PublicHeader currentTab="clasamente" showSportSubHeader={true} />
 
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-24 lg:pb-10">
         {championship ? (
           <TournamentPhasesView
             championshipName={championshipTitle}
@@ -175,63 +257,11 @@ export default async function ClasamentePage({
             matches={formattedMatches}
           />
         ) : (
-          <div>
-            <h1 className="text-2xl font-headline font-black text-blue-950 dark:text-white mb-6">
-              Clasament Platformă
-            </h1>
-            {allChampionships.length === 0 ? (
-              <div className="text-center py-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                <span className="material-symbols-outlined text-4xl text-slate-400 mb-3">emoji_events</span>
-                <p className="text-slate-500 dark:text-slate-400 text-lg font-label">
-                  Nu sunt turnee disponibile în platformă momentan.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {allChampionships.map((c) => {
-                  const initials = (c.name || "CP")
-                    .trim()
-                    .replace(/\b(202\d|203\d)\b/g, "")
-                    .split(/\s+/)
-                    .filter(Boolean)
-                    .slice(0, 2)
-                    .map((w: string) => w[0])
-                    .join("")
-                    .toUpperCase()
-                    .slice(0, 3) || "CP";
-
-                  return (
-                    <Link
-                      key={c.id}
-                      href={`/clasamente?id=${c.id}`}
-                      className="block p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-lime-400 to-emerald-600 flex items-center justify-center text-white font-black text-sm shadow-md shrink-0">
-                          {c.logoUrl ? (
-                            <img src={c.logoUrl} alt={c.name} className="w-full h-full object-cover rounded-full" />
-                          ) : (
-                            initials
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-headline font-bold text-blue-950 dark:text-white truncate">
-                            {c.name}
-                          </h3>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 font-label uppercase tracking-wider">
-                            {c.sport} • {c.scope === "national" ? "Național" : c.scope === "judetean" ? "Județean" : "Orășenesc"}
-                          </p>
-                          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-                            {c.teams?.length || 0} echipe • {c.matches?.length || 0} meciuri
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+          <ClasamenteListingView
+            championships={allChampionships}
+            topTeams={topTeams}
+            liveMatches={liveMatches}
+          />
         )}
       </main>
 
@@ -239,3 +269,4 @@ export default async function ClasamentePage({
     </div>
   );
 }
+
