@@ -76,6 +76,14 @@ export function AdminSuperPanel() {
   const [demoFilter, setDemoFilter] = useState<"all" | "demo" | "real">("all");
   const [activatingVenues, setActivatingVenues] = useState(false);
 
+  // Fake Player Generator State
+  const [fakePlayerCount, setFakePlayerCount] = useState<number>(10);
+  const [fakePlayerTeam, setFakePlayerTeam] = useState<string>("all_teams");
+  const [fakePlayerWithAccounts, setFakePlayerWithAccounts] = useState<boolean>(true);
+  const [generatingPlayers, setGeneratingPlayers] = useState<boolean>(false);
+  const [deletingFakePlayers, setDeletingFakePlayers] = useState<boolean>(false);
+  const [fakePlayersStats, setFakePlayersStats] = useState<{ totalPlayers: number; fakePlayersCount: number; teams: any[] } | null>(null);
+
   // Logo & Branding State
   const [activeLogoUrl, setActiveLogoUrl] = useState<string>("/images/logos/logo-1.png");
   const [customLogoInput, setCustomLogoInput] = useState<string>("");
@@ -348,10 +356,74 @@ export function AdminSuperPanel() {
       if (!dData.error) {
         setDemoStats(dData);
       }
+      loadFakePlayersStats();
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function loadFakePlayersStats() {
+    try {
+      const res = await fetch("/api/admin/players/generate");
+      const data = await res.json();
+      if (res.ok) {
+        setFakePlayersStats(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function handleGenerateFakePlayers() {
+    setGeneratingPlayers(true);
+    try {
+      const res = await fetch("/api/admin/players/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          count: fakePlayerCount,
+          teamId: fakePlayerTeam,
+          withAccounts: fakePlayerWithAccounts,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message || "Jucătorii au fost generați cu succes!");
+        loadFakePlayersStats();
+        loadData();
+      } else {
+        showToast(data.error || "Eroare la generarea jucătorilor.");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Eroare de rețea la generarea jucătorilor.");
+    } finally {
+      setGeneratingPlayers(false);
+    }
+  }
+
+  async function handleDeleteFakePlayers() {
+    if (!confirm("Sigur dorești să ștergi toți jucătorii generați din baza de date?")) return;
+    setDeletingFakePlayers(true);
+    try {
+      const res = await fetch("/api/admin/players/generate", {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message || "Jucătorii generați au fost eliminați!");
+        loadFakePlayersStats();
+        loadData();
+      } else {
+        showToast(data.error || "Eroare la ștergerea jucătorilor.");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Eroare de rețea la ștergerea jucătorilor.");
+    } finally {
+      setDeletingFakePlayers(false);
     }
   }
 
@@ -2495,6 +2567,148 @@ export function AdminSuperPanel() {
                     {demoStats?.isDemoActive ? "Active Live" : "Dezactivate"}
                   </span>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* FAKE PLAYERS GENERATOR MODULE */}
+          <div className="card p-6 sm:p-8 bg-slate-950 text-white border-2 border-lime-400/40 rounded-3xl shadow-xl space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400">
+                    SUPERADMIN ENGINE • GENERATOR JUCĂTORI &amp; CARTONAȘE HD
+                  </span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black font-headline uppercase tracking-tight text-white">
+                  Generare Jucători Înscriși (Profiluri &amp; Poze Atletice)
+                </h3>
+                <p className="text-xs text-slate-300 font-body max-w-2xl">
+                  Generează jucători cu nume românești, statistici atletice complete și poze oficiale în echipament din <code>/images/players/</code>. Jucătorii vor fi vizibili instantaneu în clasamentul golgheterilor, pe paginile echipelor și în rapoartele de meci.
+                </p>
+              </div>
+
+              {fakePlayersStats?.fakePlayersCount ? (
+                <button
+                  type="button"
+                  disabled={deletingFakePlayers}
+                  onClick={handleDeleteFakePlayers}
+                  className="px-4 py-2.5 bg-red-600/80 hover:bg-red-600 text-white rounded-xl text-xs font-bold font-headline uppercase tracking-wider transition flex items-center gap-1.5 shadow-md shrink-0"
+                >
+                  <span className="material-symbols-outlined text-[16px]">delete_sweep</span>
+                  <span>{deletingFakePlayers ? "Se șterg..." : `Șterge Jucătorii Generați (${fakePlayersStats.fakePlayersCount})`}</span>
+                </button>
+              ) : null}
+            </div>
+
+            {/* Gallery of 6 Authentic Player Portraits */}
+            <div className="space-y-2">
+              <span className="text-[10px] font-label font-bold uppercase tracking-wider text-slate-400 block">
+                Portrete Atletice Disponibile pentru Atribuire Automată:
+              </span>
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+                {[1, 2, 3, 4, 5, 6].map((idx) => (
+                  <div key={idx} className="p-2 bg-slate-900 rounded-2xl border border-slate-800 flex flex-col items-center gap-1.5 group hover:border-lime-400/50 transition">
+                    <div className="w-14 h-14 rounded-xl overflow-hidden bg-slate-950 border border-slate-700 shadow-sm relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`/images/players/player-${idx}.jpg`}
+                        alt={`Player ${idx}`}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      />
+                    </div>
+                    <span className="text-[9px] font-mono text-slate-400 font-bold uppercase">
+                      Kit #{idx}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Generator Controls */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+              {/* 1. Count Selection */}
+              <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-2">
+                <label className="text-[10px] font-label font-bold uppercase text-slate-400 block">
+                  Număr de Jucători (N):
+                </label>
+                <div className="flex flex-wrap gap-1.5">
+                  {[5, 10, 20, 50].map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setFakePlayerCount(n)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                        fakePlayerCount === n
+                          ? "bg-lime-400 text-slate-950 font-black"
+                          : "bg-slate-800 text-slate-300 hover:text-white"
+                      }`}
+                    >
+                      +{n}
+                    </button>
+                  ))}
+                </div>
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={fakePlayerCount}
+                  onChange={(e) => setFakePlayerCount(parseInt(e.target.value) || 1)}
+                  className="w-full mt-1 px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs font-mono font-bold text-white focus:outline-none focus:border-lime-400"
+                />
+              </div>
+
+              {/* 2. Team Allocation */}
+              <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-2">
+                <label className="text-[10px] font-label font-bold uppercase text-slate-400 block">
+                  Distribuire pe Echipe:
+                </label>
+                <select
+                  value={fakePlayerTeam}
+                  onChange={(e) => setFakePlayerTeam(e.target.value)}
+                  className="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-xs font-label text-white focus:outline-none focus:border-lime-400"
+                >
+                  <option value="all_teams">Distribuie Uniform pe Toate Echipele</option>
+                  {fakePlayersStats?.teams?.map((t: any) => (
+                    <option key={t.id} value={t.id}>
+                      {t.name} {t.championship?.name ? `(${t.championship.name})` : ""}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[10px] text-slate-400 font-label">
+                  Fiecare jucător primește număr de tricou unic și rol tactic în echipă.
+                </p>
+              </div>
+
+              {/* 3. User Accounts & Trigger */}
+              <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800 space-y-3 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-label font-bold uppercase text-slate-400">
+                      Creează Conturi Reale (Login):
+                    </span>
+                    <input
+                      type="checkbox"
+                      checked={fakePlayerWithAccounts}
+                      onChange={(e) => setFakePlayerWithAccounts(e.target.checked)}
+                      className="rounded text-lime-400 focus:ring-lime-400 w-4 h-4 bg-slate-950 border-slate-700"
+                    />
+                  </div>
+                  <p className="text-[10px] text-slate-400 font-label mt-1">
+                    Generează conturi de jucător cu date de logare și atribute biometrice.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  disabled={generatingPlayers}
+                  onClick={handleGenerateFakePlayers}
+                  className="w-full py-3 px-4 bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider rounded-xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-[18px]">sports_soccer</span>
+                  <span>{generatingPlayers ? "Se generează..." : `Generează ${fakePlayerCount} Jucători`}</span>
+                </button>
               </div>
             </div>
           </div>

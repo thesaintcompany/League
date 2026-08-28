@@ -91,16 +91,14 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
     const matchCount = teamTabCounts.calendar ?? 0;
     const inviteCount = teamTabCounts.invites ?? 0;
     navItems = [
-      { name: "Panou Manager Echipă", href: "/dashboard/team", icon: "badge" },
-      { name: "Lot Jucători", href: `/dashboard/team?tab=roster`, icon: "groups" },
-      { name: "Configurare Club & Tactică", href: `/dashboard/team?tab=tactics`, icon: "tune" },
-      { name: `Invitații pe Email${inviteCount ? ` (${inviteCount})` : ""}`, href: `/dashboard/team?tab=invites`, icon: "mail" },
+      { name: "Panou General Club", href: "/dashboard/team", icon: "dashboard" },
+      { name: `Lot Jucători & Numere${rosterCount ? ` (${rosterCount})` : ""}`, href: `/dashboard/team?tab=roster`, icon: "groups" },
+      { name: `Invitații Campionate${inviteCount ? ` (${inviteCount})` : ""}`, href: `/dashboard/team?tab=invites`, icon: "mark_email_unread" },
+      { name: "Tactică & Primul 11", href: `/dashboard/team?tab=tactics`, icon: "sports" },
       { name: "Staff Tehnic & Antrenori", href: `/dashboard/team?tab=staff`, icon: "badge" },
-      { name: `Calendar & Traseu Meciuri${matchCount ? ` (${matchCount})` : ""}`, href: `/dashboard/team?tab=calendar`, icon: "calendar_month" },
-      { name: `Meciuri & Invitații${inviteCount ? ` (${inviteCount})` : ""}`, href: `/dashboard/team?tab=matches`, icon: "sports_soccer" },
-      { name: "Metode de Plată & Facturi", href: `/dashboard/team?tab=payments`, icon: "payments" },
-      { name: "Profil & Setări", href: "/profile", icon: "account_circle" },
-      { name: "Campionate", href: "/harta-romaniei", icon: "emoji_events" },
+      { name: `Program & Traseu Meciuri${matchCount ? ` (${matchCount})` : ""}`, href: `/dashboard/team?tab=calendar`, icon: "calendar_month" },
+      { name: "Finanțe & Facturi", href: `/dashboard/team?tab=payments`, icon: "payments" },
+      { name: "Profil & Setări Manager", href: "/profile", icon: "account_circle" },
     ];
   } else if (role === "arena_owner") {
     navItems = [

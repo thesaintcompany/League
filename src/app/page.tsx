@@ -256,7 +256,7 @@ function WelcomePortalForm() {
             )}
 
 
-            <form onSubmit={onSubmit} className="space-y-4">
+            <form onSubmit={onSubmit} autoComplete="off" className="space-y-4">
               {error && (
                 <div className="p-3.5 bg-red-500/10 border border-red-500/30 text-red-500 text-xs font-semibold rounded-2xl flex items-center gap-2">
                   <span className="material-symbols-outlined text-base">error</span>
@@ -275,8 +275,12 @@ function WelcomePortalForm() {
                   <input
                     type="email"
                     required
+                    name="login_email"
+                    autoComplete="off"
+                    autoCapitalize="none"
+                    spellCheck="false"
                     className="bg-transparent border-none p-0 w-full text-xs font-body focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-400"
-                    placeholder="admin@leaguehub.local"
+                    placeholder="email@exemplu.ro"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -294,6 +298,8 @@ function WelcomePortalForm() {
                   <input
                     type="password"
                     required
+                    name="login_password"
+                    autoComplete="current-password"
                     className="bg-transparent border-none p-0 w-full text-xs font-body focus:ring-0 text-slate-900 dark:text-white placeholder:text-slate-400"
                     placeholder="••••••••"
                     value={password}

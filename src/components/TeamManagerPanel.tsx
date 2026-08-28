@@ -867,12 +867,11 @@ export function TeamManagerPanel({
       <div className="flex flex-wrap gap-2 border-b border-slate-800 pb-3">
         {[
           { id: "roster", label: `Lot Jucători (${team.players.length})`, icon: "groups" },
-          { id: "tactics", label: "Configurare Club & Tactică", icon: "tune" },
-          { id: "invites", label: "Invită Jucători pe Email", icon: "mail" },
+          { id: "invites", label: `Invitații Campionate${invitations.length ? ` (${invitations.length})` : ""}`, icon: "mark_email_unread" },
+          { id: "tactics", label: "Tactică & Primul 11", icon: "sports" },
           { id: "staff", label: "Staff Tehnic & Antrenori", icon: "badge" },
-          { id: "calendar", label: `Calendar & Traseu Meciuri (${allMatches.length})`, icon: "calendar_month" },
-          { id: "matches", label: "Meciuri & Invitații", icon: "sports_soccer" },
-          { id: "payments", label: "Metode de Plată & Facturi", icon: "payments" },
+          { id: "calendar", label: `Calendar Meciuri (${allMatches.length})`, icon: "calendar_month" },
+          { id: "payments", label: "Finanțe & Facturi", icon: "payments" },
         ].map((t) => (
           <button
             key={t.id}
@@ -1318,17 +1317,95 @@ export function TeamManagerPanel({
         </form>
       )}
 
-      {/* 5. TAB 3: Invitații Email Jucători */}
+      {/* 5. TAB 3: Invitații Campionate & Jucători */}
       {activeTab === "invites" && (
         <div className="space-y-8">
+          {/* Card 1: Official Championship Invitations from Organizers */}
+          <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-5">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-lime-400 text-2xl">mark_email_unread</span>
+                <div>
+                  <h3 className="font-headline font-black text-lg sm:text-xl uppercase text-white tracking-tight">
+                    Invitații Oficiale Primite de la Organizatori
+                  </h3>
+                  <p className="text-[11px] sm:text-xs text-slate-400 font-label mt-0.5">
+                    Organizatorii te invită să participi la campionate. Acceptă punctual pentru a înscrie echipa în competiție.
+                  </p>
+                </div>
+              </div>
+
+              <span className="px-3 py-1 rounded-full bg-lime-400/20 text-lime-400 text-xs font-bold font-mono border border-lime-400/30">
+                {invitations.length} în așteptare
+              </span>
+            </div>
+
+            {invitations.length === 0 ? (
+              <div className="p-8 text-center bg-slate-950/60 rounded-2xl border border-slate-800 space-y-2">
+                <span className="material-symbols-outlined text-slate-600 text-4xl block">mail_outline</span>
+                <p className="text-sm font-bold text-slate-300 font-headline uppercase">Nu ai invitații noi în acest moment</p>
+                <p className="text-xs text-slate-500 max-w-md mx-auto font-body">
+                  Când un organizator de campionat trimite o invitație oficială către echipa ta ({team.name}), aceasta va apărea aici pentru a o accepta cu un singur click.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {invitations.map((inv) => (
+                  <div
+                    key={inv.id}
+                    className="p-5 rounded-2xl border border-slate-700 bg-slate-950/80 text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg hover:border-lime-400/40 transition"
+                  >
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded bg-lime-400/20 text-lime-400 text-[10px] font-black uppercase font-mono">
+                          {inv.championship?.sport || "Sport"}
+                        </span>
+                        <h4 className="font-headline font-black text-base text-white truncate">
+                          {inv.championship?.name || "Campionat Oficial"}
+                        </h4>
+                      </div>
+                      <p className="text-xs text-slate-300 font-label">
+                        Sezon: <strong className="text-white">{inv.championship?.season || "2026"}</strong> • Regiune: <strong className="text-white">{inv.championship?.county || "Național"}{inv.championship?.city ? ` (${inv.championship.city})` : ""}</strong>
+                      </p>
+                      <p className="text-[10px] text-slate-500 font-mono">
+                        Invitat de {inv.inviter?.name || inv.inviter?.email || "Organizator"} • Pentru echipa: <strong className="text-slate-300">{inv.team?.name || team.name}</strong>
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2.5 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => handleInvitationAction(inv.id, "accept")}
+                        disabled={invitationActionLoading === inv.id}
+                        className="px-5 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md active:scale-95 disabled:opacity-50 flex items-center gap-1.5"
+                      >
+                        <span className="material-symbols-outlined text-sm">check_circle</span>
+                        <span>{invitationActionLoading === inv.id ? "Se procesează..." : "Acceptă Invitația"}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleInvitationAction(inv.id, "reject")}
+                        disabled={invitationActionLoading === inv.id}
+                        className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-headline font-bold text-xs uppercase transition border border-slate-700 disabled:opacity-50"
+                      >
+                        Refuză
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Card 2: Send Player Invites */}
           <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-6">
             <div className="pb-4 border-b border-slate-800">
               <h3 className="text-xl font-bold font-headline uppercase text-white flex items-center gap-2">
-                <span className="material-symbols-outlined text-lime-400">forward_to_inbox</span>
-                Trimite Invitație pe Email pentru Creare Cont Jucător
+                <span className="material-symbols-outlined text-lime-400">person_add</span>
+                Invită Jucători Noi în Lotul Tău (Email &amp; WhatsApp)
               </h3>
               <p className="text-xs text-slate-400 font-label mt-1">
-                Jucătorul primește un link securizat prin care își creează contul propriu, își poate uploada poza de profil și își completează fișa atletică  !
+                Jucătorul primește un link securizat prin care își creează contul propriu, își poate uploada poza de profil și își completează fișa atletică!
               </p>
             </div>
 
