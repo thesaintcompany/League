@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+// next/navigation not needed: tab switching is client-side with window.history.replaceState
 
 interface Player {
   id: string;
@@ -85,11 +85,17 @@ export function TeamManagerPanel({
   defaultTab = "roster",
 }: TeamManagerPanelProps) {
   const [team, setTeam] = useState<TeamData>(initialTeam);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const activeTab = (searchParams.get("tab") as "roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "payments") || defaultTab;
+  const [activeTab, setActiveTabState] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "payments">(defaultTab);
+
+  // Sync activeTab when sidebar navigation causes a full page re-render (defaultTab changes)
+  useEffect(() => {
+    setActiveTabState(defaultTab);
+  }, [defaultTab]);
+
   function setActiveTab(tab: string) {
-    router.push(`/dashboard/team?tab=${tab}`, { scroll: false });
+    setActiveTabState(tab as any);
+    // Update URL for sidebar highlight without triggering a full page navigation
+    window.history.replaceState(null, "", `/dashboard/team?tab=${tab}`);
   }
 
   // Edit Team State
