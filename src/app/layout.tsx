@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Providers } from "@/components/Providers";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
 
-const appDomain = process.env.NEXT_PUBLIC_APP_URL || "https://spligue.ro";
+const appDomain = process.env.NEXT_PUBLIC_APP_URL || "https://ligue.ro";
 
 export const metadata: Metadata = {
   metadataBase: new URL(appDomain),
@@ -65,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "image": `${appDomain}/images/hero-goal.jpg`,
     "description": "Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Și tu poți fi un profesionist în sport — începe acum!",
     "slogan": "Și tu poți fi un profesionist în sport - începe acum!",
-    "legalName": "TSC Q -  ligue.ro",
+    "legalName": "TSC Q - ligue.ro",
     "vatID": "53063735",
     "address": {
       "@type": "PostalAddress",
@@ -75,7 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     },
     "contactPoint": {
       "@type": "ContactPoint",
-      "email": "contact@ ligue.ro",
+      "email": "contact@ligue.ro",
       "contactType": "customer service"
     }
   };

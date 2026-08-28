@@ -22,11 +22,11 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
 
   // System Legal & Payment Settings State
   const [settings, setSettings] = useState({
-    companyName: initialSettings?.companyName || "TSC Q -  ligue.ro",
+    companyName: initialSettings?.companyName || "TSC Q - ligue.ro",
     companyCui: initialSettings?.companyCui || "53063735",
     companyRegCom: initialSettings?.companyRegCom || "J2025095153006",
     companyAddress: initialSettings?.companyAddress || "Timișoara, Județul Timiș, România",
-    companyEmail: initialSettings?.companyEmail || "contact@ ligue.ro",
+    companyEmail: initialSettings?.companyEmail || "contact@ligue.ro",
     companyPhone: initialSettings?.companyPhone || "+40 700 000 000",
     platformFeePercent: initialSettings?.platformFeePercent ?? 10.0,
     stripePublishableKey: initialSettings?.stripePublishableKey || "",
@@ -197,7 +197,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
               value={settings.companyName}
               onChange={(e) => setSettings({ ...settings, companyName: e.target.value })}
               className="input text-xs font-bold"
-              placeholder="TSC Q -  ligue.ro"
+              placeholder="TSC Q - ligue.ro"
             />
           </div>
 
@@ -236,7 +236,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
               value={settings.companyEmail}
               onChange={(e) => setSettings({ ...settings, companyEmail: e.target.value })}
               className="input text-xs font-mono"
-              placeholder="contact@ ligue.ro"
+              placeholder="contact@ligue.ro"
             />
           </div>
 
@@ -488,7 +488,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
                     Domeniu Web Verificat:
                   </span>
                   <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
-                    spligue.ro (Verificat )
+                    ligue.ro (Verificat )
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 font-body">

@@ -183,10 +183,10 @@ export function PublicFooter() {
               </li>
               <li className="pt-3">
                 <a
-                  href="mailto:contact@ ligue.ro"
+                  href="mailto:contact@ligue.ro"
                   className="inline-block text-xs font-mono font-bold text-slate-900 dark:text-lime-400 hover:underline"
                 >
-                  contact@ ligue.ro
+                  contact@ligue.ro
                 </a>
               </li>
             </ul>
@@ -198,7 +198,7 @@ export function PublicFooter() {
           <p>
             © {currentYear} PRO LIGUE • Operat de{" "}
             <a
-              href="https:// ligue.ro"
+              href="https://ligue.ro"
               target="_blank"
               rel="noreferrer"
               className="font-bold text-slate-800 dark:text-slate-200 hover:underline"

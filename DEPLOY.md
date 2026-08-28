@@ -13,7 +13,7 @@
    - `DATABASE_URL` = `file:/app/data/league.db` (setat automat implicit)
    - `ADMIN_EMAIL` = adresa ta de email (pentru contul de admin inițial)
    - `ADMIN_PASSWORD` = parola ta de admin (minim 8 caractere)
-   - `NEXTAUTH_URL` = `https://sp. ligue.ro` (presetat implicit; fără `localhost`)
+   - `NEXTAUTH_URL` = `https://ligue.ro` (presetat implicit; fără `localhost`)
    - `NEXTAUTH_SECRET` = un string secret aleatoriu de minim 32 caractere (ex: generat cu `openssl rand -base64 32`)
 7. Click pe **Deploy**.
 
@@ -49,4 +49,4 @@ De asemenea, este creat campionatul demonstrativ **"Liga Demo 2026"** cu echipe 
 
 ## Contact & Suport
 
-- **Email  :** `contact@ ligue.ro` (Datele de contact sunt exclusiv `contact@ ligue.ro` și sunt definitive)
+- **Email  :** `contact@ligue.ro` (Datele de contact sunt exclusiv `contact@ligue.ro` și sunt definitive)

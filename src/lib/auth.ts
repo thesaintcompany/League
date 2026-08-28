@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 // Production default for self-hosted deployments. It can still be overridden
 // by NEXTAUTH_URL in the hosting environment.
 if (process.env.NODE_ENV === "production" && !process.env.NEXTAUTH_URL) {
-  process.env.NEXTAUTH_URL = "https://spligue.ro";
+  process.env.NEXTAUTH_URL = "https://ligue.ro";
 }
 
 export const authOptions: NextAuthOptions = {

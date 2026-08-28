@@ -106,11 +106,11 @@ export function AdminSuperPanel() {
 
   // Ticketing, Legal & Payment Settings State
   const [ticketSettings, setTicketSettings] = useState({
-    companyName: "TSC Q -  ligue.ro",
+    companyName: "TSC Q - ligue.ro",
     companyCui: "53063735",
     companyRegCom: "J2025095153006",
     companyAddress: "Timișoara, Județul Timiș, România",
-    companyEmail: "contact@ ligue.ro",
+    companyEmail: "contact@ligue.ro",
     companyPhone: "+40 700 000 000",
     platformFeePercent: 10.0,
     stripePublishableKey: "",
@@ -1315,10 +1315,10 @@ export function AdminSuperPanel() {
                   </label>
                   <input
                     type="text"
-                    value={ticketSettings.companyName || "TSC Q -  ligue.ro"}
+                    value={ticketSettings.companyName || "TSC Q - ligue.ro"}
                     onChange={(e) => setTicketSettings({ ...ticketSettings, companyName: e.target.value })}
                     className="input text-xs font-bold"
-                    placeholder="TSC Q -  ligue.ro"
+                    placeholder="TSC Q - ligue.ro"
                   />
                 </div>
 
@@ -1354,10 +1354,10 @@ export function AdminSuperPanel() {
                   </label>
                   <input
                     type="email"
-                    value={ticketSettings.companyEmail || "contact@ ligue.ro"}
+                    value={ticketSettings.companyEmail || "contact@ligue.ro"}
                     onChange={(e) => setTicketSettings({ ...ticketSettings, companyEmail: e.target.value })}
                     className="input text-xs font-mono"
-                    placeholder="contact@ ligue.ro"
+                    placeholder="contact@ligue.ro"
                   />
                 </div>
 
@@ -1589,7 +1589,7 @@ export function AdminSuperPanel() {
                         Domeniu Web Verificat:
                       </span>
                       <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
-                        spligue.ro (Verificat)
+                        ligue.ro (Verificat)
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-500 font-body">
@@ -1739,13 +1739,13 @@ export function AdminSuperPanel() {
 
                 <div className="space-y-2 text-xs">
                   <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 font-mono text-[11px] flex justify-between items-center">
-                    <span className="truncate">https://spligue.ro/api/webhooks/stripe</span>
+                    <span className="truncate">https://ligue.ro/api/webhooks/stripe</span>
                     <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
                       Stripe Live
                     </span>
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 font-mono text-[11px] flex justify-between items-center">
-                    <span className="truncate">https://spligue.ro/api/webhooks/paypal</span>
+                    <span className="truncate">https://ligue.ro/api/webhooks/paypal</span>
                     <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] font-bold">
                       PayPal Live
                     </span>

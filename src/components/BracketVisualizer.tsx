@@ -86,7 +86,7 @@ export function BracketVisualizer({
   }
 
   // Get clean direct public URL
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://spligue.ro";
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://ligue.ro";
   const publicShareUrl = `${origin}/brackets?code=${currentShareCode}`;
 
   function copyToClipboard(text: string, type: "link" | "code") {

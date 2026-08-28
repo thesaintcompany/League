@@ -180,8 +180,8 @@ SQLite e ok pentru 1-10 campionate mici. Dacă vrei multi-tenant sau volum mare:
 
 ## Date de Contact
 
-- **Email   & Suport:** `contact@ ligue.ro` (Datele de contact sunt exclusiv `contact@ ligue.ro` și nu se mai modifică)
-- **Website:** [https://sp. ligue.ro](https://sp. ligue.ro)
+- **Email   & Suport:** `contact@ligue.ro` (Datele de contact sunt exclusiv `contact@ligue.ro` și nu se mai modifică)
+- **Website:** [https://ligue.ro](https://ligue.ro)
 
 ## Licență
 

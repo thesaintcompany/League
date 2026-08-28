@@ -73,8 +73,8 @@ export default function ConfidentialitatePage() {
             </h2>
             <p>
               Pentru orice solicitare privind datele dumneavoastră cu caracter personal, vă rugăm să trimiteți un e-mail către responsabilul DPO la{" "}
-              <a href="mailto:contact@ ligue.ro" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
-                contact@ ligue.ro
+              <a href="mailto:contact@ligue.ro" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
+                contact@ligue.ro
               </a>.
             </p>
           </section>

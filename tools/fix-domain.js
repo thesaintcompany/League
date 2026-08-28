@@ -23,10 +23,10 @@ let changed = 0;
 for (const file of files) {
   let content = fs.readFileSync(file, "utf8");
   const updated = content
-    .replace(/https:\/\/sp\.\s+ligue\.ro/g, "https://spligue.ro")
-    .replace(/https:\/\/sp\.\s+buu\.ro/g, "https://spligue.ro")
-    .replace(/sp\.\s+ligue\.ro/g, "spligue.ro")
-    .replace(/sp\.\s+buu\.ro/g, "spligue.ro");
+    .replace(/https:\/\/sp\.\s+ligue\.ro/g, "https://ligue.ro")
+    .replace(/https:\/\/sp\.\s+buu\.ro/g, "https://ligue.ro")
+    .replace(/sp\.\s+ligue\.ro/g, "ligue.ro")
+    .replace(/sp\.\s+buu\.ro/g, "ligue.ro");
   
   if (updated !== content) {
     fs.writeFileSync(file, updated, "utf8");

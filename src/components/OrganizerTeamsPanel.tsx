@@ -591,7 +591,7 @@ export function OrganizerTeamsPanel() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {teams.map((t, idx) => {
                   const roleParam = isIndividual ? "player" : "team_leader";
-                  const inviteUrl = `https://spligue.ro/signup?role=${roleParam}&championshipId=${activeChampId}&teamId=${t.id}&email=${encodeURIComponent(t.managerEmail || "")}`;
+                  const inviteUrl = `https://ligue.ro/signup?role=${roleParam}&championshipId=${activeChampId}&teamId=${t.id}&email=${encodeURIComponent(t.managerEmail || "")}`;
 
                   return (
                     <div

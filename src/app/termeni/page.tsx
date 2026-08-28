@@ -82,8 +82,8 @@ export default function TermeniPage() {
             </h2>
             <p>
               Pentru orice întrebări sau clarificări legate de acești termeni, vă rugăm să ne contactați la adresa de e-mail{" "}
-              <a href="mailto:contact@ ligue.ro" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
-                contact@ ligue.ro
+              <a href="mailto:contact@ligue.ro" className="text-lime-600 dark:text-lime-400 font-bold hover:underline">
+                contact@ligue.ro
               </a>.
             </p>
           </section>

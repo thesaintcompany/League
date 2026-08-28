@@ -142,7 +142,7 @@ export default function NewChampionshipPage() {
     }
     const subject = encodeURIComponent(`Invitație de colaborare pentru găzduire campionat: ${form.name || "Campionat  "}`);
     const body = encodeURIComponent(
-      `Bună ziua,\n\nVă contactăm în legătură cu campionatul "${form.name || "Campionat  "}" (${form.sport || "Sport"}).\nDorim să disputăm meciurile  e la baza dumneavoastră sportivă ("${form.defaultVenue}").\n\nPentru a vă valida și lista gratuit arena pe platformă cu tarife, poze și facilități, vă invităm să accesați:\nhttps://spligue.ro/venues\n\nCu stimă,\nOrganizator ${form.name || "Campionat"}`
+      `Bună ziua,\n\nVă contactăm în legătură cu campionatul "${form.name || "Campionat  "}" (${form.sport || "Sport"}).\nDorim să disputăm meciurile  e la baza dumneavoastră sportivă ("${form.defaultVenue}").\n\nPentru a vă valida și lista gratuit arena pe platformă cu tarife, poze și facilități, vă invităm să accesați:\nhttps://ligue.ro/venues\n\nCu stimă,\nOrganizator ${form.name || "Campionat"}`
     );
     window.open(`mailto:${venueOwnerEmail}?subject=${subject}&body=${body}`, "_blank");
     setVenueInviteSent(true);
@@ -150,7 +150,7 @@ export default function NewChampionshipPage() {
 
   function handleSendVenueInviteWhatsApp() {
     const text = encodeURIComponent(
-      `  Salut! Organizăm campionatul "${form.name || "Campionat  "}" (${form.sport || "Sport"}) și dorim să programăm meciurile la baza sportivă "${form.defaultVenue}".\n\nTe invităm să îți listezi și să îți revendici gratuit arena pe platforma oficială la: https://spligue.ro/venues`
+      `  Salut! Organizăm campionatul "${form.name || "Campionat  "}" (${form.sport || "Sport"}) și dorim să programăm meciurile la baza sportivă "${form.defaultVenue}".\n\nTe invităm să îți listezi și să îți revendici gratuit arena pe platforma oficială la: https://ligue.ro/venues`
     );
     const cleanPhone = venueOwnerPhone.replace(/\D/g, "");
     if (cleanPhone) {
@@ -1016,7 +1016,7 @@ export default function NewChampionshipPage() {
                               type="email"
                               value={venueOwnerEmail}
                               onChange={(e) => setVenueOwnerEmail(e.target.value)}
-                              placeholder="Email proprietar (ex: arena@ ligue.ro)"
+                              placeholder="Email proprietar (ex: arena@ligue.ro)"
                               className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-teal-300 dark:border-teal-800 text-[11px] text-slate-900 dark:text-white"
                             />
                             <div className="flex items-center gap-1.5">
@@ -1222,7 +1222,7 @@ export default function NewChampionshipPage() {
                   Plată Licență Competiție
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                  Operator: <strong>TSC Q -  ligue.ro</strong> • CUI: 53063735
+                  Operator: <strong>TSC Q - ligue.ro</strong> • CUI: 53063735
                 </p>
               </div>
               <button

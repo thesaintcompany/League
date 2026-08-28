@@ -84,11 +84,11 @@ export default function FAQPage() {
           </p>
           <div className="pt-2">
             <a
-              href="mailto:contact@ ligue.ro"
+              href="mailto:contact@ligue.ro"
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-sm hover:bg-lime-300 transition"
             >
               <span className="material-symbols-outlined">mail</span>
-              <span>Trimite un Email (contact@ ligue.ro)</span>
+              <span>Trimite un Email (contact@ligue.ro)</span>
             </a>
           </div>
         </div>

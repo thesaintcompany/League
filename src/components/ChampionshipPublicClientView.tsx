@@ -124,7 +124,7 @@ export function ChampionshipPublicClientView({
     router.push(`/campionat?id=${id}`);
   }
 
-  const shareUrl = typeof window !== "undefined" ? window.location.href : "https://spligue.ro/campionat";
+  const shareUrl = typeof window !== "undefined" ? window.location.href : "https://ligue.ro/campionat";
 
   function copyShareLink() {
     navigator.clipboard.writeText(shareUrl);

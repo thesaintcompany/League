@@ -36,7 +36,7 @@ export function A4TicketPrintView({ ticket }: { ticket: TicketData }) {
   const [accessQrUrl, setAccessQrUrl] = useState<string>("");
   const [promoQrUrl, setPromoQrUrl] = useState<string>("");
 
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://spligue.ro";
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://ligue.ro";
   const promoUrl = `${origin}/matches/${ticket.match.id}/promo`;
 
   useEffect(() => {
@@ -319,7 +319,7 @@ function SingleTicketCard({
             Partener   &amp; Sponsor: <strong>{ticket.match.sponsorName || "Ligue Pro Energy"}</strong> • {ticket.match.sponsorTagline || "Performanță Sportivă"}
           </p>
           <p className="text-[9px] text-slate-400 font-mono">
-            Platformă securizată operată de <strong>   ligue.ro</strong> • Toate drepturile aparțin <strong>   ligue.ro</strong> • Asistență: <strong>contact@ ligue.ro</strong>
+            Platformă securizată operată de <strong>   ligue.ro</strong> • Toate drepturile aparțin <strong>   ligue.ro</strong> • Asistență: <strong>contact@ligue.ro</strong>
           </p>
         </div>
 

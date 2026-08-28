@@ -78,7 +78,7 @@ async function generateOgImage() {
       <rect x="0" y="372" width="230" height="50" rx="16" fill="url(#btnGrad)" />
       <text x="32" y="403" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="15" fill="#020617" letter-spacing="1">VEZI CAMPIONATE →</text>
 
-      <text x="0" y="462" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="12" fill="#94a3b8">©    ligue.ro • Operat   de TSC Q -  ligue.ro</text>
+      <text x="0" y="462" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="12" fill="#94a3b8">©    ligue.ro • Operat   de TSC Q - ligue.ro</text>
     </g>
 
     <!-- RIGHT SIDE: Authentic Login UI Card Overlay (550px width) -->

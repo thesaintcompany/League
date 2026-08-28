@@ -40,10 +40,10 @@ export default function ContactPage() {
             </h3>
             <p className="text-xs text-slate-500 font-label">Răspundem în maxim 24h</p>
             <a
-              href="mailto:contact@ ligue.ro"
+              href="mailto:contact@ligue.ro"
               className="text-xs font-black font-mono text-lime-600 dark:text-lime-400 hover:underline block pt-1"
             >
-              contact@ ligue.ro
+              contact@ligue.ro
             </a>
           </div>
 
@@ -56,7 +56,7 @@ export default function ContactPage() {
             </h3>
             <p className="text-xs text-slate-500 font-label">Găzduit și administrat de</p>
             <a
-              href="https://   ligue.ro"
+              href="https://ligue.ro"
               target="_blank"
               rel="noreferrer"
               className="text-xs font-black font-headline text-blue-600 dark:text-blue-400 hover:underline block pt-1"

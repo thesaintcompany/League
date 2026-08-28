@@ -71,7 +71,7 @@ export default async function TeamManagerDashboardPage(props: {
       dbUser = await prisma.user.create({
         data: {
           ...(userId ? { id: userId } : {}),
-          email: userEmail || `user_${Date.now()}@ ligue.ro`,
+          email: userEmail || `user_${Date.now()}@ligue.ro`,
           name: user.name || "Manager Echipă",
           role: user.role || "team_leader",
         },
