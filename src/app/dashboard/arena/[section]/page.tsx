@@ -35,8 +35,8 @@ export default async function ArenaOwnerSectionPage({
 
   let venue = user.id
     ? await prisma.venue.findFirst({
-        where: { ownerId: user.id },
-      })
+      where: { ownerId: user.id },
+    })
     : null;
 
   if (!venue && session.user.email) {
@@ -61,9 +61,9 @@ export default async function ArenaOwnerSectionPage({
     const matches = venue.sport === "multifunctional"
       ? venueMatches
       : venueMatches.filter((match) => {
-          const championshipSport = match.championship?.sport?.toLowerCase();
-          return !championshipSport || championshipSport === venue.sport.toLowerCase();
-        });
+        const championshipSport = match.championship?.sport?.toLowerCase();
+        return !championshipSport || championshipSport === venue.sport.toLowerCase();
+      });
 
     const blockedSlots = await prisma.venueBlockedSlot.findMany({
       where: { venueId: venue.id },
@@ -102,7 +102,7 @@ export default async function ArenaOwnerSectionPage({
       <Sidebar />
       <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
-          title="Consolă Proprietar"
+          title="Manager Arena"
           subtitle="Gestionează secțiunea selectată a bazei tale sportive"
         />
         <main className="p-4 sm:p-6 lg:p-10 max-w-7xl">
