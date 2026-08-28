@@ -281,12 +281,12 @@ export function AdminDiceConsole({
               <h2 className="text-xl sm:text-2xl font-black font-headline text-slate-900 dark:text-white uppercase tracking-tight leading-snug">
                 {isIndividual ? (
                   <>
-                    <span className="block">Consola  ă de Tragere</span>
+                    <span className="block">Consola Oficială de Tragere</span>
                     <span className="block text-lime-600 dark:text-lime-400">Tablou &amp; Capi de Serie</span>
                   </>
                 ) : (
                   <>
-                    <span className="block">Consola  ă de Aruncare</span>
+                    <span className="block">Consola Oficială de Aruncare</span>
                     <span className="block text-lime-600 dark:text-lime-400">Tragere la Sorți &amp; Zaruri</span>
                   </>
                 )}

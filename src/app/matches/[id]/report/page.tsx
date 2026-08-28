@@ -75,7 +75,7 @@ export default async function OfficialMatchReportPage({
                 Ligue Pro • Raport   de Arbitraj
               </h1>
               <p className="text-xs font-label text-slate-600 uppercase tracking-wider mt-0.5">
-                Foia  ă de Joc &amp; Observații Arbitrale
+                Foaia Oficială de Joc &amp; Observații Arbitrale
               </p>
             </div>
           </div>

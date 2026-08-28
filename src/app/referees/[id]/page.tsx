@@ -265,7 +265,7 @@ export default async function PublicRefereeDetailPage({
 
               {matches.length === 0 ? (
                 <div className="p-8 rounded-3xl bg-white dark:bg-slate-900/60 text-center text-xs text-slate-500 font-label border border-slate-200 dark:border-slate-800 shadow-sm">
-                  Momentan nu sunt meciuri  e înregistrate în baza de date pentru acest arbitru.
+                  Momentan nu sunt meciuri oficiale înregistrate în baza de date pentru acest arbitru.
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

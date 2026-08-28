@@ -152,7 +152,7 @@ export function OrganizerInvitationsModal({
 
   const refereePersonalInviteMsg = `Salut ${refereeTargetName || " "}! Te invităm să arbitrezi partidele din cadrul competiției "${championshipName}" (${sport}${county ? ` • Județul ${county}` : ""}). Creează-ți sau accesează panoul   de arbitru aici: ${refereeSignupUrl}`;
 
-  const refereeEmailHref = `mailto:${refereeTargetEmail || ""}?subject=${encodeURIComponent(`Invitație  ă Arbitraj - ${championshipName}`)}&body=${encodeURIComponent(refereePersonalInviteMsg)}`;
+  const refereeEmailHref = `mailto:${refereeTargetEmail || ""}?subject=${encodeURIComponent(`Invitație Oficială Arbitraj - ${championshipName}`)}&body=${encodeURIComponent(refereePersonalInviteMsg)}`;
   const refereeWhatsappHref = `https://api.whatsapp.com/send?text=${encodeURIComponent(refereePersonalInviteMsg)}`;
 
   const diceAnnouncementMessage = isIndividual
@@ -434,7 +434,7 @@ export function OrganizerInvitationsModal({
                     ? `Salut ${selectedComp.name}! Te invităm   în turneul de ${sport} "${championshipName}". Înscrie-te și validează-ți prezența pe tablou aici: ${inviteUrl}`
                     : `Salut ${selectedComp.name}! Te invităm să-ți înscrii echipa în campionatul de ${sport} "${championshipName}". Confirmă participarea aici: ${inviteUrl}`;
                   const waHref = `https://api.whatsapp.com/send?${selectedComp.phone ? `phone=${selectedComp.phone.replace(/\D/g, "")}&` : ""}text=${encodeURIComponent(personalMsg)}`;
-                  const mailHref = `mailto:${selectedComp.email || ""}?subject=${encodeURIComponent(`Invitație  ă - ${championshipName}`)}&body=${encodeURIComponent(personalMsg)}`;
+                  const mailHref = `mailto:${selectedComp.email || ""}?subject=${encodeURIComponent(`Invitație Oficială - ${championshipName}`)}&body=${encodeURIComponent(personalMsg)}`;
 
                   return (
                     <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
@@ -518,7 +518,7 @@ export function OrganizerInvitationsModal({
                   <div className="pt-2 flex flex-wrap gap-2.5">
                     <a
                       href={`mailto:${competitorCustomEmail}?subject=${encodeURIComponent(
-                        isIndividual ? `Invitație  ă Jucător - ${championshipName}` : `Invitație  ă Echipă - ${championshipName}`
+                        isIndividual ? `Invitație Oficială Jucător - ${championshipName}` : `Invitație Oficială Echipă - ${championshipName}`
                       )}&body=${encodeURIComponent(
                         `Salut ${competitorCustomName || "Sportiv"}!\n\nTe invităm să participi la "${championshipName}" (${sport}).\nÎnscrie-te și confirmă prezența aici: ${inviteUrl}\n\nCu stimă,\nOrganizatorul competiției`
                       )}`}
@@ -790,7 +790,7 @@ export function OrganizerInvitationsModal({
                       {county ? `Comisia Județeană de Arbitri (CJA) • ${county}` : "Comisia Centrală a Arbitrilor (CCA / FRF)"}
                     </h4>
                     <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                      Contactează direct Asociația Județeană de Fotbal sau Comisia Centrală a Arbitrilor pentru delegări  e, baremuri și arbitri autorizați.
+                      Contactează direct Asociația Județeană de Fotbal sau Comisia Centrală a Arbitrilor pentru delegări oficiale, baremuri și arbitri autorizați.
                     </p>
                   </div>
                 </div>

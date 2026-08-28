@@ -709,7 +709,7 @@ function BracketMatchNode({
       {/* Clean Match Stage & Quick Link Footer */}
       <div className="pt-2 mt-2 border-t border-slate-200 dark:border-slate-800/80 flex justify-between items-center text-[10px] gap-2">
         <span className="text-slate-500 dark:text-slate-400 font-label uppercase tracking-wider text-[9px] font-bold truncate">
-          {stageLabel || match.stage || "Etapă  ă"}
+          {stageLabel || match.stage || "Etapă Oficială"}
         </span>
 
         <div className="flex items-center gap-1.5 shrink-0">

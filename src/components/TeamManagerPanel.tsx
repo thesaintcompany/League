@@ -1539,7 +1539,7 @@ export function TeamManagerPanel({
                   >
                     <div className="flex justify-between items-center text-[10px] font-label text-slate-400 uppercase">
                       <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 font-bold border border-lime-400/30">
-                        {isHome ? " Meci pe Teren Propriu" : " Deplasare  ă"}
+                        {isHome ? " Meci pe Teren Propriu" : " Deplasare Oficială"}
                       </span>
                       <span>
                         {dateObj.toLocaleDateString("ro-RO", { weekday: "short", day: "numeric", month: "short" })} • {dateObj.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}

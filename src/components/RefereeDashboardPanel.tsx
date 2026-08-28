@@ -320,7 +320,7 @@ export function RefereeDashboardPanel({
         <div className="flex items-center gap-2.5">
           <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
           <h2 className="text-xl font-bold font-headline text-white uppercase tracking-tight">
-             Meciul Următor Asignat (Delegare  ă)
+             Meciul Următor Asignat (Delegare Oficială)
           </h2>
         </div>
 

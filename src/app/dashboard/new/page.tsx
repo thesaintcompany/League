@@ -139,7 +139,7 @@ export default function NewChampionshipPage() {
 
   function handleSendVenueInviteWhatsApp() {
     const text = encodeURIComponent(
-      `  Salut! Organizăm campionatul "${form.name || "Campionat  "}" (${form.sport || "Sport"}) și dorim să programăm meciurile la baza sportivă "${form.defaultVenue}".\n\nTe invităm să îți listezi și să îți revendici gratuit arena pe platforma  ă la: https://sp.buu.ro/venues`
+      `  Salut! Organizăm campionatul "${form.name || "Campionat  "}" (${form.sport || "Sport"}) și dorim să programăm meciurile la baza sportivă "${form.defaultVenue}".\n\nTe invităm să îți listezi și să îți revendici gratuit arena pe platforma oficială la: https://sp.buu.ro/venues`
     );
     const cleanPhone = venueOwnerPhone.replace(/\D/g, "");
     if (cleanPhone) {
@@ -497,7 +497,7 @@ export default function NewChampionshipPage() {
                 </div>
               </div>
 
-              {/* Carousel Container for Siglă  ă & Arie Teritorială */}
+              {/* Carousel Container for Siglă Oficială & Arie Teritorială */}
               <div className="p-4 sm:p-6 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm overflow-hidden">
                 {/* Carousel Header with Slide Tabs & Next/Prev Controls */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-200 dark:border-slate-800">
@@ -510,7 +510,7 @@ export default function NewChampionshipPage() {
                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                         }`}
                     >
-                      <span>1. <span className="material-symbols-outlined text-xs align-middle">image</span> Siglă  ă</span>
+                      <span>1. <span className="material-symbols-outlined text-xs align-middle">image</span> Siglă Oficială</span>
                       {form.logoUrl && <span className="text-[10px] material-symbols-outlined">check_circle</span>}
                     </button>
                     <button
@@ -553,12 +553,12 @@ export default function NewChampionshipPage() {
                   </div>
                 </div>
 
-                {/* SLIDE 0: Siglă  ă Campionat (Rotundă) & Upload Foto */}
+                {/* SLIDE 0: Siglă Oficială Campionat (Rotundă) & Upload Foto */}
                 {brandingScopeSlide === 0 && (
                   <div className="space-y-4 animate-in fade-in slide-in-from-right-2 duration-200">
                     <div className="flex items-center justify-between">
                       <label className="text-xs font-bold font-label text-slate-700 dark:text-slate-300 uppercase block">
-                        Siglă  ă Campionat (Rotundă)
+                        Siglă Oficială Campionat (Rotundă)
                       </label>
                       <span className="text-[10px] text-slate-400 font-label uppercase">Opțional</span>
                     </div>
@@ -967,7 +967,7 @@ export default function NewChampionshipPage() {
                       </div>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label mt-0.5">
                         {form.refereeEnabled
-                          ? "Arbitraj Activ: Se pot delega arbitri  i, întocmi rapoarte de joc și cartonașe."
+                          ? "Arbitraj Activ: Se pot delega arbitri oficiali, întocmi rapoarte de joc și cartonașe."
                           : "Fără Arbitraj  : Turneu amical / meciuri autogestionate (fără delegare de arbitri)."}
                       </p>
                     </div>

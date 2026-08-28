@@ -54,7 +54,7 @@ export default function TermeniPage() {
               3. Regulamentul Tragerii la Sorți &amp; Meciurilor
             </h2>
             <p>
-              Sistemul de tragere la sorți cu zaruri 3D este guvernat de un algoritm pseudo-aleatoriu verificat. Organizatorii pot re-arunca zarurile de cel mult 3 ori înainte de publicarea  ă. Odată publicat, arborele competițional devine definitiv și nu mai poate fi rescris decât cu aprobarea comisiei de organizare.
+              Sistemul de tragere la sorți cu zaruri 3D este guvernat de un algoritm pseudo-aleatoriu verificat. Organizatorii pot re-arunca zarurile de cel mult 3 ori înainte de publicarea oficială. Odată publicat, arborele competițional devine definitiv și nu mai poate fi rescris decât cu aprobarea comisiei de organizare.
             </p>
           </section>
 

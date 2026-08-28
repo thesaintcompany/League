@@ -29,7 +29,7 @@ export function PublicFooter() {
                 Și tu poți fi un <span className="text-lime-400">profesionist în sport</span> — începe acum!
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 font-body drop-shadow-sm">
-                Creează propria ta ligă sau înscrie-te ca jucător, arbitru ori manager de echipă pe platforma  ă.
+                Creează propria ta ligă sau înscrie-te ca jucător, arbitru ori manager de echipă pe platforma oficială.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3 shrink-0">
@@ -37,13 +37,13 @@ export function PublicFooter() {
                 href="/signup"
                 className="px-6 py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg transition active:scale-95 flex items-center gap-2"
               >
-                <span>Începe Acum  </span>
+                <span>Înregistrare Cont</span>
               </Link>
               <Link
-                href="/harta-romaniei"
+                href="/clasamente"
                 className="px-5 py-3.5 rounded-2xl bg-slate-900/80 hover:bg-slate-800 text-white font-headline font-bold text-xs uppercase tracking-wider border border-slate-700 transition"
               >
-                <span>Vezi Ligi</span>
+                <span>Vezi Clasamente</span>
               </Link>
             </div>
           </div>
@@ -55,11 +55,11 @@ export function PublicFooter() {
           <div className="col-span-2 lg:col-span-1 space-y-4">
             <BrandLogo size="md" href="/clasamente" />
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-body">
-              Platforma națională digitală de gestiune competițională, clasamente omologate și arbitraj live.
+              Platforma națională digitală de gestiune competițională, clasamente omologate, tablouri eliminatorii și arbitraj live.
             </p>
             <div className="pt-2 text-xs font-label space-y-1">
               <p className="text-slate-500 dark:text-slate-400">
-                Operator platformă: <strong className="text-slate-900 dark:text-white font-bold">TSC Q - BUU.RO</strong>
+                Operator platformă: <strong className="text-slate-900 dark:text-white font-bold">BUU.RO</strong>
               </p>
               <p className="text-slate-400 dark:text-slate-500 text-[11px] font-mono">
                 CUI: 53063735 • J2025095153006
@@ -75,17 +75,22 @@ export function PublicFooter() {
             <ul className="space-y-2 text-xs font-label">
               <li>
                 <Link href="/clasamente" className="hover:text-slate-950 dark:hover:text-white transition-colors">
-                  Clasamente &amp; Ligi
+                  Clasament &amp; Ligi
                 </Link>
               </li>
               <li>
                 <Link href="/harta-romaniei" className="hover:text-slate-950 dark:hover:text-white transition-colors">
-                  Harta Competițională
+                  Harta Competițională RO
                 </Link>
               </li>
               <li>
                 <Link href="/brackets" className="hover:text-slate-950 dark:hover:text-white transition-colors">
-                  Tablou &amp; Meciuri
+                  Tablou Eliminatoriu
+                </Link>
+              </li>
+              <li>
+                <Link href="/matches" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Program &amp; Rezultate
                 </Link>
               </li>
               <li>
@@ -105,12 +110,12 @@ export function PublicFooter() {
               </li>
               <li>
                 <Link href="/players" className="hover:text-slate-950 dark:hover:text-white transition-colors">
-                  Catalog Jucători
+                  Golgheteri &amp; Jucători
                 </Link>
               </li>
               <li>
                 <Link href="/referees" className="hover:text-slate-950 dark:hover:text-white transition-colors">
-                  Corp Arbitri  i
+                  Corp Arbitri
                 </Link>
               </li>
             </ul>
@@ -144,12 +149,12 @@ export function PublicFooter() {
               </li>
               <li>
                 <Link href="/signup" className="hover:text-slate-950 dark:hover:text-white transition-colors">
-                  Înregistrare Organizator
+                  Înregistrare Cont Nou
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard/admin" className="hover:text-slate-950 dark:hover:text-white transition-colors">
-                  Consolă Administrare
+                <Link href="/dashboard" className="hover:text-slate-950 dark:hover:text-white transition-colors">
+                  Panou de Control
                 </Link>
               </li>
             </ul>
@@ -193,12 +198,12 @@ export function PublicFooter() {
           <p>
             © {currentYear} PRO LIGUE • Operat de{" "}
             <a
-              href="https://  buu.ro"
+              href="https://buu.ro"
               target="_blank"
               rel="noreferrer"
               className="font-bold text-slate-800 dark:text-slate-200 hover:underline"
             >
-              TSC Q - BUU.RO
+              BUU.RO
             </a>
             . Toate drepturile rezervate.
           </p>

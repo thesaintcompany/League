@@ -376,7 +376,7 @@ export default async function PublicBracketsPage({
                         {isIndividual ? "Competitori Înscriși pe Tablou" : "Echipe Înscrise la Competiție"}
                       </h3>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label">
-                        Lista  ă a participanților validați pentru #{shareCode} ({championship.teams.length} {isIndividual ? "participanți" : "echipe"})
+                        Lista Oficială a participanților validați pentru #{shareCode} ({championship.teams.length} {isIndividual ? "participanți" : "echipe"})
                       </p>
                     </div>
                   </div>

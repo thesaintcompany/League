@@ -39,7 +39,7 @@ export default function DesprePage() {
               Tragere la Sorți cu Zaruri
             </h3>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-body">
-              Algoritm unic și transparent de generare a meciurilor eliminatorii, limitat la maxim 3 aruncări înainte de publicarea  ă a arborelui.
+              Algoritm unic și transparent de generare a meciurilor eliminatorii, limitat la maxim 3 aruncări înainte de publicarea oficială a arborelui.
             </p>
           </div>
 

@@ -172,7 +172,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
         <div className="relative z-10 max-w-4xl space-y-4">
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="px-3.5 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-base">gavel</span> CORPUL DE ARBITRI  I
+              <span className="material-symbols-outlined text-base">gavel</span> CORPUL DE ARBITRI OMOLOGAȚI
             </span>
             <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-[10px] uppercase font-label">
               30 Arbitri Licențiați
@@ -183,11 +183,11 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black italic tracking-tight font-headline uppercase leading-none text-white drop-shadow-md">
-            Arbitri &amp;  i de Joc
+            Arbitri &amp; Oficiali de Joc
           </h1>
 
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl font-body">
-            Comisia Centrală a Arbitrilor din cadrul Ligue Pro. Descoperă cei 30 de arbitri omologați cu portrete umane reale (9:16), ecusoane  e inteligente, telemetrie avansată și delegări transparente.
+            Comisia Centrală a Arbitrilor din cadrul Ligue Pro. Descoperă cei 30 de arbitri omologați cu ecusoane oficiale inteligente, telemetrie avansată și delegări transparente.
           </p>
 
           {/* Search & Category Filter Pills */}
@@ -326,7 +326,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
                     </div>
 
                     <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-label font-bold text-slate-500 group-hover:text-lime-600 dark:group-hover:text-lime-400">
-                      <span>Fișă  ă</span>
+                      <span>Fișă Oficială</span>
                       <span className="material-symbols-outlined text-sm">arrow_forward</span>
                     </div>
                   </div>
@@ -345,7 +345,7 @@ export function PublicRefereesCatalog({ initialReferees }: { initialReferees: Re
             <h2 className="text-xl sm:text-2xl font-bold font-headline text-slate-900 dark:text-white uppercase tracking-tight">
               {searchQuery || selectedCategory !== "all"
                 ? `Rezultate Căutare (${filtered.length} Arbitri)`
-                : "Catalog Complet Corp Arbitri (30  i)"}
+                : "Catalog Complet Corp Arbitri (30 Arbitri Licențiați)"}
             </h2>
           </div>
           <span className="text-xs font-label font-bold text-slate-500 dark:text-slate-400 uppercase">

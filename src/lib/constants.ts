@@ -33,7 +33,7 @@ export function translateMatchStage(stage?: string | null): string {
     final: "Finală",
   };
 
-  return stage ? labels[stage] || stage : "Etapă  ă";
+  return stage ? labels[stage] || stage : "Etapă Oficială";
 }
 
 export const FORMATS = [

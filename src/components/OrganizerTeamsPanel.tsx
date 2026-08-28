@@ -467,8 +467,8 @@ export function OrganizerTeamsPanel() {
                     <a
                       href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
                         isIndividual
-                          ? `Invitație  ă ca jucător/competitor în Turneul de Tenis ${activeChamp?.name || ""}: ${lastInviteLink}`
-                          : `Invitație  ă pentru echipa ta în Campionatul ${activeChamp?.name || ""}: ${lastInviteLink}`
+                          ? `Invitație Oficială ca jucător/competitor în Turneul de Tenis ${activeChamp?.name || ""}: ${lastInviteLink}`
+                          : `Invitație Oficială pentru echipa ta în Campionatul ${activeChamp?.name || ""}: ${lastInviteLink}`
                       )}`}
                       target="_blank"
                       rel="noreferrer"

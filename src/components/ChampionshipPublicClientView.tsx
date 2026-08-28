@@ -214,7 +214,7 @@ export function ChampionshipPublicClientView({
 
               <p className="text-xs text-slate-600 dark:text-slate-300 font-body max-w-2xl mt-1">
                 {championship?.description ||
-                  `Harta interactivă, arbore eliminatoriu, clasamente  e și telemetria meciurilor de ${currentSportMeta.name}.`}
+                  `Harta interactivă, arbore eliminatoriu, clasamente oficiale și telemetria meciurilor de ${currentSportMeta.name}.`}
               </p>
             </div>
           </div>

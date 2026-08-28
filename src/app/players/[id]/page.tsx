@@ -171,7 +171,7 @@ export default async function PublicPlayerDetailPage({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-5">
                     <span className="text-[10px] font-label font-bold text-amber-400 uppercase tracking-widest">
-                      Fișă  ă Atlet
+                      Fișă Oficială Atlet
                     </span>
                     <h2 className="font-headline font-black text-white text-2xl uppercase tracking-tight leading-tight">
                       {player.name}

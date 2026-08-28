@@ -12,13 +12,13 @@ export const metadata: Metadata = {
     template: "%s | PRO LIGUE ROMÂNIA",
   },
   description:
-    "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente  e și arbitraj omologat. Începe acum!",
+    "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!",
   keywords: [
     "PRO LIGUE",
     "aplicatia care iti organizeaza campionatul",
     "campionat fotbal",
     "turnee fotbal romania",
-    "clasamente  e",
+    "clasamente oficiale",
     "arbitri meciuri",
     "TSC QUANTUM SRL",
     "profesionist in sport",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "PRO LIGUE • Aplicația care îți organizează campionatul!",
     description:
-      "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente  e și arbitraj omologat. Începe acum!",
+      "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!",
     url: appDomain,
     siteName: "PRO LIGUE ROMÂNIA",
     images: [
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "PRO LIGUE • Aplicația care îți organizează campionatul!",
     description:
-      "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente  e și arbitraj omologat. Începe acum!",
+      "Aplicația care îți organizează campionatul! Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Începe acum!",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -63,7 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "url": appDomain,
     "logo": `${appDomain}/images/logos/logo-1.png`,
     "image": `${appDomain}/images/hero-goal.jpg`,
-    "description": "Platforma națională digitală de gestiune competițională, clasamente  e și arbitraj omologat. Și tu poți fi un profesionist în sport — începe acum!",
+    "description": "Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Și tu poți fi un profesionist în sport — începe acum!",
     "slogan": "Și tu poți fi un profesionist în sport - începe acum!",
     "legalName": "TSC Q - BUU.RO",
     "vatID": "53063735",

@@ -946,7 +946,7 @@ export function ArenaOwnerPanel({
                 Bannere Reclame &amp; Sponsori Arenă
               </h3>
               <p className="text-xs text-slate-500 font-normal mt-0.5">
-                Afișează bannere ale partenerilor comerciali pe pagina  ă a arenei tale.
+                Afișează bannere ale partenerilor comerciali pe pagina oficială a arenei tale.
               </p>
             </div>
             <button
