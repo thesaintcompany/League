@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getContrastTextColor } from "@/lib/utils";
 
 export interface StandingTeam {
   position: number;
@@ -292,8 +293,8 @@ export function PublicStandingsView({
                               className="flex items-center gap-3 group"
                             >
                               <div
-                                className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black text-white shadow-md uppercase shrink-0 border border-white/10 group-hover:scale-105 transition-transform"
-                                style={{ backgroundColor: team.color || "#84cc16" }}
+                                className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black shadow-md uppercase shrink-0 border border-slate-300 dark:border-white/10"
+                                style={{ backgroundColor: team.color || "#84cc16", color: getContrastTextColor(team.color || "#84cc16") }}
                               >
                                 {team.logoUrl ? (
                                   <img src={team.logoUrl} alt="Logo" className="w-full h-full object-cover rounded-xl" />

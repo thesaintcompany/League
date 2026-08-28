@@ -8,6 +8,7 @@ import { MatchData } from "./MatchCard";
 import { useSportContext } from "@/context/SportContext";
 import { ChampionshipLogoBadge } from "./ChampionshipLogoBadge";
 import { TournamentPhasesView } from "./TournamentPhasesView";
+import { getContrastTextColor } from "@/lib/utils";
 
 interface Standing {
   position: number;
@@ -405,8 +406,8 @@ export function ChampionshipPublicClientView({
                             <td className="px-4 py-4">
                               <div className="flex items-center gap-3">
                                 <div
-                                  className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black text-white shadow-md uppercase shrink-0 border border-white/10"
-                                  style={{ backgroundColor: team.color || "#84cc16" }}
+                                  className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black shadow-md uppercase shrink-0 border border-slate-300 dark:border-white/10"
+                                  style={{ backgroundColor: team.color || "#84cc16", color: getContrastTextColor(team.color || "#84cc16") }}
                                 >
                                   {(team.shortName || team.teamName || "ECH").substring(0, 3).toUpperCase()}
                                 </div>
@@ -477,8 +478,8 @@ export function ChampionshipPublicClientView({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 flex-1 min-w-0">
                           <div
-                            className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black text-white shrink-0"
-                            style={{ backgroundColor: m.homeTeam?.color || "#1e293b" }}
+                            className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black shrink-0 border border-slate-300 dark:border-slate-700"
+                            style={{ backgroundColor: m.homeTeam?.color || "#1e293b", color: getContrastTextColor(m.homeTeam?.color || "#1e293b") }}
                           >
                             {(m.homeTeam?.shortName || m.homeTeam?.name || "GAZ").substring(0, 3).toUpperCase()}
                           </div>
@@ -496,8 +497,8 @@ export function ChampionshipPublicClientView({
                             {m.awayTeam?.name || "Echipă Oaspete"}
                           </span>
                           <div
-                            className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black text-white shrink-0"
-                            style={{ backgroundColor: m.awayTeam?.color || "#1e293b" }}
+                            className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black shrink-0 border border-slate-300 dark:border-slate-700"
+                            style={{ backgroundColor: m.awayTeam?.color || "#1e293b", color: getContrastTextColor(m.awayTeam?.color || "#1e293b") }}
                           >
                             {(m.awayTeam?.shortName || m.awayTeam?.name || "OAS").substring(0, 3).toUpperCase()}
                           </div>

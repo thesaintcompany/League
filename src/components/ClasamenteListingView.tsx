@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
+import { getContrastTextColor } from "@/lib/utils";
 
 /* ── Sport metadata (mirror of SportContext, inlined to avoid provider dependency) ── */
 const SPORT_META: Record<string, { icon: string; accent: string; badgeBg: string; label: string }> = {
@@ -362,8 +363,8 @@ export function ClasamenteListingView({ championships, topTeams = [], liveMatche
                       {/* Home team */}
                       <div className="flex-1 min-w-0 text-center space-y-2">
                         <div
-                          className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center text-xs font-black text-white shadow-md border border-white/10"
-                          style={{ backgroundColor: match.homeTeam.color || "#334155" }}
+                          className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center text-xs font-black shadow-md border border-slate-300 dark:border-white/10"
+                          style={{ backgroundColor: match.homeTeam.color || "#334155", color: getContrastTextColor(match.homeTeam.color || "#334155") }}
                         >
                           {match.homeTeam.logoUrl ? (
                             <img src={match.homeTeam.logoUrl} alt={match.homeTeam.name} className="w-full h-full object-cover rounded-xl" />
@@ -392,8 +393,8 @@ export function ClasamenteListingView({ championships, topTeams = [], liveMatche
                       {/* Away team */}
                       <div className="flex-1 min-w-0 text-center space-y-2">
                         <div
-                          className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center text-xs font-black text-white shadow-md border border-white/10"
-                          style={{ backgroundColor: match.awayTeam.color || "#334155" }}
+                          className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center text-xs font-black shadow-md border border-slate-300 dark:border-white/10"
+                          style={{ backgroundColor: match.awayTeam.color || "#334155", color: getContrastTextColor(match.awayTeam.color || "#334155") }}
                         >
                           {match.awayTeam.logoUrl ? (
                             <img src={match.awayTeam.logoUrl} alt={match.awayTeam.name} className="w-full h-full object-cover rounded-xl" />

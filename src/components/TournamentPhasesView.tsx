@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { getContrastTextColor } from "@/lib/utils";
 
 export interface TournamentTeamStanding {
   id: string;
@@ -106,22 +107,22 @@ export function TournamentPhasesView({
             <tbody>
               {initialStandings.map((row: any, idx: number) => (
                 <tr key={row.id || idx} className="border-t border-slate-200 dark:border-slate-800">
-                  <td className="px-4 py-3 font-bold text-sm">{idx + 1}</td>
+                  <td className="px-4 py-3 font-bold text-sm text-slate-900 dark:text-white">{idx + 1}</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div
-                        className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black text-white shrink-0"
-                        style={{ backgroundColor: row.color || "#1e293b" }}
+                        className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black shrink-0"
+                        style={{ backgroundColor: row.color || "#1e293b", color: getContrastTextColor(row.color || "#1e293b") }}
                       >
                         {(row.shortName || row.name || "E").substring(0, 2).toUpperCase()}
                       </div>
-                      <span className="font-bold text-sm truncate">{row.name}</span>
+                      <span className="font-bold text-sm truncate text-slate-900 dark:text-white">{row.name}</span>
                     </div>
                   </td>
-                  <td className="px-3 py-3 text-center text-sm">{row.played || 0}</td>
-                  <td className="px-3 py-3 text-center text-sm">{row.won || 0}</td>
-                  <td className="px-3 py-3 text-center text-sm">{row.drawn || 0}</td>
-                  <td className="px-3 py-3 text-center text-sm">{row.lost || 0}</td>
+                  <td className="px-3 py-3 text-center text-sm text-slate-700 dark:text-slate-300">{row.played || 0}</td>
+                  <td className="px-3 py-3 text-center text-sm text-slate-700 dark:text-slate-300">{row.won || 0}</td>
+                  <td className="px-3 py-3 text-center text-sm text-slate-700 dark:text-slate-300">{row.drawn || 0}</td>
+                  <td className="px-3 py-3 text-center text-sm text-slate-700 dark:text-slate-300">{row.lost || 0}</td>
                   <td className="px-3 py-3 text-center font-black text-sm text-lime-600 dark:text-lime-400">{row.points || 0}</td>
                 </tr>
               ))}

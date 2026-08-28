@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { getContrastTextColor } from "@/lib/utils";
 
 export interface StandingRow {
   position: number;
@@ -84,8 +85,8 @@ export function StandingsTable({ standings, title = "Clasament General" }: Stand
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-3">
                       <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs text-white shadow-sm shrink-0"
-                        style={{ backgroundColor: row.color || "#1e293b" }}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs shadow-sm shrink-0"
+                        style={{ backgroundColor: row.color || "#1e293b", color: getContrastTextColor(row.color || "#1e293b") }}
                       >
                         {row.shortName || row.teamName.substring(0, 3).toUpperCase()}
                       </div>

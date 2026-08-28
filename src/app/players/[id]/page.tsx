@@ -88,8 +88,9 @@ export default async function PublicPlayerDetailPage({
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md">
-                <span className="material-symbols-outlined">star</span>   ULTIMATE ATLET
+              <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[10px] uppercase font-label tracking-widest shadow-md flex items-center gap-1">
+                <span className="material-symbols-outlined text-xs">star</span>
+                <span>ULTIMATE ATLET</span>
               </span>
               <span className="px-3 py-1 rounded-full bg-white/10 text-white font-bold text-xs font-label">
                 #{player.number || 10} • {player.position || "Atacant Central"}
@@ -214,9 +215,11 @@ export default async function PublicPlayerDetailPage({
 
             {/* Social Connectivity */}
             <div className="card p-6 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-3xl space-y-3 shadow-md">
-              <h4 className="font-headline font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider">
-                Rețele Sociale  e
-              </h4>
+              <div className="flex justify-between items-center">
+                <h4 className="font-headline font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider">
+                  Rețele Sociale
+                </h4>
+              </div>
               <div className="flex gap-2">
                 <a
                   href="https://instagram.com"
@@ -224,7 +227,8 @@ export default async function PublicPlayerDetailPage({
                   rel="noreferrer"
                   className="flex-1 py-2.5 bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-400 hover:bg-pink-100 dark:hover:bg-pink-900/50 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition border border-pink-200/60 dark:border-pink-800/40"
                 >
-                  <span><span className="material-symbols-outlined align-middle text-sm">photo_camera</span></span> Instagram
+                  <span className="material-symbols-outlined text-sm">photo_camera</span>
+                  <span>Instagram</span>
                 </a>
                 <a
                   href="https://x.com"
@@ -232,7 +236,8 @@ export default async function PublicPlayerDetailPage({
                   rel="noreferrer"
                   className="flex-1 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold font-label flex items-center justify-center gap-1.5 transition border border-slate-200 dark:border-slate-700"
                 >
-                  <span>𝕏</span> Twitter / X
+                  <span className="font-bold">𝕏</span>
+                  <span>Twitter / X</span>
                 </a>
               </div>
             </div>
@@ -240,125 +245,218 @@ export default async function PublicPlayerDetailPage({
 
           {/* Right Column: Detailed Attributes & Match Statistics (7 cols) */}
           <div className="lg:col-span-7 space-y-8">
-            {/* Bento Season Telemetry */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="card p-5 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-3xl text-center shadow-md dark:shadow-xl hover:shadow-lg transition">
-                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">
-                  Goluri Înscrise
-                </span>
-                <span className="text-3xl sm:text-4xl font-black data-font text-amber-500 dark:text-amber-400 mt-1 block">
-                  {player.goals || 0} <span className="material-symbols-outlined align-middle">sports_soccer</span>
-                </span>
+            {/* Bento Season Telemetry Cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4">
+              {/* Goluri Înscrise */}
+              <div className="relative overflow-hidden p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm hover:shadow-md transition-all group">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-amber-500" />
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[10px] font-label font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Goluri Marcate
+                  </span>
+                  <div className="w-8 h-8 rounded-xl bg-red-500/10 text-red-500 dark:text-red-400 flex items-center justify-center border border-red-500/20 group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-base">sports_soccer</span>
+                  </div>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl sm:text-4xl font-black font-mono text-slate-900 dark:text-white">
+                    {player.goals || 0}
+                  </span>
+                  <span className="text-[10px] font-label text-slate-400 font-bold">goluri</span>
+                </div>
               </div>
 
-              <div className="card p-5 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-3xl text-center shadow-md dark:shadow-xl hover:shadow-lg transition">
-                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">
-                  Pase de Gol
-                </span>
-                <span className="text-3xl sm:text-4xl font-black data-font text-lime-600 dark:text-lime-400 mt-1 block">
-                  {player.assists || 6} 
-                </span>
+              {/* Pase de Gol */}
+              <div className="relative overflow-hidden p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm hover:shadow-md transition-all group">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-lime-400 to-emerald-500" />
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[10px] font-label font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Pase de Gol
+                  </span>
+                  <div className="w-8 h-8 rounded-xl bg-lime-400/10 text-lime-600 dark:text-lime-400 flex items-center justify-center border border-lime-400/20 group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-base">alt_route</span>
+                  </div>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl sm:text-4xl font-black font-mono text-slate-900 dark:text-white">
+                    {player.assists || 6}
+                  </span>
+                  <span className="text-[10px] font-label text-slate-400 font-bold">asisturi</span>
+                </div>
               </div>
 
-              <div className="card p-5 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-3xl text-center shadow-md dark:shadow-xl hover:shadow-lg transition">
-                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">
-                  Meciuri Jucate
-                </span>
-                <span className="text-3xl sm:text-4xl font-black data-font text-slate-900 dark:text-white mt-1 block">
-                  {player.matchesCount || 18}
-                </span>
+              {/* Meciuri Jucate */}
+              <div className="relative overflow-hidden p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm hover:shadow-md transition-all group">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-400 to-blue-600" />
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[10px] font-label font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Meciuri Jucate
+                  </span>
+                  <div className="w-8 h-8 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center border border-sky-500/20 group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-base">stadium</span>
+                  </div>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl sm:text-4xl font-black font-mono text-slate-900 dark:text-white">
+                    {player.matchesCount || 18}
+                  </span>
+                  <span className="text-[10px] font-label text-slate-400 font-bold">partide</span>
+                </div>
               </div>
 
-              <div className="card p-5 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-3xl text-center shadow-md dark:shadow-xl hover:shadow-lg transition">
-                <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">
-                  Rating
-                </span>
-                <span className="text-3xl sm:text-4xl font-black data-font text-amber-500 dark:text-amber-400 mt-1 block">
-                  {fut.futRating} <span className="material-symbols-outlined align-middle">star</span>
-                </span>
+              {/* Rating */}
+              <div className="relative overflow-hidden p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm hover:shadow-md transition-all group">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 to-yellow-500" />
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[10px] font-label font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Rating General
+                  </span>
+                  <div className="w-8 h-8 rounded-xl bg-amber-400/10 text-amber-500 dark:text-amber-400 flex items-center justify-center border border-amber-400/20 group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-base">workspace_premium</span>
+                  </div>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl sm:text-4xl font-black font-mono text-amber-500 dark:text-amber-400">
+                    {fut.futRating}
+                  </span>
+                  <span className="text-[10px] font-label text-slate-400 font-bold">/ 99</span>
+                </div>
               </div>
             </div>
 
             {/* Detailed Attribute Breakdown Bars */}
-            <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-[2rem] space-y-6 shadow-xl dark:shadow-2xl">
-              <div className="flex items-center gap-3.5 pb-4 border-b border-slate-200 dark:border-slate-800">
-                <div className="w-11 h-11 rounded-2xl bg-amber-400/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-2xl border border-amber-400/40 shadow-inner">
-                  <span className="material-symbols-outlined align-middle text-sm">bolt</span>
+            <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 space-y-6 shadow-md dark:shadow-xl">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800/80">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-amber-400/10 text-amber-500 dark:text-amber-400 flex items-center justify-center border border-amber-400/20 shadow-sm">
+                    <span className="material-symbols-outlined text-xl">bolt</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-headline font-black text-slate-900 dark:text-white uppercase tracking-tight">
+                      Atribute Tehnice &amp; Parametri de Performanță
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
+                      Statistici calibrate conform standardelor de elită Pro Ligue
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-lg sm:text-xl font-bold font-headline text-slate-900 dark:text-white">
-                    Atribute Tehnice &amp; Parametri de Performanță
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
-                    Statistici calibrate conform standardelor  e de elită
-                  </p>
-                </div>
+                <span className="hidden sm:inline-flex px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-mono font-bold uppercase border border-slate-200 dark:border-slate-700">
+                  Telemetry v2.4
+                </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
                 {/* Finishing */}
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-xs font-label">
-                    <span className="text-slate-700 dark:text-slate-300 font-bold">Finalizare &amp; Șut (Finishing)</span>
-                    <span className="text-amber-600 dark:text-amber-400 font-black">{fut.finishing} / 99</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs font-label">
+                    <span className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-200">
+                      <span className="material-symbols-outlined text-sm text-red-500">sports_score</span>
+                      Finalizare &amp; Șut (Finishing)
+                    </span>
+                    <span className="font-mono font-black text-slate-900 dark:text-white">
+                      {fut.finishing} <span className="text-[10px] text-slate-400 font-normal">/ 99</span>
+                    </span>
                   </div>
-                  <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
-                    <div className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full" style={{ width: `${fut.finishing}%` }}></div>
+                  <div className="h-3 rounded-full bg-slate-100 dark:bg-slate-800/80 p-0.5 overflow-hidden border border-slate-200/80 dark:border-slate-700/60">
+                    <div
+                      className="h-full bg-gradient-to-r from-red-500 to-amber-500 rounded-full transition-all duration-500 shadow-sm"
+                      style={{ width: `${fut.finishing}%` }}
+                    />
                   </div>
                 </div>
 
                 {/* Sprint Speed */}
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-xs font-label">
-                    <span className="text-slate-700 dark:text-slate-300 font-bold">Viteză Maximă (Sprint Speed)</span>
-                    <span className="text-lime-600 dark:text-lime-400 font-black">{fut.sprintSpeed} / 99</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs font-label">
+                    <span className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-200">
+                      <span className="material-symbols-outlined text-sm text-lime-500">speed</span>
+                      Viteză Maximă (Sprint Speed)
+                    </span>
+                    <span className="font-mono font-black text-slate-900 dark:text-white">
+                      {fut.sprintSpeed} <span className="text-[10px] text-slate-400 font-normal">/ 99</span>
+                    </span>
                   </div>
-                  <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
-                    <div className="h-full bg-gradient-to-r from-lime-400 to-lime-500 rounded-full" style={{ width: `${fut.sprintSpeed}%` }}></div>
+                  <div className="h-3 rounded-full bg-slate-100 dark:bg-slate-800/80 p-0.5 overflow-hidden border border-slate-200/80 dark:border-slate-700/60">
+                    <div
+                      className="h-full bg-gradient-to-r from-lime-400 to-emerald-500 rounded-full transition-all duration-500 shadow-sm"
+                      style={{ width: `${fut.sprintSpeed}%` }}
+                    />
                   </div>
                 </div>
 
                 {/* Agility */}
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-xs font-label">
-                    <span className="text-slate-700 dark:text-slate-300 font-bold">Agilitate &amp; Dribling</span>
-                    <span className="text-blue-600 dark:text-blue-400 font-black">{fut.agility} / 99</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs font-label">
+                    <span className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-200">
+                      <span className="material-symbols-outlined text-sm text-sky-500">directions_run</span>
+                      Agilitate &amp; Dribling
+                    </span>
+                    <span className="font-mono font-black text-slate-900 dark:text-white">
+                      {fut.agility} <span className="text-[10px] text-slate-400 font-normal">/ 99</span>
+                    </span>
                   </div>
-                  <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
-                    <div className="h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full" style={{ width: `${fut.agility}%` }}></div>
+                  <div className="h-3 rounded-full bg-slate-100 dark:bg-slate-800/80 p-0.5 overflow-hidden border border-slate-200/80 dark:border-slate-700/60">
+                    <div
+                      className="h-full bg-gradient-to-r from-sky-400 to-blue-600 rounded-full transition-all duration-500 shadow-sm"
+                      style={{ width: `${fut.agility}%` }}
+                    />
                   </div>
                 </div>
 
                 {/* Shot Power */}
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-xs font-label">
-                    <span className="text-slate-700 dark:text-slate-300 font-bold">Forță Șut (Shot Power)</span>
-                    <span className="text-amber-600 dark:text-amber-400 font-black">{fut.shotPower} / 99</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs font-label">
+                    <span className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-200">
+                      <span className="material-symbols-outlined text-sm text-amber-500">local_fire_department</span>
+                      Forță Șut (Shot Power)
+                    </span>
+                    <span className="font-mono font-black text-slate-900 dark:text-white">
+                      {fut.shotPower} <span className="text-[10px] text-slate-400 font-normal">/ 99</span>
+                    </span>
                   </div>
-                  <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
-                    <div className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full" style={{ width: `${fut.shotPower}%` }}></div>
+                  <div className="h-3 rounded-full bg-slate-100 dark:bg-slate-800/80 p-0.5 overflow-hidden border border-slate-200/80 dark:border-slate-700/60">
+                    <div
+                      className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500 shadow-sm"
+                      style={{ width: `${fut.shotPower}%` }}
+                    />
                   </div>
                 </div>
 
                 {/* Vision */}
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-xs font-label">
-                    <span className="text-slate-700 dark:text-slate-300 font-bold">Viziune &amp; Pase Decisive</span>
-                    <span className="text-purple-600 dark:text-purple-400 font-black">{fut.vision} / 99</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs font-label">
+                    <span className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-200">
+                      <span className="material-symbols-outlined text-sm text-purple-500">visibility</span>
+                      Viziune &amp; Pase Decisive
+                    </span>
+                    <span className="font-mono font-black text-slate-900 dark:text-white">
+                      {fut.vision} <span className="text-[10px] text-slate-400 font-normal">/ 99</span>
+                    </span>
                   </div>
-                  <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
-                    <div className="h-full bg-gradient-to-r from-purple-400 to-purple-500 rounded-full" style={{ width: `${fut.vision}%` }}></div>
+                  <div className="h-3 rounded-full bg-slate-100 dark:bg-slate-800/80 p-0.5 overflow-hidden border border-slate-200/80 dark:border-slate-700/60">
+                    <div
+                      className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full transition-all duration-500 shadow-sm"
+                      style={{ width: `${fut.vision}%` }}
+                    />
                   </div>
                 </div>
 
                 {/* Stamina */}
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-xs font-label">
-                    <span className="text-slate-700 dark:text-slate-300 font-bold">Rezistență Fizică (Stamina)</span>
-                    <span className="text-lime-600 dark:text-lime-400 font-black">{fut.stamina} / 99</span>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs font-label">
+                    <span className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-200">
+                      <span className="material-symbols-outlined text-sm text-teal-500">favorite</span>
+                      Rezistență Fizică (Stamina)
+                    </span>
+                    <span className="font-mono font-black text-slate-900 dark:text-white">
+                      {fut.stamina} <span className="text-[10px] text-slate-400 font-normal">/ 99</span>
+                    </span>
                   </div>
-                  <div className="h-2.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200/60 dark:border-slate-700/60">
-                    <div className="h-full bg-gradient-to-r from-lime-400 to-lime-500 rounded-full" style={{ width: `${fut.stamina}%` }}></div>
+                  <div className="h-3 rounded-full bg-slate-100 dark:bg-slate-800/80 p-0.5 overflow-hidden border border-slate-200/80 dark:border-slate-700/60">
+                    <div
+                      className="h-full bg-gradient-to-r from-teal-400 to-emerald-600 rounded-full transition-all duration-500 shadow-sm"
+                      style={{ width: `${fut.stamina}%` }}
+                    />
                   </div>
                 </div>
               </div>
@@ -369,7 +467,7 @@ export default async function PublicPlayerDetailPage({
               <div className="flex justify-between items-center pb-2 border-b border-slate-200 dark:border-slate-800">
                 <h3 className="text-lg font-bold font-headline text-slate-900 dark:text-white flex items-center gap-2">
                   <span className="material-symbols-outlined text-amber-500 dark:text-amber-400">sports_soccer</span>
-                  Meciuri  e &amp; Rapoarte
+                  Meciuri Oficiale &amp; Rapoarte
                 </h3>
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-label font-bold">
                   {matches.length} Partide
@@ -407,7 +505,7 @@ export default async function PublicPlayerDetailPage({
 
                       <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
                         <span className="text-[11px] text-slate-500 dark:text-slate-400 font-label">
-                          {m.venue || "Arena  ă"}
+                          {m.venue || "Arena Oficială"}
                         </span>
                         <Link
                           href={`/matches/${m.id}/report`}
