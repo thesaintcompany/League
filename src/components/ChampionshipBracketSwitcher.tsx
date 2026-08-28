@@ -79,6 +79,14 @@ export function ChampionshipBracketSwitcher({
                 <Link
                   key={c.id}
                   href={`/brackets?id=${c.id}`}
+                  onClick={() => {
+                    if (c.county && typeof window !== "undefined") {
+                      try {
+                        localStorage.setItem("selected_county", c.county);
+                        document.cookie = `selected_county=${encodeURIComponent(c.county)}; path=/; max-age=31536000; SameSite=Lax`;
+                      } catch (e) {}
+                    }
+                  }}
                   className={`px-3 py-1.5 rounded-xl text-xs font-label font-bold transition-all truncate max-w-[140px] ${
                     isSelected
                       ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
@@ -96,7 +104,17 @@ export function ChampionshipBracketSwitcher({
           <div className="relative flex-1 sm:flex-initial sm:w-64">
             <select
               value={currentChampionshipId || ""}
-              onChange={(e) => router.push(`/brackets?id=${e.target.value}`)}
+              onChange={(e) => {
+                const targetId = e.target.value;
+                const found = championships.find((item) => item.id === targetId);
+                if (found?.county && typeof window !== "undefined") {
+                  try {
+                    localStorage.setItem("selected_county", found.county);
+                    document.cookie = `selected_county=${encodeURIComponent(found.county)}; path=/; max-age=31536000; SameSite=Lax`;
+                  } catch (err) {}
+                }
+                router.push(`/brackets?id=${targetId}`);
+              }}
               aria-label="Alege alt campionat"
               className="w-full appearance-none bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 pl-3.5 pr-9 py-2.5 rounded-2xl text-xs font-headline font-bold text-slate-900 dark:text-white focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition shadow-sm cursor-pointer"
             >

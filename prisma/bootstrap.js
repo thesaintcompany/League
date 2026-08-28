@@ -104,23 +104,10 @@ const SEEDS = [
 async function ensureUser(userData) {
   if (!userData.email) return null;
   const existing = await prisma.user.findUnique({ where: { email: userData.email } });
-  const passwordHash = await hashPassword(userData.password);
   if (existing) {
-    const updated = await prisma.user.update({
-      where: { id: existing.id },
-      data: {
-        name: userData.name,
-        passwordHash,
-        role: userData.role || "organizer",
-        position: userData.position,
-        jerseyNumber: userData.jerseyNumber,
-        preferredFoot: userData.preferredFoot,
-        refereeBadge: userData.refereeBadge,
-        experienceYears: userData.experienceYears,
-      },
-    });
-    return updated;
+    return existing;
   }
+  const passwordHash = await hashPassword(userData.password);
   const user = await prisma.user.create({
     data: {
       email: userData.email,
@@ -449,21 +436,7 @@ async function ensureReferees() {
 
   for (const ref of REFEREES_30) {
     const existing = await prisma.user.findUnique({ where: { email: ref.email } });
-    if (existing) {
-      await prisma.user.update({
-        where: { id: existing.id },
-        data: {
-          name: ref.name,
-          role: "referee",
-          refereeBadge: ref.refereeBadge,
-          experienceYears: ref.experienceYears,
-          phone: ref.phone,
-          bio: ref.bio,
-          image: ref.image,
-          coverPhotoUrl: ref.coverPhotoUrl,
-        },
-      });
-    } else {
+    if (!existing) {
       await prisma.user.create({
         data: {
           email: ref.email,

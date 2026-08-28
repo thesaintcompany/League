@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -13,7 +14,7 @@ export const dynamic = "force-dynamic";
 export default async function PublicBracketsPage({
   searchParams,
 }: {
-  searchParams?: { id?: string; code?: string };
+  searchParams?: { id?: string; code?: string; county?: string };
 }) {
   const session = await getServerSession(authOptions);
   const currentUserId = (session?.user as any)?.id;
@@ -72,8 +73,15 @@ export default async function PublicBracketsPage({
 
   // 2. Fallback: ONLY when NO direct link was specified in URL
   if (!championship && !isDirectLink) {
-    championship =
-      (await prisma.championship.findFirst({
+    const cookieStore = cookies();
+    const cookieCounty = cookieStore.get("selected_county")?.value;
+    const targetCounty = searchParams?.county?.trim() || (cookieCounty ? decodeURIComponent(cookieCounty).trim() : null);
+
+    if (targetCounty) {
+      const cleanTarget = targetCounty.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+      // Find published championships and match county
+      const candidates = await prisma.championship.findMany({
         where: { isBracketPublished: true },
         include: {
           teams: {
@@ -86,20 +94,67 @@ export default async function PublicBracketsPage({
           },
         },
         orderBy: { updatedAt: "desc" },
-      })) ||
-      (await prisma.championship.findFirst({
-        include: {
-          teams: {
-            include: { players: true },
-            orderBy: { name: "asc" },
+      });
+
+      championship = candidates.find((c) => {
+        if (!c.county) return false;
+        const norm = c.county.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        return norm === cleanTarget || norm.includes(cleanTarget) || cleanTarget.includes(norm);
+      }) || null;
+
+      if (!championship) {
+        const allCandidates = await prisma.championship.findMany({
+          include: {
+            teams: {
+              include: { players: true },
+              orderBy: { name: "asc" },
+            },
+            matches: {
+              include: { homeTeam: true, awayTeam: true },
+              orderBy: [{ round: "asc" }, { scheduledAt: "asc" }],
+            },
           },
-          matches: {
-            include: { homeTeam: true, awayTeam: true },
-            orderBy: [{ round: "asc" }, { scheduledAt: "asc" }],
+          orderBy: { updatedAt: "desc" },
+        });
+
+        championship = allCandidates.find((c) => {
+          if (!c.county) return false;
+          const norm = c.county.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+          return norm === cleanTarget || norm.includes(cleanTarget) || cleanTarget.includes(norm);
+        }) || null;
+      }
+    }
+
+    if (!championship) {
+      championship =
+        (await prisma.championship.findFirst({
+          where: { isBracketPublished: true },
+          include: {
+            teams: {
+              include: { players: true },
+              orderBy: { name: "asc" },
+            },
+            matches: {
+              include: { homeTeam: true, awayTeam: true },
+              orderBy: [{ round: "asc" }, { scheduledAt: "asc" }],
+            },
           },
-        },
-        orderBy: { updatedAt: "desc" },
-      }));
+          orderBy: { updatedAt: "desc" },
+        })) ||
+        (await prisma.championship.findFirst({
+          include: {
+            teams: {
+              include: { players: true },
+              orderBy: { name: "asc" },
+            },
+            matches: {
+              include: { homeTeam: true, awayTeam: true },
+              orderBy: [{ round: "asc" }, { scheduledAt: "asc" }],
+            },
+          },
+          orderBy: { updatedAt: "desc" },
+        }));
+    }
   }
 
   // Direct link specified but championship code was not found -> Clean Not Found Screen
@@ -290,7 +345,7 @@ export default async function PublicBracketsPage({
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2.5 sm:gap-3">
+          <div className="hidden md:flex flex-wrap gap-2.5 sm:gap-3">
             <Link
               href={championship?.id ? `/clasamente?id=${championship.id}` : "/clasamente"}
               className="px-4 py-2.5 sm:py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md flex items-center gap-1.5 active:scale-95"

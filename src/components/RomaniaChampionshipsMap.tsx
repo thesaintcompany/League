@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { ROMANIAN_COUNTIES } from "@/lib/constants";
@@ -69,6 +69,25 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
   const [activeTab, setActiveTab] = useState<"championships" | "venues">("championships");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedScope, setSelectedScope] = useState<string>("all"); // "all" | "national" | "judetean" | "oras"
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("selected_county");
+      if (saved) {
+        setSelectedCounty(saved);
+      }
+    }
+  }, []);
+
+  const handleCountySelect = (county: string) => {
+    setSelectedCounty(county);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("selected_county", county);
+        document.cookie = `selected_county=${encodeURIComponent(county)}; path=/; max-age=31536000; SameSite=Lax`;
+      } catch (e) {}
+    }
+  };
 
   const createTournamentHref = session?.user
     ? "/dashboard/new"
@@ -249,7 +268,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
               <button
                 key={cName}
                 type="button"
-                onClick={() => setSelectedCounty(cName)}
+                onClick={() => handleCountySelect(cName)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-headline font-bold uppercase tracking-wider transition-all shrink-0 whitespace-nowrap flex items-center gap-1.5 active:scale-95 ${isSel
                   ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-md ring-2 ring-lime-400/50 scale-105"
                   : "bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 border border-slate-200 dark:border-slate-700/60"
@@ -291,7 +310,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
             <InteractiveRomaniaSvgMap
               selectedCounty={selectedCounty}
               onSelectCounty={(county) => {
-                setSelectedCounty(county);
+                handleCountySelect(county);
               }}
               getCountyStats={getCountyStats}
             />
@@ -308,7 +327,7 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                     <button
                       key={cName}
                       type="button"
-                      onClick={() => setSelectedCounty(cName)}
+                      onClick={() => handleCountySelect(cName)}
                       className={`px-2.5 py-1 rounded-xl text-xs font-bold font-label transition fluid-press ${isSel
                         ? "bg-lime-400 text-slate-950 font-black shadow-sm"
                         : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-lime-100 dark:hover:bg-slate-700"

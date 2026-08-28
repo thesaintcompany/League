@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ligue-app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/data/league.db
+      - NEXTAUTH_URL=https://ligue.ro
+      - NEXTAUTH_SECRET=dev-secret-change-me-please-this-is-not-secure-change-in-production-min-32
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    volumes:
+      - ligue_data:/app/data
+
+volumes:
+  ligue_data:
+    driver: local
