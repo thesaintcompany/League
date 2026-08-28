@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Player {
   id: string;
@@ -84,7 +85,12 @@ export function TeamManagerPanel({
   defaultTab = "roster",
 }: TeamManagerPanelProps) {
   const [team, setTeam] = useState<TeamData>(initialTeam);
-  const [activeTab, setActiveTab] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "payments">(defaultTab);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeTab = (searchParams.get("tab") as "roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "payments") || defaultTab;
+  function setActiveTab(tab: string) {
+    router.push(`/dashboard/team?tab=${tab}`, { scroll: false });
+  }
 
   // Edit Team State
   const [teamName, setTeamName] = useState(team.name);
@@ -122,6 +128,9 @@ export function TeamManagerPanel({
 
   const [busy, setBusy] = useState(false);
   const [statusMsg, setStatusMsg] = useState<string | null>(null);
+
+  // Inline hero editing state
+  const [editingHero, setEditingHero] = useState(false);
 
   // Team creation state
   const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
@@ -564,41 +573,182 @@ export function TeamManagerPanel({
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10">
           <div className="flex items-center gap-4">
-            <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center font-headline font-black text-2xl text-white shadow-xl border-2 border-white/20"
-              style={{ backgroundColor: team.color || "#84cc16" }}
-            >
-              {team.shortName || team.name.substring(0, 3).toUpperCase()}
-            </div>
-            <div>
+            {/* Color swatch / logo - clickable in edit mode */}
+            {editingHero ? (
+              <label className="w-16 h-16 rounded-2xl flex items-center justify-center font-headline font-black text-2xl text-white shadow-xl border-2 border-lime-400 cursor-pointer relative overflow-hidden" style={{ backgroundColor: color }}>
+                {logoUrl ? (
+                  <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                ) : (
+                  <>{shortName || team.name.substring(0, 3).toUpperCase()}</>
+                )}
+                <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="absolute inset-0 opacity-0 cursor-pointer" title="Schimba culoarea" />
+              </label>
+            ) : (
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center font-headline font-black text-2xl text-white shadow-xl border-2 border-white/20 overflow-hidden"
+                style={{ backgroundColor: team.color || "#84cc16" }}
+              >
+                {team.logoUrl ? (
+                  <img src={team.logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                ) : (
+                  <>{team.shortName || team.name.substring(0, 3).toUpperCase()}</>
+                )}
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="px-3 py-0.5 rounded-full bg-lime-400 text-slate-950 font-black text-[10px] uppercase font-label">
                   <span className="material-symbols-outlined text-xs align-middle">work</span> PANOU MANAGER ECHIPĂ
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-lime-400 text-xs font-label font-bold">
-                  {team.players.length} Jucători în Lot
+                  {team.players.length} Jucatori in Lot
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-slate-300 text-xs font-label">
-                  {team.championship?.name || "Liga Pro România"}
+                  {team.championship?.name || "Liga Pro Romania"}
                 </span>
               </div>
-              <h1 className="text-2xl sm:text-4xl font-black font-headline uppercase tracking-tight text-white mt-1">
-                {team.name}
-              </h1>
-              <p className="text-xs text-slate-400 font-label">
-                Arenă Gazdă: <strong className="text-slate-200">{team.homeArena || "Stadionul Dan Păltinișanu"}</strong> • Formație: <strong className="text-lime-400">{team.formation || "4-3-3"}</strong>
-              </p>
+
+              {editingHero ? (
+                <div className="mt-2 space-y-3">
+                  {/* Inline: Nume Club */}
+                  <div>
+                    <label className="text-[10px] font-bold font-label text-slate-400 uppercase block mb-1">Nume Club</label>
+                    <input
+                      value={teamName}
+                      onChange={(e) => setTeamName(e.target.value)}
+                      className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-lg font-black font-headline uppercase text-white focus:outline-none focus:border-lime-400 transition"
+                      placeholder="Numele echipei tale"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {/* Prescurtare */}
+                    <div>
+                      <label className="text-[10px] font-bold font-label text-slate-400 uppercase block mb-1">Prescurtare</label>
+                      <input
+                        maxLength={5}
+                        value={shortName}
+                        onChange={(e) => setShortName(e.target.value.toUpperCase())}
+                        className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white font-mono uppercase focus:outline-none focus:border-lime-400"
+                      />
+                    </div>
+
+                    {/* Arena */}
+                    <div className="col-span-2 sm:col-span-2">
+                      <label className="text-[10px] font-bold font-label text-slate-400 uppercase block mb-1">Arena Gazda</label>
+                      <input
+                        value={homeArena}
+                        onChange={(e) => setHomeArena(e.target.value)}
+                        placeholder="ex: Arena Sporturilor"
+                        className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-lime-400"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Formatie */}
+                    <div>
+                      <label className="text-[10px] font-bold font-label text-slate-400 uppercase block mb-1">Formatie</label>
+                      <select
+                        value={formation}
+                        onChange={(e) => setFormation(e.target.value)}
+                        className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-lime-400"
+                      >
+                        <option value="4-3-3">4-3-3</option>
+                        <option value="4-4-2">4-4-2</option>
+                        <option value="3-5-2">3-5-2</option>
+                        <option value="4-2-3-1">4-2-3-1</option>
+                      </select>
+                    </div>
+
+                    {/* Descriere */}
+                    <div>
+                      <label className="text-[10px] font-bold font-label text-slate-400 uppercase block mb-1">Descriere</label>
+                      <input
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Descriere scurta..."
+                        maxLength={300}
+                        className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-lime-400"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Logo upload */}
+                  <div className="flex items-center gap-3">
+                    <label className="px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-bold text-white cursor-pointer hover:border-lime-400 transition flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-sm">upload</span>
+                      {logoUrl ? "Schimba Logo" : "Incarca Logo"}
+                      <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
+                    </label>
+                    {logoUrl && (
+                      <span className="text-[10px] text-lime-400 font-label">Logo incarcat</span>
+                    )}
+                  </div>
+
+                  {/* Save & Cancel */}
+                  <div className="flex items-center gap-2 pt-1">
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={async (e) => {
+                        await handleSaveTeam(e as any);
+                        setEditingHero(false);
+                      }}
+                      className="px-5 py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95 disabled:opacity-50"
+                    >
+                      <span className="material-symbols-outlined text-sm">save</span>
+                      {busy ? "Se salveaza..." : "Salveaza"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTeamName(team.name);
+                        setShortName(team.shortName || "");
+                        setColor(team.color || "#84cc16");
+                        setDescription(team.description || "");
+                        setFormation(team.formation || "4-3-3");
+                        setHomeArena(team.homeArena || "");
+                        setLogoUrl(team.logoUrl || "");
+                        setEditingHero(false);
+                      }}
+                      className="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase transition border border-slate-700"
+                    >
+                      Anuleaza
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h1 className="text-2xl sm:text-4xl font-black font-headline uppercase tracking-tight text-white mt-1">
+                    {team.name}
+                  </h1>
+                  <p className="text-xs text-slate-400 font-label">
+                    Arena Gazda: <strong className="text-slate-200">{team.homeArena || "Alege un stadion"}</strong> • Formatie: <strong className="text-lime-400">{team.formation || "4-3-3"}</strong>
+                  </p>
+                </>
+              )}
             </div>
           </div>
 
           <div className="flex flex-wrap gap-2.5">
+            {!editingHero && (
+              <button
+                type="button"
+                onClick={() => setEditingHero(true)}
+                className="px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95"
+              >
+                <span className="material-symbols-outlined text-base">edit</span>
+                Editeaza Date Club
+              </button>
+            )}
             <button
               type="button"
               onClick={() => setActiveTab("invites")}
               className="px-4 py-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-lg flex items-center gap-1.5 active:scale-95"
             >
               <span className="material-symbols-outlined text-base">forward_to_inbox</span>
-              Invită Jucător pe Email
+              Invita Jucator pe Email
             </button>
             <button
               type="button"
@@ -606,7 +756,7 @@ export function TeamManagerPanel({
               className="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-label font-bold text-xs uppercase transition border border-slate-700 flex items-center gap-1.5"
             >
               <span className="material-symbols-outlined text-base">sports</span>
-              Așezare Tactică
+              Asezare Tactica
             </button>
           </div>
         </div>
@@ -863,30 +1013,7 @@ export function TeamManagerPanel({
         </div>
       )}
 
-      {/* 2. Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-slate-800 pb-3">
-        {[
-          { id: "roster", label: `Lot Jucători (${team.players.length})`, icon: "groups" },
-          { id: "invites", label: `Invitații Campionate${invitations.length ? ` (${invitations.length})` : ""}`, icon: "mark_email_unread" },
-          { id: "tactics", label: "Tactică & Primul 11", icon: "sports" },
-          { id: "staff", label: "Staff Tehnic & Antrenori", icon: "badge" },
-          { id: "calendar", label: `Calendar Meciuri (${allMatches.length})`, icon: "calendar_month" },
-          { id: "payments", label: "Finanțe & Facturi", icon: "payments" },
-        ].map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            onClick={() => setActiveTab(t.id as any)}
-            className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 border ${activeTab === t.id
-              ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
-              : "bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-white"
-              }`}
-          >
-            <span className="material-symbols-outlined text-base">{t.icon}</span>
-            <span>{t.label}</span>
-          </button>
-        ))}
-      </div>
+      {/* Navigation is handled by the Sidebar — no duplicate tab bar */}
 
       {/* 3. TAB 1: Lot Jucători (Titulari vs Rezerve) */}
       {activeTab === "roster" && (
@@ -1112,137 +1239,10 @@ export function TeamManagerPanel({
         </div>
       )}
 
-      {/* 4. TAB 2: Configurare Club & Așezare Tactică */}
+      {/* 4. TAB 2: Tactic Board */}
       {activeTab === "tactics" && (
-        <form onSubmit={handleSaveTeam} className="space-y-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Left Col: Team Settings Form */}
-            <div className="lg:col-span-6 card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl space-y-6">
-              <h3 className="text-lg font-bold font-headline uppercase text-white pb-3 border-b border-slate-800">
-                Date  e Club
-              </h3>
-
-              <div>
-                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
-                  Nume Club
-                </label>
-                <input
-                  required
-                  value={teamName}
-                  onChange={(e) => setTeamName(e.target.value)}
-                  className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-lime-400"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
-                    Prescurtare (3 litere)
-                  </label>
-                  <input
-                    maxLength={5}
-                    value={shortName}
-                    onChange={(e) => setShortName(e.target.value.toUpperCase())}
-                    className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white font-mono uppercase focus:outline-none focus:border-lime-400"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
-                    Culoare Reprezentativă
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="color"
-                      value={color}
-                      onChange={(e) => setColor(e.target.value)}
-                      className="h-10 w-12 rounded-xl bg-slate-950 border border-slate-800 p-1 cursor-pointer"
-                    />
-                    <span className="text-xs font-mono text-slate-400">{color}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
-                  Descriere echipei
-                </label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="ex: Echipa noastră de fotbal din Timișoara, fondată în 2010..."
-                  maxLength={300}
-                  rows={3}
-                  className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-lime-400 resize-none"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
-                  Arenă / Stadion Gazdă
-                </label>
-                <input
-                  value={homeArena}
-                  onChange={(e) => setHomeArena(e.target.value)}
-                  placeholder="ex: Stadionul Dan Păltinișanu (Timișoara)"
-                  className="w-full p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-none focus:border-lime-400"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
-                  Formație Tactică de Joc
-                </label>
-                <div className="grid grid-cols-4 gap-2">
-                  {["4-3-3", "4-4-2", "3-5-2", "4-2-3-1"].map((f) => (
-                    <button
-                      key={f}
-                      type="button"
-                      onClick={() => setFormation(f)}
-                      className={`p-2.5 rounded-xl border text-xs font-headline font-bold uppercase transition ${formation === f
-                        ? "bg-lime-400 text-slate-950 border-lime-400 shadow-md font-black"
-                        : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700"
-                        }`}
-                    >
-                      {f}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1.5">
-                  Logo Echipa
-                </label>
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl border border-slate-700 bg-slate-950 flex items-center justify-center overflow-hidden">
-                    {logoUrl ? (
-                      <img src={logoUrl} alt="Logo echipa" className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="material-symbols-outlined text-slate-500 text-3xl">image</span>
-                    )}
-                  </div>
-                  <label className="px-4 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs font-bold text-white cursor-pointer hover:border-lime-400 transition">
-                    {logoUrl ? "Schimbă Logo" : "Încarcă Logo"}
-                    <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
-                  </label>
-                </div>
-                <p className="text-[11px] text-slate-500 font-label mt-1">
-                  Format recomandat: PNG sau JPG, dimensiune maximă 5MB.
-                </p>
-              </div>
-
-              <button
-                type="submit"
-                disabled={busy}
-                className="w-full py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg transition active:scale-95"
-              >
-                {busy ? "Se salvează..." : "Salvează Modificările Clubului "}
-              </button>
-            </div>
-
-            {/* Right Col: Virtual Tactical Pitch */}
-            <div className="lg:col-span-6 card p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between space-y-4">
+        <div className="space-y-8">
+          <div className="card p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl flex flex-col justify-between space-y-4">
               <div className="flex justify-between items-center pb-3 border-b border-slate-800">
                 <h3 className="text-base font-bold font-headline uppercase text-white">
                   Tactic Board • {formation}
@@ -1312,9 +1312,8 @@ export function TeamManagerPanel({
                   </div>
                 </div>
               </div>
-            </div>
           </div>
-        </form>
+        </div>
       )}
 
       {/* 5. TAB 3: Invitații Campionate & Jucători */}

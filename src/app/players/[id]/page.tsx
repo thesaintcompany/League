@@ -35,6 +35,8 @@ export default async function PublicPlayerDetailPage({
 }: {
   params: { id: string };
 }) {
+  if (!params?.id) notFound();
+
   const player = await prisma.player.findUnique({
     where: { id: params.id },
     include: {
@@ -48,15 +50,17 @@ export default async function PublicPlayerDetailPage({
 
   if (!player) notFound();
 
-  // Find team matches
-  const matches = await prisma.match.findMany({
-    where: {
-      OR: [{ homeTeamId: player.teamId }, { awayTeamId: player.teamId }],
-    },
-    include: { homeTeam: true, awayTeam: true },
-    orderBy: { scheduledAt: "desc" },
-    take: 6,
-  });
+  // Find team matches safely
+  const matches = player.teamId
+    ? await prisma.match.findMany({
+        where: {
+          OR: [{ homeTeamId: player.teamId }, { awayTeamId: player.teamId }],
+        },
+        include: { homeTeam: true, awayTeam: true },
+        orderBy: { scheduledAt: "desc" },
+        take: 6,
+      })
+    : [];
 
   const fut = calculateFUTStats(player.position, player.rating || 8.8, player.goals || 10);
   const defaultCover =
@@ -163,10 +167,6 @@ export default async function PublicPlayerDetailPage({
                   <img
                     src={defaultAvatar}
                     alt={player.name}
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src =
-                        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80";
-                    }}
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-5">
