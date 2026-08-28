@@ -112,15 +112,15 @@ export function NotificationBell() {
             fetchNotifications();
           }
         }}
-        className="relative p-2 sm:p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition flex items-center justify-center border border-slate-200/80 dark:border-slate-700/60 shadow-sm"
+        className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl transition-all duration-200 active:scale-95 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/60 shadow-sm"
         aria-label="Notificări"
         title="Notificări & Invitații"
       >
-        <span className="material-symbols-outlined text-xl sm:text-2xl">
+        <span className="material-symbols-outlined text-[18px] sm:text-[20px] leading-none">
           {unreadCount > 0 ? "notifications_active" : "notifications"}
         </span>
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 text-white rounded-full text-[10px] font-black flex items-center justify-center border-2 border-white dark:border-slate-950 animate-pulse font-mono shadow-sm">
+          <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-rose-500 text-white rounded-full text-[9px] font-black flex items-center justify-center border-2 border-white dark:border-slate-900 animate-pulse font-mono shadow-sm">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}

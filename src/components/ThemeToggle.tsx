@@ -81,9 +81,9 @@ export function ThemeToggle({ variant = "compact", className = "" }: ThemeToggle
       onClick={toggleTheme}
       title={isDark ? "Comută la Modul Luminos" : "Comută la Modul Întunecat"}
       aria-label="Comută mod noapte / zi"
-      className={`p-2 sm:p-2.5 rounded-xl transition-all duration-200 active:scale-95 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/60 ${className}`}
+      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl transition-all duration-200 active:scale-95 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/60 shadow-sm ${className}`}
     >
-      <span className="text-sm leading-none material-symbols-outlined">{isDark ? "dark_mode" : "light_mode"}</span>
+      <span className="material-symbols-outlined text-[18px] sm:text-[20px] leading-none">{isDark ? "dark_mode" : "light_mode"}</span>
       <span className="sr-only">{isDark ? "Mod Noapte" : "Mod Zi"}</span>
     </button>
   );

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { appSignOut } from "@/lib/logout";
 import { ThemeToggle } from "./ThemeToggle";
+import { NotificationBell } from "./NotificationBell";
 import { BrandLogo } from "./BrandLogo";
 import { SportSubHeader } from "./SportSubHeader";
 import { getCurrentSeasonYear } from "@/lib/season";
@@ -201,8 +202,9 @@ export function PublicHeader({ currentTab, variant, showSportSubHeader }: Public
           ))}
         </nav>
 
-        {/* Right: Theme Toggle & Login / User Profile Controls */}
-        <div ref={rightRef} className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        {/* Right: Notification Bell, Theme Toggle & Login / User Profile Controls */}
+        <div ref={rightRef} className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          <NotificationBell />
           <ThemeToggle />
 
           {session?.user ? (
