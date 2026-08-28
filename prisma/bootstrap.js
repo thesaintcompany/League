@@ -31,9 +31,16 @@ if (process.env.DATABASE_URL.startsWith("file:")) {
     rawPath = path.resolve(cwd, rawPath);
   }
   const dbDir = path.dirname(rawPath);
-  if (dbDir && !fs.existsSync(dbDir)) {
-    fs.mkdirSync(dbDir, { recursive: true });
-    console.log("[bootstrap] ensured db directory: " + dbDir);
+  try {
+    if (dbDir && !fs.existsSync(dbDir)) {
+      fs.mkdirSync(dbDir, { recursive: true });
+      console.log("[bootstrap] ensured db directory: " + dbDir);
+    }
+    if (dbDir && fs.existsSync(dbDir)) {
+      fs.chmodSync(dbDir, 0o777);
+    }
+  } catch (err) {
+    console.warn("[bootstrap] warning on dbDir permissions:", err.message);
   }
 }
 

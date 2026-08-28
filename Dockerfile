@@ -56,16 +56,14 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/bcryptjs ./node_modu
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.bin ./node_modules/.bin
 
 # Set the correct permission for prerender cache
-RUN mkdir -p .next && chown nextjs:nodejs .next
+RUN mkdir -p .next && chown -R nextjs:nodejs .next /app/data && chmod -R 777 /app/data
 RUN chmod +x ./scripts/bootstrap.sh
 
 # Standalone output bundle
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-USER nextjs
-
 EXPOSE 3000
 
 # Run bootstrap (schema push + user seeds) then start Next.js standalone server
-CMD ["sh", "-c", "node prisma/bootstrap.js && node scripts/start.js"]
+CMD ["sh", "-c", "mkdir -p /app/data && (chmod -R 777 /app/data || true) && node prisma/bootstrap.js && node scripts/start.js"]
