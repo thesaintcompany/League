@@ -408,11 +408,11 @@ export function ChampionshipPublicClientView({
                                   className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black text-white shadow-md uppercase shrink-0 border border-white/10"
                                   style={{ backgroundColor: team.color || "#84cc16" }}
                                 >
-                                  {team.shortName.substring(0, 3)}
+                                  {(team.shortName || team.teamName || "ECH").substring(0, 3).toUpperCase()}
                                 </div>
                                 <div>
                                   <span className="font-bold text-slate-900 dark:text-white block tracking-tight">
-                                    {team.teamName}
+                                    {team.teamName || "Echipă"}
                                   </span>
                                   <span className="text-[10px] font-label text-slate-500 dark:text-slate-400 uppercase">
                                     Lot
@@ -478,12 +478,12 @@ export function ChampionshipPublicClientView({
                         <div className="flex items-center gap-2 flex-1 min-w-0">
                           <div
                             className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black text-white shrink-0"
-                            style={{ backgroundColor: m.homeTeam.color }}
+                            style={{ backgroundColor: m.homeTeam?.color || "#1e293b" }}
                           >
-                            {m.homeTeam.shortName}
+                            {(m.homeTeam?.shortName || m.homeTeam?.name || "GAZ").substring(0, 3).toUpperCase()}
                           </div>
                           <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                            {m.homeTeam.name}
+                            {m.homeTeam?.name || "Echipă Gazdă"}
                           </span>
                         </div>
 
@@ -493,13 +493,13 @@ export function ChampionshipPublicClientView({
 
                         <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
                           <span className="text-xs font-bold text-slate-900 dark:text-white truncate text-right">
-                            {m.awayTeam.name}
+                            {m.awayTeam?.name || "Echipă Oaspete"}
                           </span>
                           <div
                             className="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black text-white shrink-0"
-                            style={{ backgroundColor: m.awayTeam.color }}
+                            style={{ backgroundColor: m.awayTeam?.color || "#1e293b" }}
                           >
-                            {m.awayTeam.shortName}
+                            {(m.awayTeam?.shortName || m.awayTeam?.name || "OAS").substring(0, 3).toUpperCase()}
                           </div>
                         </div>
                       </div>
@@ -559,16 +559,16 @@ export function ChampionshipPublicClientView({
                         <div className="flex items-center gap-2">
                           <span
                             className="w-2.5 h-2.5 rounded-full"
-                            style={{ backgroundColor: m.homeTeam.color }}
+                            style={{ backgroundColor: m.homeTeam?.color || "#1e293b" }}
                           ></span>
-                          <span className="truncate max-w-[100px]">{m.homeTeam.name}</span>
+                          <span className="truncate max-w-[100px]">{m.homeTeam?.name || "Echipă"}</span>
                         </div>
                         <span className="text-slate-400 font-mono text-[10px]">VS</span>
                         <div className="flex items-center gap-2">
-                          <span className="truncate max-w-[100px]">{m.awayTeam.name}</span>
+                          <span className="truncate max-w-[100px]">{m.awayTeam?.name || "Echipă"}</span>
                           <span
                             className="w-2.5 h-2.5 rounded-full"
-                            style={{ backgroundColor: m.awayTeam.color }}
+                            style={{ backgroundColor: m.awayTeam?.color || "#1e293b" }}
                           ></span>
                         </div>
                       </div>
@@ -616,14 +616,14 @@ export function ChampionshipPublicClientView({
                         0{idx + 1}
                       </span>
                       <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center font-bold text-xs text-slate-800 dark:text-white shrink-0">
-                        {player.name[0]}
+                        {(player.name || "P")[0]}
                       </div>
                       <div>
                         <span className="font-bold text-xs text-slate-900 dark:text-white block tracking-tight">
-                          {player.name}
+                          {player.name || "Jucător"}
                         </span>
                         <span className="text-[10px] font-label text-slate-500 dark:text-slate-400">
-                          {player.teamName}
+                          {player.teamName || "Club"}
                         </span>
                       </div>
                     </div>

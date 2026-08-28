@@ -111,24 +111,24 @@ export default async function ClasamentePage({
       id: m.id,
       round: m.round,
       scheduledAt: m.scheduledAt ? new Date(m.scheduledAt).toISOString() : new Date().toISOString(),
-      venue: m.venue,
+      venue: m.venue || "",
       status: m.status,
       stage: m.stage || "Grupe",
       homeScore: m.homeScore,
       awayScore: m.awayScore,
       homeTeam: {
-        id: m.homeTeam.id,
-        name: m.homeTeam.name,
-        shortName: m.homeTeam.shortName,
-        color: m.homeTeam.color,
-        logoUrl: m.homeTeam.logoUrl,
+        id: m.homeTeam?.id || "home-tbd",
+        name: m.homeTeam?.name || "Echipă Gazdă",
+        shortName: m.homeTeam?.shortName || (m.homeTeam?.name ? m.homeTeam.name.substring(0, 3).toUpperCase() : "GAZ"),
+        color: m.homeTeam?.color || "#1e293b",
+        logoUrl: m.homeTeam?.logoUrl,
       },
       awayTeam: {
-        id: m.awayTeam.id,
-        name: m.awayTeam.name,
-        shortName: m.awayTeam.shortName,
-        color: m.awayTeam.color,
-        logoUrl: m.awayTeam.logoUrl,
+        id: m.awayTeam?.id || "away-tbd",
+        name: m.awayTeam?.name || "Echipă Oaspete",
+        shortName: m.awayTeam?.shortName || (m.awayTeam?.name ? m.awayTeam.name.substring(0, 3).toUpperCase() : "OAS"),
+        color: m.awayTeam?.color || "#1e293b",
+        logoUrl: m.awayTeam?.logoUrl,
       },
     }));
 
@@ -145,28 +145,26 @@ export default async function ClasamentePage({
 
     teams.forEach((t) => {
       standingsMap.set(t.id, {
-        team: {
-          id: t.id,
-          name: t.name,
-          shortName: t.shortName,
-          color: t.color,
-          logoUrl: t.logoUrl,
-        },
+        teamId: t.id,
+        teamName: t.name,
+        shortName: t.shortName || t.name.substring(0, 3).toUpperCase(),
+        color: t.color || "#84cc16",
+        logoUrl: t.logoUrl,
         played: 0,
         won: 0,
         drawn: 0,
         lost: 0,
         goalsFor: 0,
         goalsAgainst: 0,
-        goalDifference: 0,
+        goalDiff: 0,
         points: 0,
-        form: [],
+        form: [] as string[],
       });
     });
 
     finishedMatches.forEach((m) => {
-      const home = standingsMap.get(m.homeTeam.id);
-      const away = standingsMap.get(m.awayTeam.id);
+      const home = m.homeTeam?.id ? standingsMap.get(m.homeTeam.id) : null;
+      const away = m.awayTeam?.id ? standingsMap.get(m.awayTeam.id) : null;
       const hs = Number(m.homeScore) || 0;
       const as = Number(m.awayScore) || 0;
 
@@ -208,16 +206,21 @@ export default async function ClasamentePage({
     });
 
     standings = Array.from(standingsMap.values())
-      .map((s) => ({
+      .map((s, idx) => ({
         ...s,
-        goalDifference: s.goalsFor - s.goalsAgainst,
+        position: idx + 1,
+        goalDiff: s.goalsFor - s.goalsAgainst,
         form: s.form.slice(-5),
       }))
       .sort((a, b) => {
         if (b.points !== a.points) return b.points - a.points;
-        if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+        if (b.goalDiff !== a.goalDiff) return b.goalDiff - a.goalDiff;
         return b.goalsFor - a.goalsFor;
-      });
+      })
+      .map((s, idx) => ({
+        ...s,
+        position: idx + 1,
+      }));
 
     // Top scorers from players
     const allPlayers: any[] = [];
