@@ -260,11 +260,11 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
       </section>
 
       {/* Filter Tray */}
-      <section className="p-4 sm:p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+      <section className="p-3.5 sm:p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-3">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2.5 sm:gap-3 items-center">
           {/* Live Search */}
-          <div className="md:col-span-4 relative">
-            <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base">
+          <div className="lg:col-span-4 relative">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
               search
             </span>
             <input
@@ -272,16 +272,16 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
               placeholder="Caută jucător, echipă sau ligă..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition"
+              className="w-full pl-8 pr-3 py-1.5 sm:py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition"
             />
           </div>
 
           {/* Championship Filter */}
-          <div className="md:col-span-4">
+          <div className="lg:col-span-3">
             <select
               value={selectedChampionship}
               onChange={(e) => setSelectedChampionship(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition"
+              className="w-full px-2.5 py-1.5 sm:py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-slate-950 dark:focus:border-lime-400 transition cursor-pointer"
             >
               <option value="all">Toate Campionatele</option>
               {championships.map((c) => (
@@ -292,47 +292,54 @@ export function SanctionsPublicClientView({ sanctions, championships }: Sanction
             </select>
           </div>
 
-          {/* Sanction Status Filter */}
-          <div className="md:col-span-4 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          {/* Sanction Status Filter Buttons (Compact, Fits perfectly on width) */}
+          <div className="lg:col-span-5 flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar py-0.5">
             <button
               type="button"
               onClick={() => setCardFilter("all")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 ${cardFilter === "all"
-                ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
-                : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                }`}
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold font-label transition shrink-0 ${
+                cardFilter === "all"
+                  ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-xs"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+              }`}
             >
               Toate
             </button>
             <button
               type="button"
               onClick={() => setCardFilter("suspended")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${cardFilter === "suspended"
-                ? "bg-red-600 text-white font-black shadow-sm"
-                : "bg-red-500/10 text-red-600 dark:text-red-400"
-                }`}
+              className={`px-2 py-1 rounded-lg text-[11px] font-bold font-label transition shrink-0 flex items-center gap-1 ${
+                cardFilter === "suspended"
+                  ? "bg-red-600 text-white font-black shadow-xs"
+                  : "bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20"
+              }`}
             >
-              <span><span className="material-symbols-outlined align-middle text-sm">block</span></span> Suspendate ({totalSuspended})
+              <span className="material-symbols-outlined text-[13px] leading-none">block</span>
+              <span>Suspendate ({totalSuspended})</span>
             </button>
             <button
               type="button"
               onClick={() => setCardFilter("red")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${cardFilter === "red"
-                ? "bg-red-600 text-white font-black shadow-sm"
-                : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                }`}
+              className={`px-2 py-1 rounded-lg text-[11px] font-bold font-label transition shrink-0 flex items-center gap-1 ${
+                cardFilter === "red"
+                  ? "bg-red-600 text-white font-black shadow-xs"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+              }`}
             >
-              <span className="flex items-center gap-1"><span className="material-symbols-outlined align-middle">cancel</span> Roșii</span>
+              <span className="material-symbols-outlined text-[13px] leading-none text-red-500">cancel</span>
+              <span>Roșii ({totalRed})</span>
             </button>
             <button
               type="button"
               onClick={() => setCardFilter("yellow")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold font-label transition shrink-0 flex items-center gap-1 ${cardFilter === "yellow"
-                ? "bg-amber-500 text-slate-950 font-black shadow-sm"
-                : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                }`}
+              className={`px-2 py-1 rounded-lg text-[11px] font-bold font-label transition shrink-0 flex items-center gap-1 ${
+                cardFilter === "yellow"
+                  ? "bg-amber-500 text-slate-950 font-black shadow-xs"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+              }`}
             >
-              <span className="flex items-center gap-1"><span className="material-symbols-outlined align-middle">warning</span> Galbene</span>
+              <span className="material-symbols-outlined text-[13px] leading-none text-amber-500">warning</span>
+              <span>Galbene ({totalYellow})</span>
             </button>
           </div>
         </div>
