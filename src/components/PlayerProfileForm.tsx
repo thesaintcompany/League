@@ -90,6 +90,11 @@ const SPORT_POSITIONS: Record<string, { label: string; value: string }[]> = {
   ],
 };
 
+const DEFAULT_COVER =
+  "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80";
+const DEFAULT_AVATAR =
+  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80";
+
 export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProfileFormProps) {
   const nameParts = (initialUser.name || "").split(" ");
   const [firstName, setFirstName] = useState<string>(nameParts[0] || "");
@@ -102,17 +107,19 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
 
   // Visual Assets
   const [image, setImage] = useState<string>(
-    initialUser.image ||
-    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80"
+    initialUser.image || DEFAULT_AVATAR
   );
   const [coverPhotoUrl, setCoverPhotoUrl] = useState<string>(
-    initialUser.coverPhotoUrl ||
-    "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80"
+    initialUser.coverPhotoUrl || DEFAULT_COVER
   );
 
-  // Modal State for Photo Change on Double Click
+  // Modal State for Photo Change
   const [activePhotoModal, setActivePhotoModal] = useState<"cover" | "avatar" | null>(null);
+  const [photoModalTab, setPhotoModalTab] = useState<"upload" | "url">("upload");
   const [customUrlInput, setCustomUrlInput] = useState<string>("");
+  const [isDraggingCover, setIsDraggingCover] = useState<boolean>(false);
+  const [isDraggingAvatar, setIsDraggingAvatar] = useState<boolean>(false);
+  const [isProcessingPhoto, setIsProcessingPhoto] = useState<boolean>(false);
 
   const coverFileInputRef = useRef<HTMLInputElement>(null);
   const avatarFileInputRef = useRef<HTMLInputElement>(null);
@@ -216,49 +223,24 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
 
   const currentPositions = SPORT_POSITIONS[primarySport] || SPORT_POSITIONS.fotbal;
 
-  // Preset photos for quick demonstration
-  const COVER_PRESETS = [
-    {
-      label: "Echipament Teren Nocturnă",
-      url: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
-    },
-    {
-      label: "Sală & Condiționare Fizică",
-      url: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80",
-    },
-    {
-      label: "Teren Tenis & Padel",
-      url: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=800&auto=format&fit=crop&q=80",
-    },
-    {
-      label: "Meci pe Stadion  ",
-      url: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop&q=80",
-    },
-  ];
+  function processFile(file: File, target: "cover" | "avatar") {
+    if (!file.type.startsWith("image/")) {
+      setMessage({
+        text: "Format de fișier neacceptat. Te rugăm să încarci o imagine validă (JPG, PNG, WEBP).",
+        type: "error",
+      });
+      return;
+    }
 
-  const AVATAR_PRESETS = [
-    {
-      label: "Portret Studio  ",
-      url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
-    },
-    {
-      label: "Portret Atletic",
-      url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80",
-    },
-    {
-      label: "Portret Căpitan",
-      url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80",
-    },
-    {
-      label: "Portret Număr 10",
-      url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&auto=format&fit=crop&q=80",
-    },
-  ];
+    if (file.size > 10 * 1024 * 1024) {
+      setMessage({
+        text: "Dimensiunea fișierului depășește limita de 10 MB. Te rugăm să alegi o imagine mai mică.",
+        type: "error",
+      });
+      return;
+    }
 
-  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>, target: "cover" | "avatar") {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+    setIsProcessingPhoto(true);
     const reader = new FileReader();
     reader.onload = (uploadEvent) => {
       const result = uploadEvent.target?.result as string;
@@ -269,13 +251,77 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
           setImage(result);
         }
         setActivePhotoModal(null);
+        setCustomUrlInput("");
         setMessage({
-          text: `Fotografia a fost actualizată. Apasă pe Salvează Profil pentru a o păstra permanent.`,
+          text:
+            target === "cover"
+              ? "Fotografia în picioare (Full-Body) a fost actualizată. Apasă pe Salvează Profilul."
+              : "Fotografia portret față (Headshot) a fost actualizată. Apasă pe Salvează Profilul.",
           type: "success",
         });
       }
+      setIsProcessingPhoto(false);
+    };
+    reader.onerror = () => {
+      setIsProcessingPhoto(false);
+      setMessage({
+        text: "A apărut o eroare la procesarea imaginii. Te rugăm să încerci din nou.",
+        type: "error",
+      });
     };
     reader.readAsDataURL(file);
+  }
+
+  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>, target: "cover" | "avatar") {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    processFile(file, target);
+    e.target.value = "";
+  }
+
+  function handleDropFile(e: React.DragEvent, target: "cover" | "avatar") {
+    e.preventDefault();
+    e.stopPropagation();
+    if (target === "cover") setIsDraggingCover(false);
+    else setIsDraggingAvatar(false);
+
+    if (!isEditable) return;
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      processFile(file, target);
+    }
+  }
+
+  function handleDragOver(e: React.DragEvent, target: "cover" | "avatar") {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isEditable) return;
+    if (target === "cover") setIsDraggingCover(true);
+    else setIsDraggingAvatar(true);
+  }
+
+  function handleDragLeave(e: React.DragEvent, target: "cover" | "avatar") {
+    e.preventDefault();
+    e.stopPropagation();
+    if (target === "cover") setIsDraggingCover(false);
+    else setIsDraggingAvatar(false);
+  }
+
+  function handleResetPhoto(target: "cover" | "avatar") {
+    if (!isEditable) return;
+    if (target === "cover") {
+      setCoverPhotoUrl(DEFAULT_COVER);
+      setMessage({
+        text: "Fotografia în picioare a fost resetată la imaginea implicită.",
+        type: "success",
+      });
+    } else {
+      setImage(DEFAULT_AVATAR);
+      setMessage({
+        text: "Fotografia portret față a fost resetată la imaginea implicită.",
+        type: "success",
+      });
+    }
   }
 
   function handleApplyCustomUrl(target: "cover" | "avatar") {
@@ -288,7 +334,7 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
     setCustomUrlInput("");
     setActivePhotoModal(null);
     setMessage({
-      text: "Imaginea a fost actualizată. Nu uita să apeși Salvează Profil.",
+      text: "Imaginea a fost actualizată. Nu uita să apeși Salvează Profilul.",
       type: "success",
     });
   }
@@ -561,151 +607,331 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
 
           {/* Left Column: Visual Assets (4 cols) */}
           <div className="lg:col-span-4 space-y-6">
-        <div className="p-5 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden relative">
-          <div className="flex justify-between items-center mb-3">
-            <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">
-              Card Prezentare
-            </span>
-            <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-semibold uppercase tracking-wider">
-              {isEditable ? "Sportiv Înregistrat" : "Vizualizare"}
-            </span>
-          </div>
-
-          {/* 9:14 Full-Body Cover Photo */}
-          <div
-            onDoubleClick={() => isEditable && setActivePhotoModal("cover")}
-            title={isEditable ? "Dublu-click pentru a schimba poza în picioare (9:16)" : "Profil în mod vizualizare"}
-            className="aspect-[9/14] w-full rounded-xl overflow-hidden relative mb-4 bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer group/cover"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={coverPhotoUrl}
-              alt="Poză în picioare jucător"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src =
-                  "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80";
-              }}
-              className="w-full h-full object-cover object-center group-hover/cover:scale-105 transition-transform duration-500"
-            />
-            {/* Double-Click Hover Indicator */}
-            <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px] opacity-0 group-hover/cover:opacity-100 transition-opacity flex flex-col items-center justify-center text-center p-4 text-white z-10">
-              <span className="w-10 h-10 rounded-full bg-lime-400 text-slate-950 flex items-center justify-center mb-2 shadow-md scale-90 group-hover/cover:scale-100 transition-transform">
-                <span className="material-symbols-outlined text-xl">photo_camera</span>
-              </span>
-              <p className="font-semibold text-xs text-white">
-                Dublu-click pe imagine
-              </p>
-              <p className="text-[11px] text-lime-300 font-normal">
-                pentru a schimba fotografia în picioare
-              </p>
-            </div>
-
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-4 pointer-events-none">
-              <span className="text-[10px] font-medium text-lime-400 uppercase tracking-wider flex items-center gap-1">
-                <span className="material-symbols-outlined text-[13px]">
-                  {SPORT_OPTIONS.find((s) => s.id === primarySport)?.icon || "sports_soccer"}
+            <div className="p-5 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden relative">
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">
+                  Card Prezentare Oficial
                 </span>
-                <span>{SPORT_OPTIONS.find((s) => s.id === primarySport)?.label || "Fotbal"}</span>
-              </span>
-              <p className="font-semibold text-white text-base leading-tight mt-0.5">
-                {firstName || "Nume"} {lastName || "Jucător"}
-              </p>
-              <p className="text-xs text-slate-300">
-                #{jerseyNumber} • {position}
-              </p>
-            </div>
-          </div>
-
-          {/* Face Headshot Overlay */}
-          <div className="flex items-center gap-3.5 pt-1">
-            <div
-              onDoubleClick={() => setActivePhotoModal("avatar")}
-              title="Dublu-click pentru a schimba poza portret"
-              className="w-16 h-16 rounded-xl border-2 border-white dark:border-slate-900 overflow-hidden shadow-md -mt-10 z-20 relative bg-slate-900 cursor-pointer group/avatar shrink-0"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={image}
-                alt="Poză față portret"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src =
-                    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80";
-                }}
-                className="w-full h-full object-cover group-hover/avatar:scale-110 transition-transform"
-              />
-              <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center text-lime-400">
-                <span className="material-symbols-outlined text-lg">edit</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-semibold uppercase tracking-wider">
+                  {isEditable ? "Sportiv Înregistrat" : "Vizualizare"}
+                </span>
               </div>
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="font-semibold text-sm text-slate-900 dark:text-white leading-tight truncate">
-                {firstName || "Nume"} {lastName || "Sportiv"}
-              </h3>
-              <p className="text-xs text-lime-600 dark:text-lime-400 font-medium truncate mt-0.5">
-                {position}
-              </p>
-            </div>
-          </div>
 
-          {/* Quick Photo Presets / Selectors */}
-          <div className="mt-5 pt-3.5 border-t border-slate-100 dark:border-slate-800 space-y-3">
-            <div>
-              <div className="flex justify-between items-center mb-1.5">
-                <label className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
-                  Poză în Picioare (Full-Body)
-                </label>
-                <button
-                  type="button"
-                  onClick={() => coverFileInputRef.current?.click()}
-                  className="text-[11px] font-medium text-lime-600 dark:text-lime-400 hover:underline flex items-center gap-1"
+              {/* 9:14 Full-Body Cover Photo with Drag & Drop */}
+              <div
+                onDragOver={(e) => handleDragOver(e, "cover")}
+                onDragLeave={(e) => handleDragLeave(e, "cover")}
+                onDrop={(e) => handleDropFile(e, "cover")}
+                onClick={() => isEditable && coverFileInputRef.current?.click()}
+                title={isEditable ? "Apasă sau trage fișierul pentru a încărca poza în picioare (9:16)" : "Profil în mod vizualizare"}
+                className={`aspect-[9/14] w-full rounded-2xl overflow-hidden relative mb-4 bg-slate-900 border transition-all duration-300 shadow-sm cursor-pointer group/cover ${
+                  isDraggingCover
+                    ? "border-2 border-dashed border-lime-400 ring-4 ring-lime-400/20 scale-[0.99]"
+                    : "border-slate-200 dark:border-slate-800 hover:border-lime-400/80"
+                }`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={coverPhotoUrl}
+                  alt="Poză în picioare jucător"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src = DEFAULT_COVER;
+                  }}
+                  className="w-full h-full object-cover object-center group-hover/cover:scale-105 transition-transform duration-500"
+                />
+
+                {/* Badge 9:16 Aspect */}
+                <div className="absolute top-3 right-3 z-10 pointer-events-none">
+                  <span className="px-2 py-0.5 rounded-md bg-slate-950/70 backdrop-blur-md border border-white/10 text-[10px] font-medium text-slate-200 uppercase tracking-wider">
+                    9:16 Full-Body
+                  </span>
+                </div>
+
+                {/* Drag Active Indicator */}
+                {isDraggingCover && (
+                  <div className="absolute inset-0 bg-lime-950/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center text-center p-4 text-lime-300">
+                    <span className="w-14 h-14 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center mb-2 shadow-lg animate-bounce">
+                      <span className="material-symbols-outlined text-3xl">cloud_upload</span>
+                    </span>
+                    <p className="font-bold text-sm text-white">Plasează fișierul aici</p>
+                    <p className="text-xs text-lime-300 mt-0.5">pentru poza în picioare</p>
+                  </div>
+                )}
+
+                {/* Hover Action Overlay (when not dragging) */}
+                {!isDraggingCover && isEditable && (
+                  <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-[2px] opacity-0 group-hover/cover:opacity-100 transition-opacity flex flex-col items-center justify-center text-center p-4 text-white z-10">
+                    <span className="w-11 h-11 rounded-xl bg-lime-400 text-slate-950 flex items-center justify-center mb-2 shadow-md scale-95 group-hover/cover:scale-100 transition-transform">
+                      <span className="material-symbols-outlined text-xl">upload_file</span>
+                    </span>
+                    <p className="font-bold text-xs text-white">Apasă sau trage fișierul aici</p>
+                    <p className="text-[11px] text-lime-300 font-normal mt-0.5">
+                      pentru a încărca poza în picioare (9:16)
+                    </p>
+                  </div>
+                )}
+
+                {/* Bottom Overlay Info */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent flex flex-col justify-end p-4 pointer-events-none">
+                  <span className="text-[10px] font-medium text-lime-400 uppercase tracking-wider flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[13px]">
+                      {SPORT_OPTIONS.find((s) => s.id === primarySport)?.icon || "sports_soccer"}
+                    </span>
+                    <span>{SPORT_OPTIONS.find((s) => s.id === primarySport)?.label || "Fotbal"}</span>
+                  </span>
+                  <p className="font-semibold text-white text-base leading-tight mt-0.5">
+                    {firstName || "Nume"} {lastName || "Jucător"}
+                  </p>
+                  <p className="text-xs text-slate-300">
+                    #{jerseyNumber} • {position}
+                  </p>
+                </div>
+              </div>
+
+              {/* Face Headshot Overlay with Drag & Drop */}
+              <div className="flex items-center gap-3.5 pt-1">
+                <div
+                  onDragOver={(e) => handleDragOver(e, "avatar")}
+                  onDragLeave={(e) => handleDragLeave(e, "avatar")}
+                  onDrop={(e) => handleDropFile(e, "avatar")}
+                  onClick={() => isEditable && avatarFileInputRef.current?.click()}
+                  title={isEditable ? "Apasă sau trage pentru a schimba poza portret (1:1)" : "Poză portret"}
+                  className={`w-16 h-16 rounded-2xl border-2 overflow-hidden shadow-lg -mt-10 z-20 relative bg-slate-900 cursor-pointer group/avatar shrink-0 transition-all ${
+                    isDraggingAvatar
+                      ? "border-lime-400 ring-4 ring-lime-400/30 scale-105"
+                      : "border-white dark:border-slate-900"
+                  }`}
                 >
-                  <span className="material-symbols-outlined text-[13px]">upload_file</span>
-                  <span>Încarcă fișier</span>
-                </button>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                {COVER_PRESETS.map((p, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setCoverPhotoUrl(p.url)}
-                    className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-[10px] font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-lime-400 text-center truncate transition"
-                  >
-                    Preset #{idx + 1}
-                  </button>
-                ))}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={image}
+                    alt="Poză față portret"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = DEFAULT_AVATAR;
+                    }}
+                    className="w-full h-full object-cover group-hover/avatar:scale-110 transition-transform"
+                  />
+                  {isDraggingAvatar ? (
+                    <div className="absolute inset-0 bg-lime-950/80 backdrop-blur-[1px] flex items-center justify-center text-lime-400">
+                      <span className="material-symbols-outlined text-xl animate-pulse">cloud_upload</span>
+                    </div>
+                  ) : (
+                    <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center text-lime-400">
+                      <span className="material-symbols-outlined text-lg">photo_camera</span>
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="font-semibold text-sm text-slate-900 dark:text-white leading-tight truncate">
+                      {firstName || "Nume"} {lastName || "Sportiv"}
+                    </h3>
+                    <span className="px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-[9px] font-medium text-slate-500">
+                      1:1
+                    </span>
+                  </div>
+                  <p className="text-xs text-lime-600 dark:text-lime-400 font-medium truncate mt-0.5">
+                    {position}
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div>
-              <div className="flex justify-between items-center mb-1.5">
-                <label className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
-                  Poză Portret Față
-                </label>
-                <button
-                  type="button"
-                  onClick={() => avatarFileInputRef.current?.click()}
-                  className="text-[11px] font-medium text-lime-600 dark:text-lime-400 hover:underline flex items-center gap-1"
-                >
-                  <span className="material-symbols-outlined text-[13px]">upload_file</span>
-                  <span>Încarcă fișier</span>
-                </button>
+            {/* Professional Photo Upload Center */}
+            <div className="p-5 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-lime-400/20 text-lime-600 dark:text-lime-400 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-lg">cloud_upload</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                      Centru Încărcare Fotografii
+                    </h3>
+                    <p className="text-[10px] text-slate-500">
+                      Formate oficiale pentru transmisiuni &amp; arbitraj
+                    </p>
+                  </div>
+                </div>
+                {isProcessingPhoto && (
+                  <span className="text-[10px] text-lime-600 dark:text-lime-400 font-medium flex items-center gap-1">
+                    <span className="material-symbols-outlined text-xs animate-spin">progress_activity</span>
+                    <span>Procesare...</span>
+                  </span>
+                )}
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                {AVATAR_PRESETS.map((p, idx) => (
+
+              {/* SECTION 1: Poză Corp Întreg (Full-Body) */}
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-base text-slate-600 dark:text-slate-400">
+                      accessibility_new
+                    </span>
+                    <span className="text-xs font-semibold text-slate-900 dark:text-white">
+                      Poză în Picioare (Full-Body)
+                    </span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-slate-200/80 dark:bg-slate-800 text-[10px] font-semibold text-slate-600 dark:text-slate-300">
+                    Format 9:16
+                  </span>
+                </div>
+
+                {/* Upload Zone / Interactive Drop Area */}
+                <div
+                  onDragOver={(e) => handleDragOver(e, "cover")}
+                  onDragLeave={(e) => handleDragLeave(e, "cover")}
+                  onDrop={(e) => handleDropFile(e, "cover")}
+                  onClick={() => isEditable && coverFileInputRef.current?.click()}
+                  className={`p-3.5 rounded-xl border-2 border-dashed transition-all cursor-pointer text-center flex flex-col items-center justify-center gap-1.5 ${
+                    isDraggingCover
+                      ? "border-lime-400 bg-lime-400/10 text-lime-400 ring-2 ring-lime-400/20"
+                      : "border-slate-300 dark:border-slate-700/80 hover:border-lime-400 hover:bg-slate-100/60 dark:hover:bg-slate-900/60 text-slate-600 dark:text-slate-400"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-2xl text-lime-600 dark:text-lime-400">
+                    cloud_upload
+                  </span>
+                  <div className="space-y-0.5">
+                    <p className="text-xs font-medium text-slate-800 dark:text-slate-200">
+                      Trage fișierul aici sau apasă pentru selecție
+                    </p>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                      Recomandat vertical în echipament • JPG, PNG, WEBP (max 10MB)
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Buttons Row */}
+                <div className="flex items-center gap-2 pt-1">
                   <button
-                    key={idx}
                     type="button"
-                    onClick={() => setImage(p.url)}
-                    className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-[10px] font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-lime-400 text-center truncate transition"
+                    disabled={!isEditable}
+                    onClick={() => coverFileInputRef.current?.click()}
+                    className="flex-1 py-2 px-3 rounded-lg bg-lime-400 hover:bg-lime-300 text-slate-950 font-semibold text-[11px] uppercase tracking-wider transition flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50"
                   >
-                    Portret #{idx + 1}
+                    <span className="material-symbols-outlined text-sm">upload_file</span>
+                    <span>Încarcă Fișier</span>
                   </button>
-                ))}
+
+                  <button
+                    type="button"
+                    disabled={!isEditable}
+                    onClick={() => {
+                      setActivePhotoModal("cover");
+                      setPhotoModalTab("url");
+                    }}
+                    className="py-2 px-3 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[11px] font-medium transition flex items-center gap-1 disabled:opacity-50"
+                    title="Introdu link URL direct"
+                  >
+                    <span className="material-symbols-outlined text-sm">link</span>
+                    <span>Link URL</span>
+                  </button>
+
+                  {coverPhotoUrl !== DEFAULT_COVER && isEditable && (
+                    <button
+                      type="button"
+                      onClick={() => handleResetPhoto("cover")}
+                      className="p-2 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition"
+                      title="Resetează la poza implicită"
+                    >
+                      <span className="material-symbols-outlined text-sm">restart_alt</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* SECTION 2: Poză Portret Față (Headshot) */}
+              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-base text-slate-600 dark:text-slate-400">
+                      face
+                    </span>
+                    <span className="text-xs font-semibold text-slate-900 dark:text-white">
+                      Poză Portret Față (Headshot)
+                    </span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-slate-200/80 dark:bg-slate-800 text-[10px] font-semibold text-slate-600 dark:text-slate-300">
+                    Format 1:1
+                  </span>
+                </div>
+
+                {/* Upload Zone / Interactive Drop Area */}
+                <div
+                  onDragOver={(e) => handleDragOver(e, "avatar")}
+                  onDragLeave={(e) => handleDragLeave(e, "avatar")}
+                  onDrop={(e) => handleDropFile(e, "avatar")}
+                  onClick={() => isEditable && avatarFileInputRef.current?.click()}
+                  className={`p-3.5 rounded-xl border-2 border-dashed transition-all cursor-pointer text-center flex flex-col items-center justify-center gap-1.5 ${
+                    isDraggingAvatar
+                      ? "border-lime-400 bg-lime-400/10 text-lime-400 ring-2 ring-lime-400/20"
+                      : "border-slate-300 dark:border-slate-700/80 hover:border-lime-400 hover:bg-slate-100/60 dark:hover:bg-slate-900/60 text-slate-600 dark:text-slate-400"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-2xl text-lime-600 dark:text-lime-400">
+                    add_photo_alternate
+                  </span>
+                  <div className="space-y-0.5">
+                    <p className="text-xs font-medium text-slate-800 dark:text-slate-200">
+                      Trage portretul aici sau apasă pentru selecție
+                    </p>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500">
+                      Format pătrat prim-plan • JPG, PNG, WEBP (max 10MB)
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Buttons Row */}
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    disabled={!isEditable}
+                    onClick={() => avatarFileInputRef.current?.click()}
+                    className="flex-1 py-2 px-3 rounded-lg bg-lime-400 hover:bg-lime-300 text-slate-950 font-semibold text-[11px] uppercase tracking-wider transition flex items-center justify-center gap-1.5 shadow-sm disabled:opacity-50"
+                  >
+                    <span className="material-symbols-outlined text-sm">upload_file</span>
+                    <span>Încarcă Portret</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={!isEditable}
+                    onClick={() => {
+                      setActivePhotoModal("avatar");
+                      setPhotoModalTab("url");
+                    }}
+                    className="py-2 px-3 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[11px] font-medium transition flex items-center gap-1 disabled:opacity-50"
+                    title="Introdu link URL direct"
+                  >
+                    <span className="material-symbols-outlined text-sm">link</span>
+                    <span>Link URL</span>
+                  </button>
+
+                  {image !== DEFAULT_AVATAR && isEditable && (
+                    <button
+                      type="button"
+                      onClick={() => handleResetPhoto("avatar")}
+                      className="p-2 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition"
+                      title="Resetează la portretul implicit"
+                    >
+                      <span className="material-symbols-outlined text-sm">restart_alt</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Helper guidelines */}
+              <div className="p-3 bg-slate-100/70 dark:bg-slate-800/40 rounded-xl space-y-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+                <div className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
+                  <span className="material-symbols-outlined text-sm text-lime-500">verified</span>
+                  <span>Ghid Fotografii Oficiale</span>
+                </div>
+                <p className="text-[10px] leading-relaxed">
+                  Platforma optimizează și comprimă automat imaginile pentru încărcare ultra-rapidă în rapoartele de meci și pe transmisiunile live.
+                </p>
               </div>
             </div>
-          </div>
-        </div>
 
         {/* Privacy Note */}
         <div className="p-4 bg-slate-100/60 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl space-y-1 text-xs text-slate-500 dark:text-slate-400">
@@ -1040,100 +1266,163 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
     </>
   )}
 
-  {/* Double-Click Interactive Photo Change Modal */}
+      {/* Interactive Photo Upload Modal */}
       {activePhotoModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-5 shadow-2xl text-slate-900 dark:text-white">
+          <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 space-y-5 shadow-2xl text-slate-900 dark:text-white">
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-[10px] font-semibold uppercase tracking-wider text-lime-600 dark:text-lime-400 block mb-0.5">
-                  Actualizare Fotografie
+                  Încărcare Fotografie Oficială
                 </span>
-                <h3 className="font-semibold text-lg text-slate-900 dark:text-white">
+                <h3 className="font-bold text-lg text-slate-900 dark:text-white">
                   {activePhotoModal === "cover"
-                    ? "Poză în Picioare (Full-Body)"
-                    : "Poză Portret Față (Headshot)"}
+                    ? "Poză în Picioare (Full-Body 9:16)"
+                    : "Poză Portret Față (Headshot 1:1)"}
                 </h3>
               </div>
               <button
                 type="button"
-                onClick={() => setActivePhotoModal(null)}
-                className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center text-sm"
+                onClick={() => {
+                  setActivePhotoModal(null);
+                  setCustomUrlInput("");
+                }}
+                className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center text-sm transition"
               >
                 <span className="material-symbols-outlined text-lg">close</span>
               </button>
             </div>
 
-            {/* Option 1: File Upload */}
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
-              <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
-                Opțiunea 1: Încarcă din Dispozitiv
-              </span>
+            {/* Target Selector Tabs */}
+            <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl">
               <button
                 type="button"
-                onClick={() => {
-                  if (activePhotoModal === "cover") coverFileInputRef.current?.click();
-                  else avatarFileInputRef.current?.click();
-                }}
-                className="w-full py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-medium text-xs uppercase tracking-wider shadow-sm transition flex items-center justify-center gap-1.5"
+                onClick={() => setActivePhotoModal("cover")}
+                className={`py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 ${
+                  activePhotoModal === "cover"
+                    ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
               >
-                <span className="material-symbols-outlined text-base">upload_file</span>
-                <span>Selectează Fișier</span>
+                <span className="material-symbols-outlined text-sm">accessibility_new</span>
+                <span>Full-Body (9:16)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActivePhotoModal("avatar")}
+                className={`py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 ${
+                  activePhotoModal === "avatar"
+                    ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span className="material-symbols-outlined text-sm">face</span>
+                <span>Portret Față (1:1)</span>
               </button>
             </div>
 
-            {/* Option 2: Direct Image URL */}
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
-              <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
-                Opțiunea 2: Introdu URL Imagine Direct
-              </span>
-              <div className="flex gap-2">
-                <input
-                  type="url"
-                  placeholder="https://images.unsplash.com/..."
-                  value={customUrlInput}
-                  onChange={(e) => setCustomUrlInput(e.target.value)}
-                  className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 w-full focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleApplyCustomUrl(activePhotoModal)}
-                  className="px-4 py-2 rounded-xl bg-slate-900 text-white dark:bg-slate-800 hover:bg-slate-800 text-xs font-medium transition"
-                >
-                  Aplică
-                </button>
-              </div>
-            </div>
-
-            {/* Option 3: Presets Gallery */}
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
-              <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
-                Opțiunea 3: Galerie Preset
-              </span>
-              <div className="grid grid-cols-2 gap-2">
-                {(activePhotoModal === "cover" ? COVER_PRESETS : AVATAR_PRESETS).map((p, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => {
-                      if (activePhotoModal === "cover") setCoverPhotoUrl(p.url);
-                      else setImage(p.url);
-                      setActivePhotoModal(null);
-                    }}
-                    className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-lime-400 text-left text-xs font-medium text-slate-700 dark:text-slate-300 transition flex items-center gap-2 truncate"
-                  >
-                    <span className="material-symbols-outlined text-sm text-lime-500">check</span>
-                    <span className="truncate">{p.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex justify-end pt-1">
+            {/* Method Tabs */}
+            <div className="flex border-b border-slate-100 dark:border-slate-800 gap-4">
               <button
                 type="button"
-                onClick={() => setActivePhotoModal(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-medium"
+                onClick={() => setPhotoModalTab("upload")}
+                className={`pb-2 text-xs font-semibold transition flex items-center gap-1.5 border-b-2 ${
+                  photoModalTab === "upload"
+                    ? "border-lime-500 text-lime-600 dark:text-lime-400"
+                    : "border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">upload_file</span>
+                <span>Încarcă din Dispozitiv</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setPhotoModalTab("url")}
+                className={`pb-2 text-xs font-semibold transition flex items-center gap-1.5 border-b-2 ${
+                  photoModalTab === "url"
+                    ? "border-lime-500 text-lime-600 dark:text-lime-400"
+                    : "border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">link</span>
+                <span>Link URL Imagine</span>
+              </button>
+            </div>
+
+            {photoModalTab === "upload" ? (
+              <div className="space-y-3">
+                <div
+                  onDragOver={(e) => handleDragOver(e, activePhotoModal)}
+                  onDragLeave={(e) => handleDragLeave(e, activePhotoModal)}
+                  onDrop={(e) => handleDropFile(e, activePhotoModal)}
+                  onClick={() => {
+                    if (activePhotoModal === "cover") coverFileInputRef.current?.click();
+                    else avatarFileInputRef.current?.click();
+                  }}
+                  className="p-8 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-lime-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition cursor-pointer text-center flex flex-col items-center justify-center gap-2.5"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-lime-400/20 text-lime-600 dark:text-lime-400 flex items-center justify-center shadow-sm">
+                    <span className="material-symbols-outlined text-2xl">cloud_upload</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                      Trage fișierul aici sau apasă pentru a răsfoi
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Fișiere acceptate: JPG, PNG, WEBP • Dimensiune maximă: 10 MB
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (activePhotoModal === "cover") coverFileInputRef.current?.click();
+                      else avatarFileInputRef.current?.click();
+                    }}
+                    className="mt-2 py-2 px-4 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-semibold text-xs uppercase tracking-wider shadow-sm transition flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm">folder_open</span>
+                    <span>Selectează Fișier</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block">
+                    URL Imagine Publică
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      placeholder="https://exemplu.ro/fotografie.jpg"
+                      value={customUrlInput}
+                      onChange={(e) => setCustomUrlInput(e.target.value)}
+                      className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 w-full focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleApplyCustomUrl(activePhotoModal)}
+                      className="px-4 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 text-xs font-bold uppercase tracking-wider transition whitespace-nowrap"
+                    >
+                      Aplică
+                    </button>
+                  </div>
+                </div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                  Asigură-te că link-ul este direct către fișierul imaginii (se termină în .jpg, .png sau .webp).
+                </p>
+              </div>
+            )}
+
+            <div className="flex justify-end pt-2 border-t border-slate-100 dark:border-slate-800">
+              <button
+                type="button"
+                onClick={() => {
+                  setActivePhotoModal(null);
+                  setCustomUrlInput("");
+                }}
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-medium transition"
               >
                 Închide
               </button>
