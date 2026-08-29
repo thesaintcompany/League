@@ -51,6 +51,14 @@ export async function GET() {
       teamSubscriptionPrice: settings.teamSubscriptionPrice ?? 60.0,
       seasonYear: settings.seasonYear,
       seasonMode: settings.seasonMode || "auto",
+      notFoundTitle: settings.notFoundTitle || "Pagina nu a fost găsită",
+      notFoundMessage:
+        settings.notFoundMessage ||
+        "Ne pare rău, pagina pe care o căutați nu există, a fost mutată sau adresa URL a fost introdusă greșit.",
+      notFoundCountdown: settings.notFoundCountdown ?? 10,
+      notFoundRedirectEnabled: settings.notFoundRedirectEnabled ?? true,
+      notFoundButtonText: settings.notFoundButtonText || "Mergi la Pagina Principală",
+      notFoundRedirectUrl: settings.notFoundRedirectUrl || "/",
     });
   }
 
@@ -114,6 +122,12 @@ export async function PUT(req: Request) {
       teamSubscriptionPrice,
       seasonYear,
       seasonMode,
+      notFoundTitle,
+      notFoundMessage,
+      notFoundCountdown,
+      notFoundRedirectEnabled,
+      notFoundButtonText,
+      notFoundRedirectUrl,
     } = body;
 
     const updated = await prisma.systemSetting.upsert({
@@ -141,6 +155,13 @@ export async function PUT(req: Request) {
         teamSubscriptionPrice: typeof teamSubscriptionPrice === "number" ? teamSubscriptionPrice : undefined,
         seasonYear: seasonYear !== undefined ? (seasonYear ? Number(seasonYear) : null) : undefined,
         seasonMode: seasonMode !== undefined ? seasonMode : undefined,
+        notFoundTitle: notFoundTitle !== undefined ? notFoundTitle : undefined,
+        notFoundMessage: notFoundMessage !== undefined ? notFoundMessage : undefined,
+        notFoundCountdown: typeof notFoundCountdown === "number" ? notFoundCountdown : undefined,
+        notFoundRedirectEnabled:
+          notFoundRedirectEnabled !== undefined ? Boolean(notFoundRedirectEnabled) : undefined,
+        notFoundButtonText: notFoundButtonText !== undefined ? notFoundButtonText : undefined,
+        notFoundRedirectUrl: notFoundRedirectUrl !== undefined ? notFoundRedirectUrl : undefined,
       },
       create: {
         id: "default",
@@ -166,6 +187,15 @@ export async function PUT(req: Request) {
         teamSubscriptionPrice: typeof teamSubscriptionPrice === "number" ? teamSubscriptionPrice : 60.0,
         seasonYear: seasonYear ? Number(seasonYear) : null,
         seasonMode: seasonMode || "auto",
+        notFoundTitle: notFoundTitle || "Pagina nu a fost găsită",
+        notFoundMessage:
+          notFoundMessage ||
+          "Ne pare rău, pagina pe care o căutați nu există, a fost mutată sau adresa URL a fost introdusă greșit.",
+        notFoundCountdown: typeof notFoundCountdown === "number" ? notFoundCountdown : 10,
+        notFoundRedirectEnabled:
+          notFoundRedirectEnabled !== undefined ? Boolean(notFoundRedirectEnabled) : true,
+        notFoundButtonText: notFoundButtonText || "Mergi la Pagina Principală",
+        notFoundRedirectUrl: notFoundRedirectUrl || "/",
       },
     });
 

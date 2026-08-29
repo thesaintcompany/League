@@ -16,6 +16,12 @@ export async function GET() {
         demoPreFillDisabled: true,
         seasonYear: true,
         seasonMode: true,
+        notFoundTitle: true,
+        notFoundMessage: true,
+        notFoundCountdown: true,
+        notFoundRedirectEnabled: true,
+        notFoundButtonText: true,
+        notFoundRedirectUrl: true,
       },
     });
 
@@ -32,6 +38,14 @@ export async function GET() {
       seasonYear,
       seasonMode,
       activeSeasonYear,
+      notFoundTitle: settings?.notFoundTitle || "Pagina nu a fost găsită",
+      notFoundMessage:
+        settings?.notFoundMessage ||
+        "Ne pare rău, pagina pe care o căutați nu există, a fost mutată sau adresa URL a fost introdusă greșit.",
+      notFoundCountdown: settings?.notFoundCountdown ?? 10,
+      notFoundRedirectEnabled: settings?.notFoundRedirectEnabled ?? true,
+      notFoundButtonText: settings?.notFoundButtonText || "Mergi la Pagina Principală",
+      notFoundRedirectUrl: settings?.notFoundRedirectUrl || "/",
     });
   } catch (err) {
     const activeSeasonYear = getCurrentSeasonYear(null, "auto");
@@ -44,6 +58,13 @@ export async function GET() {
       seasonYear: null,
       seasonMode: "auto",
       activeSeasonYear,
+      notFoundTitle: "Pagina nu a fost găsită",
+      notFoundMessage:
+        "Ne pare rău, pagina pe care o căutați nu există, a fost mutată sau adresa URL a fost introdusă greșit.",
+      notFoundCountdown: 10,
+      notFoundRedirectEnabled: true,
+      notFoundButtonText: "Mergi la Pagina Principală",
+      notFoundRedirectUrl: "/",
     });
   }
 }

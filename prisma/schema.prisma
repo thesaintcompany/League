@@ -400,6 +400,15 @@ model SystemSetting {
   teamSubscriptionPrice Float    @default(60.0) // Preț abonament anual pentru echipe suplimentare (EUR)
   seasonYear            Int?     // Anul manual al sezonului setat de SuperAdmin (ex: 2027)
   seasonMode            String   @default("auto") // "auto" (automat în funcție de timp) sau "manual" (setat manual de SuperAdmin)
+
+  // Configurare Pagină 404 (Not Found)
+  notFoundTitle           String?  @default("Pagina nu a fost găsită")
+  notFoundMessage         String?  @default("Ne pare rău, pagina pe care o căutați nu există, a fost mutată sau adresa URL a fost introdusă greșit.")
+  notFoundCountdown       Int      @default(10) // Durată countdown redirecționare automată (secunde)
+  notFoundRedirectEnabled Boolean  @default(true) // Comutator activare/dezactivare redirecționare
+  notFoundButtonText      String?  @default("Mergi la Pagina Principală")
+  notFoundRedirectUrl     String?  @default("/")
+
   updatedAt             DateTime @updatedAt
 }
 

@@ -43,6 +43,14 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
     teamSubscriptionPrice: initialSettings?.teamSubscriptionPrice ?? 60.0,
     seasonYear: initialSettings?.seasonYear ?? 2027,
     seasonMode: initialSettings?.seasonMode || "auto",
+    notFoundTitle: initialSettings?.notFoundTitle || "Pagina nu a fost găsită",
+    notFoundMessage:
+      initialSettings?.notFoundMessage ||
+      "Ne pare rău, pagina pe care o căutați nu există, a fost mutată sau adresa URL a fost introdusă greșit.",
+    notFoundCountdown: initialSettings?.notFoundCountdown ?? 10,
+    notFoundRedirectEnabled: initialSettings?.notFoundRedirectEnabled ?? true,
+    notFoundButtonText: initialSettings?.notFoundButtonText || "Mergi la Pagina Principală",
+    notFoundRedirectUrl: initialSettings?.notFoundRedirectUrl || "/",
   });
 
   const [savingSettings, setSavingSettings] = useState(false);
@@ -654,12 +662,220 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           </div>
         </div>
 
+        {/* 5. Configurare Pagină 404 (Not Found & Redirecționare Automată) */}
+        <div className="card p-6 sm:p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-lg shadow-sm">
+                <span className="material-symbols-outlined align-middle text-base">explore_off</span>
+              </div>
+              <div>
+                <h3 className="font-headline font-black text-base sm:text-lg text-slate-900 dark:text-white uppercase">
+                  Configurare Pagină 404 &amp; Redirecționare Automată
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-label">
+                  Personalizează mesajul, timpul de numărătoare inversă și comportamentul la pagini inexistente.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <a
+                href="/pagina-test-404-inexistenta"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-lime-400 hover:text-slate-950 text-slate-700 dark:text-slate-300 font-headline font-bold text-xs uppercase tracking-wider transition flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 shadow-sm"
+              >
+                <span className="material-symbols-outlined text-sm">open_in_new</span>
+                <span>Testează Pagina 404</span>
+              </a>
+
+              <div className="px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-mono font-bold uppercase border border-amber-500/20 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                <span>
+                  {settings.notFoundRedirectEnabled
+                    ? `Auto-Redirect: ${settings.notFoundCountdown || 10}s`
+                    : "Auto-Redirect: Oprit"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Câmpuri de configurare */}
+            <div className="space-y-4">
+              <div>
+                <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                  Titlu Principal Pagină 404 *
+                </label>
+                <input
+                  type="text"
+                  value={settings.notFoundTitle}
+                  onChange={(e) => setSettings({ ...settings, notFoundTitle: e.target.value })}
+                  className="input text-xs font-bold"
+                  placeholder="Pagina nu a fost găsită"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                  Mesaj Explicativ Pagină 404 *
+                </label>
+                <textarea
+                  rows={3}
+                  value={settings.notFoundMessage}
+                  onChange={(e) => setSettings({ ...settings, notFoundMessage: e.target.value })}
+                  className="input text-xs font-medium resize-none"
+                  placeholder="Ne pare rău, pagina pe care o căutați nu există, a fost mutată sau adresa URL a fost introdusă greșit."
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Text Buton Acțiune Principală
+                  </label>
+                  <input
+                    type="text"
+                    value={settings.notFoundButtonText}
+                    onChange={(e) => setSettings({ ...settings, notFoundButtonText: e.target.value })}
+                    className="input text-xs font-bold"
+                    placeholder="Mergi la Pagina Principală"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Cale Redirecționare (URL)
+                  </label>
+                  <input
+                    type="text"
+                    value={settings.notFoundRedirectUrl}
+                    onChange={(e) => setSettings({ ...settings, notFoundRedirectUrl: e.target.value })}
+                    className="input text-xs font-mono"
+                    placeholder="/"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                <div>
+                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                    Timp Numărătoare Inversă (secunde)
+                  </label>
+                  <input
+                    type="number"
+                    min="3"
+                    max="60"
+                    value={settings.notFoundCountdown}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        notFoundCountdown: parseInt(e.target.value) || 10,
+                      })
+                    }
+                    className="input text-xs font-mono font-bold"
+                  />
+                  <p className="text-[10px] text-slate-400 font-label mt-1">
+                    Valoare recomandată: 10 secunde (interval permis: 3 - 60 secunde).
+                  </p>
+                </div>
+
+                <div className="flex flex-col justify-center">
+                  <label className="flex items-center gap-2.5 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={settings.notFoundRedirectEnabled}
+                      onChange={(e) =>
+                        setSettings({ ...settings, notFoundRedirectEnabled: e.target.checked })
+                      }
+                      className="rounded text-lime-500 focus:ring-lime-400 w-4 h-4"
+                    />
+                    <div>
+                      <span className="text-xs font-bold font-headline block text-slate-900 dark:text-white">
+                        Redirecționare Automată Activă
+                      </span>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-body">
+                        Navighează automat la expirarea cronometrului.
+                      </span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Previzualizare Live */}
+            <div className="flex flex-col">
+              <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-2">
+                Previzualizare Live Card 404 (Aspect Utilizator)
+              </label>
+
+              <div className="flex-1 p-5 rounded-2xl bg-slate-950 text-white border border-slate-800 shadow-inner flex flex-col justify-between space-y-4">
+                <div className="text-center space-y-2">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-[9px] font-black uppercase font-label">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                    <span>EROARE 404</span>
+                  </div>
+
+                  <div className="text-3xl font-black font-headline tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-500">
+                    404
+                  </div>
+
+                  <h5 className="text-xs sm:text-sm font-black font-headline text-white uppercase line-clamp-1">
+                    {settings.notFoundTitle || "Pagina nu a fost găsită"}
+                  </h5>
+
+                  <p className="text-[11px] text-slate-400 font-body line-clamp-2 leading-relaxed">
+                    {settings.notFoundMessage ||
+                      "Ne pare rău, pagina pe care o căutați nu există sau link-ul este incorect."}
+                  </p>
+                </div>
+
+                {settings.notFoundRedirectEnabled && (
+                  <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1.5">
+                    <div className="flex items-center justify-between text-[10px] text-slate-300 font-label">
+                      <span className="flex items-center gap-1">
+                        <span className="material-symbols-outlined text-xs text-lime-400">timer</span>
+                        <span>Redirecționare în:</span>
+                      </span>
+                      <span className="text-lime-400 font-mono font-bold">
+                        {settings.notFoundCountdown || 10}s
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                      <div className="bg-lime-400 h-full w-1/3 rounded-full"></div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    disabled
+                    className="flex-1 py-2 px-3 rounded-xl bg-lime-400 text-slate-950 font-black font-headline text-[10px] uppercase tracking-wider flex items-center justify-center gap-1 shadow-md opacity-95"
+                  >
+                    <span className="material-symbols-outlined text-xs">home</span>
+                    <span>{settings.notFoundButtonText || "Mergi la Pagina Principală"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    disabled
+                    className="py-2 px-2.5 rounded-xl bg-slate-800 text-slate-300 font-bold font-headline text-[10px] uppercase border border-slate-700 flex items-center justify-center"
+                  >
+                    <span className="material-symbols-outlined text-xs">arrow_back</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Global Save Button */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4">
           <div>
             {settingsSuccess && (
               <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-label flex items-center gap-1.5">
-                <span><span className="material-symbols-outlined align-middle text-sm">check_circle</span></span> Datele legale și setările de plată au fost salvate cu succes!
+                <span><span className="material-symbols-outlined align-middle text-sm">check_circle</span></span> Toate setările platformei (inclusiv configurările paginii 404) au fost salvate cu succes!
               </span>
             )}
           </div>
@@ -671,7 +887,7 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
             className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-lg shadow-lime-400/20 transition active:scale-95 flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-lg">save</span>
-            <span>{savingSettings ? "Se salvează..." : "Salvează Date Legale & Module de Plată "}</span>
+            <span>{savingSettings ? "Se salvează..." : "Salvează Setările Platformei"}</span>
           </button>
         </div>
       </div>
