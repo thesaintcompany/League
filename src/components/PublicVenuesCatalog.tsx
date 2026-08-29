@@ -18,6 +18,12 @@ export interface VenueItem {
   floodlights: boolean;
   pricePerHour?: number | null;
   imageUrl?: string | null;
+  phone?: string | null;
+  website?: string | null;
+  googleMapsUrl?: string | null;
+  rating?: number | null;
+  reviewCount?: number | null;
+  crmStatus?: string | null;
 }
 
 const ROMANIAN_COUNTIES_WITH_VENUES = [
@@ -462,6 +468,23 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                           <span>{venue.location}</span>
                           {venue.county && <span>• Jud. {venue.county}</span>}
                         </p>
+
+                        {(venue.rating || venue.phone) && (
+                          <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] font-label">
+                            {venue.rating && (
+                              <span className="inline-flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                                <span className="material-symbols-outlined text-[12px] fill-current">star</span>
+                                <span>{venue.rating.toFixed(1)} {venue.reviewCount ? `(${venue.reviewCount})` : ""}</span>
+                              </span>
+                            )}
+                            {venue.phone && (
+                              <span className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-300 font-medium">
+                                <span className="material-symbols-outlined text-[12px] text-emerald-500">call</span>
+                                <span>{venue.phone}</span>
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </div>
 
                       {venue.specs && (

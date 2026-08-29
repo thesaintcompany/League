@@ -168,6 +168,12 @@ export default async function PublicVenueDetailPage({
             tickerSpeed: venue.tickerSpeed,
             ads: venue.ads,
             announcements: venue.announcements,
+            phone: venue.phone,
+            website: venue.website,
+            googleMapsUrl: venue.googleMapsUrl,
+            rating: venue.rating,
+            reviewCount: venue.reviewCount,
+            crmStatus: venue.crmStatus,
             owner: venue.owner,
           }}
           upcomingMatches={formattedUpcoming}

@@ -129,6 +129,12 @@ model Venue {
   tickerSpeed   Int      @default(20)
   isDemo        Boolean  @default(false) // Arena demonstrativă: protejată de ștergere (100% safe)
   calendarSyncUrl String? // URL for external .ics sync (e.g. Google Calendar)
+  phone         String?
+  website       String?
+  googleMapsUrl String?
+  rating        Float?   @default(4.5)
+  reviewCount   Int?     @default(0)
+  crmStatus     String?  @default("Nou")
   createdAt     DateTime @default(now())
 
   owner         User?    @relation(fields: [ownerId], references: [id], onDelete: SetNull)

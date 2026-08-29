@@ -25,6 +25,12 @@ export interface VenueData {
   tickerSpeed?: number;
   ads?: string | null;
   announcements?: string | null;
+  phone?: string | null;
+  website?: string | null;
+  googleMapsUrl?: string | null;
+  rating?: number | null;
+  reviewCount?: number | null;
+  crmStatus?: string | null;
   owner?: {
     name?: string | null;
     email?: string | null;
@@ -252,6 +258,12 @@ export function VenueDetailClientView({
                   <span>Nocturnă Omologată</span>
                 </span>
               )}
+              {venue.rating && (
+                <span className="px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 font-bold text-xs font-label border border-amber-400/30 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-[14px] text-amber-400 fill-current">star</span>
+                  <span>{venue.rating.toFixed(1)} {venue.reviewCount ? `(${venue.reviewCount} recenzii)` : ""}</span>
+                </span>
+              )}
             </div>
 
             <h1 className="text-4xl sm:text-6xl font-black italic tracking-tight font-headline uppercase leading-none text-white drop-shadow-2xl">
@@ -271,8 +283,30 @@ export function VenueDetailClientView({
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
+            {venue.phone && (
+              <a
+                href={`tel:${venue.phone.replace(/\s+/g, "")}`}
+                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider py-3.5 px-5 rounded-xl shadow-md transition flex items-center gap-2 active:scale-95"
+              >
+                <span className="material-symbols-outlined text-lg">call</span>
+                <span>{venue.phone}</span>
+              </a>
+            )}
+
+            {venue.website && (
+              <a
+                href={venue.website}
+                target="_blank"
+                rel="noreferrer"
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-medium text-xs uppercase tracking-wider py-3.5 px-5 rounded-xl border border-white/20 transition flex items-center gap-2 active:scale-95"
+              >
+                <span className="material-symbols-outlined text-lg">language</span>
+                <span>Website Oficial</span>
+              </a>
+            )}
+
             <a
-              href={`https://maps.google.com/?q=${encodeURIComponent(venue.name + " " + (venue.address || venue.location))}`}
+              href={venue.googleMapsUrl || `https://maps.google.com/?q=${encodeURIComponent(venue.name + " " + (venue.address || venue.location))}`}
               target="_blank"
               rel="noreferrer"
               className="bg-lime-400 hover:bg-lime-300 text-slate-950 font-medium text-xs uppercase tracking-wider py-3.5 px-5 rounded-xl shadow-md transition flex items-center gap-2 active:scale-95"
@@ -350,7 +384,40 @@ export function VenueDetailClientView({
                 )}
               </div>
             ) : (
-              <p className="pt-5 text-sm text-slate-500 dark:text-slate-400">Datele proprietarului nu sunt publicate pentru această arenă.</p>
+              <div className="pt-5 space-y-4 text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {venue.phone && (
+                    <div>
+                      <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">Telefon Recepție</span>
+                      <a href={`tel:${venue.phone.replace(/\s+/g, "")}`} className="font-bold text-emerald-600 dark:text-emerald-400 hover:underline">{venue.phone}</a>
+                    </div>
+                  )}
+                  {venue.website && (
+                    <div>
+                      <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">Website Oficial</span>
+                      <a href={venue.website} target="_blank" rel="noreferrer" className="font-bold text-lime-700 dark:text-lime-400 break-all hover:underline">{venue.website}</a>
+                    </div>
+                  )}
+                  {venue.rating && (
+                    <div>
+                      <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">Rating Google</span>
+                      <p className="font-bold text-amber-500 flex items-center gap-1">
+                        <span className="material-symbols-outlined text-sm">star</span>
+                        <span>{venue.rating.toFixed(1)} / 5.0 ({venue.reviewCount} recenzii)</span>
+                      </p>
+                    </div>
+                  )}
+                  {venue.crmStatus && (
+                    <div>
+                      <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">Status înregistrare</span>
+                      <p className="font-bold text-slate-900 dark:text-white">{venue.crmStatus}</p>
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-3">
+                  Informații verificate din profilul public oficial al bazei sportive.
+                </p>
+              </div>
             )}
           </div>
 
