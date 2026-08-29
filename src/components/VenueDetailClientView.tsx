@@ -407,12 +407,6 @@ export function VenueDetailClientView({
                       </p>
                     </div>
                   )}
-                  {venue.crmStatus && (
-                    <div>
-                      <span className="text-[10px] font-label font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">Status înregistrare</span>
-                      <p className="font-bold text-slate-900 dark:text-white">{venue.crmStatus}</p>
-                    </div>
-                  )}
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-3">
                   Informații verificate din profilul public oficial al bazei sportive.

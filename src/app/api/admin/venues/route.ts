@@ -111,6 +111,24 @@ export async function PATCH(req: Request) {
   const body = await req.json();
   const { action } = body;
 
+  if (action === "sync_venues") {
+    try {
+      const { ensureVenues } = require("../../../../../prisma/bootstrap.js");
+      if (typeof ensureVenues === "function") {
+        await ensureVenues(user.id || null);
+      }
+      const count = await prisma.venue.count();
+      return NextResponse.json({
+        success: true,
+        message: `Sincronizare completă! Toate arenele din România au fost actualizate (${count} în total) și sunt active.`,
+        count,
+      });
+    } catch (err: any) {
+      console.error("Venue sync error:", err);
+      return NextResponse.json({ error: "Eroare la sincronizarea arenelor: " + (err?.message || err) }, { status: 500 });
+    }
+  }
+
   if (action === "activate_all") {
     const updated = await prisma.venue.updateMany({
       data: {

@@ -75,6 +75,7 @@ export function AdminSuperPanel() {
   const [sportFilter, setSportFilter] = useState("all");
   const [demoFilter, setDemoFilter] = useState<"all" | "demo" | "real">("all");
   const [activatingVenues, setActivatingVenues] = useState(false);
+  const [syncingVenues, setSyncingVenues] = useState(false);
 
   // Fake Player Generator State
   const [fakePlayerCount, setFakePlayerCount] = useState<number>(10);
@@ -698,6 +699,31 @@ export function AdminSuperPanel() {
       showToast("Eroare de rețea la activarea arenelor.");
     } finally {
       setActivatingVenues(false);
+    }
+  }
+
+  async function handleSyncVenues() {
+    setSyncingVenues(true);
+    try {
+      const res = await fetch("/api/admin/venues", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "sync_venues" }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message || "Arenele au fost sincronizate cu succes!");
+        const vRes = await fetch("/api/admin/venues");
+        const vData = await vRes.json();
+        if (vData.venues) setVenues(vData.venues);
+      } else {
+        showToast(data.error || "Eroare la sincronizarea arenelor.");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("Eroare de rețea la sincronizarea arenelor.");
+    } finally {
+      setSyncingVenues(false);
     }
   }
 
@@ -2460,6 +2486,16 @@ export function AdminSuperPanel() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="input text-xs w-full sm:w-56"
               />
+              <button
+                type="button"
+                disabled={syncingVenues}
+                onClick={handleSyncVenues}
+                className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition active:scale-95 shrink-0"
+                title="Sincronizează și încarcă automat toate arenele în baza de date"
+              >
+                <span className="material-symbols-outlined text-[18px]">sync</span>
+                <span>{syncingVenues ? "Se sincronizează..." : "Sincronizează Arenele"}</span>
+              </button>
               <button
                 type="button"
                 disabled={activatingVenues}

@@ -245,33 +245,6 @@ const TEN_DEMO_ARENAS = [
       "https://images.unsplash.com/photo-1518604666864-7423958f76d9?w=1000&auto=format&fit=crop&q=80",
     ]),
   },
-  {
-    name: "Alborz",
-    matchNames: ["Alborz", "Alborz Minifotbal"],
-    location: "Timișoara",
-    county: "Timiș",
-    status: "activ",
-    address: "Calea Buziașului, nr 9E, 300693 Timișoara, România",
-    specs: "Terenuri de minifotbal cu suprafață sintetică 20x40m, nocturnă, vestiare, tribună și terasă Sun Beach.",
-    sport: "fotbal",
-    surface: "Sintetic",
-    capacity: 300,
-    floodlights: true,
-    pricePerHour: 170,
-    phone: "0745 625 622",
-    website: "https://www.alborzminifotbal.ro/",
-    googleMapsUrl: "https://maps.google.com/?cid=14072666632636259257&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
-    rating: 4.3,
-    reviewCount: 237,
-    crmStatus: "Nou",
-    imageUrl: "https://www.timisoreni.ro/upload/photo/2012-12/minifotbal_timisoara_large.jpg",
-    galleryImages: JSON.stringify([
-      "https://www.timisoreni.ro/upload/photo/2012-12/minifotbal_timisoara_large.jpg",
-      "https://images.unsplash.com/photo-1551958219-acbc608c6377?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1000&auto=format&fit=crop&q=80",
-    ]),
-  },
 ];
 
 async function main() {

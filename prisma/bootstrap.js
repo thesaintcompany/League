@@ -521,7 +521,6 @@ async function ensureVenues(arenaOwnerId) {
       googleMapsUrl: "https://maps.google.com/?cid=9453092852249755851&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
       rating: 3.7,
       reviewCount: 13,
-      crmStatus: "Nou",
       imageUrl: "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&auto=format&fit=crop&q=80",
       galleryImages: JSON.stringify([
         "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=1200&auto=format&fit=crop&q=80",
@@ -547,7 +546,6 @@ async function ensureVenues(arenaOwnerId) {
       googleMapsUrl: "https://maps.google.com/?cid=7339607368588852888&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
       rating: 4.6,
       reviewCount: 68,
-      crmStatus: "Lead Existent",
       imageUrl: "https://firebasestorage.googleapis.com/v0/b/oina-9f3b3.firebasestorage.app/o/facilities%2FSCXVnU479j4W8zyxs98M%2Fstadion-galaxy-timisoara-cover-1770581252000.webp?alt=media&token=01cab8a6-ee7b-4a49-bb32-98cb5716871b",
       galleryImages: JSON.stringify([
         "https://firebasestorage.googleapis.com/v0/b/oina-9f3b3.firebasestorage.app/o/facilities%2FSCXVnU479j4W8zyxs98M%2Fstadion-galaxy-timisoara-cover-1770581252000.webp?alt=media&token=01cab8a6-ee7b-4a49-bb32-98cb5716871b",
@@ -572,7 +570,6 @@ async function ensureVenues(arenaOwnerId) {
       googleMapsUrl: "https://maps.google.com/?cid=6250039398556901589&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
       rating: 4.8,
       reviewCount: 125,
-      crmStatus: "Nou",
       imageUrl: "https://premierarena.ro/images/poze/15.png",
       galleryImages: JSON.stringify([
         "https://premierarena.ro/images/poze/15.png",
@@ -597,7 +594,6 @@ async function ensureVenues(arenaOwnerId) {
       googleMapsUrl: "https://maps.google.com/?cid=15551196610856274559&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
       rating: 4.3,
       reviewCount: 150,
-      crmStatus: "Nou",
       imageUrl: "https://www.timisoreni.ro/upload/photo/2012-12/davia_sport_timisoara_large.JPG",
       galleryImages: JSON.stringify([
         "https://www.timisoreni.ro/upload/photo/2012-12/davia_sport_timisoara_large.JPG",
@@ -622,7 +618,6 @@ async function ensureVenues(arenaOwnerId) {
       googleMapsUrl: "https://maps.google.com/?cid=8642291627127798502&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
       rating: 4.4,
       reviewCount: 52,
-      crmStatus: "Nou",
       imageUrl: "https://tonomatuldefotbal.ro/wp-content/uploads/2020/07/teren_slide.png",
       galleryImages: JSON.stringify([
         "https://tonomatuldefotbal.ro/wp-content/uploads/2020/07/teren_slide.png",
@@ -648,7 +643,6 @@ async function ensureVenues(arenaOwnerId) {
       googleMapsUrl: "https://maps.google.com/?cid=10251418588098758205&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
       rating: 4.5,
       reviewCount: 880,
-      crmStatus: "Nou",
       imageUrl: "https://www.timisoreni.ro/upload/photo/2016-08/asu_politehnica_timisoara_echipa_de_fotbal_a_suporterilor_large.jpg",
       galleryImages: JSON.stringify([
         "https://www.timisoreni.ro/upload/photo/2016-08/asu_politehnica_timisoara_echipa_de_fotbal_a_suporterilor_large.jpg",
@@ -673,7 +667,6 @@ async function ensureVenues(arenaOwnerId) {
       googleMapsUrl: "https://maps.google.com/?cid=1206366030263530928&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
       rating: 4.5,
       reviewCount: 322,
-      crmStatus: "Lead Existent",
       imageUrl: "http://www.berlinsport.ro/491251246_1192297292685872_2779412641348048025_n.jpg",
       galleryImages: JSON.stringify([
         "http://www.berlinsport.ro/491251246_1192297292685872_2779412641348048025_n.jpg",
@@ -699,7 +692,6 @@ async function ensureVenues(arenaOwnerId) {
       googleMapsUrl: "https://maps.google.com/?cid=10600601471629724082&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
       rating: 4.5,
       reviewCount: 299,
-      crmStatus: "Nou",
       imageUrl: "https://www.timisoreni.ro/upload/photo/2008-04/friends_arena_large.jpg",
       galleryImages: JSON.stringify([
         "https://www.timisoreni.ro/upload/photo/2008-04/friends_arena_large.jpg",
@@ -724,39 +716,12 @@ async function ensureVenues(arenaOwnerId) {
       googleMapsUrl: "https://maps.google.com/?cid=9237119472599171373&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
       rating: 4.5,
       reviewCount: 558,
-      crmStatus: "Nou",
       imageUrl: "https://www.timisoreni.ro/upload/photo/2013-03/helios_sport_club_timisoara_large.JPG",
       galleryImages: JSON.stringify([
         "https://www.timisoreni.ro/upload/photo/2013-03/helios_sport_club_timisoara_large.JPG",
         "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&auto=format&fit=crop&q=80",
         "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&auto=format&fit=crop&q=80",
         "https://images.unsplash.com/photo-1518604666864-7423958f76d9?w=1000&auto=format&fit=crop&q=80",
-      ]),
-      ownerId: arenaOwnerId,
-    },
-    {
-      name: "Alborz",
-      matchNames: ["Alborz", "Alborz Minifotbal"],
-      location: "Timișoara",
-      address: "Calea Buziașului, nr 9E, 300693 Timișoara, România",
-      specs: "Terenuri de minifotbal cu suprafață sintetică 20x40m, nocturnă, vestiare, tribună și terasă Sun Beach.",
-      sport: "fotbal",
-      surface: "Sintetic",
-      capacity: 300,
-      floodlights: true,
-      pricePerHour: 170,
-      phone: "0745 625 622",
-      website: "https://www.alborzminifotbal.ro/",
-      googleMapsUrl: "https://maps.google.com/?cid=14072666632636259257&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
-      rating: 4.3,
-      reviewCount: 237,
-      crmStatus: "Nou",
-      imageUrl: "https://www.timisoreni.ro/upload/photo/2012-12/minifotbal_timisoara_large.jpg",
-      galleryImages: JSON.stringify([
-        "https://www.timisoreni.ro/upload/photo/2012-12/minifotbal_timisoara_large.jpg",
-        "https://images.unsplash.com/photo-1551958219-acbc608c6377?w=800&auto=format&fit=crop&q=80",
-        "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&auto=format&fit=crop&q=80",
-        "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=1000&auto=format&fit=crop&q=80",
       ]),
       ownerId: arenaOwnerId,
     },
@@ -1474,6 +1439,17 @@ async function ensureVenues(arenaOwnerId) {
     ...TIMIS_VENUES.map((v) => ({ ...v, county: "Timiș", status: "activ" })),
   ];
 
+  // Remove Alborz if present
+  try {
+    await prisma.venue.deleteMany({
+      where: {
+        name: { in: ["Alborz", "Alborz Minifotbal", "Baza Sportivă Alborz"] },
+      },
+    });
+  } catch (err) {
+    console.warn("[seed] note on Alborz cleanup:", err.message);
+  }
+
   let createdCount = 0;
   let updatedCount = 0;
   for (const item of ALL_VENUES) {
@@ -1488,16 +1464,22 @@ async function ensureVenues(arenaOwnerId) {
     });
 
     if (!existingVenue) {
-      await prisma.venue.create({ data: { ...venueData, isDemo: true } });
+      await prisma.venue.create({
+        data: {
+          ...venueData,
+          isActive: true,
+          status: venueData.status || "activ",
+        },
+      });
       createdCount++;
-    } else if (existingVenue.isDemo) {
+    } else {
       await prisma.venue.update({
         where: { id: existingVenue.id },
         data: {
           name: venueData.name,
           location: venueData.location,
           county: venueData.county,
-          status: venueData.status,
+          status: venueData.status || "activ",
           address: venueData.address,
           specs: venueData.specs,
           sport: venueData.sport,
@@ -1512,8 +1494,7 @@ async function ensureVenues(arenaOwnerId) {
           googleMapsUrl: venueData.googleMapsUrl,
           rating: venueData.rating,
           reviewCount: venueData.reviewCount,
-          crmStatus: venueData.crmStatus,
-          isDemo: true,
+          isActive: true,
         },
       });
       updatedCount++;
@@ -1901,9 +1882,7 @@ async function main() {
     if (s.role === "arena_owner") arenaOwner = u;
   }
   await ensureReferees();
-  if (arenaOwner) {
-    await ensureVenues(arenaOwner.id);
-  }
+  await ensureVenues(arenaOwner?.id || null);
   const adminEmail = SEEDS[0].email;
   const admin = await prisma.user.findUnique({ where: { email: adminEmail } });
   if (admin) {
@@ -1925,3 +1904,5 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+
+module.exports = { ensureVenues };
