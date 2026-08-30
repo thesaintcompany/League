@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { useSportContext } from "@/context/SportContext";
 import { ArenaCard } from "./ArenaCard";
+import { ARENA_SPORTS_OPTIONS, parseVenueSports } from "@/lib/constants";
 
 export interface VenueItem {
   id: string;
@@ -424,8 +425,21 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
                       <td className="p-4 font-headline font-black text-amber-600 dark:text-amber-400 text-sm">
                         {v.capacity.toLocaleString("ro-RO")}
                       </td>
-                      <td className="p-4 font-label uppercase font-bold text-emerald-700 dark:text-lime-400">
-                        {v.sport}
+                      <td className="p-4 font-label">
+                        <div className="flex flex-wrap gap-1">
+                          {parseVenueSports(v.sport).map((sId) => {
+                            const opt = ARENA_SPORTS_OPTIONS.find((o) => o.id === sId);
+                            return (
+                              <span
+                                key={sId}
+                                className="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-slate-800 text-[10px] font-bold uppercase text-emerald-800 dark:text-lime-400 border border-emerald-200 dark:border-slate-700 flex items-center gap-1"
+                              >
+                                <span className="material-symbols-outlined text-[11px]">{opt?.icon || "sports"}</span>
+                                <span>{opt?.shortName || sId}</span>
+                              </span>
+                            );
+                          })}
+                        </div>
                       </td>
                       <td className="p-4 font-label">
                         <span

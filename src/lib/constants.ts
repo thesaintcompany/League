@@ -9,6 +9,34 @@ export const SPORTS = [
   "Custom",
 ] as const;
 
+export interface ArenaSportOption {
+  id: string;
+  label: string;
+  shortName: string;
+  icon: string;
+}
+
+export const ARENA_SPORTS_OPTIONS: ArenaSportOption[] = [
+  { id: "fotbal", label: "Fotbal & Minifotbal", shortName: "Fotbal", icon: "sports_soccer" },
+  { id: "futsal", label: "Futsal & Sală", shortName: "Futsal", icon: "sports_soccer" },
+  { id: "tenis", label: "Tenis de Câmp", shortName: "Tenis", icon: "sports_tennis" },
+  { id: "padel", label: "Padel", shortName: "Padel", icon: "sports_tennis" },
+  { id: "pingpong", label: "Tenis de Masă (Ping-Pong)", shortName: "Ping-Pong", icon: "circle" },
+  { id: "baschet", label: "Baschet 5x5 & 3x3", shortName: "Baschet", icon: "sports_basketball" },
+  { id: "volei", label: "Volei / Beach Volley", shortName: "Volei", icon: "sports_volleyball" },
+  { id: "handbal", label: "Handbal Național", shortName: "Handbal", icon: "sports_handball" },
+  { id: "multifunctional", label: "Multifuncțional / Mixt", shortName: "Multisport", icon: "stadium" },
+];
+
+export function parseVenueSports(val?: string | null): string[] {
+  if (!val) return ["fotbal"];
+  const list = val
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  return list.length > 0 ? list : ["fotbal"];
+}
+
 export function isIndividualSport(sport?: string | null): boolean {
   if (!sport) return false;
   const s = sport.toLowerCase();

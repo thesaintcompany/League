@@ -7,6 +7,7 @@ import Link from "next/link";
 
 
 import { VenueItem } from "./PublicVenuesCatalog";
+import { ARENA_SPORTS_OPTIONS, parseVenueSports } from "@/lib/constants";
 
 interface ArenaCardProps {
   venue: VenueItem;
@@ -56,20 +57,15 @@ export function ArenaCard({ venue }: ArenaCardProps) {
       ? `${(venue.capacity / 1000).toFixed(venue.capacity % 1000 === 0 ? 0 : 1)}k`
       : `${venue.capacity}`;
 
-  // Primary sport icon
-  const primarySport = (venue.sport || "fotbal").split(",")[0].trim().toLowerCase();
-  const sportIcon =
-    primarySport === "fotbal"
-      ? "sports_soccer"
-      : primarySport === "tenis"
-        ? "sports_tennis"
-        : primarySport === "baschet"
-          ? "sports_basketball"
-          : primarySport === "volei"
-            ? "sports_volleyball"
-            : primarySport === "handbal"
-              ? "sports_handball"
-              : "stadium";
+  // Sport icon & display
+  const sports = parseVenueSports(venue.sport);
+  const primarySportId = sports[0] || "fotbal";
+  const primarySportMeta = ARENA_SPORTS_OPTIONS.find((s) => s.id === primarySportId);
+  const sportIcon = primarySportMeta?.icon || "stadium";
+  const sportDisplayName =
+    sports.length > 1
+      ? `${primarySportMeta?.shortName || "Fotbal"} +${sports.length - 1}`
+      : primarySportMeta?.shortName || "Fotbal";
 
   return (
     <div className={`relative group arena-card ${tierClass}`}>
@@ -144,7 +140,7 @@ export function ArenaCard({ venue }: ArenaCardProps) {
             {/* Sport Pill */}
             <span className="px-2.5 py-1 rounded-lg bg-slate-950/85 backdrop-blur-md border border-white/20 text-lime-400 text-[10px] font-black uppercase font-label tracking-wider shadow-md flex items-center gap-1">
               <span className="material-symbols-outlined text-[13px]">{sportIcon}</span>
-              <span>{venue.sport?.split(",")[0] || "Fotbal"}</span>
+              <span>{sportDisplayName}</span>
             </span>
 
             {/* Floodlights Glow Badge */}

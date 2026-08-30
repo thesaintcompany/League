@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { VenueClaimModal } from "./VenueClaimModal";
 import { isTicketSalesClosed } from "@/lib/tickets";
-import { translateMatchStage } from "@/lib/constants";
+import { translateMatchStage, ARENA_SPORTS_OPTIONS, parseVenueSports } from "@/lib/constants";
 
 export interface VenueData {
   id: string;
@@ -219,32 +219,15 @@ export function VenueDetailClientView({
               <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 text-xs font-semibold uppercase tracking-wider font-label shadow-sm flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[15px]">stadium</span> ARENĂ  Ă LIGUE PRO
               </span>
-              {(venue.sport || "Fotbal").split(",").map((s, idx) => {
-                const spTrimmed = s.trim();
-                const spLower = spTrimmed.toLowerCase();
-                const iconName =
-                  spLower === "fotbal"
-                    ? "sports_soccer"
-                    : spLower === "tenis"
-                      ? "sports_tennis"
-                      : spLower === "padel"
-                        ? "sports_tennis"
-                        : spLower === "pingpong"
-                          ? " "
-                          : spLower === "baschet"
-                            ? "sports_basketball"
-                            : spLower === "volei"
-                              ? "sports_volleyball"
-                              : spLower === "handbal"
-                                ? "sports_handball"
-                                : "stadium";
+              {parseVenueSports(venue.sport).map((sId) => {
+                const opt = ARENA_SPORTS_OPTIONS.find((o) => o.id === sId);
                 return (
                   <span
-                    key={idx}
+                    key={sId}
                     className="px-3 py-1 rounded-full bg-slate-900/90 backdrop-blur-md text-white text-xs font-medium font-label uppercase border border-slate-700 flex items-center gap-1.5"
                   >
-                    <span className="material-symbols-outlined text-[14px] text-slate-300">{iconName}</span>
-                    <span>{spTrimmed}</span>
+                    <span className="material-symbols-outlined text-[14px] text-slate-300">{opt?.icon || "sports"}</span>
+                    <span>{opt?.label || sId}</span>
                   </span>
                 );
               })}

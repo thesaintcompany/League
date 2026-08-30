@@ -33,7 +33,7 @@ export async function GET(req: Request) {
 
   const where: any = {};
   if (sport && sport !== "all") {
-    where.sport = sport;
+    where.sport = { contains: sport };
   }
   if (query) {
     where.OR = [

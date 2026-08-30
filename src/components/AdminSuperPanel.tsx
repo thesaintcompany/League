@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getCurrentSeasonYear, getAutoSeasonYear } from "@/lib/season";
+import { ARENA_SPORTS_OPTIONS, parseVenueSports } from "@/lib/constants";
 
 export type AdminTab =
   | "branding"
@@ -589,6 +590,30 @@ export function AdminSuperPanel() {
     setModalOpen(true);
   }
 
+  function toggleFormSport(sportId: string) {
+    const current = parseVenueSports(form.sport);
+    let updated: string[];
+    if (current.includes(sportId)) {
+      if (current.length === 1) {
+        updated = [sportId];
+      } else {
+        updated = current.filter((s) => s !== sportId);
+      }
+    } else {
+      updated = [...current, sportId];
+    }
+    setForm((prev) => ({ ...prev, sport: updated.join(", ") }));
+  }
+
+  function selectAllSports() {
+    const all = ARENA_SPORTS_OPTIONS.map((s) => s.id);
+    setForm((prev) => ({ ...prev, sport: all.join(", ") }));
+  }
+
+  function selectOnlyFootball() {
+    setForm((prev) => ({ ...prev, sport: "fotbal" }));
+  }
+
   async function handleSaveVenue(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
@@ -879,7 +904,11 @@ export function AdminSuperPanel() {
 
   // Filter venues
   const filteredVenues = venues.filter((v) => {
-    const matchesSport = sportFilter === "all" || v.sport === sportFilter;
+    const vSports = parseVenueSports(v.sport);
+    const matchesSport =
+      sportFilter === "all" ||
+      vSports.includes(sportFilter.toLowerCase()) ||
+      (v.sport && v.sport.toLowerCase().includes(sportFilter.toLowerCase()));
     const matchesDemo =
       demoFilter === "all" ||
       (demoFilter === "demo" && v.isDemo) ||
@@ -2443,19 +2472,24 @@ export function AdminSuperPanel() {
         <div className="space-y-4 animate-in fade-in">
           {/* Header Action Bar */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1">
               {[
                 { id: "all", label: "Toate Disciplinele" },
                 { id: "fotbal", label: "Fotbal" },
+                { id: "futsal", label: "Futsal" },
+                { id: "tenis", label: "Tenis" },
+                { id: "padel", label: "Padel" },
+                { id: "pingpong", label: "Ping-Pong" },
                 { id: "baschet", label: "Baschet" },
                 { id: "volei", label: "Volei" },
+                { id: "handbal", label: "Handbal" },
                 { id: "multifunctional", label: "Multifuncțional" },
               ].map((s) => (
                 <button
                   key={s.id}
                   type="button"
                   onClick={() => setSportFilter(s.id)}
-                  className={`px-4 py-2 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition ${sportFilter === s.id
+                  className={`px-3 py-1.5 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition ${sportFilter === s.id
                     ? "bg-blue-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
                     : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
                     }`}
@@ -2559,11 +2593,22 @@ export function AdminSuperPanel() {
                               >
                                 {v.name}
                               </Link>
-                              <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[9px] font-black uppercase text-slate-600 dark:text-slate-300 font-label inline-block mt-0.5">
-                                {v.sport}
-                              </span>
+                              <div className="flex flex-wrap gap-1 mt-1">
+                                {parseVenueSports(v.sport).map((sId) => {
+                                  const opt = ARENA_SPORTS_OPTIONS.find((o) => o.id === sId);
+                                  return (
+                                    <span
+                                      key={sId}
+                                      className="px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[9px] font-bold uppercase text-slate-700 dark:text-slate-300 font-label inline-flex items-center gap-0.5 border border-slate-200 dark:border-slate-700"
+                                    >
+                                      <span className="material-symbols-outlined text-[11px]">{opt?.icon || "sports"}</span>
+                                      <span>{opt?.shortName || sId}</span>
+                                    </span>
+                                  );
+                                })}
+                              </div>
                               {v.isDemo && (
-                                <span className="px-1.5 py-0.5 ml-1.5 rounded-full bg-amber-400/10 text-amber-600 dark:text-amber-400 text-[8px] font-black uppercase font-label border border-amber-400/30 inline-flex items-center gap-0.5">
+                                <span className="px-1.5 py-0.5 mt-1 rounded-full bg-amber-400/10 text-amber-600 dark:text-amber-400 text-[8px] font-black uppercase font-label border border-amber-400/30 inline-flex items-center gap-0.5">
                                   <span className="material-symbols-outlined text-[10px]">shield</span> Demo
                                 </span>
                               )}
@@ -2977,20 +3022,73 @@ export function AdminSuperPanel() {
                   />
                 </div>
 
-                <div>
-                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
-                    Disciplină Sportivă *
-                  </label>
-                  <select
-                    value={form.sport}
-                    onChange={(e) => setForm({ ...form, sport: e.target.value })}
-                    className="input text-sm"
-                  >
-                    <option value="fotbal">Fotbal / Minifotbal</option>
-                    <option value="baschet">Baschet</option>
-                    <option value="volei">Volei</option>
-                    <option value="multifunctional">Multifuncțional</option>
-                  </select>
+                <div className="sm:col-span-2 space-y-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
+                    <div>
+                      <label className="text-xs font-bold font-headline uppercase text-slate-900 dark:text-white block">
+                        Discipline Sportive Suportate (Bifează sporturile) *
+                      </label>
+                      <span className="text-[11px] text-slate-500 font-normal">
+                        Bifează toate sporturile pe care baza le poate găzdui
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={selectAllSports}
+                        className="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase font-label bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition"
+                      >
+                        Bifează Toate
+                      </button>
+                      <button
+                        type="button"
+                        onClick={selectOnlyFootball}
+                        className="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase font-label bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition"
+                      >
+                        Doar Fotbal
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+                    {ARENA_SPORTS_OPTIONS.map((sportOpt) => {
+                      const isChecked = parseVenueSports(form.sport).includes(sportOpt.id);
+                      return (
+                        <label
+                          key={sportOpt.id}
+                          className={`flex items-center gap-2 p-2.5 rounded-xl border transition cursor-pointer select-none ${
+                            isChecked
+                              ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-900 dark:border-lime-400 font-bold shadow-sm"
+                              : "bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => toggleFormSport(sportOpt.id)}
+                            className="w-3.5 h-3.5 rounded text-lime-500 accent-lime-400 focus:ring-0"
+                          />
+                          <span className="material-symbols-outlined text-[16px] shrink-0">{sportOpt.icon}</span>
+                          <span className="text-xs truncate font-medium">{sportOpt.label}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-200/60 dark:border-slate-800">
+                    <span className="text-[10px] font-bold uppercase text-slate-400 mr-1">Selectate:</span>
+                    {parseVenueSports(form.sport).map((sId) => {
+                      const opt = ARENA_SPORTS_OPTIONS.find((o) => o.id === sId);
+                      return (
+                        <span
+                          key={sId}
+                          className="px-2 py-0.5 rounded-md bg-lime-400/20 text-lime-700 dark:text-lime-400 border border-lime-400/30 text-[10px] font-bold uppercase font-label"
+                        >
+                          {opt?.shortName || sId}
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 <div className="sm:col-span-2">

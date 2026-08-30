@@ -51,25 +51,9 @@ interface VenueData {
   calendarSyncUrl?: string | null;
 }
 
-export const ARENA_SPORTS_OPTIONS = [
-  { id: "fotbal", label: "Fotbal & Minifotbal", icon: "sports_soccer" },
-  { id: "tenis", label: "Tenis de Câmp", icon: "sports_tennis" },
-  { id: "padel", label: "Padel  ", icon: "sports_tennis" },
-  { id: "pingpong", label: "Tenis de Masă (Ping-Pong)", icon: "circle" },
-  { id: "baschet", label: "Baschet 5x5 & 3x3", icon: "sports_basketball" },
-  { id: "volei", label: "Volei / Beach Volley", icon: "sports_volleyball" },
-  { id: "handbal", label: "Handbal", icon: "sports_handball" },
-  { id: "multifunctional", label: "Multifuncțional / Mixt", icon: "stadium" },
-];
+import { ARENA_SPORTS_OPTIONS, parseVenueSports } from "@/lib/constants";
 
-export function parseVenueSports(val?: string | null): string[] {
-  if (!val) return ["fotbal"];
-  const list = val
-    .split(",")
-    .map((s) => s.trim().toLowerCase())
-    .filter(Boolean);
-  return list.length > 0 ? list : ["fotbal"];
-}
+export { ARENA_SPORTS_OPTIONS, parseVenueSports };
 
 export function ArenaOwnerPanel({
   initialVenue,
@@ -295,6 +279,17 @@ export function ArenaOwnerPanel({
     }
     setSelectedSports(updated);
     setSport(updated.join(", "));
+  }
+
+  function selectAllSports() {
+    const all = ARENA_SPORTS_OPTIONS.map((s) => s.id);
+    setSelectedSports(all);
+    setSport(all.join(", "));
+  }
+
+  function selectOnlyFootball() {
+    setSelectedSports(["fotbal"]);
+    setSport("fotbal");
   }
 
   async function handleSaveAll() {
@@ -745,40 +740,42 @@ export function ArenaOwnerPanel({
               </div>
 
               {/* Sporturi Suportate - Selectare Multiplă / Bife (Fără Emoji) */}
-              <div className="sm:col-span-2 space-y-2.5 p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800">
+              <div className="sm:col-span-2 space-y-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-slate-200/50 dark:border-slate-800">
                   <div>
                     <label className="text-xs font-semibold text-slate-900 dark:text-white block">
-                      Discipline Sportive Suportate (Selectare multiplă) *
+                      Discipline Sportive Suportate (Bifează sporturile) *
                     </label>
                     <span className="text-[11px] text-slate-500 font-normal">
                       Bifează toate sporturile pe care baza le poate găzdui (ex: Tenis, Padel, Fotbal etc.)
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-1">
-                    {selectedSports.map((sId) => {
-                      const item = ARENA_SPORTS_OPTIONS.find((opt) => opt.id === sId);
-                      return (
-                        <span
-                          key={sId}
-                          className="px-2 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-[10px] font-medium flex items-center gap-1"
-                        >
-                          <span className="material-symbols-outlined text-[13px]">{item?.icon || "sports"}</span>
-                          <span>{item?.label.split(" ")[0] || sId}</span>
-                        </span>
-                      );
-                    })}
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={selectAllSports}
+                      className="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase font-label bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition"
+                    >
+                      Bifează Toate
+                    </button>
+                    <button
+                      type="button"
+                      onClick={selectOnlyFootball}
+                      className="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase font-label bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 transition"
+                    >
+                      Doar Fotbal
+                    </button>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
                   {ARENA_SPORTS_OPTIONS.map((sportOpt) => {
                     const isChecked = selectedSports.includes(sportOpt.id);
                     return (
                       <label
                         key={sportOpt.id}
                         className={`flex items-center gap-2 p-2.5 rounded-xl border transition cursor-pointer select-none ${isChecked
-                          ? "bg-slate-900 text-white dark:bg-slate-800 dark:text-white border-slate-900 dark:border-slate-700 shadow-sm"
+                          ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-900 dark:border-lime-400 font-bold shadow-sm"
                           : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
                           }`}
                       >
@@ -788,9 +785,25 @@ export function ArenaOwnerPanel({
                           onChange={() => toggleSport(sportOpt.id)}
                           className="w-3.5 h-3.5 rounded text-lime-500 accent-lime-400 focus:ring-0"
                         />
-                        <span className="material-symbols-outlined text-[16px] opacity-80">{sportOpt.icon}</span>
+                        <span className="material-symbols-outlined text-[16px] shrink-0">{sportOpt.icon}</span>
                         <span className="text-xs truncate font-medium">{sportOpt.label}</span>
                       </label>
+                    );
+                  })}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-200/50 dark:border-slate-800">
+                  <span className="text-[10px] font-bold uppercase text-slate-400 mr-1">Selectate:</span>
+                  {selectedSports.map((sId) => {
+                    const item = ARENA_SPORTS_OPTIONS.find((opt) => opt.id === sId);
+                    return (
+                      <span
+                        key={sId}
+                        className="px-2 py-0.5 rounded-md bg-lime-400/20 text-lime-700 dark:text-lime-400 border border-lime-400/30 text-[10px] font-bold uppercase font-label flex items-center gap-1"
+                      >
+                        <span className="material-symbols-outlined text-[12px]">{item?.icon || "sports"}</span>
+                        <span>{item?.shortName || sId}</span>
+                      </span>
                     );
                   })}
                 </div>

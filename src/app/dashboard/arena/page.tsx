@@ -58,7 +58,7 @@ export default async function ArenaOwnerDashboardPage() {
       ? venueMatches
       : venueMatches.filter((match) => {
         const championshipSport = match.championship?.sport?.toLowerCase();
-        return !championshipSport || championshipSport === venue.sport.toLowerCase();
+        return !championshipSport || venue.sport.toLowerCase().includes(championshipSport);
       });
 
     const blockedSlots = await prisma.venueBlockedSlot.findMany({
