@@ -36,6 +36,11 @@ interface VenueData {
   capacity: number;
   floodlights: boolean;
   imageUrl?: string | null;
+  phone?: string | null;
+  website?: string | null;
+  googleMapsUrl?: string | null;
+  rating?: number | null;
+  reviewCount?: number | null;
 }
 
 interface RomaniaMapProps {
@@ -559,49 +564,80 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                     </Link>
                   </div>
                 ) : (
-                  countyVenues.map((v) => (
-                    <div
-                      key={v.id}
-                      className="card p-4 sm:p-5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-2xl shadow-sm hover:border-lime-400/80 transition space-y-3 group"
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-black uppercase font-label">
-                            {v.sport}
-                          </span>
-                          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 font-label">
-                            {v.surface}
-                          </span>
+                  countyVenues.map((v) => {
+                    const rtg = v.rating || 4.5;
+                    const ovr = Math.min(99, Math.max(78, Math.round(rtg * 17 + (v.floodlights ? 5 : 0) + (v.capacity > 5000 ? 6 : 2))));
+                    const isElite = ovr >= 92;
+
+                    return (
+                      <div
+                        key={v.id}
+                        className="card p-4 sm:p-5 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-lime-400/80 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 space-y-3 group relative overflow-hidden"
+                      >
+                        <div className="flex items-start gap-3">
+                          {/* Mini Stadium Thumbnail with OVR Badge */}
+                          <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-slate-950 flex-shrink-0 border border-slate-200 dark:border-slate-800">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={v.imageUrl || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80"}
+                              alt={v.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                            <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded-md bg-slate-950/90 text-lime-400 font-headline font-black text-[10px] tracking-tight leading-none border border-lime-400/40">
+                              {ovr}
+                            </div>
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-1">
+                              <span className="px-2 py-0.5 rounded-md bg-lime-400 text-slate-950 text-[9px] font-black uppercase font-label">
+                                {v.sport?.split(",")[0] || "Fotbal"}
+                              </span>
+                              <span className="text-[11px] font-black font-mono text-lime-600 dark:text-lime-400">
+                                {v.capacity.toLocaleString()} locuri
+                              </span>
+                            </div>
+
+                            <Link href={`/venues/${v.id}`}>
+                              <h4 className="font-headline font-black text-sm sm:text-base text-slate-900 dark:text-white uppercase italic tracking-tight group-hover:text-lime-600 dark:group-hover:text-lime-400 transition-colors truncate mt-1">
+                                {v.name}
+                              </h4>
+                            </Link>
+
+                            <p className="text-xs text-slate-500 dark:text-slate-400 font-label flex items-center gap-1 mt-0.5 truncate">
+                              <span className="material-symbols-outlined text-[13px] text-lime-600 dark:text-lime-400">location_on</span>
+                              <span>{v.location}</span>
+                              {v.address ? <span className="truncate">• {v.address}</span> : null}
+                            </p>
+                          </div>
                         </div>
 
-                        <span className="text-xs font-black font-mono text-lime-600 dark:text-lime-400">
-                          {v.capacity.toLocaleString()} Locuri
-                        </span>
-                      </div>
+                        <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-label">
+                          <div className="flex items-center gap-2 text-[11px] text-slate-600 dark:text-slate-300">
+                            <span className="flex items-center gap-0.5 text-amber-500 font-bold">
+                              <span className="material-symbols-outlined text-[13px] fill-current">star</span>
+                              <span>{rtg.toFixed(1)}</span>
+                            </span>
+                            <span>•</span>
+                            <span className="flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[13px] text-slate-400">
+                                {v.floodlights ? "light_mode" : "wb_sunny"}
+                              </span>
+                              <span>{v.floodlights ? "Nocturnă" : "Diurn"}</span>
+                            </span>
+                          </div>
 
-                      <div>
-                        <h4 className="font-headline font-bold text-base sm:text-lg text-slate-900 dark:text-white group-hover:text-lime-600 dark:group-hover:text-lime-400 transition-colors">
-                          {v.name}
-                        </h4>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 font-label flex items-center gap-1 mt-0.5">
-                          <span className="material-symbols-outlined text-sm">location_on</span> {v.location} {v.address ? `• ${v.address}` : ""}
-                        </p>
+                          <Link
+                            href={`/venues/${v.id}`}
+                            className="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 dark:bg-lime-400 dark:hover:bg-lime-300 text-white dark:text-slate-950 font-headline font-black text-[11px] uppercase tracking-wider transition flex items-center gap-1 shadow-sm active:scale-95"
+                          >
+                            <span>Arenă</span>
+                            <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
+                          </Link>
+                        </div>
                       </div>
-
-                      <div className="pt-2 border-t border-slate-200/80 dark:border-slate-700 flex justify-between items-center">
-                        <span className="text-[11px] font-label text-slate-500">
-                          {v.floodlights ? <><span className="material-symbols-outlined text-sm">lightbulb</span> Nocturnă Omologată</> : "Fără nocturnă"}
-                        </span>
-
-                        <Link
-                          href={`/venues/${v.id}`}
-                          className="px-3 py-1.5 rounded-xl bg-slate-900 dark:bg-lime-400 text-white dark:text-slate-950 font-headline font-black text-[11px] uppercase tracking-wider hover:bg-lime-500 transition flex items-center gap-1 shadow-sm"
-                        >
-                          Detalii Arenă ↗
-                        </Link>
-                      </div>
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             )}

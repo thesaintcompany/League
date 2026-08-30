@@ -48,6 +48,11 @@ export default async function RomaniaMapPage() {
     capacity: v.capacity,
     floodlights: v.floodlights,
     imageUrl: v.imageUrl,
+    rating: v.rating,
+    reviewCount: v.reviewCount,
+    phone: v.phone,
+    website: v.website,
+    googleMapsUrl: v.googleMapsUrl,
   }));
 
   return (

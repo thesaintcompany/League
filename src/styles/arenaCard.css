@@ -1,0 +1,69 @@
+/* arenaCard.css – Premium football‑game inspired styling */
+
+/* Base card with glass‑morphism background */
+.arena-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  /* default border – overridden by tier classes */
+  border: 2px solid transparent;
+}
+
+/* Hover – subtle 3D tilt and shadow */
+.arena-card:hover {
+  transform: perspective(800px) rotateX(3deg) rotateY(3deg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Tier colour variables */
+.tier-elite {
+  --tier-color: #fbbf24; /* amber */
+  border-color: var(--tier-color);
+}
+.tier-pro {
+  --tier-color: #84cc16; /* lime */
+  border-color: var(--tier-color);
+}
+.tier-verified {
+  --tier-color: #38bdf8; /* cyan */
+  border-color: var(--tier-color);
+}
+
+/* Glowing halo effect on hover – uses the tier colour */
+.arena-card::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 22px; /* slightly larger than card */
+  background: radial-gradient(circle at center, var(--tier-color) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+.arena-card:hover::before {
+  opacity: 0.45;
+}
+
+/* Optional inner light sweep – keep existing class names for compatibility */
+.arena-card .sweep-light {
+  position: absolute;
+  inset: -100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: rotate(45deg);
+  animation: sweep 2s infinite;
+}
+@keyframes sweep {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(200%) rotate(45deg); }
+}
+
+/* Dark mode – make background slightly darker */
+@media (prefers-color-scheme: dark) {
+  .arena-card {
+    background: rgba(0, 0, 0, 0.35);
+  }
+}

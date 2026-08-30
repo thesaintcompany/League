@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { useSportContext } from "@/context/SportContext";
+import { ArenaCard } from "./ArenaCard";
 
 export interface VenueItem {
   id: string;
@@ -381,144 +382,11 @@ export function PublicVenuesCatalog({ initialVenues }: { initialVenues: VenueIte
             </p>
           </div>
         ) : viewMode === "grid" ? (
-          /* GRID VIEW: Clean White Cards in Light Mode, Dark Cards in Dark Mode */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((venue) => {
-              const img =
-                venue.imageUrl ||
-                "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80";
-
-              return (
-                <Link
-                  key={venue.id}
-                  href={`/venues/${venue.id}`}
-                  className="card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-lime-400/80 shadow-sm hover:shadow-xl rounded-3xl overflow-hidden group transition-all duration-300 flex flex-col"
-                >
-                  {/* Cover Image — top half with rounded top corners */}
-                  <div className="relative h-48 overflow-hidden bg-slate-800">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={img}
-                      alt={venue.name}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src =
-                          "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80";
-                      }}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    {/* Subtle bottom gradient for badge readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
-
-                    {/* Floating Badges */}
-                    <div className="absolute top-2.5 left-2.5 right-2.5 flex justify-between items-start gap-1">
-                      <div className="flex flex-wrap gap-1 max-w-[65%]">
-                        {(venue.sport || "fotbal").split(",").map((sp, sIdx) => {
-                          const sTrim = sp.trim().toLowerCase();
-                          const iconName =
-                            sTrim === "fotbal"
-                              ? "sports_soccer"
-                              : sTrim === "tenis"
-                                ? "sports_tennis"
-                                : sTrim === "padel"
-                                  ? "sports_tennis"
-                                  : sTrim === "pingpong"
-                                    ? " "
-                                    : sTrim === "baschet"
-                                      ? "sports_basketball"
-                                      : sTrim === "volei"
-                                        ? "sports_volleyball"
-                                        : sTrim === "handbal"
-                                          ? "sports_handball"
-                                          : "stadium";
-                          return (
-                            <span
-                              key={sIdx}
-                              className="px-2 py-0.5 rounded-md bg-lime-400 text-slate-950 text-[9px] font-semibold uppercase tracking-wider shadow-sm flex items-center gap-1"
-                            >
-                              <span className="material-symbols-outlined text-[12px]">{iconName}</span>
-                              <span>{sp.trim()}</span>
-                            </span>
-                          );
-                        })}
-                      </div>
-                      <span className="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-amber-300 font-medium text-[11px] shrink-0">
-                        {venue.capacity.toLocaleString("ro-RO")} locuri
-                      </span>
-                    </div>
-
-                    {/* Status badge if not active */}
-                    {venue.status && venue.status !== "activ" && (
-                      <div className="absolute bottom-2.5 left-2.5">
-                        <span className="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[9px] font-semibold uppercase tracking-wider">
-                          {venue.status === "constructie" ? "În Construcție" : "În Proiect"}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Card Body — bottom half with venue info */}
-                  <div className="flex-1 flex flex-col justify-between">
-                    <div className="p-5 space-y-3">
-                      <div>
-                        <h3 className="font-headline font-bold text-slate-900 dark:text-white text-lg leading-tight group-hover:text-lime-600 dark:group-hover:text-lime-400 transition-colors">
-                          {venue.name}
-                        </h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 font-label flex items-center gap-1 mt-1">
-                          <span className="material-symbols-outlined text-[13px] text-slate-400">location_on</span>
-                          <span>{venue.location}</span>
-                          {venue.county && <span>• Jud. {venue.county}</span>}
-                        </p>
-
-                        {(venue.rating || venue.phone) && (
-                          <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] font-label">
-                            {venue.rating && (
-                              <span className="inline-flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
-                                <span className="material-symbols-outlined text-[12px] fill-current">star</span>
-                                <span>{venue.rating.toFixed(1)} {venue.reviewCount ? `(${venue.reviewCount})` : ""}</span>
-                              </span>
-                            )}
-                            {venue.phone && (
-                              <span className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-300 font-medium">
-                                <span className="material-symbols-outlined text-[12px] text-emerald-500">call</span>
-                                <span>{venue.phone}</span>
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-
-                      {venue.specs && (
-                        <p className="text-xs text-slate-600 dark:text-slate-400 font-body line-clamp-2 leading-relaxed">
-                          {venue.specs}
-                        </p>
-                      )}
-
-                      <div className="grid grid-cols-2 gap-2 text-[11px] font-label pt-2 border-t border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300">
-                        <div className="flex items-center gap-1">
-                          <span className="material-symbols-outlined text-[13px] text-slate-400">grass</span>
-                          <span>Suprafață: <strong className="text-slate-900 dark:text-white font-medium">{venue.surface}</strong></span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span className="material-symbols-outlined text-[13px] text-slate-400">light_mode</span>
-                          <span>Nocturnă: <strong className="text-slate-900 dark:text-white font-medium">{venue.floodlights ? "Da" : "Nu"}</strong></span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Card Footer */}
-                    <div className="p-4 bg-slate-50 dark:bg-slate-950/80 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs font-label">
-                      <span className="font-black text-slate-900 dark:text-lime-400 font-mono">
-                        {venue.pricePerHour ? `${venue.pricePerHour} RON / oră` : "Tarif la cerere"}
-                      </span>
-                      <span className="font-bold text-slate-700 dark:text-slate-300 group-hover:text-slate-950 dark:group-hover:text-white flex items-center gap-1 transition">
-                        Detalii Arenă
-                        <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+          /* GRID VIEW: EA Sports FC / FUT Inspired Arena Cards */
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+            {filtered.map((venue) => (
+              <ArenaCard key={venue.id} venue={venue} />
+            ))}
           </div>
         ) : (
           /* TABLE VIEW: Clean White Table in Light Mode */
