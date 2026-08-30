@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { isSuperAdmin } from "@/lib/permissions";
+import { logAuditAction, extractClientInfo } from "@/lib/audit";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -52,6 +53,8 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: "Acces interzis: Doar SuperAdmin." }, { status: 403 });
   }
 
+  const clientInfo = extractClientInfo(req);
+
   try {
     const body = await req.json();
     const { userId, action, role, isActive, password, name, email, phone } = body;
@@ -99,6 +102,19 @@ export async function PATCH(req: Request) {
           isActive: true,
           passwordHash: superAdminHash,
         },
+      });
+
+      await logAuditAction({
+        userId: currentUser.id,
+        userEmail: currentUser.email,
+        userName: currentUser.name,
+        userRole: currentUser.role,
+        action: "DEMO_REVOKE",
+        details: `Anulare drepturi demo. ${result.count} conturi dezactivate. Nouă parolă SuperAdmin generată. IP: ${clientInfo.ipAddress}`,
+        ipAddress: clientInfo.ipAddress,
+        userAgent: clientInfo.userAgent,
+        status: "warning",
+        entityType: "user",
       });
 
       return NextResponse.json({
@@ -173,6 +189,21 @@ export async function PATCH(req: Request) {
         where: { id: userId },
         data: { passwordHash },
       });
+
+      await logAuditAction({
+        userId: currentUser.id,
+        userEmail: currentUser.email,
+        userName: currentUser.name,
+        userRole: currentUser.role,
+        action: "PASSWORD_RESET",
+        details: `Resetare/modificare parolă pentru utilizatorul ${updated.email}. Operat de Admin. IP: ${clientInfo.ipAddress}`,
+        ipAddress: clientInfo.ipAddress,
+        userAgent: clientInfo.userAgent,
+        status: "success",
+        entityType: "user",
+        entityId: updated.id,
+      });
+
       return NextResponse.json({ success: true, message: `Parola utilizatorului ${updated.email} a fost resetată cu succes!` });
     }
 
@@ -183,6 +214,21 @@ export async function PATCH(req: Request) {
         where: { id: userId },
         data: { isActive: newStatus },
       });
+
+      await logAuditAction({
+        userId: currentUser.id,
+        userEmail: currentUser.email,
+        userName: currentUser.name,
+        userRole: currentUser.role,
+        action: "USER_STATUS_CHANGE",
+        details: `Contul ${updated.email} marcat ca ${newStatus ? "ACTIV" : "SUSPENDAT"}. IP: ${clientInfo.ipAddress}`,
+        ipAddress: clientInfo.ipAddress,
+        userAgent: clientInfo.userAgent,
+        status: newStatus ? "success" : "warning",
+        entityType: "user",
+        entityId: updated.id,
+      });
+
       return NextResponse.json({
         success: true,
         user: updated,
@@ -202,7 +248,22 @@ export async function PATCH(req: Request) {
           isActive: typeof isActive === "boolean" ? isActive : targetUser.isActive,
         },
       });
-      return NextResponse.json({ success: true, user: updated, message: "Datele utilizatorului au fost actualizate! " });
+
+      await logAuditAction({
+        userId: currentUser.id,
+        userEmail: currentUser.email,
+        userName: currentUser.name,
+        userRole: currentUser.role,
+        action: "USER_UPDATE",
+        details: `Actualizare date profil pentru ${updated.email} (Rol: ${updated.role}). IP: ${clientInfo.ipAddress}`,
+        ipAddress: clientInfo.ipAddress,
+        userAgent: clientInfo.userAgent,
+        status: "success",
+        entityType: "user",
+        entityId: updated.id,
+      });
+
+      return NextResponse.json({ success: true, user: updated, message: "Datele utilizatorului au fost actualizate!" });
     }
 
     // 4. Update Role Action (default fallback)
@@ -211,6 +272,21 @@ export async function PATCH(req: Request) {
         where: { id: userId },
         data: { role },
       });
+
+      await logAuditAction({
+        userId: currentUser.id,
+        userEmail: currentUser.email,
+        userName: currentUser.name,
+        userRole: currentUser.role,
+        action: "USER_ROLE_CHANGE",
+        details: `Schimbare rol utilizator ${updated.email} -> ${role}. IP: ${clientInfo.ipAddress}`,
+        ipAddress: clientInfo.ipAddress,
+        userAgent: clientInfo.userAgent,
+        status: "success",
+        entityType: "user",
+        entityId: updated.id,
+      });
+
       return NextResponse.json({ success: true, user: updated, message: `Rolul utilizatorului ${updated.email} a fost schimbat în ${role}.` });
     }
 
@@ -232,6 +308,8 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ error: "Acces interzis: Doar SuperAdmin." }, { status: 403 });
   }
 
+  const clientInfo = extractClientInfo(req);
+
   try {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
@@ -244,10 +322,27 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Nu îți poți șterge propriul cont de SuperAdmin!" }, { status: 400 });
     }
 
+    const targetUser = await prisma.user.findUnique({ where: { id: userId } });
     await prisma.user.delete({ where: { id: userId } });
-    return NextResponse.json({ success: true, message: "Utilizatorul a fost șters definitiv din baza de date. " });
+
+    await logAuditAction({
+      userId: currentUser.id,
+      userEmail: currentUser.email,
+      userName: currentUser.name,
+      userRole: currentUser.role,
+      action: "USER_DELETE",
+      details: `Ștergere definitivă utilizator ${targetUser?.email || userId}. IP: ${clientInfo.ipAddress}`,
+      ipAddress: clientInfo.ipAddress,
+      userAgent: clientInfo.userAgent,
+      status: "warning",
+      entityType: "user",
+      entityId: userId,
+    });
+
+    return NextResponse.json({ success: true, message: "Utilizatorul a fost șters definitiv din baza de date." });
   } catch (err: any) {
     console.error("Error deleting user:", err);
     return NextResponse.json({ error: err.message || "Eroare la ștergerea utilizatorului." }, { status: 500 });
   }
 }
+

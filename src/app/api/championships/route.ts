@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { logAuditAction, extractClientInfo } from "@/lib/audit";
 
 const createSchema = z.object({
   name: z.string().min(1, "Numele campionatului este obligatoriu").max(120),
@@ -44,6 +45,8 @@ export async function GET() {
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const clientInfo = extractClientInfo(req);
 
   try {
     const body = await req.json();
@@ -150,6 +153,20 @@ export async function POST(req: Request) {
       },
     });
 
+    await logAuditAction({
+      userId: dbUser.id,
+      userEmail: dbUser.email,
+      userName: dbUser.name,
+      userRole: dbUser.role,
+      action: "CHAMPIONSHIP_CREATE",
+      details: `Creare turneu nou: "${champ.name}" (${champ.sport}). IP: ${clientInfo.ipAddress}`,
+      ipAddress: clientInfo.ipAddress,
+      userAgent: clientInfo.userAgent,
+      status: "success",
+      entityType: "championship",
+      entityId: champ.id,
+    });
+
     return NextResponse.json({ id: champ.id, championship: champ, isPaid: body.isPaid || false }, { status: 201 });
   } catch (err: any) {
     console.error("Error creating championship:", err);
@@ -159,3 +176,4 @@ export async function POST(req: Request) {
     );
   }
 }
+

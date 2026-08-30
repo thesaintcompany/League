@@ -4,6 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
+import { logAuditAction, extractClientInfo } from "@/lib/audit";
+
 // Production default for self-hosted deployments. It can still be overridden
 // by NEXTAUTH_URL in the hosting environment.
 if (process.env.NODE_ENV === "production" && !process.env.NEXTAUTH_URL) {
@@ -24,9 +26,10 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) return null;
 
+        const clientInfo = extractClientInfo(req);
         const normalizedEmail = credentials.email.trim().toLowerCase();
         const rawPassword = credentials.password.trim();
 
@@ -68,9 +71,32 @@ export const authOptions: NextAuthOptions = {
           });
         }
 
-        if (!user) return null;
+        if (!user) {
+          await logAuditAction({
+            userEmail: normalizedEmail,
+            action: "AUTH_LOGIN_FAILED",
+            details: `Tentativă de autentificare eșuată (utilizator inexistent). IP: ${clientInfo.ipAddress}`,
+            ipAddress: clientInfo.ipAddress,
+            userAgent: clientInfo.userAgent,
+            status: "error",
+          });
+          return null;
+        }
 
         if (user.isActive === false) {
+          await logAuditAction({
+            userId: user.id,
+            userEmail: user.email,
+            userName: user.name,
+            userRole: user.role,
+            action: "AUTH_LOGIN_BLOCKED",
+            details: `Tentativă de conectare pe cont dezactivat / suspendat. IP: ${clientInfo.ipAddress}`,
+            ipAddress: clientInfo.ipAddress,
+            userAgent: clientInfo.userAgent,
+            status: "blocked",
+            entityType: "user",
+            entityId: user.id,
+          });
           throw new Error("Contul tău a fost dezactivat / suspendat de către un SuperAdmin.");
         }
 
@@ -95,7 +121,36 @@ export const authOptions: NextAuthOptions = {
           }
         }
 
-        if (!valid) return null;
+        if (!valid) {
+          await logAuditAction({
+            userId: user.id,
+            userEmail: user.email,
+            userName: user.name,
+            userRole: user.role,
+            action: "AUTH_LOGIN_FAILED",
+            details: `Tentativă de autentificare eșuată (parolă incorectă). IP: ${clientInfo.ipAddress}`,
+            ipAddress: clientInfo.ipAddress,
+            userAgent: clientInfo.userAgent,
+            status: "error",
+            entityType: "user",
+            entityId: user.id,
+          });
+          return null;
+        }
+
+        await logAuditAction({
+          userId: user.id,
+          userEmail: user.email,
+          userName: user.name,
+          userRole: user.role,
+          action: "AUTH_LOGIN",
+          details: `Autentificare reușită în sistem. IP: ${clientInfo.ipAddress}`,
+          ipAddress: clientInfo.ipAddress,
+          userAgent: clientInfo.userAgent,
+          status: "success",
+          entityType: "user",
+          entityId: user.id,
+        });
 
         return {
           id: user.id,

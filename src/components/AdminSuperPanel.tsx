@@ -141,8 +141,8 @@ export function AdminSuperPanel() {
 
   // Audit Logs & GDPR State (100% Real Live DB Data)
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
-  const [auditStats, setAuditStats] = useState({ totalCount: 0, loginCount: 0, modificationCount: 0, gdprCount: 0 });
-  const [auditFilter, setAuditFilter] = useState<"all" | "logins" | "modifications" | "gdpr" | "security">("all");
+  const [auditStats, setAuditStats] = useState({ totalCount: 0, loginCount: 0, passwordResetCount: 0, modificationCount: 0, gdprCount: 0 });
+  const [auditFilter, setAuditFilter] = useState<"all" | "logins" | "passwords" | "modifications" | "gdpr" | "security">("all");
   const [auditSearch, setAuditSearch] = useState("");
   const [loadingAudit, setLoadingAudit] = useState(false);
   const [gdprRequests, setGdprRequests] = useState<any[]>([]);
@@ -2245,7 +2245,7 @@ export function AdminSuperPanel() {
             </div>
 
             {/* Live Stats Badges */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
               <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800">
                 <span className="text-[10px] font-mono uppercase text-slate-400 block font-bold">Total Evenimente</span>
                 <span className="text-xl font-black text-white">{auditStats.totalCount}</span>
@@ -2253,6 +2253,10 @@ export function AdminSuperPanel() {
               <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800">
                 <span className="text-[10px] font-mono uppercase text-lime-400 block font-bold">Conectări Reale</span>
                 <span className="text-xl font-black text-lime-400">{auditStats.loginCount}</span>
+              </div>
+              <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800">
+                <span className="text-[10px] font-mono uppercase text-purple-400 block font-bold">Securitate &amp; Parole IP</span>
+                <span className="text-xl font-black text-purple-400">{auditStats.passwordResetCount}</span>
               </div>
               <div className="p-3 bg-slate-900 rounded-2xl border border-slate-800">
                 <span className="text-[10px] font-mono uppercase text-blue-400 block font-bold">Modificări în App</span>
@@ -2270,9 +2274,10 @@ export function AdminSuperPanel() {
                 {[
                   { id: "all", label: "Toate Activitățile", count: auditStats.totalCount },
                   { id: "logins", label: "Conectări (Login)", count: auditStats.loginCount },
-                  { id: "modifications", label: "Modificări în App", count: auditStats.modificationCount },
+                  { id: "passwords", label: "Securitate & Parole (cu IP)", count: auditStats.passwordResetCount },
+                  { id: "modifications", label: "Modificări Turnee/Echipe/Meciuri", count: auditStats.modificationCount },
                   { id: "gdpr", label: `Cereri GDPR (${gdprRequests.length})`, count: gdprRequests.length },
-                  { id: "security", label: "Securitate & Alerte", count: 0 },
+                  { id: "security", label: "Alerte & Blocaje", count: 0 },
                 ].map((item) => (
                   <button
                     key={item.id}
