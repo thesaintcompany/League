@@ -322,20 +322,22 @@ export function VenueDetailClientView({
             </div>
           </div>
         )}
+
+        {/* Ownership claim button right under ticker/hero */}
+        <div className="bg-slate-900/60 dark:bg-slate-950/80 border-b border-slate-800/60 py-2 px-4 sm:px-6 lg:px-8 flex justify-end">
+          <button
+            type="button"
+            onClick={() => setShowClaimModal(true)}
+            className="text-right text-xs font-label text-slate-300 hover:text-lime-300 transition-colors flex items-center gap-1.5"
+          >
+            <span className="material-symbols-outlined text-[15px] text-lime-400">verified_user</span>
+            <span>Administrezi această arenă? <span className="underline underline-offset-2 font-bold text-lime-400">Solicită acces</span></span>
+          </button>
+        </div>
       </div>
 
       {/* Main Content Sections */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        {/* Deliberately quiet ownership route, inspired by Google Business profiles. */}
-        <div className="flex justify-end pt-3">
-          <button
-            type="button"
-            onClick={() => setShowClaimModal(true)}
-            className="text-right text-[10px] font-label text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
-          >
-            Administrezi această arenă? <span className="underline underline-offset-2">Solicită acces  </span>
-          </button>
-        </div>
 
         <section className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-lg">

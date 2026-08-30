@@ -64,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "logo": `${appDomain}/images/logos/logo-1.png`,
     "image": `${appDomain}/images/hero-goal.jpg`,
     "description": "Platforma națională digitală de gestiune competițională, clasamente oficiale și arbitraj omologat. Și tu poți fi un profesionist în sport începe acum!",
-    "slogan": "Și tu poți fi un profesionist în sport - începe acum!",
+    "slogan": "Și tu poți fi un profesionist în sport. Începe acum!",
     "legalName": "TSC Q - ligue.ro",
     "vatID": "53063735",
     "address": {

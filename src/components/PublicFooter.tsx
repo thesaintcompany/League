@@ -26,7 +26,7 @@ export function PublicFooter() {
                 PRO LIGUE ROMÂNIA
               </span>
               <h3 className="text-2xl sm:text-3xl font-black italic font-headline uppercase leading-tight tracking-tight text-white drop-shadow-md">
-                Și tu poți fi un <span className="text-lime-400">profesionist în sport</span> — începe acum!
+                Și tu poți fi un <span className="text-lime-400">profesionist în sport</span>. Începe acum!
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 font-body drop-shadow-sm">
                 Creează propria ta ligă sau înscrie-te ca jucător, arbitru ori manager de echipă pe platforma oficială.
