@@ -180,26 +180,10 @@ export function VenueDetailClientView({
 
   return (
     <div className="space-y-12 font-body text-slate-900 dark:text-white transition-colors duration-200">
-      {/* Live Scrolling Ticker Marquee if active */}
-      {venue.tickerActive && venue.tickerText && (
-        <div className="bg-slate-900 text-white py-2.5 px-4 flex items-center gap-3 overflow-hidden border-b border-lime-400/30">
-          <div className="px-2.5 py-0.5 rounded-lg bg-lime-400 text-slate-950 font-black text-[9px] uppercase font-label shrink-0 shadow-sm flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-pulse"></span>
-            TICKER ARENĂ
-          </div>
-          <div className="overflow-hidden whitespace-nowrap w-full">
-            <div
-              className="inline-block font-headline font-bold text-xs text-lime-300 animate-marquee"
-              style={{ animationDuration: `${venue.tickerSpeed || 20}s` }}
-            >
-              {venue.tickerText}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Hero Section with Kinetic Stadium Backdrop */}
-      <section className="relative overflow-hidden bg-slate-950 text-white py-20 px-4 sm:px-6 lg:px-8 border-b border-lime-400/30 shadow-2xl min-h-[420px] flex items-center">
+      {/* Hero Header Group (Kinetic Stadium Backdrop Hero + Ticker below) */}
+      <div className="overflow-hidden">
+        {/* Hero Section with Kinetic Stadium Backdrop */}
+        <section className="relative overflow-hidden bg-slate-950 text-white py-20 px-4 sm:px-6 lg:px-8 border-b border-lime-400/30 shadow-2xl min-h-[420px] flex items-center">
         {/* Arena cover photo remains visible beneath the legibility overlays. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -320,6 +304,25 @@ export function VenueDetailClientView({
           </div>
         </div>
       </section>
+
+        {/* Live Scrolling Ticker Marquee directly under Hero if active */}
+        {venue.tickerActive && venue.tickerText && (
+          <div className="bg-slate-950 text-white py-2.5 px-4 flex items-center gap-3 overflow-hidden border-b border-lime-400/30 shadow-md">
+            <div className="px-2.5 py-0.5 rounded-lg bg-lime-400 text-slate-950 font-black text-[9px] uppercase font-label shrink-0 shadow-sm flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-pulse"></span>
+              TICKER ARENĂ
+            </div>
+            <div className="overflow-hidden whitespace-nowrap w-full">
+              <div
+                className="inline-block font-headline font-bold text-xs text-lime-300 animate-marquee"
+                style={{ animationDuration: `${venue.tickerSpeed || 20}s` }}
+              >
+                {venue.tickerText}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Main Content Sections */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
