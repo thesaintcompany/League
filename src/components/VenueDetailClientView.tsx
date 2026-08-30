@@ -307,17 +307,28 @@ export function VenueDetailClientView({
 
         {/* Live Scrolling Ticker Marquee directly under Hero if active */}
         {venue.tickerActive && venue.tickerText && (
-          <div className="bg-slate-950 text-white py-2.5 px-4 flex items-center gap-3 overflow-hidden border-b border-lime-400/30 shadow-md">
-            <div className="px-2.5 py-0.5 rounded-lg bg-lime-400 text-slate-950 font-black text-[9px] uppercase font-label shrink-0 shadow-sm flex items-center gap-1">
+          <div className="bg-slate-950 text-white py-2.5 px-4 flex items-center gap-3 overflow-hidden border-b border-lime-400/30 shadow-md group">
+            <div className="px-2.5 py-0.5 rounded-lg bg-lime-400 text-slate-950 font-black text-[9px] uppercase font-label shrink-0 shadow-sm flex items-center gap-1 z-10">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-950 animate-pulse"></span>
               TICKER ARENĂ
             </div>
-            <div className="overflow-hidden whitespace-nowrap w-full">
+            <div className="overflow-hidden whitespace-nowrap w-full relative">
               <div
-                className="inline-block font-headline font-bold text-xs text-lime-300 animate-marquee"
-                style={{ animationDuration: `${venue.tickerSpeed || 20}s` }}
+                className="animate-marquee font-headline font-bold text-xs text-lime-300"
+                style={{ animationDuration: `${(venue.tickerSpeed || 20) * 1.8}s` }}
               >
-                {venue.tickerText}
+                <div className="flex items-center gap-6 shrink-0 pr-6">
+                  <span>{venue.tickerText}</span>
+                  <span className="text-lime-500 font-mono text-[10px]">•</span>
+                  <span>{venue.tickerText}</span>
+                  <span className="text-lime-500 font-mono text-[10px]">•</span>
+                </div>
+                <div className="flex items-center gap-6 shrink-0 pr-6" aria-hidden="true">
+                  <span>{venue.tickerText}</span>
+                  <span className="text-lime-500 font-mono text-[10px]">•</span>
+                  <span>{venue.tickerText}</span>
+                  <span className="text-lime-500 font-mono text-[10px]">•</span>
+                </div>
               </div>
             </div>
           </div>

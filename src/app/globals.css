@@ -129,24 +129,28 @@
   background: rgba(51, 65, 85, 0.8);
 }
 
-/* Ticker Marquee Continuous Scrolling Animation */
+/* Ticker Marquee Pro Seamless Continuous Scrolling Animation */
 @keyframes marquee {
   0% {
-    transform: translateX(100%);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
 .animate-marquee {
-  display: inline-block;
-  white-space: nowrap;
-  animation: marquee 20s linear infinite;
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
   will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
-.animate-marquee:hover {
+.animate-marquee:hover,
+.group:hover .animate-marquee {
   animation-play-state: paused;
 }
+
 

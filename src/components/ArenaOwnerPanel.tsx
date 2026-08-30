@@ -428,17 +428,24 @@ export function ArenaOwnerPanel({
 
       {/* Live Scrolling Ticker Banner Preview */}
       {tickerActive && tickerText && (
-        <div className="bg-slate-900 text-white rounded-xl p-2.5 shadow-sm flex items-center gap-3 overflow-hidden border border-slate-800">
-          <div className="px-2 py-0.5 rounded-md bg-lime-400/20 text-lime-400 text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1 shrink-0">
+        <div className="bg-slate-900 text-white rounded-xl p-2.5 shadow-sm flex items-center gap-3 overflow-hidden border border-slate-800 group">
+          <div className="px-2 py-0.5 rounded-md bg-lime-400/20 text-lime-400 text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1 shrink-0 z-10">
             <span className="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse"></span>
             Ticker Live
           </div>
-          <div className="overflow-hidden whitespace-nowrap w-full">
+          <div className="overflow-hidden whitespace-nowrap w-full relative">
             <div
-              className="inline-block text-xs font-normal text-slate-200 animate-marquee"
-              style={{ animationDuration: `${tickerSpeed}s` }}
+              className="animate-marquee text-xs font-normal text-slate-200"
+              style={{ animationDuration: `${(tickerSpeed || 20) * 1.8}s` }}
             >
-              {tickerText} • {name} • Tarif: {pricePerHour} RON/oră • Nocturnă: {floodlights ? "Disponibilă" : "Indisponibilă"}
+              <div className="flex items-center gap-6 shrink-0 pr-6">
+                <span>{tickerText} • {name} • Tarif: {pricePerHour} RON/oră • Nocturnă: {floodlights ? "Disponibilă" : "Indisponibilă"}</span>
+                <span className="text-lime-400 font-mono text-[10px]">•</span>
+              </div>
+              <div className="flex items-center gap-6 shrink-0 pr-6" aria-hidden="true">
+                <span>{tickerText} • {name} • Tarif: {pricePerHour} RON/oră • Nocturnă: {floodlights ? "Disponibilă" : "Indisponibilă"}</span>
+                <span className="text-lime-400 font-mono text-[10px]">•</span>
+              </div>
             </div>
           </div>
         </div>
