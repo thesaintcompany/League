@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getCurrentSeasonYear, getAutoSeasonYear } from "@/lib/season";
@@ -921,6 +921,17 @@ export function AdminSuperPanel() {
       (v.address && v.address.toLowerCase().includes(q));
     return matchesSport && matchesQuery && matchesDemo;
   });
+
+  const sportCounts = useMemo(() => {
+    const counts: Record<string, number> = { all: venues.length };
+    venues.forEach((v) => {
+      const list = parseVenueSports(v.sport);
+      list.forEach((s) => {
+        counts[s] = (counts[s] || 0) + 1;
+      });
+    });
+    return counts;
+  }, [venues]);
 
   // Filter users
   const filteredUsers = users.filter((u) => {
@@ -2470,84 +2481,189 @@ export function AdminSuperPanel() {
       {/* ========================================================================= */}
       {activeTab === "venues" && (
         <div className="space-y-4 animate-in fade-in">
-          {/* Header Action Bar */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1">
-              {[
-                { id: "all", label: "Toate Disciplinele" },
-                { id: "fotbal", label: "Fotbal" },
-                { id: "futsal", label: "Futsal" },
-                { id: "tenis", label: "Tenis" },
-                { id: "padel", label: "Padel" },
-                { id: "pingpong", label: "Ping-Pong" },
-                { id: "baschet", label: "Baschet" },
-                { id: "volei", label: "Volei" },
-                { id: "handbal", label: "Handbal" },
-                { id: "multifunctional", label: "Multifuncțional" },
-              ].map((s) => (
+          {/* Header & Controls Hub Card */}
+          <div className="card bg-surface-container-lowest border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-4 sm:p-5 shadow-sm space-y-4">
+            {/* Top Bar: Title, Stats & Primary Action Toolbar */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800/80">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-lime-400/20 dark:bg-lime-400/10 text-lime-600 dark:text-lime-400 flex items-center justify-center border border-lime-400/30 shrink-0">
+                  <span className="material-symbols-outlined text-2xl">stadium</span>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="font-headline font-black text-lg text-slate-900 dark:text-white leading-tight">
+                      Management Arene &amp; Baze Sportive
+                    </h2>
+                    <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-bold font-label">
+                      {filteredVenues.length} {filteredVenues.length === 1 ? "arenă" : "arene"}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 font-label">
+                    Configurează terenurile, tarifele, facilitățile și disponibilitatea pe sporturi
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons Group */}
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
                 <button
-                  key={s.id}
                   type="button"
-                  onClick={() => setSportFilter(s.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition ${sportFilter === s.id
-                    ? "bg-blue-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-                    }`}
+                  disabled={syncingVenues}
+                  onClick={handleSyncVenues}
+                  className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-headline font-bold text-xs uppercase tracking-wider transition active:scale-95 flex items-center gap-1.5 border border-slate-200 dark:border-slate-700"
+                  title="Sincronizează și încarcă automat toate arenele din configurația sistemului"
                 >
-                  {s.label}
+                  <span className={`material-symbols-outlined text-[16px] ${syncingVenues ? "animate-spin text-blue-500" : "text-blue-500"}`}>
+                    sync
+                  </span>
+                  <span>{syncingVenues ? "Sincronizare..." : "Sincronizează"}</span>
                 </button>
-              ))}
+
+                <button
+                  type="button"
+                  disabled={activatingVenues}
+                  onClick={handleBulkActivateVenues}
+                  className="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 rounded-xl font-headline font-bold text-xs uppercase tracking-wider transition active:scale-95 flex items-center gap-1.5 border border-emerald-200 dark:border-emerald-800/60"
+                  title="Activează toate arenele pentru a fi vizibile pe hartă și în catalog"
+                >
+                  <span className="material-symbols-outlined text-[16px] text-emerald-600 dark:text-emerald-400">
+                    visibility
+                  </span>
+                  <span>{activatingVenues ? "Se activează..." : "Activează Toate"}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={openCreateModal}
+                  className="px-4 py-2 bg-lime-400 hover:bg-lime-300 text-slate-950 rounded-xl font-headline font-black text-xs uppercase tracking-wider shadow-sm hover:shadow-md flex items-center gap-1.5 transition active:scale-95"
+                >
+                  <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                  <span>Adaugă Arenă</span>
+                </button>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400">Tip:</span>
-              <select
-                value={demoFilter}
-                onChange={(e) => setDemoFilter(e.target.value as "all" | "demo" | "real")}
-                className="px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-label text-slate-900 dark:text-white focus:outline-none focus:border-lime-500"
-              >
-                <option value="all">Toate Arene</option>
-                <option value="demo">Doar Demo (protejate)</option>
-                <option value="real">Doar Reale</option>
-              </select>
+            {/* Discipline Sportive Filter Hub Tabs */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-label font-bold uppercase tracking-wider text-slate-400">
+                  Filtrează după disciplină sportivă:
+                </span>
+                {sportFilter !== "all" && (
+                  <button
+                    type="button"
+                    onClick={() => setSportFilter("all")}
+                    className="text-[10px] font-bold text-lime-600 dark:text-lime-400 hover:underline font-label uppercase flex items-center gap-1"
+                  >
+                    <span className="material-symbols-outlined text-[12px]">restart_alt</span>
+                    <span>Toate Disciplinele</span>
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+                {[
+                  { id: "all", label: "Toate Disciplinele", icon: "sports" },
+                  { id: "fotbal", label: "Fotbal", icon: "sports_soccer" },
+                  { id: "futsal", label: "Futsal", icon: "sports_soccer" },
+                  { id: "tenis", label: "Tenis", icon: "sports_tennis" },
+                  { id: "padel", label: "Padel", icon: "sports_tennis" },
+                  { id: "pingpong", label: "Ping-Pong", icon: "circle" },
+                  { id: "baschet", label: "Baschet", icon: "sports_basketball" },
+                  { id: "volei", label: "Volei", icon: "sports_volleyball" },
+                  { id: "handbal", label: "Handbal", icon: "sports_handball" },
+                  { id: "multifunctional", label: "Multifuncțional", icon: "stadium" },
+                ].map((s) => {
+                  const isActive = sportFilter === s.id;
+                  const count = sportCounts[s.id] ?? 0;
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => setSportFilter(s.id)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-label font-bold uppercase tracking-wider transition flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
+                        isActive
+                          ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 shadow-sm ring-2 ring-lime-400/40 font-black"
+                          : "bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white border border-transparent"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[14px]">
+                        {s.icon}
+                      </span>
+                      <span>{s.label}</span>
+                      <span
+                        className={`ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+                          isActive
+                            ? "bg-white/20 dark:bg-slate-900/20 text-white dark:text-slate-950"
+                            : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
+                        }`}
+                      >
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                placeholder="Caută arenă, adresă sau oraș..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="input text-xs w-full sm:w-56"
-              />
-              <button
-                type="button"
-                disabled={syncingVenues}
-                onClick={handleSyncVenues}
-                className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition active:scale-95 shrink-0"
-                title="Sincronizează și încarcă automat toate arenele în baza de date"
-              >
-                <span className="material-symbols-outlined text-[18px]">sync</span>
-                <span>{syncingVenues ? "Se sincronizează..." : "Sincronizează Arenele"}</span>
-              </button>
-              <button
-                type="button"
-                disabled={activatingVenues}
-                onClick={handleBulkActivateVenues}
-                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition active:scale-95 shrink-0"
-                title="Activează toate arenele pentru a fi vizibile pe hartă și în catalog"
-              >
-                <span className="material-symbols-outlined text-[18px]">visibility</span>
-                <span>{activatingVenues ? "Se activează..." : "Activează Arenele"}</span>
-              </button>
-              <button
-                type="button"
-                onClick={openCreateModal}
-                className="px-4 py-2.5 bg-lime-400 hover:bg-lime-300 text-slate-950 rounded-xl font-headline font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 transition active:scale-95 shrink-0"
-              >
-                <span className="material-symbols-outlined text-[18px]">add_circle</span>
-                <span>Adaugă Arenă</span>
-              </button>
+            {/* Bottom Controls: Search & Secondary Filters */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-slate-800/60">
+              {/* Search Bar with inner icon */}
+              <div className="relative flex-1 max-w-md">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px] pointer-events-none">
+                  search
+                </span>
+                <input
+                  type="text"
+                  placeholder="Caută după denumire arenă, oraș, adresă sau facilități..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="input pl-9 pr-8 text-xs w-full py-2 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-950"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5"
+                    title="Șterge căutarea"
+                  >
+                    <span className="material-symbols-outlined text-[14px]">close</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Filters Right Area */}
+              <div className="flex items-center gap-2.5 shrink-0">
+                <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1">
+                  <span className="material-symbols-outlined text-slate-400 text-[16px]">verified</span>
+                  <span className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-400">Tip:</span>
+                  <select
+                    value={demoFilter}
+                    onChange={(e) => setDemoFilter(e.target.value as "all" | "demo" | "real")}
+                    className="bg-transparent border-0 text-xs font-label font-bold text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer pr-1"
+                  >
+                    <option value="all" className="bg-white dark:bg-slate-900">Toate Arenele</option>
+                    <option value="demo" className="bg-white dark:bg-slate-900">Doar Demo (Protejate)</option>
+                    <option value="real" className="bg-white dark:bg-slate-900">Doar Reale</option>
+                  </select>
+                </div>
+
+                {(searchQuery || sportFilter !== "all" || demoFilter !== "all") && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSportFilter("all");
+                      setDemoFilter("all");
+                    }}
+                    className="px-2.5 py-1.5 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl font-label font-bold transition flex items-center gap-1"
+                    title="Resetează toate filtrele"
+                  >
+                    <span className="material-symbols-outlined text-[14px]">filter_alt_off</span>
+                    <span>Resetează</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
