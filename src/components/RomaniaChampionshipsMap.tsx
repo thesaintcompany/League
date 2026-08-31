@@ -581,6 +581,9 @@ export function RomaniaChampionshipsMap({ initialChampionships, initialVenues = 
                             <img
                               src={v.imageUrl || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80"}
                               alt={v.name}
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80";
+                              }}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             />
                             <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded-md bg-slate-950/90 text-lime-400 font-headline font-black text-[10px] tracking-tight leading-none border border-lime-400/40">

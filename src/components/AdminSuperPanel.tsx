@@ -6,6 +6,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { getCurrentSeasonYear, getAutoSeasonYear } from "@/lib/season";
 import { ARENA_SPORTS_OPTIONS, parseVenueSports } from "@/lib/constants";
 
+import { AdminManagementPanel } from "./AdminManagementPanel";
+
 export type AdminTab =
   | "branding"
   | "api_integrations"
@@ -13,7 +15,8 @@ export type AdminTab =
   | "analytics"
   | "login_history"
   | "venues"
-  | "data_export";
+  | "data_export"
+  | "competitions_teams";
 
 interface VenueItem {
   id: string;
@@ -961,6 +964,15 @@ export function AdminSuperPanel() {
       )}
 
       {/* Content Tabs (Navigation controlled exclusively by Left Sidebar) */}
+
+      {/* ========================================================================= */}
+      {/* 0. COMPETITIONS & TEAMS MANAGEMENT TAB */}
+      {/* ========================================================================= */}
+      {activeTab === "competitions_teams" && (
+        <div className="space-y-8 animate-in fade-in">
+          <AdminManagementPanel />
+        </div>
+      )}
 
       {/* ========================================================================= */}
       {/* 1. BRANDING & APPLICATION SETTINGS TAB */}

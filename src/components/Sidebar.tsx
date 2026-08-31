@@ -72,6 +72,7 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
 
   if (isSuperAdminRole) {
     navItems = [
+      { name: "Campionate & Echipe", href: "/dashboard/admin/management", icon: "military_tech" },
       { name: "Setări", href: "/dashboard/admin?tab=branding", icon: "tune" },
       { name: "API & Plăți", href: "/dashboard/admin?tab=api_integrations", icon: "key" },
       { name: "Utilizatori", href: "/dashboard/admin?tab=users", icon: "manage_accounts" },

@@ -175,6 +175,10 @@ model Championship {
   singleVenueEnabled Boolean @default(false) // Toate meciurile în aceeași locație/arenă
   defaultVenue       String?                 // Numele locației unice
   shareCode   String?  @unique // unique public share code e.g. "LP-2026-A1"
+  status             String   @default("active") // "active" | "archived" | "cancelled" | "completed" | "draft"
+  isArchived         Boolean  @default(false)
+  isCancelled        Boolean  @default(false)
+  cancellationReason String?
   ownerId     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -208,6 +212,8 @@ model Team {
   sport           String? @default("fotbal")
   description     String?
   sponsors        String? // JSON string: [{ id, name, logoUrl, linkUrl, tier }]
+  status          String  @default("active") // "active" | "archived" | "suspended"
+  isArchived      Boolean @default(false)
   createdAt       DateTime @default(now())
 
   subscriptionActive    Boolean   @default(false)
