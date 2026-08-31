@@ -353,48 +353,48 @@ export function VenueDetailClientView({
         {/* SECTION: Administration & Competitions Cards */}
         <section className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6">
           {/* Card 1: Administrare arenă & Date proprietar */}
-          <div className="bg-slate-900 border border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-6">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-lime-400/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-xl dark:shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-6">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-lime-400/10 dark:bg-lime-400/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="relative z-10 space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-slate-800/80">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800/80">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-lime-400/10 border border-lime-400/30 flex items-center justify-center text-lime-400 shadow-sm">
+                  <div className="w-10 h-10 rounded-2xl bg-lime-500/10 border border-lime-500/30 flex items-center justify-center text-lime-600 dark:text-lime-400 shadow-sm">
                     <span className="material-symbols-outlined text-xl">badge</span>
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400 block">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-600 dark:text-lime-400 block">
                       Administrare Arenă
                     </span>
-                    <h2 className="text-xl font-headline font-black uppercase text-white">
+                    <h2 className="text-xl font-headline font-black uppercase text-slate-900 dark:text-white">
                       Date Proprietar &amp; Contact
                     </h2>
                   </div>
                 </div>
-                <span className="px-3 py-1 rounded-full bg-slate-950 text-lime-400 text-[10px] font-mono font-bold uppercase border border-slate-800">
+                <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-lime-400 text-[10px] font-mono font-bold uppercase border border-slate-200 dark:border-slate-800">
                   {venue.owner ? "Proprietar Atribuit" : "Profil Public"}
                 </span>
               </div>
 
               {venue.owner ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-1">
-                    <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                  <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/80 dark:border-slate-800/80 space-y-1">
+                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase font-bold block">
                       Nume Administrator
                     </span>
-                    <p className="font-headline font-bold text-white text-sm">
+                    <p className="font-headline font-bold text-slate-900 dark:text-white text-sm">
                       {venue.owner.name || "Proprietar"}
                     </p>
                   </div>
 
                   {venue.owner.email && (
-                    <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-1">
-                      <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/80 dark:border-slate-800/80 space-y-1">
+                      <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase font-bold block">
                         Email Oficial
                       </span>
                       <a
                         href={`mailto:${venue.owner.email}`}
-                        className="font-mono text-xs text-lime-400 hover:text-lime-300 transition break-all block"
+                        className="font-mono text-xs text-lime-700 dark:text-lime-400 hover:text-lime-600 dark:hover:text-lime-300 transition break-all block"
                       >
                         {venue.owner.email}
                       </a>
@@ -402,13 +402,13 @@ export function VenueDetailClientView({
                   )}
 
                   {venue.owner.phone && (
-                    <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-1">
-                      <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/80 dark:border-slate-800/80 space-y-1">
+                      <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase font-bold block">
                         Telefon Direct
                       </span>
                       <a
                         href={`tel:${venue.owner.phone}`}
-                        className="font-mono text-xs text-emerald-400 hover:text-emerald-300 transition block"
+                        className="font-mono text-xs text-emerald-700 dark:text-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition block"
                       >
                         {venue.owner.phone}
                       </a>
@@ -416,15 +416,15 @@ export function VenueDetailClientView({
                   )}
 
                   {venue.website && (
-                    <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-1">
-                      <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/80 dark:border-slate-800/80 space-y-1">
+                      <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase font-bold block">
                         Website Bază
                       </span>
                       <a
                         href={venue.website}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-mono text-xs text-sky-400 hover:text-sky-300 transition truncate block"
+                        className="font-mono text-xs text-sky-700 dark:text-sky-400 hover:text-sky-600 dark:hover:text-sky-300 transition truncate block"
                       >
                         {venue.website}
                       </a>
@@ -434,13 +434,13 @@ export function VenueDetailClientView({
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   {venue.phone && (
-                    <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-1">
-                      <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/80 dark:border-slate-800/80 space-y-1">
+                      <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase font-bold block">
                         Telefon Recepție
                       </span>
                       <a
                         href={`tel:${venue.phone.replace(/\s+/g, "")}`}
-                        className="font-mono font-bold text-xs text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1.5"
+                        className="font-mono font-bold text-xs text-emerald-700 dark:text-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition flex items-center gap-1.5"
                       >
                         <span className="material-symbols-outlined text-sm">call</span>
                         <span>{venue.phone}</span>
@@ -449,15 +449,15 @@ export function VenueDetailClientView({
                   )}
 
                   {venue.website && (
-                    <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-1">
-                      <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/80 dark:border-slate-800/80 space-y-1">
+                      <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase font-bold block">
                         Website Oficial
                       </span>
                       <a
                         href={venue.website}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-mono font-bold text-xs text-sky-400 hover:text-sky-300 transition truncate flex items-center gap-1.5"
+                        className="font-mono font-bold text-xs text-sky-700 dark:text-sky-400 hover:text-sky-600 dark:hover:text-sky-300 transition truncate flex items-center gap-1.5"
                       >
                         <span className="material-symbols-outlined text-sm">language</span>
                         <span>{venue.website.replace(/^https?:\/\//, "")}</span>
@@ -466,16 +466,16 @@ export function VenueDetailClientView({
                   )}
 
                   {venue.rating && (
-                    <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-1 sm:col-span-2">
-                      <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                    <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200/80 dark:border-slate-800/80 space-y-1 sm:col-span-2">
+                      <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase font-bold block">
                         Rating Google Maps
                       </span>
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-1 text-amber-400 font-mono font-black text-sm">
+                        <div className="flex items-center gap-1 text-amber-500 font-mono font-black text-sm">
                           <span className="material-symbols-outlined text-base">star</span>
                           <span>{venue.rating.toFixed(1)} / 5.0</span>
                         </div>
-                        <span className="text-xs text-slate-400 font-label">
+                        <span className="text-xs text-slate-500 dark:text-slate-400 font-label">
                           ({venue.reviewCount || 0} recenzii verificate)
                         </span>
                       </div>
@@ -485,32 +485,32 @@ export function VenueDetailClientView({
               )}
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-slate-400 border-t border-slate-800/80 pt-4 relative z-10 font-label">
-              <span className="material-symbols-outlined text-sm text-lime-400">verified</span>
+            <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800/80 pt-4 relative z-10 font-label">
+              <span className="material-symbols-outlined text-sm text-lime-600 dark:text-lime-400">verified</span>
               <span>Informații verificate din profilul public oficial al bazei sportive.</span>
             </div>
           </div>
 
           {/* Card 2: Competiții pe arenă */}
-          <div className="bg-slate-900 border border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-6">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-xl dark:shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-6">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/10 dark:bg-sky-500/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="relative z-10 space-y-5">
-              <div className="flex items-center justify-between gap-4 pb-4 border-b border-slate-800/80">
+              <div className="flex items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800/80">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 shadow-sm">
+                  <div className="w-10 h-10 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-600 dark:text-sky-400 shadow-sm">
                     <span className="material-symbols-outlined text-xl">emoji_events</span>
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-sky-400 block">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-sky-600 dark:text-sky-400 block">
                       Locație Confirmată
                     </span>
-                    <h2 className="text-xl font-headline font-black uppercase text-white">
+                    <h2 className="text-xl font-headline font-black uppercase text-slate-900 dark:text-white">
                       Competiții pe Arenă
                     </h2>
                   </div>
                 </div>
-                <span className="px-3 py-1 rounded-full bg-slate-950 text-sky-400 text-xs font-mono font-bold uppercase border border-slate-800">
+                <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-950 text-sky-700 dark:text-sky-400 text-xs font-mono font-bold uppercase border border-slate-200 dark:border-slate-800">
                   {competitions.length}
                 </span>
               </div>
@@ -521,23 +521,23 @@ export function VenueDetailClientView({
                     <Link
                       key={competition.id}
                       href={`/clasamente?id=${competition.id}`}
-                      className="flex items-center justify-between gap-3 rounded-2xl bg-slate-950/80 hover:bg-slate-800/80 p-3.5 border border-slate-800/80 hover:border-sky-500/40 transition group"
+                      className="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 dark:bg-slate-950/80 hover:bg-slate-100 dark:hover:bg-slate-800/80 p-3.5 border border-slate-200/80 dark:border-slate-800/80 hover:border-sky-500/40 transition group"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <span className="material-symbols-outlined text-base text-sky-400 group-hover:scale-110 transition">
+                        <span className="material-symbols-outlined text-base text-sky-600 dark:text-sky-400 group-hover:scale-110 transition">
                           sports_score
                         </span>
-                        <span className="font-headline font-bold text-sm text-white group-hover:text-sky-300 transition truncate">
+                        <span className="font-headline font-bold text-sm text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-300 transition truncate">
                           {competition.name}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {competition.season && (
-                          <span className="text-[11px] font-mono text-slate-400">
+                          <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
                             {competition.season}
                           </span>
                         )}
-                        <span className="material-symbols-outlined text-sm text-slate-500 group-hover:text-white transition">
+                        <span className="material-symbols-outlined text-sm text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white transition">
                           arrow_forward
                         </span>
                       </div>
@@ -546,24 +546,24 @@ export function VenueDetailClientView({
                 </div>
               ) : (
                 <div className="text-center py-8 space-y-2">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center mx-auto text-slate-500">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center mx-auto text-slate-400 dark:text-slate-500">
                     <span className="material-symbols-outlined text-2xl">event_busy</span>
                   </div>
-                  <p className="text-sm font-headline font-bold text-white">
+                  <p className="text-sm font-headline font-bold text-slate-900 dark:text-white">
                     Nu există competiții programate
                   </p>
-                  <p className="text-xs text-slate-400 max-w-sm mx-auto font-label">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto font-label">
                     În prezent nu sunt ligi active pe această arenă. Organizatorii vor adăuga etapele oficiale.
                   </p>
                 </div>
               )}
             </div>
 
-            <div className="flex items-center justify-between text-xs text-slate-400 border-t border-slate-800/80 pt-4 relative z-10 font-label">
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800/80 pt-4 relative z-10 font-label">
               <span>Bază omologată pentru competiții</span>
               <Link
                 href="/clasamente"
-                className="text-sky-400 hover:text-sky-300 font-bold uppercase tracking-wider text-[11px] inline-flex items-center gap-1"
+                className="text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 font-bold uppercase tracking-wider text-[11px] inline-flex items-center gap-1"
               >
                 <span>Toate Ligile</span>
                 <span className="material-symbols-outlined text-xs">chevron_right</span>
@@ -574,49 +574,49 @@ export function VenueDetailClientView({
 
         {/* Venue facts only: no match or goal telemetry on an arena profile. */}
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 relative z-20">
-          <div className="bg-slate-900 border border-slate-800/90 p-6 rounded-3xl shadow-xl space-y-1 hover:border-slate-700 transition">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400 block">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 p-6 rounded-3xl shadow-lg dark:shadow-xl space-y-1 hover:border-slate-300 dark:hover:border-slate-700 transition">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">
               Capacitate Spectatori
             </span>
-            <p className="text-3xl sm:text-4xl font-black text-white font-mono">
+            <p className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-mono">
               {venue.capacity ? venue.capacity.toLocaleString() : "—"}
             </p>
-            <p className="text-xs text-slate-400 font-label">Locuri pe scaune în tribune</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-label">Locuri pe scaune în tribune</p>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800/90 p-6 rounded-3xl shadow-xl space-y-1 hover:border-slate-700 transition">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400 block">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 p-6 rounded-3xl shadow-lg dark:shadow-xl space-y-1 hover:border-slate-300 dark:hover:border-slate-700 transition">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">
               Suprafață de Joc
             </span>
-            <p className="text-2xl sm:text-3xl font-black text-white font-headline uppercase">
+            <p className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-headline uppercase">
               {venue.surface || "—"}
             </p>
-            <p className="text-xs text-slate-400 font-label">{venue.sport || "Sport"} • bază omologată</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-label">{venue.sport || "Sport"} • bază omologată</p>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800/90 p-6 rounded-3xl shadow-xl space-y-1 hover:border-slate-700 transition">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400 block">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 p-6 rounded-3xl shadow-lg dark:shadow-xl space-y-1 hover:border-slate-300 dark:hover:border-slate-700 transition">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 block">
               Iluminat &amp; Acces
             </span>
-            <p className="text-2xl sm:text-3xl font-black text-lime-400 font-headline uppercase">
+            <p className="text-2xl sm:text-3xl font-black text-lime-600 dark:text-lime-400 font-headline uppercase">
               {venue.floodlights ? "Nocturnă" : "Program de zi"}
             </p>
-            <p className="text-xs text-slate-400 font-label">Acces public și facilități de arenă</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-label">Acces public și facilități de arenă</p>
           </div>
         </section>
 
         {/* SECTION: Visual Discovery - Interactive Venue Photo Gallery */}
         <section className="space-y-6">
-          <div className="flex justify-between items-end pb-3 border-b border-slate-800">
+          <div className="flex justify-between items-end pb-3 border-b border-slate-200 dark:border-slate-800">
             <div>
-              <span className="font-mono text-lime-400 font-bold uppercase tracking-widest text-xs block">
+              <span className="font-mono text-lime-600 dark:text-lime-400 font-bold uppercase tracking-widest text-xs block">
                 Descoperire Vizuală
               </span>
-              <h2 className="text-2xl sm:text-3xl font-black font-headline uppercase text-white">
+              <h2 className="text-2xl sm:text-3xl font-black font-headline uppercase text-slate-900 dark:text-white">
                 Galerie Foto &amp; Facilități Arenă
               </h2>
             </div>
-            <span className="text-xs font-mono font-bold text-slate-400 uppercase">
+            <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">
               4 Cadre Configurabile
             </span>
           </div>
@@ -626,7 +626,7 @@ export function VenueDetailClientView({
               <div
                 key={idx}
                 onClick={() => setSelectedPhotoIndex(idx)}
-                className="group relative h-64 sm:h-72 rounded-3xl overflow-hidden cursor-pointer bg-slate-950 border border-slate-800 shadow-md hover:shadow-2xl transition-all duration-300"
+                className="group relative h-64 sm:h-72 rounded-3xl overflow-hidden cursor-pointer bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-md hover:shadow-2xl transition-all duration-300"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -658,14 +658,14 @@ export function VenueDetailClientView({
         </section>
 
         {/* SECTION: Elite Amenities Showcase */}
-        <section className="bg-slate-900 border border-slate-800/90 rounded-3xl p-8 sm:p-10 shadow-2xl space-y-8">
-          <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
+        <section className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-8 sm:p-10 shadow-xl dark:shadow-2xl space-y-8">
+          <div className="flex items-center gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
             <span className="w-3 h-7 bg-lime-400 rounded-full"></span>
             <div>
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-400 block">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-lime-600 dark:text-lime-400 block">
                 Standarde de Performanță
               </span>
-              <h2 className="text-xl sm:text-2xl font-black font-headline uppercase text-white">
+              <h2 className="text-xl sm:text-2xl font-black font-headline uppercase text-slate-900 dark:text-white">
                 Dotări &amp; Facilități Principale ale Arenei
               </h2>
             </div>
@@ -674,43 +674,43 @@ export function VenueDetailClientView({
           {amenities.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {amenities.map((amenity) => (
-                <div key={amenity.key} className="bg-slate-950 p-5 rounded-2xl border border-slate-800/80 hover:border-lime-400/40 transition space-y-2">
-                  <div className="w-10 h-10 rounded-xl bg-lime-400/10 text-lime-400 flex items-center justify-center border border-lime-400/20">
+                <div key={amenity.key} className="bg-slate-50 dark:bg-slate-950 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 hover:border-lime-500/40 dark:hover:border-lime-400/40 transition space-y-2">
+                  <div className="w-10 h-10 rounded-xl bg-lime-500/10 text-lime-600 dark:text-lime-400 flex items-center justify-center border border-lime-500/20">
                     <span className="material-symbols-outlined text-xl">{amenity.icon}</span>
                   </div>
-                  <h4 className="font-headline font-bold text-sm text-white">{amenity.label}</h4>
-                  {amenity.detail && <p className="text-xs text-slate-400 font-body leading-relaxed">{amenity.detail}</p>}
+                  <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white">{amenity.label}</h4>
+                  {amenity.detail && <p className="text-xs text-slate-600 dark:text-slate-400 font-body leading-relaxed">{amenity.detail}</p>}
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-slate-400">Facilitățile acestei arene nu au fost configurate încă.</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Facilitățile acestei arene nu au fost configurate încă.</p>
           )}
         </section>
 
         {/* SECTION: Next on the Turf / Upcoming Matches with DIRECT TICKET LINK */}
         <section id="upcoming-matches" className="space-y-6 scroll-mt-24">
-          <div className="flex justify-between items-center pb-3 border-b border-slate-800">
+          <div className="flex justify-between items-center pb-3 border-b border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2.5">
               <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
-              <h2 className="text-xl sm:text-2xl font-black font-headline uppercase text-white">
+              <h2 className="text-xl sm:text-2xl font-black font-headline uppercase text-slate-900 dark:text-white">
                 Următoarele Meciuri pe Arenă &amp; Vânzare Bilete
               </h2>
             </div>
-            <span className="text-xs font-mono font-bold text-slate-400 uppercase">
+            <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">
               {upcomingMatches.length} Partide Programate
             </span>
           </div>
 
           {upcomingMatches.length === 0 ? (
-            <div className="p-12 rounded-3xl bg-slate-900 border border-slate-800 text-center space-y-3 shadow-sm">
-              <span className="material-symbols-outlined text-4xl text-slate-500 block">
+            <div className="p-12 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center space-y-3 shadow-sm">
+              <span className="material-symbols-outlined text-4xl text-slate-400 dark:text-slate-500 block">
                 sports_soccer
               </span>
-              <h3 className="font-headline font-bold text-white text-base">
+              <h3 className="font-headline font-bold text-slate-900 dark:text-white text-base">
                 Nu sunt meciuri programate momentan
               </h3>
-              <p className="text-xs text-slate-400 max-w-md mx-auto">
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
                 Organizatorii ligilor vor programa în curând următoarele confruntări oficiale pe această arenă.
               </p>
             </div>
@@ -732,14 +732,14 @@ export function VenueDetailClientView({
                 return (
                   <div
                     key={m.id}
-                    className="bg-slate-900 border border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-xl hover:shadow-2xl hover:border-lime-400/60 transition-all duration-300 flex flex-col justify-between space-y-6 group"
+                    className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-lg dark:shadow-xl hover:shadow-xl dark:hover:shadow-2xl hover:border-lime-500 dark:hover:border-lime-400/60 transition-all duration-300 flex flex-col justify-between space-y-6 group"
                   >
                     {/* Header: League & Kickoff */}
-                    <div className="flex justify-between items-center text-xs font-label pb-4 border-b border-slate-800">
-                      <span className="px-3 py-1 rounded-full bg-slate-950 text-lime-400 font-mono font-bold text-[10px] uppercase border border-slate-800">
+                    <div className="flex justify-between items-center text-xs font-label pb-4 border-b border-slate-100 dark:border-slate-800">
+                      <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-lime-400 font-mono font-bold text-[10px] uppercase border border-slate-200 dark:border-slate-800">
                         {m.championship?.name || "Ligue Pro"} • Etapa {m.round || 1}
                       </span>
-                      <span className="text-slate-400 text-xs font-mono font-bold">
+                      <span className="text-slate-500 dark:text-slate-400 text-xs font-mono font-bold">
                         Ora {formattedTime}
                       </span>
                     </div>
@@ -747,16 +747,16 @@ export function VenueDetailClientView({
                     {/* Team Clash Display */}
                     <div className="flex items-center justify-between gap-4 py-2">
                       <div className="flex-1 text-center space-y-2">
-                        <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center text-xl font-black font-headline text-white shadow-sm">
+                        <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-xl font-black font-headline text-slate-900 dark:text-white shadow-sm">
                           {m.homeTeam?.name?.substring(0, 2).toUpperCase() || "GA"}
                         </div>
-                        <h4 className="font-headline font-bold text-sm sm:text-base text-white line-clamp-1">
+                        <h4 className="font-headline font-bold text-sm sm:text-base text-slate-900 dark:text-white line-clamp-1">
                           {m.homeTeam?.name || "Gazde"}
                         </h4>
                       </div>
 
                       <div className="shrink-0 flex flex-col items-center">
-                        <span className="text-xl sm:text-2xl font-black italic font-headline text-lime-400">
+                        <span className="text-xl sm:text-2xl font-black italic font-headline text-lime-600 dark:text-lime-400">
                           VS
                         </span>
                         <span className="text-[10px] font-mono font-bold text-slate-400 uppercase mt-0.5">
@@ -765,18 +765,18 @@ export function VenueDetailClientView({
                       </div>
 
                       <div className="flex-1 text-center space-y-2">
-                        <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center text-xl font-black font-headline text-white shadow-sm">
+                        <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-xl font-black font-headline text-slate-900 dark:text-white shadow-sm">
                           {m.awayTeam?.name?.substring(0, 2).toUpperCase() || "OA"}
                         </div>
-                        <h4 className="font-headline font-bold text-sm sm:text-base text-white line-clamp-1">
+                        <h4 className="font-headline font-bold text-sm sm:text-base text-slate-900 dark:text-white line-clamp-1">
                           {m.awayTeam?.name || "Oaspeți"}
                         </h4>
                       </div>
                     </div>
 
                     {/* Footer Date & Direct Ticket Link */}
-                    <div className="pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                      <div className="flex items-center gap-1.5 text-xs text-slate-300">
+                    <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                      <div className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300">
                         <span className="material-symbols-outlined text-[15px] text-slate-400">calendar_month</span>
                         <span className="capitalize">{formattedDate}</span>
                       </div>
@@ -793,7 +793,7 @@ export function VenueDetailClientView({
                         ) : (
                           <Link
                             href={`/matches/${m.id}/promo`}
-                            className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-slate-950 text-slate-400 font-medium text-xs uppercase tracking-wider transition border border-slate-800 flex items-center justify-center gap-1.5 hover:bg-slate-800"
+                            className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-950 text-slate-500 dark:text-slate-400 font-medium text-xs uppercase tracking-wider transition border border-slate-200 dark:border-slate-800 flex items-center justify-center gap-1.5 hover:bg-slate-200 dark:hover:bg-slate-800"
                             title="Vânzarea online a biletelor este închisă (ziua meciului sau meci finalizat)"
                           >
                             <span className="material-symbols-outlined text-[14px]">lock</span>
@@ -812,9 +812,9 @@ export function VenueDetailClientView({
         {/* Written Announcements from Arena Owner */}
         {activeAnnouncements.length > 0 && (
           <section id="arena-sponsors" className="space-y-4 scroll-mt-24">
-            <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
+            <div className="flex items-center gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
               <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
-              <h2 className="text-xl font-bold font-headline uppercase text-white">
+              <h2 className="text-xl font-bold font-headline uppercase text-slate-900 dark:text-white">
                 Comunicate &amp; Anunțuri Oficiale ale Arenei
               </h2>
             </div>
@@ -823,15 +823,15 @@ export function VenueDetailClientView({
               {activeAnnouncements.map((ann) => (
                 <div
                   key={ann.id}
-                  className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-md space-y-2 border-l-4 border-l-lime-400"
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-md space-y-2 border-l-4 border-l-lime-500 dark:border-l-lime-400"
                 >
-                  <span className="text-[10px] font-mono font-bold text-slate-400 uppercase">
+                  <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">
                     <span className="flex items-center gap-1"><span className="material-symbols-outlined text-xs">calendar_month</span> {ann.date}</span>
                   </span>
-                  <h4 className="font-headline font-bold text-base text-white">
+                  <h4 className="font-headline font-bold text-base text-slate-900 dark:text-white">
                     {ann.title}
                   </h4>
-                  <p className="text-xs text-slate-300 font-body leading-relaxed">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 font-body leading-relaxed">
                     {ann.content}
                   </p>
                 </div>
@@ -843,9 +843,9 @@ export function VenueDetailClientView({
         {/* Sponsor Banners & Advertising Space */}
         {activeAds.length > 0 && (
           <section className="space-y-4">
-            <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
+            <div className="flex items-center gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
               <span className="w-2.5 h-6 bg-lime-400 rounded-full"></span>
-              <h2 className="text-xl font-bold font-headline uppercase text-white">
+              <h2 className="text-xl font-bold font-headline uppercase text-slate-900 dark:text-white">
                 Sponsori &amp; Parteneri Oficiali
               </h2>
             </div>
@@ -857,7 +857,7 @@ export function VenueDetailClientView({
                   href={ad.linkUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition group block"
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition group block"
                 >
                   <div className="h-44 bg-slate-950 relative overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -883,20 +883,20 @@ export function VenueDetailClientView({
 
         {/* SECTION: Historical Match Results Archive */}
         <section className="space-y-6 pb-8">
-          <div className="flex justify-between items-center pb-3 border-b border-slate-800">
+          <div className="flex justify-between items-center pb-3 border-b border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-6 bg-blue-500 rounded-full"></span>
-              <h2 className="text-xl font-bold font-headline uppercase text-white">
+              <h2 className="text-xl font-bold font-headline uppercase text-slate-900 dark:text-white">
                 Istoric Meciuri &amp; Rezultate pe Arenă
               </h2>
             </div>
-            <span className="text-xs font-mono font-bold text-slate-400 uppercase">
+            <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">
               {finishedMatches.length} Partide Jucate
             </span>
           </div>
 
           {finishedMatches.length === 0 ? (
-            <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center text-xs text-slate-400 font-mono shadow-sm">
+            <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400 font-mono shadow-sm">
               Nu există încă meciuri finalizate pe această arenă.
             </div>
           ) : (
@@ -904,7 +904,7 @@ export function VenueDetailClientView({
               {Object.entries(groupedResults).map(([groupTitle, groupMatches]) => (
                 <div key={groupTitle} className="space-y-4">
                   <div className="flex items-center gap-2">
-                    <span className="px-3 py-1 rounded-full bg-slate-800 text-lime-400 text-xs font-mono font-bold uppercase border border-slate-700">
+                    <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-lime-400 text-xs font-mono font-bold uppercase border border-slate-200 dark:border-slate-700">
                       {groupTitle}
                     </span>
                   </div>
@@ -913,9 +913,9 @@ export function VenueDetailClientView({
                     {groupMatches.map((m) => (
                       <div
                         key={m.id}
-                        className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-sm hover:shadow-xl space-y-4 transition"
+                        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm hover:shadow-xl space-y-4 transition"
                       >
-                        <div className="flex justify-between items-center text-[10px] font-mono font-bold text-slate-400 uppercase">
+                        <div className="flex justify-between items-center text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">
                           <span>
                             {m.scheduledAt
                               ? new Date(m.scheduledAt).toLocaleDateString("ro-RO", {
@@ -925,7 +925,7 @@ export function VenueDetailClientView({
                               })
                               : "FINALIZAT"}
                           </span>
-                          <span className="text-emerald-400 font-medium flex items-center gap-1">
+                          <span className="text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
                             <span className="material-symbols-outlined text-[14px]">check_circle</span>
                             <span>Finalizat</span>
                           </span>
@@ -933,25 +933,25 @@ export function VenueDetailClientView({
 
                         {/* Score Banner */}
                         <div className="flex items-center justify-between gap-2 py-1">
-                          <span className="font-bold text-base text-white font-headline truncate flex-1 min-w-0">{m.homeTeam?.name || "Gazde"}</span>
-                          <span className="shrink-0 whitespace-nowrap text-center text-lg font-black font-mono px-3 py-0.5 rounded-lg bg-slate-950 text-lime-400 border border-slate-800">
+                          <span className="font-bold text-base text-slate-900 dark:text-white font-headline truncate flex-1 min-w-0">{m.homeTeam?.name || "Gazde"}</span>
+                          <span className="shrink-0 whitespace-nowrap text-center text-lg font-black font-mono px-3 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-950 text-lime-700 dark:text-lime-400 border border-slate-200 dark:border-slate-800">
                             {m.homeScore ?? 0} - {m.awayScore ?? 0}
                           </span>
-                          <span className="font-bold text-base text-white font-headline truncate flex-1 min-w-0 text-right">{m.awayTeam?.name || "Oaspeți"}</span>
+                          <span className="font-bold text-base text-slate-900 dark:text-white font-headline truncate flex-1 min-w-0 text-right">{m.awayTeam?.name || "Oaspeți"}</span>
                         </div>
 
                         {m.referee && (
-                          <p className="text-[11px] text-slate-400 font-label flex items-center gap-1">
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-label flex items-center gap-1">
                             <span className="material-symbols-outlined text-[14px]">sports</span>
                             Arbitru: {m.referee}
                           </p>
                         )}
 
-                        <div className="pt-3 border-t border-slate-800 flex gap-2">
+                        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex gap-2">
                           <Link
                             href={`/matches/${m.id}/report`}
                             target="_blank"
-                            className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-[11px] font-bold font-mono uppercase tracking-wider text-center block transition border border-slate-700"
+                            className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-xl text-[11px] font-bold font-mono uppercase tracking-wider text-center block transition border border-slate-200 dark:border-slate-700"
                           >
                             <span className="material-symbols-outlined text-[14px] mr-1 align-middle">description</span>
                             Raport Meci PDF
