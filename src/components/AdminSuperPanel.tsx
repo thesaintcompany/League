@@ -2006,6 +2006,28 @@ export function AdminSuperPanel() {
                 </div>
               ))}
             </div>
+
+            {/* Impersonation Feature Guide Banner */}
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/5 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-black shrink-0 shadow-sm">
+                  <span className="material-symbols-outlined text-lg">switch_account</span>
+                </div>
+                <div>
+                  <p className="font-headline font-black uppercase text-slate-900 dark:text-white text-xs">
+                    Autentificare Automată &amp; Impersonare Utilizator
+                  </p>
+                  <p className="text-slate-600 dark:text-slate-400 text-[11px] mt-0.5">
+                    Ca SuperAdmin, te poți conecta instantaneu în contul oricărui utilizator apăsând butonul galben <strong>„Impersonate”</strong> din dreptul contului din tabel.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-300 font-mono font-bold text-[10px]">
+                  Revenire printr-un singur click
+                </span>
+              </div>
+            </div>
           </div>
 
           {/* User Search & Filter Control Hub */}
@@ -2065,16 +2087,16 @@ export function AdminSuperPanel() {
                   onClick={() => setUserAccountTypeFilter("real")}
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-headline font-bold uppercase transition-all duration-200 flex items-center gap-1.5 ${
                     userAccountTypeFilter === "real"
-                      ? "bg-lime-400 text-slate-950 font-black shadow-sm shadow-lime-400/20 scale-[1.02]"
+                      ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm font-black scale-[1.02]"
                       : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
-                  <span className="material-symbols-outlined text-sm text-lime-600 dark:text-lime-400">verified</span>
+                  <span className="material-symbols-outlined text-sm text-emerald-500">verified</span>
                   <span>Reale</span>
                   <span
                     className={`ml-1 px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold ${
                       userAccountTypeFilter === "real"
-                        ? "bg-slate-950 text-lime-400"
+                        ? "bg-emerald-500 text-white"
                         : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
                     }`}
                   >
@@ -2087,16 +2109,16 @@ export function AdminSuperPanel() {
                   onClick={() => setUserAccountTypeFilter("demo")}
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-headline font-bold uppercase transition-all duration-200 flex items-center gap-1.5 ${
                     userAccountTypeFilter === "demo"
-                      ? "bg-purple-600 text-white font-black shadow-sm shadow-purple-600/20 scale-[1.02]"
+                      ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm font-black scale-[1.02]"
                       : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
-                  <span className="material-symbols-outlined text-sm text-purple-400">science</span>
+                  <span className="material-symbols-outlined text-sm text-purple-500">science</span>
                   <span>Demo</span>
                   <span
                     className={`ml-1 px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold ${
                       userAccountTypeFilter === "demo"
-                        ? "bg-white text-purple-900"
+                        ? "bg-purple-500 text-white"
                         : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
                     }`}
                   >
@@ -2106,11 +2128,11 @@ export function AdminSuperPanel() {
               </div>
             </div>
 
-            {/* Bottom Row: Role Pills Carousel / Group with Dynamic Counts */}
-            <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-800/80">
-              <span className="text-[10px] font-label font-bold text-slate-400 uppercase tracking-widest mr-1 shrink-0 flex items-center gap-1">
-                <span className="material-symbols-outlined text-xs">filter_list</span>
-                Filtru Rol:
+            {/* Bottom Row: Role Filter Pills */}
+            <div className="flex items-center gap-1.5 flex-wrap pt-2 border-t border-slate-100 dark:border-slate-800">
+              <span className="text-[11px] font-label font-bold text-slate-400 uppercase tracking-wider mr-1 flex items-center gap-1">
+                <span className="material-symbols-outlined text-xs">tune</span>
+                Filtrează după Rol:
               </span>
 
               {[
@@ -2198,7 +2220,7 @@ export function AdminSuperPanel() {
                     <th className="py-4 px-4 text-center">Status Cont</th>
                     <th className="py-4 px-4 text-center">Campionate / Arene</th>
                     <th className="py-4 px-4 text-center">Data Înregistrării &amp; IP</th>
-                    <th className="py-4 px-4 text-right">Acțiuni WordPress Admin</th>
+                    <th className="py-4 px-4 text-right">Acțiuni &amp; Impersonare</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-body">
@@ -2289,13 +2311,19 @@ export function AdminSuperPanel() {
                               type="button"
                               onClick={() => handleImpersonateUser(u)}
                               disabled={impersonatingUserId === u.id || u.isActive === false}
-                              className="p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold transition disabled:opacity-40 flex items-center justify-center"
+                              className="px-2.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-headline font-black text-[11px] uppercase tracking-wider transition-all shadow-sm active:scale-95 disabled:opacity-40 flex items-center gap-1 shrink-0"
                               title="Conectează-te automat ca acest utilizator (Impersonate)"
                             >
                               {impersonatingUserId === u.id ? (
-                                <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
+                                <>
+                                  <span className="material-symbols-outlined text-xs animate-spin">progress_activity</span>
+                                  <span>Conectare...</span>
+                                </>
                               ) : (
-                                <span className="material-symbols-outlined text-base">switch_account</span>
+                                <>
+                                  <span className="material-symbols-outlined text-sm font-bold">switch_account</span>
+                                  <span>Impersonate</span>
+                                </>
                               )}
                             </button>
 
