@@ -145,9 +145,7 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
       {/* Dynamic Athletic Player Shadow & Stadium Lights */}
       <SportsBackgroundSilhouette />
 
-      <div className="relative z-10">
-        <PublicHeader currentTab="teams" />
-      </div>
+      <PublicHeader currentTab="teams" />
 
       {/* Hero Banner Section with Team Group Photo */}
       <section className="relative w-full border-b border-slate-800 bg-slate-950 overflow-hidden">

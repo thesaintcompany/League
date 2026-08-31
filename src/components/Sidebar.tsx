@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -31,6 +32,23 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
   const [userChampionships, setUserChampionships] = useState<{ id: string; name: string; sport: string }[]>([]);
   const [selectedChampId, setSelectedChampId] = useState<string | null>(null);
   const [arenaId, setArenaId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock background body scroll when mobile sidebar drawer is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   useEffect(() => {
     function handleToggle() {
@@ -410,23 +428,28 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
         {sidebarContent}
       </aside>
 
-      {/* Mobile Drawer (visible when mobileOpen is true) */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden flex">
-          <div
-            onClick={() => setMobileOpen(false)}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in"
-          />
-          <div
-            className={`relative w-4/5 max-w-xs h-full py-6 shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200 border-r ${isDarkTheme
-              ? "bg-slate-900 border-slate-800 text-white"
-              : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
+      {/* Mobile Drawer (rendered directly to body to avoid clipping and stacking context bugs) */}
+      {mounted &&
+        mobileOpen &&
+        createPortal(
+          <div className="fixed inset-0 z-[99999] lg:hidden flex isolate">
+            <div
+              onClick={() => setMobileOpen(false)}
+              className="fixed inset-0 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 z-[99999]"
+              aria-hidden="true"
+            />
+            <div
+              className={`relative w-4/5 max-w-xs h-full py-6 shadow-2xl flex flex-col z-[100000] animate-in slide-in-from-left duration-200 border-r overflow-y-auto ${
+                isDarkTheme
+                  ? "bg-slate-900 border-slate-800 text-white"
+                  : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
               }`}
-          >
-            {sidebarContent}
-          </div>
-        </div>
-      )}
+            >
+              {sidebarContent}
+            </div>
+          </div>,
+          document.body
+        )}
     </>
   );
 }

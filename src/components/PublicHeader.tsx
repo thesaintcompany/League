@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -37,6 +38,23 @@ export function PublicHeader({ currentTab, variant, showSportSubHeader }: Public
   const isDark = variant === "dark";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock background body scroll when mobile menu drawer is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
 
   const headerRef = useRef<HTMLElement | null>(null);
   const leftRef = useRef<HTMLDivElement | null>(null);
@@ -258,141 +276,128 @@ export function PublicHeader({ currentTab, variant, showSportSubHeader }: Public
       {/* Sub Header for Sport Selection & Context Filter (Hidden on Team & Manager Pages) */}
       {shouldRenderSubHeader && <SportSubHeader variant={variant} />}
 
-      {/* Slide-Out Navigation Drawer (Shown whenever mobileMenuOpen is true) */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 flex">
-          {/* Backdrop Blur */}
-          <div
-            onClick={() => setMobileMenuOpen(false)}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm animate-in fade-in"
-          />
+      {/* Slide-Out Navigation Drawer rendered directly to document.body via Portal to escape all local stacking contexts */}
+      {mounted &&
+        mobileMenuOpen &&
+        createPortal(
+          <div className="fixed inset-0 z-[99999] flex isolate">
+            {/* Full-Screen Dimmed & Blurred Backdrop */}
+            <div
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 z-[99999]"
+              aria-hidden="true"
+            />
 
-          {/* Drawer Panel */}
-          <div className="relative w-4/5 max-w-xs bg-white dark:bg-slate-900 text-slate-900 dark:text-white h-full shadow-2xl p-6 flex flex-col justify-between z-10 animate-in slide-in-from-left duration-200 border-r border-slate-200 dark:border-slate-800">
-            <div>
-              {/* Drawer Top Header */}
-              <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
-                <BrandLogo size="sm" href="/campionat" onClick={() => setMobileMenuOpen(false)} />
+            {/* Slide-In Drawer Panel */}
+            <div className="relative w-4/5 max-w-xs bg-white dark:bg-slate-900 text-slate-900 dark:text-white h-full shadow-2xl p-6 flex flex-col justify-between z-[100000] animate-in slide-in-from-left duration-200 border-r border-slate-200 dark:border-slate-800 overflow-y-auto">
+              <div className="space-y-4">
+                {/* Drawer Top Header */}
+                <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+                  <BrandLogo size="sm" href="/campionat" onClick={() => setMobileMenuOpen(false)} />
 
-                <button
-                  type="button"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center"
-                >
-                  <span className="material-symbols-outlined align-middle text-sm">close</span>
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition active:scale-95"
+                    aria-label="Închide meniu"
+                  >
+                    <span className="material-symbols-outlined text-base">close</span>
+                  </button>
+                </div>
+
+                {/* Navigation Items */}
+                <nav className="space-y-1">
+                  {navLinks.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-headline font-bold uppercase tracking-wider transition ${
+                        item.active
+                          ? "bg-lime-400 text-slate-950 font-black shadow-sm"
+                          : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </Link>
+                  ))}
+                </nav>
               </div>
 
-              {/* Navigation Items */}
-              <nav className="space-y-1">
-                {navLinks.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-headline font-bold uppercase tracking-wider transition ${
-                      item.active
-                        ? "bg-lime-400 text-slate-950 font-black shadow-sm"
-                        : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                    }`}
-                  >
-                    <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-                    <span>{item.label}</span>
-                  </Link>
-                ))}
-              </nav>
-            </div>
-
-            {/* Bottom Actions inside Drawer */}
-            <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
-              {session?.user ? (
-                <>
-                  <Link
-                    href="/profile"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center gap-3"
-                  >
-                    <div className="w-10 h-10 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center text-sm font-black shadow shrink-0">
-                      {session.user.name ? session.user.name[0].toUpperCase() : (session.user.email ? session.user.email[0].toUpperCase() : "U")}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-headline font-bold text-slate-900 dark:text-white truncate">
-                        {session.user.name || "Utilizator"}
-                      </p>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate font-mono">
-                        {session.user.email}
-                      </p>
-                    </div>
-                  </Link>
-
-                  <div className="grid grid-cols-2 gap-2">
+              {/* Bottom Actions inside Drawer */}
+              <div className="pt-4 mt-6 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+                {session?.user ? (
+                  <>
                     <Link
-                      href={targetDashboard}
+                      href="/profile"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow-sm"
+                      className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center gap-3"
                     >
-                      <span className="material-symbols-outlined text-sm">dashboard</span>
-                      <span>Panou</span>
+                      <div className="w-10 h-10 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center text-sm font-black shadow shrink-0">
+                        {session.user.name
+                          ? session.user.name[0].toUpperCase()
+                          : session.user.email
+                            ? session.user.email[0].toUpperCase()
+                            : "U"}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-headline font-bold text-slate-900 dark:text-white truncate">
+                          {session.user.name || "Utilizator"}
+                        </p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate font-mono">
+                          {session.user.email}
+                        </p>
+                      </div>
                     </Link>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        appSignOut("/");
-                      }}
-                      className="py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-red-500 hover:text-white text-slate-700 dark:text-slate-300 font-headline font-bold text-xs uppercase flex items-center justify-center gap-1.5 transition"
-                    >
-                      <span className="material-symbols-outlined text-sm">logout</span>
-                      <span>Logout</span>
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/dashboard"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-label font-bold text-xs uppercase flex items-center justify-center gap-1.5"
-                  >
-                    <span>Panou</span>
-                    <span className="material-symbols-outlined text-sm">open_in_new</span>
-                  </Link>
-                  <Link
-                    href="/signin"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow-md"
-                  >
-                    <span className="material-symbols-outlined text-base">login</span>
-                    <span>Login</span>
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* Floating Modern Mobile Bottom Navigation Bar (1-Thumb Ergonomics) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800/80 px-2 py-1.5 flex items-center justify-around shadow-2xl safe-bottom">
-        {mobileBottomNav.map((btn) => {
-          return (
-            <Link
-              key={btn.href}
-              href={btn.href}
-              className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all ${
-                btn.active
-                  ? "text-lime-600 dark:text-lime-400 scale-105 font-black"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
-              }`}
-            >
-              <span className="material-symbols-outlined text-[20px]">{btn.icon}</span>
-              <span className="text-[10px] font-headline uppercase tracking-tight mt-0.5">
-                {btn.label}
-              </span>
-            </Link>
-          );
-        })}
-      </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Link
+                        href={targetDashboard}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow-sm"
+                      >
+                        <span className="material-symbols-outlined text-sm">dashboard</span>
+                        <span>Panou</span>
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          appSignOut("/");
+                        }}
+                        className="py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-red-500 hover:text-white text-slate-700 dark:text-slate-300 font-headline font-bold text-xs uppercase flex items-center justify-center gap-1.5 transition"
+                      >
+                        <span className="material-symbols-outlined text-sm">logout</span>
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-label font-bold text-xs uppercase flex items-center justify-center gap-1.5"
+                    >
+                      <span>Panou</span>
+                      <span className="material-symbols-outlined text-sm">open_in_new</span>
+                    </Link>
+                    <Link
+                      href="/signin"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow-md"
+                    >
+                      <span className="material-symbols-outlined text-base">login</span>
+                      <span>Login</span>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
     </>
   );
 }
