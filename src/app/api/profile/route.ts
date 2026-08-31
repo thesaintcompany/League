@@ -124,5 +124,29 @@ export async function PATCH(req: Request) {
     data: updateData,
   });
 
+  // Sync with player records in team roster
+  try {
+    await prisma.player.updateMany({
+      where: {
+        OR: [
+          { userId: targetUser.id },
+          ...(targetUser.email ? [{ email: targetUser.email }] : []),
+        ],
+      },
+      data: {
+        ...(updateData.image !== undefined && { image: updateData.image }),
+        ...(updateData.position !== undefined && { position: updateData.position }),
+        ...(updateData.jerseyNumber !== undefined && { number: updateData.jerseyNumber }),
+        ...(updateData.preferredFoot !== undefined && { preferredFoot: updateData.preferredFoot }),
+        ...(updateData.phone !== undefined && { phone: updateData.phone }),
+        ...(updateData.heightCm !== undefined && { heightCm: updateData.heightCm }),
+        ...(updateData.weightKg !== undefined && { weightKg: updateData.weightKg }),
+        ...(updateData.bio !== undefined && { bio: updateData.bio }),
+      },
+    });
+  } catch {
+    // ignore sync errors
+  }
+
   return NextResponse.json({ user: updatedUser });
 }

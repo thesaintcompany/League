@@ -26,15 +26,35 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Invitația nu a fost găsită" }, { status: 404 });
     }
 
+    // Find pre-configured player profile
+    const player = await prisma.player.findFirst({
+      where: {
+        teamId: invite.teamId,
+        email: invite.inviteeEmail,
+      },
+    });
+
     return NextResponse.json({
       ok: true,
-      name: invite.inviteeName || "",
-      email: invite.inviteeEmail || "",
+      name: invite.inviteeName || player?.name || "",
+      email: invite.inviteeEmail || player?.email || "",
       teamName: invite.team?.name || "",
+      teamLogo: invite.team?.logoUrl || null,
       championshipName: invite.championship?.name || "",
       sport: invite.championship?.sport || invite.sport || "fotbal",
       role: "player",
       inviteToken: invite.accountOfferToken || invite.token || invite.acceptToken,
+      player: player
+        ? {
+            id: player.id,
+            name: player.name,
+            number: player.number,
+            position: player.position,
+            image: player.image,
+            preferredFoot: player.preferredFoot,
+            phone: player.phone,
+          }
+        : null,
     });
   } catch (e) {
     console.error("GET invite error", e);
@@ -76,22 +96,23 @@ export async function POST(req: Request) {
     const base = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "https://ligue.ro";
     const offerLink = `${base}/invite/accept?offer=${offerToken}`;
     const cardLink = `${base}/invite/card?token=${offerToken}`;
+    const directSignupLink = `${base}/signup?inviteToken=${offerToken}&email=${encodeURIComponent(email.trim().toLowerCase())}`;
     const sport = invite.championship?.sport || invite.sport || "campionat";
 
     // 1) Confirmation email (info collected)
     await sendEmail({
       to: email.trim().toLowerCase(),
       subject: "Invitație primită — confirmare preliminară",
-      html: `<p>Bună ${name},</p><p>Prenumele tău și emailul au fost înregistrați pentru <strong>${invite.team.name}</strong> (${sport}) în cadrul campionatului <strong>${invite.championship?.name || ""}</strong>.</p><p>Ești așteptat! Pentru a își activa contul oferte de creat este valabilă 48 de ore.</p><p>${offerLink}</p>`,
-      text: `Invitație primită pentru ${invite.team.name} (${sport}). Link activare: ${offerLink}`,
+      html: `<p>Bună ${name},</p><p>Prenumele tău și emailul au fost înregistrați pentru <strong>${invite.team.name}</strong> (${sport}) în cadrul campionatului <strong>${invite.championship?.name || ""}</strong>.</p><p>Profilul tău de jucător este gata pregătit! Pentru a-ți activa contul:</p><p><a href="${directSignupLink}">Activează Contul Direct</a></p>`,
+      text: `Invitație primită pentru ${invite.team.name} (${sport}). Link activare: ${directSignupLink}`,
     });
 
     // 2) Offer email (optional, with card-link)
     await sendEmail({
       to: email.trim().toLowerCase(),
       subject: "Oferta ta de cont — doar o parolă",
-      html: `<p>După confirmare, poți crea contul tău scriind o singură parolă. Link-ul este valabil 48h.</p><p>${offerLink}</p><p>Poți, de asemenea, să îți încarci poza de profil și cardul de membru aici: ${cardLink}</p>`,
-      text: `Oferta de cont: ${offerLink}. Card/membru: ${cardLink}`,
+      html: `<p>După confirmare, poți crea contul tău scriind o singură parolă. Link-ul este valabil 48h.</p><p><a href="${directSignupLink}">Finalizează Înregistrarea</a></p><p>Card/membru: ${cardLink}</p>`,
+      text: `Oferta de cont: ${directSignupLink}. Card/membru: ${cardLink}`,
     });
 
     // Notify the inviter
@@ -112,7 +133,8 @@ export async function POST(req: Request) {
       championshipName: invite.championship?.name,
       offerToken,
       offerLink,
-      message: `Conformarea primită! Link-ul de activare a fost generat.`,
+      directSignupLink,
+      message: `Confirmarea primită! Link-ul de activare a fost generat.`,
     });
   } catch (e) {
     console.error("invite accept error", e);

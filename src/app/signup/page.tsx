@@ -48,7 +48,7 @@ const ROLES = [
 function SignUpForm() {
   const router = useRouter();
   const search = useSearchParams();
-  const inviteToken = search.get("invite") || search.get("offer") || search.get("token") || undefined;
+  const inviteToken = search.get("invite") || search.get("inviteToken") || search.get("offer") || search.get("token") || undefined;
   const roleParam = search.get("role") || undefined;
   const emailParam = search.get("email") || undefined;
   const nameParam = search.get("name") || search.get("userName") || undefined;

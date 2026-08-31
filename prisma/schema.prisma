@@ -62,8 +62,9 @@ model User {
     sentTeamInvitations TeamInvitation[] @relation("TeamInvitationInviter")
     externalInvites ExternalInvite[]
     paymentMethods  PaymentMethod[]
-    invoices        Invoice[]
-    notifications   Notification[]
+   invoices        Invoice[]
+   notifications   Notification[]
+   players         Player[]
 }
 
 model Account {
@@ -305,11 +306,17 @@ model Player {
   id              String   @id @default(cuid())
   name            String
   email           String?
+  phone           String?
   number          Int?
   position        String?
   status          String   @default("active") // "active", "invited", "reserve"
   isStarter       Boolean  @default(true)
   invitationToken String?
+  preferredFoot   String?  // "Drept", "Stâng", "Ambele"
+  birthDate       String?  // Data nașterii (ex: "1998-05-14")
+  heightCm        Int?     // Înălțime cm
+  weightKg        Int?     // Greutate kg
+  bio             String?  // Scurtă descriere / caracteristici
   goals           Int      @default(0)
   matchesCount    Int      @default(0)
   assists         Int      @default(0)
@@ -319,11 +326,14 @@ model Player {
   suspensions     Int      @default(0)
   image           String?
   teamId          String
+  userId          String?
   createdAt       DateTime @default(now())
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([teamId])
+  @@index([userId])
 }
 
 model Match {

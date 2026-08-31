@@ -7,12 +7,15 @@ import { CheckInModal } from "./CheckInModal";
 import { TeamNewsFeed } from "./TeamNewsFeed";
 import { generateClubNewsFeed } from "@/lib/teamNewsGenerator";
 import { ManagerGamificationWidget } from "./ManagerGamificationWidget";
+import { PlayerProfileEditorModal, EditablePlayerData } from "./PlayerProfileEditorModal";
+import { PlayerInviteModal } from "./PlayerInviteModal";
 // next/navigation not needed: tab switching is client-side with window.history.replaceState
 
 interface Player {
   id: string;
   name: string;
   email?: string | null;
+  phone?: string | null;
   number: number | null;
   position: string | null;
   status: string;
@@ -21,6 +24,12 @@ interface Player {
   assists: number;
   rating: number;
   image?: string | null;
+  preferredFoot?: string | null;
+  birthDate?: string | null;
+  heightCm?: number | null;
+  weightKg?: number | null;
+  bio?: string | null;
+  userId?: string | null;
   invitationToken?: string | null;
   yellowCards: number;
   redCards: number;
@@ -169,6 +178,12 @@ export function TeamManagerPanel({
   const [newPlayerNumber, setNewPlayerNumber] = useState<number | "">("");
   const [newPlayerPosition, setNewPlayerPosition] = useState("Mijlocaș");
   const [newPlayerIsStarter, setNewPlayerIsStarter] = useState(true);
+
+  // Player Profile Editor & Direct Invite Modal states
+  const [editingPlayer, setEditingPlayer] = useState<EditablePlayerData | null>(null);
+  const [showEditPlayerModal, setShowEditPlayerModal] = useState(false);
+  const [invitingPlayer, setInvitingPlayer] = useState<Player | null>(null);
+  const [showInvitePlayerModal, setShowInvitePlayerModal] = useState(false);
 
   // Search Platform Players Modal State
   const [showSearchModal, setShowSearchModal] = useState(false);
@@ -559,6 +574,99 @@ export function TeamManagerPanel({
     } finally {
       setBusy(false);
     }
+  }
+
+  // Save Player Profile (Create or Edit via Modal)
+  async function handleSavePlayerProfile(data: EditablePlayerData) {
+    setBusy(true);
+    try {
+      if (data.id) {
+        // Edit existing player
+        const res = await fetch("/api/team/players", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        const resData = await res.json();
+        if (res.ok && resData.player) {
+          setTeam((prev) => ({
+            ...prev,
+            players: prev.players.map((p) => (p.id === data.id ? { ...p, ...resData.player } : p)),
+          }));
+          notify(`Profilul jucătorului "${data.name}" a fost actualizat cu succes!`);
+        } else {
+          throw new Error(resData.error || "Eroare la actualizarea jucătorului.");
+        }
+      } else {
+        // Create new player with pre-set attributes
+        const res = await fetch("/api/team/players", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...data,
+            teamId: team.id,
+          }),
+        });
+        const resData = await res.json();
+        if (res.ok && resData.player) {
+          setTeam((prev) => ({
+            ...prev,
+            players: [...prev.players, resData.player],
+          }));
+          notify(`Profilul jucătorului "${data.name}" a fost creat și presetat!`);
+        } else {
+          throw new Error(resData.error || "Eroare la adăugarea jucătorului.");
+        }
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  // Send Direct Profile Invite to Player
+  async function handleSendPlayerInvite(playerIdOrData: string | EditablePlayerData, email?: string) {
+    const pId = typeof playerIdOrData === "string" ? playerIdOrData : playerIdOrData.id;
+    const targetPlayer = team.players.find((p) => p.id === pId) || (typeof playerIdOrData !== "string" ? playerIdOrData : null);
+    const targetEmail = email || targetPlayer?.email;
+
+    if (!targetEmail) {
+      throw new Error("Adresa de email este necesară pentru generarea invitației.");
+    }
+
+    const res = await fetch("/api/team/invite", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        playerId: pId,
+        teamId: team.id,
+        championshipId: team.championship?.id,
+        sport: team.sport,
+        email: targetEmail,
+        name: targetPlayer?.name,
+        number: targetPlayer?.number,
+        position: targetPlayer?.position,
+        image: targetPlayer?.image,
+        phone: targetPlayer?.phone,
+      }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Eroare la trimiterea invitației.");
+    }
+
+    if (data.player) {
+      setTeam((prev) => ({
+        ...prev,
+        players: prev.players.map((p) => (p.id === data.player.id ? { ...p, ...data.player } : p)),
+      }));
+    }
+
+    notify(`Invitația pentru ${targetPlayer?.name || targetEmail} a fost generată!`);
+    return {
+      acceptLink: data.acceptLink,
+      directSignupLink: data.directSignupLink,
+    };
   }
 
   // Add Direct Player
@@ -1568,208 +1676,127 @@ export function TeamManagerPanel({
               </button>
               <button
                 type="button"
-                onClick={() => setShowAddPlayer((s) => !s)}
-                className="px-4 py-2 rounded-xl bg-lime-100 dark:bg-slate-800 hover:bg-lime-200 dark:hover:bg-slate-700 text-lime-700 dark:text-lime-400 text-xs font-label font-bold uppercase transition border border-lime-300 dark:border-lime-400/30 flex items-center gap-1.5 shadow-sm"
+                onClick={() => {
+                  setEditingPlayer(null);
+                  setShowEditPlayerModal(true);
+                }}
+                className="px-4 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider transition shadow-md flex items-center gap-1.5 active:scale-95"
               >
                 <span className="material-symbols-outlined text-base">person_add</span>
-                Adaugă Manual
+                <span>Configurează Profil Jucător</span>
               </button>
             </div>
           </div>
 
-          {showAddPlayer && (
-            <form
-              onSubmit={handleAddPlayer}
-              className="card p-6 bg-slate-900 border border-lime-400/50 rounded-3xl shadow-xl grid grid-cols-1 sm:grid-cols-4 gap-4 animate-in fade-in"
-            >
-              <div className="sm:col-span-2">
-                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1">
-                  Nume &amp; Prenume Jucător *
-                </label>
-                <input
-                  required
-                  placeholder="ex: Andrei Popescu"
-                  value={newPlayerName}
-                  onChange={(e) => setNewPlayerName(e.target.value)}
-                  className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-lime-400"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1">
-                  Număr Tricou
-                </label>
-                <input
-                  type="number"
-                  placeholder="ex: 10"
-                  value={newPlayerNumber}
-                  onChange={(e) => setNewPlayerNumber(e.target.value === "" ? "" : Number(e.target.value))}
-                  className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-lime-400"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-bold font-label text-slate-300 uppercase block mb-1">
-                  Poziție
-                </label>
-                <select
-                  value={newPlayerPosition}
-                  onChange={(e) => setNewPlayerPosition(e.target.value)}
-                  className="w-full p-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-lime-400"
-                >
-                  <option value="Portar">Portar (GK)</option>
-                  <option value="Fundaș Central">Fundaș Central (CB)</option>
-                  <option value="Fundaș Lateral">Fundaș Lateral (LB/RB)</option>
-                  <option value="Mijlocaș">Mijlocaș (CM/CAM)</option>
-                  <option value="Extremă">Extremă (LW/RW)</option>
-                  <option value="Atacant">Atacant (ST/CF)</option>
-                </select>
-              </div>
-
-              <div className="sm:col-span-4 flex justify-between items-center pt-2 border-t border-slate-800">
-                <label className="flex items-center gap-2 text-xs font-label text-slate-300 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={newPlayerIsStarter}
-                    onChange={(e) => setNewPlayerIsStarter(e.target.checked)}
-                    className="w-4 h-4 rounded text-lime-400 focus:ring-0"
-                  />
-                  <span>Adaugă direct ca Titular în Primul 11</span>
-                </label>
-
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowAddPlayer(false)}
-                    className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-400"
-                  >
-                    Anulează
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={busy || !newPlayerName.trim()}
-                    className="px-5 py-2 rounded-xl bg-lime-400 text-slate-950 font-bold text-xs uppercase"
-                  >
-                    Salvează Jucător
-                  </button>
-                </div>
-              </div>
-            </form>
-          )}
-
           {/* Section: Titulari (Starting XI) */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-lime-600 dark:bg-lime-400 animate-pulse"></span>
-              <h4 className="text-base font-bold font-headline uppercase text-lime-700 dark:text-lime-400 tracking-wide">
-                Titulari (Primul 11) - {starters.length} Jucători
-              </h4>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-lime-400 animate-pulse"></span>
+                <h4 className="text-base font-bold font-headline uppercase text-lime-400 tracking-wide">
+                  Titulari (Primul 11) - {starters.length} Jucători
+                </h4>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {starters.map((p) => (
-                <div
-                  key={p.id}
-                  className="card p-4 bg-slate-900 border border-lime-400/30 rounded-2xl shadow-md flex flex-col justify-between space-y-3"
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-lime-400 text-slate-950 font-black text-sm flex items-center justify-center font-mono shadow-md">
-                        #{p.number ?? "—"}
-                      </div>
-                      <div>
-                        <h5 className="font-headline font-bold text-sm text-white">
-                          {p.name}
-                        </h5>
-                        <span className="text-[10px] font-label uppercase font-bold text-lime-400">
-                          {p.position || "Mijlocaș"}
-                        </span>
-                      </div>
-                    </div>
+              {starters.map((p) => {
+                const initials = (p.name || "J")
+                  .split(/\s+/)
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((w) => w[0])
+                  .join("")
+                  .toUpperCase() || "J";
 
-                    <button
-                      type="button"
-                      onClick={() => handleDeletePlayer(p.id, p.name)}
-                      className="text-slate-500 hover:text-red-400 p-1"
-                      title="Șterge"
-                    >
-                      <span className="material-symbols-outlined text-sm">delete</span>
-                    </button>
-                  </div>
-
-                  <div className="flex justify-around items-center pt-2 pb-1 border-t border-slate-800 text-xs">
-                    <div className="flex flex-col items-center" title="Cartonașe Galbene">
-                      <span className="text-[10px] text-yellow-500 font-bold uppercase">CG</span>
-                      <span className="font-bold text-white">{p.yellowCards || 0}</span>
-                    </div>
-                    <div className="flex flex-col items-center" title="Cartonașe Roșii">
-                      <span className="text-[10px] text-red-500 font-bold uppercase">CR</span>
-                      <span className="font-bold text-white">{p.redCards || 0}</span>
-                    </div>
-                    <div className="flex flex-col items-center" title="Suspendări (Etape)">
-                      <span className="text-[10px] text-orange-500 font-bold uppercase">Susp</span>
-                      <span className="font-bold text-white">{p.suspensions || 0}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center pt-2 border-t border-slate-800 text-xs font-label">
-                    <span className="px-2 py-0.5 rounded bg-lime-400/20 text-lime-400 font-bold text-[10px] uppercase">
-                      Titular
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => togglePlayerStarter(p.id, true)}
-                      className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-[11px] uppercase transition"
-                    >
-                      Treci pe Rezervă ⇄
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Section: Banca de Rezerve */}
-          <div className="space-y-4 pt-4 border-t border-slate-800">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 dark:bg-amber-400"></span>
-              <h4 className="text-base font-bold font-headline uppercase text-amber-600 dark:text-amber-300 tracking-wide">
-                Banca de Rezerve - {reserves.length} Jucători
-              </h4>
-            </div>
-
-            {reserves.length === 0 ? (
-              <div className="p-6 text-center text-xs text-slate-500 bg-slate-900 border border-slate-800 rounded-2xl italic">
-                Nu există jucători pe banca de rezerve.
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {reserves.map((p) => (
+                return (
                   <div
                     key={p.id}
-                    className="card p-4 bg-slate-900 border border-slate-800 rounded-2xl shadow-sm flex flex-col justify-between space-y-3"
+                    className="card p-4 bg-slate-900 border border-lime-400/30 rounded-2xl shadow-md flex flex-col justify-between space-y-3 hover:border-lime-400/60 transition group"
                   >
-                    <div className="flex justify-between items-start">
+                    <div className="flex justify-between items-start gap-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 font-black text-sm flex items-center justify-center font-mono">
-                          #{p.number ?? "—"}
-                        </div>
-                        <div>
-                          <h5 className="font-headline font-bold text-sm text-white">
-                            {p.name}
-                          </h5>
-                          <span className="text-[10px] font-label uppercase font-bold text-slate-400">
-                            {p.position || "Rezervă"} {p.status === "invited" ? "• Invitație Trimisă" : ""}
+                        <div className="relative">
+                          <div className="w-12 h-12 rounded-xl bg-slate-800 border border-lime-400/40 overflow-hidden flex items-center justify-center text-white font-black text-sm shrink-0 shadow">
+                            {p.image ? (
+                              <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <span className="text-lime-400">{initials}</span>
+                            )}
+                          </div>
+                          <span className="absolute -bottom-1 -right-1 px-1.5 py-0.2 rounded bg-lime-400 text-slate-950 font-mono font-black text-[9px] shadow">
+                            #{p.number ?? "—"}
                           </span>
                         </div>
+
+                        <div className="min-w-0">
+                          <h5 className="font-headline font-bold text-sm text-white truncate">
+                            {p.name}
+                          </h5>
+                          <span className="text-[10px] font-label uppercase font-bold text-lime-400 block">
+                            {p.position || "Mijlocaș"}
+                          </span>
+                          {p.email && (
+                            <span className="text-[10px] font-mono text-slate-400 truncate block">
+                              {p.email}
+                            </span>
+                          )}
+                        </div>
                       </div>
+
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingPlayer(p);
+                            setShowEditPlayerModal(true);
+                          }}
+                          className="text-slate-400 hover:text-lime-400 p-1 rounded-lg hover:bg-slate-800 transition"
+                          title="Editează profilul, poza și datele de joc"
+                        >
+                          <span className="material-symbols-outlined text-base">edit</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeletePlayer(p.id, p.name)}
+                          className="text-slate-500 hover:text-red-400 p-1 rounded-lg hover:bg-slate-800 transition"
+                          title="Șterge"
+                        >
+                          <span className="material-symbols-outlined text-base">delete</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Account Status Badge */}
+                    <div className="flex items-center justify-between text-[10px] font-mono">
+                      {p.userId ? (
+                        <span className="text-emerald-400 font-bold flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[12px]">verified</span>
+                          Cont Activ
+                        </span>
+                      ) : p.status === "invited" || p.email ? (
+                        <span className="text-amber-400 font-bold flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[12px]">pending</span>
+                          Profil Presetat
+                        </span>
+                      ) : (
+                        <span className="text-slate-500 font-bold flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[12px]">person</span>
+                          Manual
+                        </span>
+                      )}
 
                       <button
                         type="button"
-                        onClick={() => handleDeletePlayer(p.id, p.name)}
-                        className="text-slate-500 hover:text-red-400 p-1"
+                        onClick={() => {
+                          setInvitingPlayer(p);
+                          setShowInvitePlayerModal(true);
+                        }}
+                        className="text-lime-400 hover:text-lime-300 font-bold flex items-center gap-1 hover:underline"
+                        title="Generează link unic sau trimite invitație"
                       >
-                        <span className="material-symbols-outlined text-sm">delete</span>
+                        <span className="material-symbols-outlined text-[12px]">send</span>
+                        <span>{p.userId ? "Reinvită" : "Invită pe Profil"}</span>
                       </button>
                     </div>
 
@@ -1789,19 +1816,168 @@ export function TeamManagerPanel({
                     </div>
 
                     <div className="flex justify-between items-center pt-2 border-t border-slate-800 text-xs font-label">
-                      <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-bold text-[10px] uppercase">
-                        Rezervă
+                      <span className="px-2 py-0.5 rounded bg-lime-400/20 text-lime-400 font-bold text-[10px] uppercase">
+                        Titular
                       </span>
                       <button
                         type="button"
-                        onClick={() => togglePlayerStarter(p.id, false)}
-                        className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-lime-400 font-bold text-[11px] uppercase transition"
+                        onClick={() => togglePlayerStarter(p.id, true)}
+                        className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-[11px] uppercase transition"
                       >
-                        Treci ca Titular ⇄
+                        Treci pe Rezervă ⇄
                       </button>
                     </div>
                   </div>
-                ))}
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Section: Banca de Rezerve */}
+          <div className="space-y-4 pt-4 border-t border-slate-800">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+              <h4 className="text-base font-bold font-headline uppercase text-amber-300 tracking-wide">
+                Banca de Rezerve - {reserves.length} Jucători
+              </h4>
+            </div>
+
+            {reserves.length === 0 ? (
+              <div className="p-6 text-center text-xs text-slate-500 bg-slate-900 border border-slate-800 rounded-2xl italic">
+                Nu există jucători pe banca de rezerve.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {reserves.map((p) => {
+                  const initials = (p.name || "J")
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .slice(0, 2)
+                    .map((w) => w[0])
+                    .join("")
+                    .toUpperCase() || "J";
+
+                  return (
+                    <div
+                      key={p.id}
+                      className="card p-4 bg-slate-900 border border-slate-800 rounded-2xl shadow-sm flex flex-col justify-between space-y-3 hover:border-slate-700 transition"
+                    >
+                      <div className="flex justify-between items-start gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className="relative">
+                            <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 overflow-hidden flex items-center justify-center text-white font-bold text-sm shrink-0">
+                              {p.image ? (
+                                <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <span className="text-slate-400">{initials}</span>
+                              )}
+                            </div>
+                            <span className="absolute -bottom-1 -right-1 px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 font-mono font-black text-[9px] border border-slate-700">
+                              #{p.number ?? "—"}
+                            </span>
+                          </div>
+
+                          <div className="min-w-0">
+                            <h5 className="font-headline font-bold text-sm text-white truncate">
+                              {p.name}
+                            </h5>
+                            <span className="text-[10px] font-label uppercase font-bold text-slate-400 block">
+                              {p.position || "Rezervă"}
+                            </span>
+                            {p.email && (
+                              <span className="text-[10px] font-mono text-slate-500 truncate block">
+                                {p.email}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingPlayer(p);
+                              setShowEditPlayerModal(true);
+                            }}
+                            className="text-slate-400 hover:text-lime-400 p-1 rounded-lg hover:bg-slate-800 transition"
+                            title="Editează profilul"
+                          >
+                            <span className="material-symbols-outlined text-base">edit</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeletePlayer(p.id, p.name)}
+                            className="text-slate-500 hover:text-red-400 p-1 rounded-lg hover:bg-slate-800 transition"
+                            title="Șterge"
+                          >
+                            <span className="material-symbols-outlined text-base">delete</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Account Status Badge */}
+                      <div className="flex items-center justify-between text-[10px] font-mono">
+                        {p.userId ? (
+                          <span className="text-emerald-400 font-bold flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[12px]">verified</span>
+                            Cont Activ
+                          </span>
+                        ) : p.status === "invited" || p.email ? (
+                          <span className="text-amber-400 font-bold flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[12px]">pending</span>
+                            Profil Presetat
+                          </span>
+                        ) : (
+                          <span className="text-slate-500 font-bold flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[12px]">person</span>
+                            Manual
+                          </span>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setInvitingPlayer(p);
+                            setShowInvitePlayerModal(true);
+                          }}
+                          className="text-lime-400 hover:text-lime-300 font-bold flex items-center gap-1 hover:underline"
+                          title="Generează link unic sau trimite invitație"
+                        >
+                          <span className="material-symbols-outlined text-[12px]">send</span>
+                          <span>{p.userId ? "Reinvită" : "Invită pe Profil"}</span>
+                        </button>
+                      </div>
+
+                      <div className="flex justify-around items-center pt-2 pb-1 border-t border-slate-800 text-xs">
+                        <div className="flex flex-col items-center" title="Cartonașe Galbene">
+                          <span className="text-[10px] text-yellow-500 font-bold uppercase">CG</span>
+                          <span className="font-bold text-white">{p.yellowCards || 0}</span>
+                        </div>
+                        <div className="flex flex-col items-center" title="Cartonașe Roșii">
+                          <span className="text-[10px] text-red-500 font-bold uppercase">CR</span>
+                          <span className="font-bold text-white">{p.redCards || 0}</span>
+                        </div>
+                        <div className="flex flex-col items-center" title="Suspendări (Etape)">
+                          <span className="text-[10px] text-orange-500 font-bold uppercase">Susp</span>
+                          <span className="font-bold text-white">{p.suspensions || 0}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between items-center pt-2 border-t border-slate-800 text-xs font-label">
+                        <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-bold text-[10px] uppercase">
+                          Rezervă
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => togglePlayerStarter(p.id, false)}
+                          className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-lime-400 font-bold text-[11px] uppercase transition"
+                        >
+                          Treci ca Titular ⇄
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -3284,6 +3460,38 @@ export function TeamManagerPanel({
           team={team}
           onClose={() => setShowCheckInModal(false)}
           onCheckInSuccess={(updated) => setTeam((prev) => ({ ...prev, ...updated }))}
+        />
+      )}
+
+      {/* Player Profile Configuration & Editing Modal */}
+      {showEditPlayerModal && (
+        <PlayerProfileEditorModal
+          isOpen={showEditPlayerModal}
+          onClose={() => {
+            setShowEditPlayerModal(false);
+            setEditingPlayer(null);
+          }}
+          player={editingPlayer}
+          teamId={team.id}
+          teamName={team.name}
+          teamColor={team.color || "#84cc16"}
+          onSave={handleSavePlayerProfile}
+          onSendInvite={handleSendPlayerInvite}
+        />
+      )}
+
+      {/* Player Direct Profile Invitation Modal */}
+      {showInvitePlayerModal && invitingPlayer && (
+        <PlayerInviteModal
+          isOpen={showInvitePlayerModal}
+          onClose={() => {
+            setShowInvitePlayerModal(false);
+            setInvitingPlayer(null);
+          }}
+          player={invitingPlayer}
+          teamId={team.id}
+          teamName={team.name}
+          onSendInvite={handleSendPlayerInvite}
         />
       )}
     </div>
