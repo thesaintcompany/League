@@ -483,10 +483,9 @@ export function ClasamenteListingView({ championships, topTeams = [], liveMatche
             const progressPct = c.matchesCount > 0 ? Math.round((matchesFinished / c.matchesCount) * 100) : 0;
 
             return (
-              <Link
+              <div
                 key={c.id}
-                href={`/clasamente?id=${c.id}`}
-                className={`group relative block rounded-3xl bg-slate-900 border border-slate-800/80 hover:border-red-500/40 shadow-lg hover:shadow-red-500/10 transition-all duration-300 hover:scale-[1.02] overflow-hidden ${
+                className={`group relative block rounded-3xl bg-slate-900 border border-slate-800/80 hover:border-lime-500/40 shadow-lg hover:shadow-lime-500/10 transition-all duration-300 overflow-hidden ${
                   mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
                 style={{ transitionDelay: mounted ? `${idx * 60}ms` : "0ms" }}
@@ -496,9 +495,12 @@ export function ClasamenteListingView({ championships, topTeams = [], liveMatche
 
                 <div className="p-5 sm:p-6 space-y-4">
                   {/* Row 1: Logo + Name + Arrow */}
-                  <div className="flex items-start gap-4">
+                  <Link
+                    href={`/clasamente?id=${c.id}`}
+                    className="flex items-start gap-4 group/title"
+                  >
                     {/* Logo / Initials */}
-                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-black text-base shadow-lg shrink-0 group-hover:scale-110 transition-transform duration-300`}>
+                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-black text-base shadow-lg shrink-0 group-hover/title:scale-105 transition-transform duration-300`}>
                       {c.logoUrl ? (
                         <img src={c.logoUrl} alt={c.name} className="w-full h-full object-cover rounded-2xl" />
                       ) : (
@@ -507,7 +509,7 @@ export function ClasamenteListingView({ championships, topTeams = [], liveMatche
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-base font-headline font-black text-white truncate group-hover:text-red-400 transition-colors duration-200">
+                      <h3 className="text-base font-headline font-black text-white truncate group-hover/title:text-lime-400 transition-colors duration-200">
                         {c.name}
                       </h3>
 
@@ -524,12 +526,12 @@ export function ClasamenteListingView({ championships, topTeams = [], liveMatche
                     </div>
 
                     {/* Arrow */}
-                    <div className="shrink-0 w-8 h-8 rounded-xl bg-slate-800 group-hover:bg-red-500 flex items-center justify-center transition-all duration-300 group-hover:translate-x-0.5">
-                      <span className="material-symbols-outlined text-sm text-slate-400 group-hover:text-white transition-colors">
+                    <div className="shrink-0 w-8 h-8 rounded-xl bg-slate-800 group-hover/title:bg-lime-400 group-hover/title:text-slate-950 flex items-center justify-center transition-all duration-300">
+                      <span className="material-symbols-outlined text-sm text-slate-400 group-hover/title:text-slate-950 transition-colors">
                         arrow_forward
                       </span>
                     </div>
-                  </div>
+                  </Link>
 
                   {/* Row 2: Location */}
                   {(c.county || c.city) && (
@@ -569,8 +571,27 @@ export function ClasamenteListingView({ championships, topTeams = [], liveMatche
                       </div>
                     )}
                   </div>
+
+                  {/* Row 4: Direct Action Buttons (Clasament & Tablou Brackets) */}
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/50">
+                    <Link
+                      href={`/clasamente?id=${c.id}`}
+                      className="py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-white text-center text-xs font-headline font-bold uppercase transition flex items-center justify-center gap-1.5 active:scale-95"
+                    >
+                      <span className="material-symbols-outlined text-sm text-lime-400">emoji_events</span>
+                      <span>Clasament</span>
+                    </Link>
+                    <Link
+                      href={`/brackets?id=${c.id}`}
+                      className="py-2 px-3 rounded-xl bg-lime-400/10 hover:bg-lime-400 text-lime-400 hover:text-slate-950 text-center text-xs font-headline font-black uppercase transition border border-lime-400/30 flex items-center justify-center gap-1.5 active:scale-95"
+                      title="Vezi tabloul meciurilor eliminatorii"
+                    >
+                      <span className="material-symbols-outlined text-sm">account_tree</span>
+                      <span>Brackets</span>
+                    </Link>
+                  </div>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>

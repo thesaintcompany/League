@@ -251,8 +251,11 @@ export default async function ClasamentePage({
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-24 lg:pb-10">
         {championship ? (
           <TournamentPhasesView
+            championshipId={championship.id}
+            championshipCode={championship.shareCode || undefined}
             championshipName={championshipTitle}
             sport={championship.sport || "fotbal"}
+            season={championship.season || undefined}
             initialStandings={initialStandings}
             matches={formattedMatches}
           />
