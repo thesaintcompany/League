@@ -936,9 +936,40 @@ export function AdminSuperPanel() {
     return counts;
   }, [venues]);
 
+  // Role Counts & Stats for Filters
+  const roleCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      all: users.length,
+      super_admin: 0,
+      organizer: 0,
+      referee: 0,
+      arena_owner: 0,
+      team_leader: 0,
+      player: 0,
+    };
+    users.forEach((u) => {
+      const r = (u.role || "player").toLowerCase();
+      if (r === "super_admin" || r === "superadmin") {
+        counts.super_admin++;
+      } else if (counts[r] !== undefined) {
+        counts[r]++;
+      } else {
+        counts.player = (counts.player || 0) + 1;
+      }
+    });
+    return counts;
+  }, [users]);
+
+  const realUsersCount = useMemo(() => users.filter((u) => !isDemoUser(u.email)).length, [users]);
+  const demoUsersCount = useMemo(() => users.filter((u) => isDemoUser(u.email)).length, [users]);
+
   // Filter users
   const filteredUsers = users.filter((u) => {
-    const matchesRole = userRoleFilter === "all" || u.role === userRoleFilter;
+    const r = (u.role || "player").toLowerCase();
+    const matchesRole =
+      userRoleFilter === "all" ||
+      r === userRoleFilter ||
+      (userRoleFilter === "super_admin" && (r === "superadmin" || r === "super_admin"));
     const isDemo = isDemoUser(u.email);
     const matchesType =
       userAccountTypeFilter === "all" ||
@@ -949,7 +980,8 @@ export function AdminSuperPanel() {
       !q ||
       (u.name && u.name.toLowerCase().includes(q)) ||
       u.email.toLowerCase().includes(q) ||
-      u.role.toLowerCase().includes(q);
+      (u.phone && u.phone.toLowerCase().includes(q)) ||
+      r.includes(q);
     return matchesRole && matchesType && matchesQuery;
   });
 
@@ -1932,65 +1964,183 @@ export function AdminSuperPanel() {
             </div>
           </div>
 
-          {/* User Search & Filter */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-2">
-              {/* Account Type Filters (Real vs Demo) */}
-              <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 mr-2">
+          {/* User Search & Filter Control Hub */}
+          <div className="card p-5 bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl shadow-sm space-y-4">
+            {/* Top Row: Search & Account Type Segmented Controller */}
+            <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+              {/* Search Bar with Clear Button */}
+              <div className="relative flex-1">
+                <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">
+                  search
+                </span>
+                <input
+                  type="text"
+                  placeholder="Caută utilizator după nume, email, telefon sau rol..."
+                  value={userSearchQuery}
+                  onChange={(e) => setUserSearchQuery(e.target.value)}
+                  className="input pl-10 pr-10 text-xs w-full py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700"
+                />
+                {userSearchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setUserSearchQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white p-1"
+                    title="Șterge căutarea"
+                  >
+                    <span className="material-symbols-outlined text-sm">close</span>
+                  </button>
+                )}
+              </div>
+
+              {/* Account Type Segmented Tabs (Toate / Reale / Demo) */}
+              <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800/80 rounded-2xl border border-slate-200/90 dark:border-slate-700 shrink-0 shadow-inner">
                 <button
                   type="button"
                   onClick={() => setUserAccountTypeFilter("all")}
-                  className={`px-3 py-1 rounded-xl text-xs font-headline font-bold uppercase transition ${userAccountTypeFilter === "all"
-                    ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm"
-                    : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-                    }`}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-headline font-bold uppercase transition-all duration-200 flex items-center gap-1.5 ${
+                    userAccountTypeFilter === "all"
+                      ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm font-black scale-[1.02]"
+                      : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                  }`}
                 >
-                  Toate ({users.length})
+                  <span className="material-symbols-outlined text-sm">group</span>
+                  <span>Toate Conturile</span>
+                  <span
+                    className={`ml-1 px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold ${
+                      userAccountTypeFilter === "all"
+                        ? "bg-slate-950 text-white dark:bg-slate-800 dark:text-lime-400"
+                        : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
+                    }`}
+                  >
+                    {users.length}
+                  </span>
                 </button>
+
                 <button
                   type="button"
                   onClick={() => setUserAccountTypeFilter("real")}
-                  className={`px-3 py-1 rounded-xl text-xs font-headline font-bold uppercase transition ${userAccountTypeFilter === "real"
-                    ? "bg-lime-400 text-slate-950 font-black shadow-sm"
-                    : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-                    }`}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-headline font-bold uppercase transition-all duration-200 flex items-center gap-1.5 ${
+                    userAccountTypeFilter === "real"
+                      ? "bg-lime-400 text-slate-950 font-black shadow-sm shadow-lime-400/20 scale-[1.02]"
+                      : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                  }`}
                 >
-                  Reale ({users.filter((u) => !isDemoUser(u.email)).length})
+                  <span className="material-symbols-outlined text-sm text-lime-600 dark:text-lime-400">verified</span>
+                  <span>Reale</span>
+                  <span
+                    className={`ml-1 px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold ${
+                      userAccountTypeFilter === "real"
+                        ? "bg-slate-950 text-lime-400"
+                        : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
+                    }`}
+                  >
+                    {realUsersCount}
+                  </span>
                 </button>
+
                 <button
                   type="button"
                   onClick={() => setUserAccountTypeFilter("demo")}
-                  className={`px-3 py-1 rounded-xl text-xs font-headline font-bold uppercase transition ${userAccountTypeFilter === "demo"
-                    ? "bg-purple-500 text-white font-black shadow-sm"
-                    : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
-                    }`}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-headline font-bold uppercase transition-all duration-200 flex items-center gap-1.5 ${
+                    userAccountTypeFilter === "demo"
+                      ? "bg-purple-600 text-white font-black shadow-sm shadow-purple-600/20 scale-[1.02]"
+                      : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                  }`}
                 >
-                  Demo ({users.filter((u) => isDemoUser(u.email)).length})
+                  <span className="material-symbols-outlined text-sm text-purple-400">science</span>
+                  <span>Demo</span>
+                  <span
+                    className={`ml-1 px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold ${
+                      userAccountTypeFilter === "demo"
+                        ? "bg-white text-purple-900"
+                        : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
+                    }`}
+                  >
+                    {demoUsersCount}
+                  </span>
                 </button>
               </div>
-
-              {["all", "super_admin", "organizer", "referee", "arena_owner", "team_leader", "player"].map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => setUserRoleFilter(r)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-label font-bold uppercase transition ${userRoleFilter === r
-                    ? "bg-slate-950 text-white dark:bg-lime-400 dark:text-slate-950 font-black shadow-sm"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
-                    }`}
-                >
-                  {r === "all" ? "Toate Rolurile" : r}
-                </button>
-              ))}
             </div>
 
-            <input
-              type="text"
-              placeholder="Caută utilizator după nume, email..."
-              value={userSearchQuery}
-              onChange={(e) => setUserSearchQuery(e.target.value)}
-              className="input text-xs w-full sm:w-72"
-            />
+            {/* Bottom Row: Role Pills Carousel / Group with Dynamic Counts */}
+            <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-800/80">
+              <span className="text-[10px] font-label font-bold text-slate-400 uppercase tracking-widest mr-1 shrink-0 flex items-center gap-1">
+                <span className="material-symbols-outlined text-xs">filter_list</span>
+                Filtru Rol:
+              </span>
+
+              {[
+                { id: "all", label: "Toate Rolurile", icon: "manage_accounts", color: "slate" },
+                { id: "super_admin", label: "SuperAdmin", icon: "verified_user", color: "red" },
+                { id: "organizer", label: "Organizator", icon: "military_tech", color: "lime" },
+                { id: "referee", label: "Arbitru", icon: "sports", color: "amber" },
+                { id: "arena_owner", label: "Proprietar Arenă", icon: "stadium", color: "blue" },
+                { id: "team_leader", label: "Manager Echipă", icon: "shield", color: "purple" },
+                { id: "player", label: "Jucător", icon: "person", color: "sky" },
+              ].map((r) => {
+                const isSelected = userRoleFilter === r.id;
+                const count = roleCounts[r.id] ?? 0;
+
+                const activeThemeClass =
+                  r.color === "red"
+                    ? "bg-red-500 text-white font-black shadow-md shadow-red-500/20"
+                    : r.color === "lime"
+                    ? "bg-lime-400 text-slate-950 font-black shadow-md shadow-lime-400/20"
+                    : r.color === "amber"
+                    ? "bg-amber-400 text-slate-950 font-black shadow-md shadow-amber-400/20"
+                    : r.color === "blue"
+                    ? "bg-blue-600 text-white font-black shadow-md shadow-blue-600/20"
+                    : r.color === "purple"
+                    ? "bg-purple-600 text-white font-black shadow-md shadow-purple-600/20"
+                    : r.color === "sky"
+                    ? "bg-sky-600 text-white font-black shadow-md shadow-sky-600/20"
+                    : "bg-slate-950 text-white dark:bg-white dark:text-slate-950 font-black shadow-md";
+
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => setUserRoleFilter(r.id)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-headline transition-all duration-200 flex items-center gap-1.5 active:scale-95 ${
+                      isSelected
+                        ? activeThemeClass
+                        : "bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white border border-slate-200/60 dark:border-slate-700/60 font-semibold"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[15px]">{r.icon}</span>
+                    <span>{r.label}</span>
+                    <span
+                      className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold ${
+                        isSelected
+                          ? isSelected && (r.color === "lime" || r.color === "amber")
+                            ? "bg-slate-950 text-white"
+                            : "bg-white/20 text-white"
+                          : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+
+              {/* Reset filters shortcut button */}
+              {(userAccountTypeFilter !== "all" || userRoleFilter !== "all" || userSearchQuery) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUserAccountTypeFilter("all");
+                    setUserRoleFilter("all");
+                    setUserSearchQuery("");
+                  }}
+                  className="ml-auto text-[11px] font-label font-bold text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 flex items-center gap-1 transition px-2 py-1"
+                  title="Resetează toate filtrele"
+                >
+                  <span className="material-symbols-outlined text-xs">restart_alt</span>
+                  <span>Resetează Filtre</span>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Users Table */}
