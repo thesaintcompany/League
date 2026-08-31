@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
 import { logAuditAction, extractClientInfo } from "@/lib/audit";
+import { verifyImpersonationToken } from "@/lib/impersonate";
 
 // Production default for self-hosted deployments. It can still be overridden
 // by NEXTAUTH_URL in the hosting environment.
@@ -25,11 +26,92 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        impersonateToken: { label: "Impersonate Token", type: "text" },
       },
       async authorize(credentials, req) {
+        const clientInfo = extractClientInfo(req);
+
+        // 1. IMPERSONATION FLOW (SuperAdmin logging in as another user or exiting)
+        if (credentials?.impersonateToken) {
+          const payload = verifyImpersonationToken(credentials.impersonateToken);
+          if (!payload) {
+            await logAuditAction({
+              action: "IMPERSONATE_TOKEN_INVALID",
+              details: `Tentativă eșuată de impersonare cu token invalid sau expirat. IP: ${clientInfo.ipAddress}`,
+              ipAddress: clientInfo.ipAddress,
+              userAgent: clientInfo.userAgent,
+              status: "error",
+            });
+            throw new Error("Tokenul de impersonare este invalid sau a expirat.");
+          }
+
+          const targetUser = await prisma.user.findUnique({
+            where: { id: payload.sub },
+          });
+
+          if (!targetUser) {
+            throw new Error("Utilizatorul țintă nu a fost găsit în baza de date.");
+          }
+
+          if (targetUser.isActive === false) {
+            throw new Error("Contul utilizatorului țintă este dezactivat sau suspendat.");
+          }
+
+          if (payload.type === "impersonate") {
+            await logAuditAction({
+              userId: targetUser.id,
+              userEmail: targetUser.email,
+              userName: targetUser.name,
+              userRole: targetUser.role,
+              action: "IMPERSONATE_USER_START",
+              details: `SuperAdmin ${payload.superAdminEmail} s-a conectat automat în contul utilizatorului ${targetUser.email} (${targetUser.role}). IP: ${clientInfo.ipAddress}`,
+              ipAddress: clientInfo.ipAddress,
+              userAgent: clientInfo.userAgent,
+              status: "success",
+              entityType: "user",
+              entityId: targetUser.id,
+            });
+
+            return {
+              id: targetUser.id,
+              email: targetUser.email,
+              name: targetUser.name,
+              role: targetUser.role,
+              impersonator: {
+                id: payload.superAdminId,
+                email: payload.superAdminEmail,
+                name: payload.superAdminName,
+              },
+            } as any;
+          } else {
+            // Exit impersonation flow
+            await logAuditAction({
+              userId: targetUser.id,
+              userEmail: targetUser.email,
+              userName: targetUser.name,
+              userRole: targetUser.role,
+              action: "IMPERSONATE_USER_END",
+              details: `SuperAdmin ${payload.superAdminEmail} a revenit în contul său de administrare master. IP: ${clientInfo.ipAddress}`,
+              ipAddress: clientInfo.ipAddress,
+              userAgent: clientInfo.userAgent,
+              status: "success",
+              entityType: "user",
+              entityId: targetUser.id,
+            });
+
+            return {
+              id: targetUser.id,
+              email: targetUser.email,
+              name: targetUser.name,
+              role: targetUser.role,
+              impersonator: null,
+            } as any;
+          }
+        }
+
+        // 2. STANDARD CREDENTIALS FLOW
         if (!credentials?.email || !credentials?.password) return null;
 
-        const clientInfo = extractClientInfo(req);
         const normalizedEmail = credentials.email.trim().toLowerCase();
         const rawPassword = credentials.password.trim();
 
@@ -166,6 +248,9 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = (user as any).role;
+        if ((user as any).impersonator !== undefined) {
+          (token as any).impersonator = (user as any).impersonator;
+        }
       }
       if (token.id && !token.role) {
         const dbUser = await prisma.user.findUnique({
@@ -193,6 +278,8 @@ export const authOptions: NextAuthOptions = {
       if (token && session.user) {
         (session.user as any).id = token.id;
         (session.user as any).role = token.role || "organizer";
+        (session.user as any).impersonator = (token as any).impersonator || null;
+        (session.user as any).isImpersonating = Boolean((token as any).impersonator);
       }
       return session;
     },

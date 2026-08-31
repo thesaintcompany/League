@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { getCurrentSeasonYear, getAutoSeasonYear } from "@/lib/season";
 import { ARENA_SPORTS_OPTIONS, parseVenueSports } from "@/lib/constants";
 
@@ -173,6 +174,7 @@ export function AdminSuperPanel() {
   // WordPress-style User Management States
   const [editUserModalOpen, setEditUserModalOpen] = useState(false);
   const [resetPassModalOpen, setResetPassModalOpen] = useState(false);
+  const [impersonatingUserId, setImpersonatingUserId] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<UserItem | null>(null);
   const [editUserForm, setEditUserForm] = useState({
     name: "",
@@ -902,6 +904,48 @@ export function AdminSuperPanel() {
       }
     } catch (err) {
       console.error(err);
+    }
+  }
+
+  async function handleImpersonateUser(u: UserItem) {
+    if (impersonatingUserId) return;
+    if (u.isActive === false) {
+      showToast("Nu te poți conecta într-un cont dezactivat sau suspendat!");
+      return;
+    }
+
+    const confirmMsg = `Dorești să te autentifici automat în contul lui ${u.name || u.email} (${u.role})?`;
+    if (!window.confirm(confirmMsg)) return;
+
+    setImpersonatingUserId(u.id);
+    try {
+      const res = await fetch("/api/admin/impersonate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ targetUserId: u.id }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.token) {
+        throw new Error(data.error || "Eroare la generarea sesiunii de impersonare.");
+      }
+
+      showToast(`Autentificare în contul ${u.email}...`);
+
+      const signInResult = await signIn("credentials", {
+        impersonateToken: data.token,
+        redirect: false,
+      });
+
+      if (signInResult?.error) {
+        throw new Error(signInResult.error);
+      }
+
+      window.location.href = data.destination || "/dashboard";
+    } catch (err: any) {
+      console.error("[handleImpersonateUser Error]", err);
+      showToast(err?.message || "Eroare la conectarea în contul utilizatorului.");
+      setImpersonatingUserId(null);
     }
   }
 
@@ -2240,6 +2284,21 @@ export function AdminSuperPanel() {
                         {/* Admin Action Buttons */}
                         <td className="py-3.5 px-4 text-right">
                           <div className="flex items-center justify-end gap-1.5">
+                            {/* Impersonate User Quick Action */}
+                            <button
+                              type="button"
+                              onClick={() => handleImpersonateUser(u)}
+                              disabled={impersonatingUserId === u.id || u.isActive === false}
+                              className="p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold transition disabled:opacity-40 flex items-center justify-center"
+                              title="Conectează-te automat ca acest utilizator (Impersonate)"
+                            >
+                              {impersonatingUserId === u.id ? (
+                                <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
+                              ) : (
+                                <span className="material-symbols-outlined text-base">switch_account</span>
+                              )}
+                            </button>
+
                             {/* Edit Profile */}
                             <button
                               type="button"
@@ -3599,21 +3658,33 @@ export function AdminSuperPanel() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
-                  onClick={() => setEditUserModalOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold font-label text-slate-600 hover:bg-slate-100"
+                  onClick={() => selectedUser && handleImpersonateUser(selectedUser)}
+                  disabled={Boolean(impersonatingUserId) || selectedUser?.isActive === false}
+                  className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm active:scale-95 transition disabled:opacity-50"
                 >
-                  Anulează
+                  <span className="material-symbols-outlined text-sm">switch_account</span>
+                  <span>{impersonatingUserId === selectedUser?.id ? "Conectare..." : "Conectare Cont (Impersonate)"}</span>
                 </button>
-                <button
-                  type="submit"
-                  disabled={savingUser}
-                  className="px-6 py-2 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md"
-                >
-                  {savingUser ? "Se salvează..." : "Salvează Modificările"}
-                </button>
+
+                <div className="flex items-center gap-2 ml-auto">
+                  <button
+                    type="button"
+                    onClick={() => setEditUserModalOpen(false)}
+                    className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold font-label text-slate-600 hover:bg-slate-100"
+                  >
+                    Anulează
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={savingUser}
+                    className="px-6 py-2 rounded-xl bg-lime-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md"
+                  >
+                    {savingUser ? "Se salvează..." : "Salvează Modificările"}
+                  </button>
+                </div>
               </div>
             </form>
           </div>

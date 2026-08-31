@@ -775,21 +775,24 @@ export function OrganizerInvitationsModal({
               </div>
             )}
 
-            {/* OPTION 3: Găsește arbitri în județul tău (Redirecționare site   AJF) */}
+            {/* OPTION 3: Găsește arbitri în județul tău (Redirecționare site oficial AJF / CCA) */}
             {refereeMode === "ajf" && (
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-lime-500/10 via-slate-50 dark:via-slate-900 to-emerald-500/10 border border-lime-400/40 dark:border-lime-500/30 space-y-4 text-center sm:text-left">
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-lime-400 text-slate-950 flex items-center justify-center font-black text-2xl shrink-0 shadow-md">
-                    <span className="material-symbols-outlined text-2xl">groups_2</span>
+              <div className="relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-slate-50 dark:via-slate-900 to-teal-500/10 border border-emerald-400/40 dark:border-emerald-500/30 space-y-4 shadow-sm">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-lime-400 text-slate-950 flex items-center justify-center font-black text-2xl shrink-0 shadow-md shadow-emerald-500/20">
+                    <span className="material-symbols-outlined text-2xl">sports</span>
                   </div>
-                  <div>
-                    <span className="text-[10px] font-label font-bold uppercase tracking-widest text-lime-600 dark:text-lime-400">
-                      Găsește  i &amp; Arbitri Certificați
-                    </span>
-                    <h4 className="text-base font-headline font-black text-slate-900 dark:text-white uppercase tracking-tight">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-label font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                        <span className="material-symbols-outlined text-[12px]">verified</span>
+                        Arbitri &amp; Observatori Omologați
+                      </span>
+                    </div>
+                    <h4 className="text-base font-headline font-black text-slate-900 dark:text-white uppercase tracking-tight mt-1">
                       {county ? `Comisia Județeană de Arbitri (CJA) • ${county}` : "Comisia Centrală a Arbitrilor (CCA / FRF)"}
                     </h4>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 leading-relaxed">
                       Contactează direct Asociația Județeană de Fotbal sau Comisia Centrală a Arbitrilor pentru delegări oficiale, baremuri și arbitri autorizați.
                     </p>
                   </div>
@@ -798,7 +801,7 @@ export function OrganizerInvitationsModal({
                 <div className="p-3.5 rounded-xl bg-white/80 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2.5">
                   <span className="material-symbols-outlined text-lg text-emerald-500 shrink-0">verified_user</span>
                   <span className="text-[11px] leading-relaxed">
-                    <strong>Protecția Datelor &amp; Siguranță:</strong> Nu este necesară introducerea de date cu caracter sensibil. Te îndrumăm direct către portalul   acreditat al asociației județene.
+                    <strong>Protecția Datelor &amp; Siguranță:</strong> Nu este necesară introducerea de date cu caracter sensibil. Te îndrumăm direct către portalul oficial acreditat al asociației județene.
                   </span>
                 </div>
 
@@ -807,10 +810,10 @@ export function OrganizerInvitationsModal({
                     href={ajfInfo.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex-1 px-5 py-3.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition active:scale-95"
+                    className="flex-1 px-5 py-3.5 rounded-xl bg-gradient-to-r from-lime-400 to-emerald-400 hover:from-lime-300 hover:to-emerald-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-lime-500/20 transition active:scale-95 group"
                   >
                     <span>Găsește arbitri în județul tău ({ajfInfo.label})</span>
-                    <span className="material-symbols-outlined text-base">open_in_new</span>
+                    <span className="material-symbols-outlined text-base transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">open_in_new</span>
                   </a>
 
                   <a

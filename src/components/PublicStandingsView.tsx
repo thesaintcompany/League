@@ -381,15 +381,23 @@ export function PublicStandingsView({
                     </div>
 
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex-1 min-w-0 text-left">
-                        <p className="text-xs font-bold text-white truncate">{m.homeTeam?.name}</p>
-                      </div>
+                      <Link
+                        href={m.homeTeam?.id ? `/teams/${m.homeTeam.id}` : "/teams"}
+                        className="flex-1 min-w-0 text-left group/team"
+                        title={`Vezi clubul ${m.homeTeam?.name || ""}`}
+                      >
+                        <p className="text-xs font-bold text-white group-hover/team:text-lime-400 transition-colors truncate">{m.homeTeam?.name}</p>
+                      </Link>
                       <div className="px-3 py-1 rounded-xl bg-slate-900 border border-slate-700 font-mono font-black text-sm text-lime-400 shrink-0">
                         {m.homeScore ?? 0} : {m.awayScore ?? 0}
                       </div>
-                      <div className="flex-1 min-w-0 text-right">
-                        <p className="text-xs font-bold text-white truncate">{m.awayTeam?.name}</p>
-                      </div>
+                      <Link
+                        href={m.awayTeam?.id ? `/teams/${m.awayTeam.id}` : "/teams"}
+                        className="flex-1 min-w-0 text-right group/team"
+                        title={`Vezi clubul ${m.awayTeam?.name || ""}`}
+                      >
+                        <p className="text-xs font-bold text-white group-hover/team:text-lime-400 transition-colors truncate">{m.awayTeam?.name}</p>
+                      </Link>
                     </div>
 
                     {m.venue && (
@@ -444,9 +452,21 @@ export function PublicStandingsView({
                     </div>
 
                     <div className="flex items-center justify-between text-xs font-bold text-white">
-                      <span className="truncate flex-1">{m.homeTeam?.name}</span>
+                      <Link
+                        href={m.homeTeam?.id ? `/teams/${m.homeTeam.id}` : "/teams"}
+                        className="truncate flex-1 hover:text-lime-400 transition-colors"
+                        title={`Vezi echipa ${m.homeTeam?.name || ""}`}
+                      >
+                        {m.homeTeam?.name}
+                      </Link>
                       <span className="text-slate-500 font-mono text-[10px] px-2">VS</span>
-                      <span className="truncate flex-1 text-right">{m.awayTeam?.name}</span>
+                      <Link
+                        href={m.awayTeam?.id ? `/teams/${m.awayTeam.id}` : "/teams"}
+                        className="truncate flex-1 text-right hover:text-lime-400 transition-colors"
+                        title={`Vezi echipa ${m.awayTeam?.name || ""}`}
+                      >
+                        {m.awayTeam?.name}
+                      </Link>
                     </div>
 
                     {m.venue && (

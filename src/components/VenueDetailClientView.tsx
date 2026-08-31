@@ -746,14 +746,21 @@ export function VenueDetailClientView({
 
                     {/* Team Clash Display */}
                     <div className="flex items-center justify-between gap-4 py-2">
-                      <div className="flex-1 text-center space-y-2">
-                        <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-xl font-black font-headline text-slate-900 dark:text-white shadow-sm">
-                          {m.homeTeam?.name?.substring(0, 2).toUpperCase() || "GA"}
+                      <Link
+                        href={m.homeTeam?.id ? `/teams/${m.homeTeam.id}` : "/teams"}
+                        className="flex-1 text-center space-y-2 group/home hover:scale-105 transition-all block"
+                        title={`Vezi pagina clubului ${m.homeTeam?.name || ""}`}
+                      >
+                        <div
+                          className="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center text-xl font-black font-headline text-white shadow-sm border border-white/20 group-hover/home:border-lime-400 group-hover/home:shadow-lg transition-all"
+                          style={{ backgroundColor: m.homeTeam?.color || "#1e293b" }}
+                        >
+                          {m.homeTeam?.shortName?.substring(0, 3) || m.homeTeam?.name?.substring(0, 2).toUpperCase() || "GA"}
                         </div>
-                        <h4 className="font-headline font-bold text-sm sm:text-base text-slate-900 dark:text-white line-clamp-1">
+                        <h4 className="font-headline font-bold text-sm sm:text-base text-slate-900 dark:text-white line-clamp-1 group-hover/home:text-lime-600 dark:group-hover/home:text-lime-400 transition-colors">
                           {m.homeTeam?.name || "Gazde"}
                         </h4>
-                      </div>
+                      </Link>
 
                       <div className="shrink-0 flex flex-col items-center">
                         <span className="text-xl sm:text-2xl font-black italic font-headline text-lime-600 dark:text-lime-400">
@@ -764,14 +771,21 @@ export function VenueDetailClientView({
                         </span>
                       </div>
 
-                      <div className="flex-1 text-center space-y-2">
-                        <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-xl font-black font-headline text-slate-900 dark:text-white shadow-sm">
-                          {m.awayTeam?.name?.substring(0, 2).toUpperCase() || "OA"}
+                      <Link
+                        href={m.awayTeam?.id ? `/teams/${m.awayTeam.id}` : "/teams"}
+                        className="flex-1 text-center space-y-2 group/away hover:scale-105 transition-all block"
+                        title={`Vezi pagina clubului ${m.awayTeam?.name || ""}`}
+                      >
+                        <div
+                          className="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center text-xl font-black font-headline text-white shadow-sm border border-white/20 group-hover/away:border-lime-400 group-hover/away:shadow-lg transition-all"
+                          style={{ backgroundColor: m.awayTeam?.color || "#0284c7" }}
+                        >
+                          {m.awayTeam?.shortName?.substring(0, 3) || m.awayTeam?.name?.substring(0, 2).toUpperCase() || "OA"}
                         </div>
-                        <h4 className="font-headline font-bold text-sm sm:text-base text-slate-900 dark:text-white line-clamp-1">
+                        <h4 className="font-headline font-bold text-sm sm:text-base text-slate-900 dark:text-white line-clamp-1 group-hover/away:text-lime-600 dark:group-hover/away:text-lime-400 transition-colors">
                           {m.awayTeam?.name || "Oaspeți"}
                         </h4>
-                      </div>
+                      </Link>
                     </div>
 
                     {/* Footer Date & Direct Ticket Link */}
@@ -933,11 +947,23 @@ export function VenueDetailClientView({
 
                         {/* Score Banner */}
                         <div className="flex items-center justify-between gap-2 py-1">
-                          <span className="font-bold text-base text-slate-900 dark:text-white font-headline truncate flex-1 min-w-0">{m.homeTeam?.name || "Gazde"}</span>
+                          <Link
+                            href={m.homeTeam?.id ? `/teams/${m.homeTeam.id}` : "/teams"}
+                            className="font-bold text-base text-slate-900 dark:text-white font-headline truncate flex-1 min-w-0 hover:text-lime-600 dark:hover:text-lime-400 transition-colors"
+                            title={`Vezi clubul ${m.homeTeam?.name || ""}`}
+                          >
+                            {m.homeTeam?.name || "Gazde"}
+                          </Link>
                           <span className="shrink-0 whitespace-nowrap text-center text-lg font-black font-mono px-3 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-950 text-lime-700 dark:text-lime-400 border border-slate-200 dark:border-slate-800">
                             {m.homeScore ?? 0} - {m.awayScore ?? 0}
                           </span>
-                          <span className="font-bold text-base text-slate-900 dark:text-white font-headline truncate flex-1 min-w-0 text-right">{m.awayTeam?.name || "Oaspeți"}</span>
+                          <Link
+                            href={m.awayTeam?.id ? `/teams/${m.awayTeam.id}` : "/teams"}
+                            className="font-bold text-base text-slate-900 dark:text-white font-headline truncate flex-1 min-w-0 text-right hover:text-lime-600 dark:hover:text-lime-400 transition-colors"
+                            title={`Vezi clubul ${m.awayTeam?.name || ""}`}
+                          >
+                            {m.awayTeam?.name || "Oaspeți"}
+                          </Link>
                         </div>
 
                         {m.referee && (

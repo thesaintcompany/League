@@ -367,29 +367,42 @@ export function RefereeControlModal({
                 </div>
               </div>
 
-              {/* AJF County Official Portal Quick Discovery Button */}
-              <div className="p-3.5 rounded-xl bg-lime-400/10 border border-lime-400/30 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-xl material-symbols-outlined">account_balance</span>
-                  <div>
-                    <p className="text-xs font-headline font-bold text-slate-900 dark:text-white">
-                      Ai nevoie de arbitri delegați  ?
-                    </p>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Te îndrumăm direct pe portalul   al asociației fără a stoca date sensibile.
-                    </p>
+              {/* AJF / CCA County Official Portal Quick Discovery Widget */}
+              <div className="relative overflow-hidden p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-lime-500/5 to-teal-500/10 dark:from-emerald-950/40 dark:via-slate-900/60 dark:to-teal-950/30 border border-emerald-500/30 dark:border-emerald-500/20 shadow-sm transition-all">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                  <div className="flex items-start sm:items-center gap-3.5 min-w-0">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-emerald-400 to-lime-400 text-slate-950 flex items-center justify-center font-black shrink-0 shadow-md shadow-emerald-500/20">
+                      <span className="material-symbols-outlined text-xl">sports</span>
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-label font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
+                          <span className="material-symbols-outlined text-[12px]">verified</span>
+                          Delegare Oficială
+                        </span>
+                        <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
+                          CCA • FRF / AJF
+                        </span>
+                      </div>
+                      <h4 className="text-sm font-headline font-bold text-slate-900 dark:text-white mt-1">
+                        Ai nevoie de arbitri delegați?
+                      </h4>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 leading-relaxed">
+                        Te îndrumăm direct pe portalul oficial al asociației fără a stoca date sensibile.
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                <a
-                  href={ajfInfo.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="px-3.5 py-2 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition active:scale-95 shrink-0"
-                >
-                  <span>Găsește arbitri în județul tău ({ajfInfo.label})</span>
-                  <span className="material-symbols-outlined text-sm">open_in_new</span>
-                </a>
+                  <a
+                    href={ajfInfo.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full md:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-lime-400 to-emerald-400 hover:from-lime-300 hover:to-emerald-300 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md shadow-lime-500/20 hover:shadow-lg transition-all active:scale-95 shrink-0 group"
+                  >
+                    <span>Găsește arbitri în județul tău ({ajfInfo.label})</span>
+                    <span className="material-symbols-outlined text-sm transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">open_in_new</span>
+                  </a>
+                </div>
               </div>
 
               {/* Referee Instructions & Notes */}
