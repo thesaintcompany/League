@@ -1875,6 +1875,134 @@ async function ensureCountyAndCityChampionships(ownerId) {
   console.log(`[seed] seeded/updated county, city, and national championships across Romania`);
 }
 
+async function ensureActiveArenaMatches() {
+  const championship = await prisma.championship.findFirst({
+    include: { teams: true },
+  });
+  if (!championship || championship.teams.length < 2) return;
+
+  const venues = await prisma.venue.findMany({
+    where: { isActive: true },
+    select: { id: true, name: true },
+  });
+  if (venues.length === 0) return;
+
+  const preferredVenueNames = [
+    "Arena Sportivă Dudeștii Noi",
+    "Arena Sportivă Centrală",
+    "Arena Viola",
+    "Davia Sport",
+    "Friend's Arena S.R.L.",
+    "Helios Sport Club",
+    "Berlin Sport Club",
+  ];
+
+  let selectedVenues = venues.filter((v) => preferredVenueNames.includes(v.name));
+  if (selectedVenues.length < 4) {
+    const remaining = venues.filter((v) => !selectedVenues.some((sv) => sv.id === v.id));
+    selectedVenues = [...selectedVenues, ...remaining];
+  }
+  const chosenVenues = selectedVenues.slice(0, 4);
+
+  const existingActive = await prisma.match.count({
+    where: {
+      status: { in: ["scheduled", "live"] },
+      venue: { not: null },
+    },
+  });
+
+  if (existingActive >= 4) {
+    return;
+  }
+
+  const teams = championship.teams;
+  const now = new Date();
+
+  const matchConfigs = [
+    {
+      homeIndex: 0,
+      awayIndex: 1,
+      venue: chosenVenues[0].name,
+      scheduledAt: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 2),
+      status: "scheduled",
+      stage: "group",
+      round: 1,
+      ticketPrice: 30,
+      referee: "Marius Avram",
+      notes: "Derby județean cu miză mare pentru calificarea în faza superioară.",
+    },
+    {
+      homeIndex: 2,
+      awayIndex: 3,
+      venue: chosenVenues[1].name,
+      scheduledAt: new Date(now.getTime() - 1000 * 60 * 50),
+      status: "live",
+      stage: "group",
+      round: 1,
+      homeScore: 2,
+      awayScore: 1,
+      ticketPrice: 25,
+      referee: "Ovidiu Hațegan",
+      notes: "Meci în desfășurare, atmosferă intensă în tribune.",
+      events: JSON.stringify([
+        { minute: 14, type: "goal", player: "Andrei Popescu", team: "home" },
+        { minute: 32, type: "goal", player: "Gabriel Ionescu", team: "away" },
+        { minute: 58, type: "goal", player: "Radu Stan", team: "home" },
+      ]),
+    },
+    {
+      homeIndex: 1,
+      awayIndex: 2,
+      venue: chosenVenues[2].name,
+      scheduledAt: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 5),
+      status: "scheduled",
+      stage: "group",
+      round: 2,
+      ticketPrice: 35,
+      referee: "Istvan Kovacs",
+      notes: "Etapa a doua din grupele principale. Accesul suporterilor pe bază de bilet digital.",
+    },
+    {
+      homeIndex: 3,
+      awayIndex: 0,
+      venue: chosenVenues[3].name,
+      scheduledAt: new Date(now.getTime() + 1000 * 60 * 60 * 24 * 7),
+      status: "scheduled",
+      stage: "group",
+      round: 2,
+      ticketPrice: 30,
+      referee: "Radu Petrescu",
+      notes: "Meci nocturn transmis în direct cu cronometraj electronic.",
+    },
+  ];
+
+  for (const cfg of matchConfigs) {
+    const homeTeam = teams[cfg.homeIndex % teams.length];
+    const awayTeam = teams[cfg.awayIndex % teams.length];
+
+    await prisma.match.create({
+      data: {
+        championshipId: championship.id,
+        homeTeamId: homeTeam.id,
+        awayTeamId: awayTeam.id,
+        scheduledAt: cfg.scheduledAt,
+        venue: cfg.venue,
+        status: cfg.status,
+        stage: cfg.stage,
+        round: cfg.round,
+        ticketPrice: cfg.ticketPrice,
+        referee: cfg.referee,
+        homeScore: cfg.homeScore ?? null,
+        awayScore: cfg.awayScore ?? null,
+        notes: cfg.notes,
+        events: cfg.events || null,
+      },
+    });
+  }
+
+  console.log(`[seed] seeded 4 active demo matches distributed across arenas`);
+}
+
 async function main() {
   let arenaOwner = null;
   for (const s of SEEDS) {
@@ -1888,6 +2016,7 @@ async function main() {
   if (admin) {
     await ensureDemoChampionship(admin.id);
     await ensureCountyAndCityChampionships(admin.id);
+    await ensureActiveArenaMatches();
   }
 
   console.log("[seed] multi-role login accounts available:");
