@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { VenueClaimModal } from "./VenueClaimModal";
 import { isTicketSalesClosed } from "@/lib/tickets";
 import { translateMatchStage, ARENA_SPORTS_OPTIONS, parseVenueSports } from "@/lib/constants";
@@ -73,6 +74,13 @@ export function VenueDetailClientView({
   finishedMatches,
   competitions,
 }: VenueDetailClientViewProps) {
+  const { data: session } = useSession();
+  const userRole = (session?.user as any)?.role;
+  const canEditArena = Boolean(
+    session?.user &&
+    (userRole === "super_admin" || userRole === "superadmin" || userRole === "arena_owner" || userRole === "arena_admin")
+  );
+
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
   const [showClaimModal, setShowClaimModal] = useState(false);
 
@@ -300,6 +308,16 @@ export function VenueDetailClientView({
                 <span className="material-symbols-outlined text-lg">campaign</span>
                 <span>Reclame &amp; Sponsori ({activeAds.length})</span>
               </a>
+            )}
+
+            {canEditArena && (
+              <Link
+                href="/dashboard/super-admin"
+                className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs uppercase tracking-wider py-3.5 px-5 rounded-xl shadow-md transition flex items-center gap-2 active:scale-95"
+              >
+                <span className="material-symbols-outlined text-lg">edit_note</span>
+                <span>Editează Poze &amp; Date Arenă</span>
+              </Link>
             )}
           </div>
         </div>

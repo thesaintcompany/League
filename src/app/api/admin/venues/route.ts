@@ -16,6 +16,7 @@ const venueSchema = z.object({
   pricePerHour: z.number().int().min(0).optional().nullable(),
   isActive: z.boolean().default(true),
   imageUrl: z.string().optional().nullable(),
+  galleryImages: z.union([z.string(), z.array(z.string())]).optional().nullable(),
 });
 
 import { isArenaAdmin } from "@/lib/permissions";
@@ -76,11 +77,20 @@ export async function POST(req: Request) {
     dbUser = await prisma.user.findUnique({ where: { email: session.user.email.trim().toLowerCase() } });
   }
 
+  const createData: any = {
+    ...parsed.data,
+    ownerId: dbUser?.id || null,
+  };
+  if (createData.galleryImages !== undefined) {
+    createData.galleryImages = createData.galleryImages
+      ? (typeof createData.galleryImages === "string"
+          ? createData.galleryImages
+          : JSON.stringify(createData.galleryImages))
+      : null;
+  }
+
   const venue = await prisma.venue.create({
-    data: {
-      ...parsed.data,
-      ownerId: dbUser?.id || null,
-    },
+    data: createData,
   });
 
   await logAuditAction({

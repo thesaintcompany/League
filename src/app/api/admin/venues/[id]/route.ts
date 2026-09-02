@@ -16,6 +16,7 @@ const updateVenueSchema = z.object({
   pricePerHour: z.number().int().min(0).optional().nullable(),
   isActive: z.boolean().optional(),
   imageUrl: z.string().optional().nullable(),
+  galleryImages: z.union([z.string(), z.array(z.string())]).optional().nullable(),
   resetToDefaults: z.boolean().optional(),
 });
 
@@ -98,6 +99,7 @@ export async function PATCH(
         pricePerHour: null,
         isActive: true,
         imageUrl: null,
+        galleryImages: null,
         amenities: null,
         announcements: null,
         tickerText: null,
@@ -109,9 +111,18 @@ export async function PATCH(
     return NextResponse.json({ venue: updated, reset: true });
   }
 
+  const updateData: any = { ...parsed.data };
+  if (updateData.galleryImages !== undefined) {
+    updateData.galleryImages = updateData.galleryImages
+      ? (typeof updateData.galleryImages === "string"
+          ? updateData.galleryImages
+          : JSON.stringify(updateData.galleryImages))
+      : null;
+  }
+
   const updated = await prisma.venue.update({
     where: { id: ctx.params.id },
-    data: parsed.data,
+    data: updateData,
   });
 
   return NextResponse.json({ venue: updated });

@@ -33,6 +33,7 @@ interface VenueItem {
   isDemo: boolean;
   pricePerHour?: number | null;
   imageUrl?: string | null;
+  galleryImages?: string | null;
 }
 
 interface UserItem {
@@ -167,6 +168,12 @@ export function AdminSuperPanel() {
     pricePerHour: 150,
     isActive: true,
     imageUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
+    galleryImages: [
+      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&auto=format&fit=crop&q=80",
+    ],
   });
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -560,6 +567,12 @@ export function AdminSuperPanel() {
   }
 
   function openCreateModal() {
+    const defaultGallery = [
+      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&auto=format&fit=crop&q=80",
+    ];
     setEditingVenue(null);
     setForm({
       name: "",
@@ -572,12 +585,27 @@ export function AdminSuperPanel() {
       floodlights: true,
       pricePerHour: 150,
       isActive: true,
-      imageUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
+      imageUrl: defaultGallery[0],
+      galleryImages: defaultGallery,
     });
     setModalOpen(true);
   }
 
   function openEditModal(v: VenueItem) {
+    let parsedGallery = [
+      v.imageUrl || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&auto=format&fit=crop&q=80",
+    ];
+    if (v.galleryImages) {
+      try {
+        const arr = JSON.parse(v.galleryImages);
+        if (Array.isArray(arr) && arr.length > 0) {
+          parsedGallery = parsedGallery.map((fallback, i) => arr[i] || fallback);
+        }
+      } catch {}
+    }
     setEditingVenue(v);
     setForm({
       name: v.name,
@@ -590,7 +618,8 @@ export function AdminSuperPanel() {
       floodlights: v.floodlights,
       pricePerHour: v.pricePerHour ?? 150,
       isActive: v.isActive,
-      imageUrl: v.imageUrl || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&auto=format&fit=crop&q=80",
+      imageUrl: v.imageUrl || parsedGallery[0],
+      galleryImages: parsedGallery,
     });
     setModalOpen(true);
   }
@@ -623,14 +652,18 @@ export function AdminSuperPanel() {
     e.preventDefault();
     setSaving(true);
     try {
+      const payload = {
+        ...form,
+        galleryImages: JSON.stringify(form.galleryImages),
+      };
       if (editingVenue) {
         const res = await fetch(`/api/admin/venues/${editingVenue.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify(payload),
         });
         if (res.ok) {
-          showToast(`Arena "${form.name}" a fost actualizată! `);
+          showToast(`Arena "${form.name}" a fost actualizată!`);
           setModalOpen(false);
           loadData();
         }
@@ -638,10 +671,10 @@ export function AdminSuperPanel() {
         const res = await fetch(`/api/admin/venues`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify(payload),
         });
         if (res.ok) {
-          showToast(`Arena "${form.name}" a fost adăugată în baza de date! `);
+          showToast(`Arena "${form.name}" a fost adăugată în baza de date!`);
           setModalOpen(false);
           loadData();
         }
@@ -3540,16 +3573,59 @@ export function AdminSuperPanel() {
                   </label>
                 </div>
 
-                <div className="sm:col-span-2">
-                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
-                    URL Imagine Arenă
-                  </label>
-                  <input
-                    type="url"
-                    value={form.imageUrl}
-                    onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                    className="input text-xs"
-                  />
+                <div className="sm:col-span-2 space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <div>
+                    <label className="text-[11px] font-headline font-bold uppercase tracking-wider text-lime-600 dark:text-lime-400 flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-sm">photo_library</span>
+                      Galerie Foto Publică (Cele 4 poze din pagina arenei)
+                    </label>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      Introduceți URL-urile celor 4 poze afișate în prezentarea publică a arenei. Poza 1 este utilizată și ca cadru principal.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      "Poza 1 • Cadru Principal (Hero)",
+                      "Poza 2 • Tribună / Vedere Panoramică",
+                      "Poza 3 • Nocturnă / Detaliu Teren",
+                      "Poza 4 • Exterior / Acces Suporteri",
+                    ].map((label, idx) => (
+                      <div key={idx} className="p-3 bg-slate-50 dark:bg-slate-850/60 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 space-y-2">
+                        <label className="text-[10px] font-label font-bold uppercase text-slate-500 dark:text-slate-300 block">
+                          {label}
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <div className="w-12 h-10 rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 shrink-0">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={form.galleryImages[idx] || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&auto=format&fit=crop&q=80"}
+                              alt={label}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=400&auto=format&fit=crop&q=80";
+                              }}
+                            />
+                          </div>
+                          <input
+                            type="url"
+                            value={form.galleryImages[idx] || ""}
+                            onChange={(e) => {
+                              const newGallery = [...form.galleryImages];
+                              newGallery[idx] = e.target.value;
+                              const updatedForm: any = { ...form, galleryImages: newGallery };
+                              if (idx === 0) {
+                                updatedForm.imageUrl = e.target.value;
+                              }
+                              setForm(updatedForm);
+                            }}
+                            placeholder={`URL Imagine ${idx + 1}...`}
+                            className="input text-xs font-mono flex-1"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
