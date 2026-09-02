@@ -242,3 +242,95 @@ export function getAjfUrlForCounty(county?: string | null): { url: string; label
     label: "Comisia Centrală a Arbitrilor (FRF)",
   };
 }
+
+export function getSportsReadableString(val?: string | null): { single: boolean; text: string; rawList: string[] } {
+  const sports = parseVenueSports(val);
+  const cleanSports = sports.filter((s) => s !== "multifunctional");
+  const listToUse = cleanSports.length > 0 ? cleanSports : ["fotbal"];
+
+  const namesMap: Record<string, string> = {
+    fotbal: "fotbal",
+    futsal: "futsal",
+    tenis: "tenis de câmp",
+    padel: "padel",
+    pingpong: "tenis de masă",
+    baschet: "baschet",
+    volei: "volei",
+    handbal: "handbal",
+    multifunctional: "multisport",
+  };
+
+  const labels = listToUse.map((s) => namesMap[s] || s);
+  if (labels.length === 1) {
+    return { single: true, text: labels[0], rawList: listToUse };
+  }
+  if (labels.length === 2) {
+    return { single: false, text: `${labels[0]} și ${labels[1]}`, rawList: listToUse };
+  }
+  return {
+    single: false,
+    text: `${labels.slice(0, -1).join(", ")} și ${labels[labels.length - 1]}`,
+    rawList: listToUse,
+  };
+}
+
+export function getVenueSpecsTemplates(sportsVal?: string | null, surfaceVal?: string | null): string[] {
+  const { single, text } = getSportsReadableString(sportsVal);
+  const surface = surfaceVal ? surfaceVal.toLowerCase() : "sintetic";
+
+  if (single) {
+    return [
+      `Teren oficial de ${text} cu gazon ${surface} de înaltă performanță, nocturnă omologată și vestiare moderne.`,
+      `Teren de ${text} omologat competițional, dotat cu nocturnă LED, vestiare complete și spații tehnice.`,
+      `Infrastructură sportivă dedicată meciurilor de ${text}, optimizată pentru campionate, turnee și antrenamente.`,
+      `Teren de ${text} all-season cu nocturnă puternică, suprafață de joc întreținută profesional și acces facil.`,
+      `Zonă sportivă modernă pentru meciuri de ${text}, prevăzută cu parcare generoasă, vestiare cu dușuri și nocturnă.`,
+      `Bază sportivă de ${text} la standarde federale, cu suprafață ${surface}, bănci de rezerve acoperite și nocturnă.`,
+      `Teren de ${text} dedicat pentru cluburi și comunitate, cu suprafață de top și vestiare individuale.`,
+      `Arenă de ${text} cu nocturnă, suprafață de joc impecabilă, tribune pentru spectatori și parcare privată.`,
+      `Teren modern de ${text} în aer liber, cu nocturnă automată și vestiare securizate.`,
+      `Teren de ${text} amenajat la standarde europene, cu suprafață ${surface} certificată și nocturnă omologată.`,
+    ];
+  }
+
+  return [
+    `Complex sportiv multifuncțional: teren amenajat pentru ${text}, cu nocturnă omologată și vestiare moderne.`,
+    `Teren multifuncțional dedicat pentru ${text}, cu suprafețe adaptabile și marcaje oficiale omologate.`,
+    `Bază sportivă multifuncțională optimizată pentru meciuri de campionat, turnee și antrenamente de ${text}.`,
+    `Complex multifuncțional all-season cu nocturnă pentru ${text}, disponibil pe tot parcursul anului.`,
+    `Zonă sportivă multifuncțională pentru ${text}, prevăzută cu parcare generoasă, vestiare cu dușuri și nocturnă.`,
+    `Infrastructură multifuncțională de performanță pentru ${text}, suprafețe de nivel înalt și nocturnă LED.`,
+    `Centru sportiv multifuncțional dedicat pentru ${text}, cu facilități complete de pregătire și vestiare.`,
+    `Arenă multifuncțională cu nocturnă, spații de joc pentru ${text}, tribune spectatori și parcare privată.`,
+    `Bază sportivă urbană multifuncțională: terenuri special amenajate pentru ${text} și facilități moderne.`,
+    `Infrastructură multifuncțională completă amenajată la standarde europene pentru ${text}, cu nocturnă omologată.`,
+  ];
+}
+
+export function sanitizeVenueSpecs(
+  specs?: string | null,
+  sportsVal?: string | null,
+  surfaceVal?: string | null
+): string {
+  const templates = getVenueSpecsTemplates(sportsVal, surfaceVal);
+  if (!specs || specs.trim() === "") {
+    return templates[0];
+  }
+
+  const { single, rawList } = getSportsReadableString(sportsVal);
+  const sLower = specs.toLowerCase();
+
+  // If only one sport is selected (or sports without baschet/handbal),
+  // but specs explicitly has "teren multifuncțional baschet/handbal" or mentions unselected sports
+  if (single) {
+    const forbiddenSports = ["baschet", "handbal", "volei", "tenis", "padel", "pingpong", "rugby", "hochei"]
+      .filter((sp) => !rawList.includes(sp));
+
+    const containsForbidden = forbiddenSports.some((sp) => sLower.includes(sp));
+    if (containsForbidden || sLower.includes("multifuncțional") || sLower.includes("multifunctional")) {
+      return templates[0];
+    }
+  }
+
+  return specs.trim();
+}

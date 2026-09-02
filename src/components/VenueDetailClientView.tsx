@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { VenueClaimModal } from "./VenueClaimModal";
 import { isTicketSalesClosed } from "@/lib/tickets";
-import { translateMatchStage, ARENA_SPORTS_OPTIONS, parseVenueSports } from "@/lib/constants";
+import { translateMatchStage, ARENA_SPORTS_OPTIONS, parseVenueSports, sanitizeVenueSpecs } from "@/lib/constants";
 
 export interface VenueData {
   id: string;
@@ -250,11 +250,14 @@ export function VenueDetailClientView({
               {venue.location} {venue.address ? `• ${venue.address}` : ""}
             </p>
 
-            {venue.specs && (
-              <p className="text-xs sm:text-sm text-slate-300 font-body leading-relaxed max-w-2xl">
-                {venue.specs}
-              </p>
-            )}
+            {(() => {
+              const displaySpecs = sanitizeVenueSpecs(venue.specs, venue.sport, venue.surface);
+              return displaySpecs ? (
+                <p className="text-xs sm:text-sm text-slate-300 font-body leading-relaxed max-w-2xl">
+                  {displaySpecs}
+                </p>
+              ) : null;
+            })()}
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
@@ -312,7 +315,7 @@ export function VenueDetailClientView({
 
             {canEditArena && (
               <Link
-                href="/dashboard/super-admin"
+                href="/dashboard"
                 className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs uppercase tracking-wider py-3.5 px-5 rounded-xl shadow-md transition flex items-center gap-2 active:scale-95"
               >
                 <span className="material-symbols-outlined text-lg">edit_note</span>

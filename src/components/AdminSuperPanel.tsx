@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { getCurrentSeasonYear, getAutoSeasonYear } from "@/lib/season";
-import { ARENA_SPORTS_OPTIONS, parseVenueSports } from "@/lib/constants";
+import { ARENA_SPORTS_OPTIONS, parseVenueSports, getVenueSpecsTemplates, sanitizeVenueSpecs } from "@/lib/constants";
 
 import { AdminManagementPanel } from "./AdminManagementPanel";
 
@@ -573,12 +573,13 @@ export function AdminSuperPanel() {
       "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&auto=format&fit=crop&q=80",
       "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1000&auto=format&fit=crop&q=80",
     ];
+    const initialSpecs = getVenueSpecsTemplates("fotbal", "Sintetic")[0];
     setEditingVenue(null);
     setForm({
       name: "",
       location: "Timișoara",
       address: "",
-      specs: "",
+      specs: initialSpecs,
       sport: "fotbal",
       surface: "Sintetic",
       capacity: 200,
@@ -606,14 +607,18 @@ export function AdminSuperPanel() {
         }
       } catch {}
     }
+    const cleanSport = v.sport || "fotbal";
+    const cleanSurface = v.surface || "Sintetic";
+    const cleanSpecs = sanitizeVenueSpecs(v.specs, cleanSport, cleanSurface);
+
     setEditingVenue(v);
     setForm({
       name: v.name,
       location: v.location,
       address: v.address || "",
-      specs: v.specs || "",
-      sport: v.sport || "fotbal",
-      surface: v.surface || "Sintetic",
+      specs: cleanSpecs,
+      sport: cleanSport,
+      surface: cleanSurface,
       capacity: v.capacity || 100,
       floodlights: v.floodlights,
       pricePerHour: v.pricePerHour ?? 150,
@@ -636,16 +641,30 @@ export function AdminSuperPanel() {
     } else {
       updated = [...current, sportId];
     }
-    setForm((prev) => ({ ...prev, sport: updated.join(", ") }));
+    const newSportString = updated.join(", ");
+    setForm((prev) => ({
+      ...prev,
+      sport: newSportString,
+      specs: sanitizeVenueSpecs(prev.specs, newSportString, prev.surface),
+    }));
   }
 
   function selectAllSports() {
     const all = ARENA_SPORTS_OPTIONS.map((s) => s.id);
-    setForm((prev) => ({ ...prev, sport: all.join(", ") }));
+    const newSportString = all.join(", ");
+    setForm((prev) => ({
+      ...prev,
+      sport: newSportString,
+      specs: sanitizeVenueSpecs(prev.specs, newSportString, prev.surface),
+    }));
   }
 
   function selectOnlyFootball() {
-    setForm((prev) => ({ ...prev, sport: "fotbal" }));
+    setForm((prev) => ({
+      ...prev,
+      sport: "fotbal",
+      specs: sanitizeVenueSpecs(prev.specs, "fotbal", prev.surface),
+    }));
   }
 
   async function handleSaveVenue(e: React.FormEvent) {
@@ -3507,17 +3526,66 @@ export function AdminSuperPanel() {
                   />
                 </div>
 
-                <div className="sm:col-span-2">
-                  <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
-                    Specificații Tehnice &amp; Dotări
-                  </label>
+                <div className="sm:col-span-2 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] font-label font-bold uppercase text-slate-400 block">
+                      Specificații Tehnice &amp; Dotări (Sub-Titlu Pagina Arenei)
+                    </label>
+                    <span className="text-[10px] font-medium text-slate-400">
+                      Afișat direct sub titlul și locația arenei
+                    </span>
+                  </div>
                   <textarea
                     rows={2}
                     value={form.specs}
                     onChange={(e) => setForm({ ...form, specs: e.target.value })}
                     className="input text-sm"
-                    placeholder="ex: Iarbă sintetică profesională 55 mm, vestiare moderne, nocturnă"
+                    placeholder="ex: Teren oficial de fotbal cu gazon sintetic, nocturnă și vestiare moderne"
                   />
+
+                  {/* 10 Dynamic Template Variants */}
+                  <div className="p-3 bg-slate-50 dark:bg-slate-850/70 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-lime-600 dark:text-lime-400 flex items-center gap-1.5 uppercase font-headline">
+                        <span className="material-symbols-outlined text-sm">auto_awesome</span>
+                        10 Variante Recomandate (În concordanță cu sporturile bifate)
+                      </span>
+                      <span className="text-[10px] text-slate-400">
+                        Click pe orice variantă pentru aplicare
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
+                      {getVenueSpecsTemplates(form.sport, form.surface).map((tmpl, idx) => {
+                        const isSelected = form.specs === tmpl;
+                        return (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => setForm((prev) => ({ ...prev, specs: tmpl }))}
+                            className={`p-2 rounded-xl text-left text-xs transition border flex flex-col gap-1 ${
+                              isSelected
+                                ? "bg-lime-400/20 border-lime-400 text-slate-900 dark:text-white font-medium shadow-sm"
+                                : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-lime-400/50 hover:bg-lime-50/50 dark:hover:bg-slate-800"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between w-full">
+                              <span className="text-[10px] font-bold text-slate-400 uppercase">
+                                Varianta {idx + 1}
+                              </span>
+                              {isSelected && (
+                                <span className="text-[10px] font-bold text-lime-600 dark:text-lime-400 flex items-center gap-0.5">
+                                  <span className="material-symbols-outlined text-xs">check_circle</span>
+                                  Selectat
+                                </span>
+                              )}
+                            </div>
+                            <span className="line-clamp-2 leading-relaxed text-[11px]">{tmpl}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
 
                 <div>

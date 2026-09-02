@@ -1,9 +1,26 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { PublicVenuesCatalog } from "@/components/PublicVenuesCatalog";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Arene & Baze Sportive din România • Catalog Oficial | Pro Ligue",
+  description: "Catalogul național al infrastructurii sportive din România: stadioane moderne, săli polivalente, terenuri sintetice și baze sportive omologate.",
+  openGraph: {
+    title: "Arene & Baze Sportive din România • Catalog Oficial | Pro Ligue",
+    description: "Catalogul național al infrastructurii sportive din România: stadioane moderne, săli polivalente, terenuri sintetice și baze sportive omologate.",
+    images: [{ url: "/images/stadium-hero.jpg", width: 1200, height: 630, alt: "Arene Sportive România" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Arene & Baze Sportive din România • Catalog Oficial | Pro Ligue",
+    description: "Catalogul național al infrastructurii sportive din România: stadioane moderne, săli polivalente, terenuri sintetice și baze sportive omologate.",
+    images: ["/images/stadium-hero.jpg"],
+  },
+};
 
 export default async function PublicVenuesPage() {
   const venues = await prisma.venue.findMany({

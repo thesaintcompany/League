@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { PublicHeader } from "@/components/PublicHeader";
@@ -5,6 +6,99 @@ import { PublicFooter } from "@/components/PublicFooter";
 import { VenueDetailClientView } from "@/components/VenueDetailClientView";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const rawId = decodeURIComponent(params.id);
+
+  let venue = await prisma.venue.findUnique({
+    where: { id: rawId },
+    select: {
+      name: true,
+      location: true,
+      county: true,
+      address: true,
+      specs: true,
+      sport: true,
+      capacity: true,
+      imageUrl: true,
+      galleryImages: true,
+    },
+  });
+
+  if (!venue) {
+    venue = await prisma.venue.findFirst({
+      where: {
+        OR: [
+          { name: rawId },
+        ],
+      },
+      select: {
+        name: true,
+        location: true,
+        county: true,
+        address: true,
+        specs: true,
+        sport: true,
+        capacity: true,
+        imageUrl: true,
+        galleryImages: true,
+      },
+    });
+  }
+
+  if (!venue) {
+    return {
+      title: "Arenă Sportivă | Pro Ligue România",
+      description: "Descoperă arenele și bazele sportive omologate din România pe platforma Pro Ligue.",
+    };
+  }
+
+  let mainPhoto = venue.imageUrl?.trim();
+  if (!mainPhoto && venue.galleryImages) {
+    try {
+      const parsed = JSON.parse(venue.galleryImages);
+      if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]) {
+        mainPhoto = String(parsed[0]).trim();
+      }
+    } catch {}
+  }
+
+  if (!mainPhoto) {
+    mainPhoto = "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&auto=format&fit=crop&q=80";
+  }
+
+  const pageTitle = `${venue.name} (${venue.location}) • Arenă Sportivă | Pro Ligue România`;
+  const pageDescription = `${venue.name} din ${venue.location}${venue.county ? `, jud. ${venue.county}` : ""}${venue.address ? ` (${venue.address})` : ""}. Capacitate: ${venue.capacity} spectatori. Sport: ${venue.sport}. Meciuri oficiale, tarife, facilități și rezervări pe platforma Pro Ligue.`;
+
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      type: "website",
+      siteName: "PRO LIGUE ROMÂNIA",
+      images: [
+        {
+          url: mainPhoto,
+          width: 1200,
+          height: 630,
+          alt: venue.name,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: pageTitle,
+      description: pageDescription,
+      images: [mainPhoto],
+    },
+  };
+}
 
 export default async function PublicVenueDetailPage({
   params,
