@@ -16,8 +16,8 @@ interface PlayerPhotoCarouselProps {
 const DEFAULT_STANDING_PORTRAIT =
   "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=900&auto=format&fit=crop&q=85";
 
-const DEFAULT_ACTION_PHOTO =
-  "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=900&auto=format&fit=crop&q=85";
+const DEFAULT_PROFILE_PHOTO =
+  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=85";
 
 export function PlayerPhotoCarousel({
   playerName,
@@ -30,7 +30,6 @@ export function PlayerPhotoCarousel({
   secondaryImage,
 }: PlayerPhotoCarouselProps) {
   const [currentSlide, setCurrentSlide] = useState<0 | 1>(0);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
 
   // Touch gesture state for "slide left" / "slide right"
@@ -41,7 +40,7 @@ export function PlayerPhotoCarousel({
   const photo1 = primaryImage?.trim() || DEFAULT_STANDING_PORTRAIT;
   const photo2 = (secondaryImage?.trim() && secondaryImage.trim() !== photo1)
     ? secondaryImage.trim()
-    : DEFAULT_ACTION_PHOTO;
+    : DEFAULT_PROFILE_PHOTO;
 
   function handleTouchStart(e: React.TouchEvent) {
     touchStartX.current = e.targetTouches[0].clientX;
@@ -123,45 +122,35 @@ export function PlayerPhotoCarousel({
             <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
               <span className="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-amber-400/40 text-amber-300 text-[10px] font-mono font-black uppercase tracking-wider shadow-lg flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                <span>1 / 2 • Portret în Picioare</span>
+                <span>1 / 2 • Portret Mare (În Picioare)</span>
               </span>
             </div>
           </div>
 
-          {/* SLIDE 1: POZĂ SECUNDARĂ / ÎN ACȚIUNE PE TEREN (SECONDARY ACTION PHOTO) */}
+          {/* SLIDE 1: POZĂ DE PROFIL (PROFILE PHOTO) */}
           <div className="w-full h-full shrink-0 relative overflow-hidden flex items-end justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={photo2}
-              alt={`${playerName} - În acțiune pe teren`}
-              className="w-full h-full object-cover object-center filter brightness-95 contrast-110 group-hover:scale-105 transition-transform duration-700"
+              alt={`${playerName} - Poză de profil`}
+              className="w-full h-full object-cover object-center filter brightness-95 contrast-105 group-hover:scale-105 transition-transform duration-700"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = DEFAULT_ACTION_PHOTO;
+                (e.target as HTMLImageElement).src = DEFAULT_PROFILE_PHOTO;
               }}
             />
 
-            {/* Match Action Overlay */}
+            {/* Profile Glow Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent pointer-events-none" />
 
             {/* Badge Indicator for Slide 2 */}
             <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
               <span className="px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-lime-400/40 text-lime-300 text-[10px] font-mono font-black uppercase tracking-wider shadow-lg flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse" />
-                <span>2 / 2 • În Acțiune pe Teren</span>
+                <span>2 / 2 • Poză de Profil</span>
               </span>
             </div>
           </div>
         </div>
-
-        {/* Floating Expand to Fullscreen Action */}
-        <button
-          type="button"
-          onClick={() => setLightboxOpen(true)}
-          className="absolute top-4 right-4 z-20 w-9 h-9 rounded-xl bg-slate-950/80 backdrop-blur-md border border-slate-700 hover:border-lime-400 text-slate-300 hover:text-white flex items-center justify-center transition shadow-lg"
-          title="Mărește poza la ecran complet"
-        >
-          <span className="material-symbols-outlined text-base">fullscreen</span>
-        </button>
 
         {/* Floating Navigation Arrows (Desktop & Mobile Click) */}
         {currentSlide === 0 && (
@@ -173,8 +162,8 @@ export function PlayerPhotoCarousel({
               setHasInteracted(true);
             }}
             className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-2xl bg-slate-950/85 hover:bg-lime-400 text-slate-200 hover:text-slate-950 border border-slate-700 hover:border-lime-400 flex items-center justify-center transition-all shadow-xl hover:scale-110 active:scale-95 group/btn"
-            title="Slide stânga pentru a vedea poza secundară"
-            aria-label="Poză secundară"
+            title="Slide stânga pentru a vedea poza de profil"
+            aria-label="Poză de profil"
           >
             <span className="material-symbols-outlined text-2xl group-hover/btn:translate-x-0.5 transition-transform">
               chevron_right
@@ -191,7 +180,7 @@ export function PlayerPhotoCarousel({
               setHasInteracted(true);
             }}
             className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-2xl bg-slate-950/85 hover:bg-amber-400 text-slate-200 hover:text-slate-950 border border-slate-700 hover:border-amber-400 flex items-center justify-center transition-all shadow-xl hover:scale-110 active:scale-95 group/btn"
-            title="Revenire la portretul în picioare"
+            title="Revenire la portretul mare în picioare"
             aria-label="Portret în picioare"
           >
             <span className="material-symbols-outlined text-2xl group-hover/btn:-translate-x-0.5 transition-transform">
@@ -209,7 +198,7 @@ export function PlayerPhotoCarousel({
             }}
             className="absolute bottom-24 right-4 z-20 px-3 py-1.5 rounded-full bg-slate-950/90 backdrop-blur-md border border-amber-400/50 text-amber-300 text-[11px] font-mono font-bold flex items-center gap-1.5 shadow-xl animate-bounce cursor-pointer hover:bg-slate-900"
           >
-            <span>Glisează stânga pentru poza 2</span>
+            <span>Glisează stânga pentru poza de profil</span>
             <span className="material-symbols-outlined text-sm">arrow_forward</span>
           </div>
         )}
@@ -219,7 +208,7 @@ export function PlayerPhotoCarousel({
           <div className="flex items-end justify-between gap-4">
             <div className="space-y-1 min-w-0">
               <span className="text-[10px] font-label font-bold text-amber-400 uppercase tracking-widest block">
-                {currentSlide === 0 ? "Portret Oficial • În Picioare" : "Cadru Acțiune Meci"}
+                {currentSlide === 0 ? "Portret Mare • În Picioare" : "Poză Oficială de Profil"}
               </span>
               <h2 className="font-headline font-black text-white text-2xl sm:text-3xl uppercase tracking-tight leading-tight truncate">
                 {playerName}
@@ -252,23 +241,22 @@ export function PlayerPhotoCarousel({
         </div>
       </div>
 
-      {/* 2. Interactive Segmented Switcher & Slide Left Quick Tabs */}
-      <div className="flex items-center justify-between gap-2 p-1.5 bg-slate-900/90 border border-slate-800 rounded-2xl">
+      {/* 2. Minimalist Line Indicator (No text, distinct colored line per slide) */}
+      <div className="flex items-center justify-center gap-2.5 py-1.5">
         <button
           type="button"
           onClick={() => {
             setCurrentSlide(0);
             setHasInteracted(true);
           }}
-          className={`flex-1 py-2 px-3 rounded-xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center justify-center gap-1.5 ${
+          title="Slide 1: Portret în Picioare"
+          aria-label="Slide 1: Portret în Picioare"
+          className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
             currentSlide === 0
-              ? "bg-amber-400 text-slate-950 font-black shadow-md"
-              : "text-slate-400 hover:text-white hover:bg-slate-800"
+              ? "w-12 sm:w-14 bg-amber-400 shadow-[0_0_12px_rgba(251,191,36,0.75)]"
+              : "w-4 sm:w-5 bg-slate-700/80 hover:bg-slate-600"
           }`}
-        >
-          <span className="material-symbols-outlined text-sm">person</span>
-          <span>1. Portret în Picioare</span>
-        </button>
+        />
 
         <button
           type="button"
@@ -276,54 +264,15 @@ export function PlayerPhotoCarousel({
             setCurrentSlide(1);
             setHasInteracted(true);
           }}
-          className={`flex-1 py-2 px-3 rounded-xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center justify-center gap-1.5 ${
+          title="Slide 2: Poză de Profil"
+          aria-label="Slide 2: Poză de Profil"
+          className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
             currentSlide === 1
-              ? "bg-lime-400 text-slate-950 font-black shadow-md"
-              : "text-slate-400 hover:text-white hover:bg-slate-800"
+              ? "w-12 sm:w-14 bg-lime-400 shadow-[0_0_12px_rgba(163,230,53,0.75)]"
+              : "w-4 sm:w-5 bg-slate-700/80 hover:bg-slate-600"
           }`}
-        >
-          <span className="material-symbols-outlined text-sm">sports_soccer</span>
-          <span>2. Poză Secundară (În Acțiune)</span>
-        </button>
+        />
       </div>
-
-      {/* 3. Fullscreen Lightbox Modal */}
-      {lightboxOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/95 backdrop-blur-md animate-in fade-in"
-          onClick={() => setLightboxOpen(false)}
-        >
-          <div
-            className="relative max-w-4xl max-h-[92vh] w-full flex flex-col items-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setLightboxOpen(false)}
-              className="absolute -top-12 right-0 p-2 text-slate-300 hover:text-white flex items-center gap-1 font-mono text-xs uppercase"
-            >
-              <span className="material-symbols-outlined text-xl">close</span>
-              <span>Închide</span>
-            </button>
-
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={currentSlide === 0 ? photo1 : photo2}
-              alt={playerName}
-              className="max-h-[82vh] w-auto max-w-full rounded-3xl object-contain shadow-2xl border-2 border-amber-400/40"
-            />
-
-            <div className="mt-4 text-center">
-              <p className="text-white font-headline font-black uppercase text-lg">
-                {playerName} • {currentSlide === 0 ? "Portret în Picioare" : "În Acțiune pe Teren"}
-              </p>
-              <p className="text-slate-400 text-xs font-mono">
-                {currentSlide === 0 ? "Poza 1 din 2" : "Poza 2 din 2"} • Apasă Escape sau închide fereastra
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

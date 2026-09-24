@@ -21,6 +21,23 @@ function WelcomePortalForm() {
   const [loading, setLoading] = useState(false);
   const [mobileView, setMobileView] = useState<"championships" | "auth">("championships");
 
+  useEffect(() => {
+    if (session?.user) {
+      const role = (session.user as any).role;
+      if (role === "player") {
+        router.replace("/profile");
+      } else if (role === "super_admin") {
+        router.replace("/dashboard/admin");
+      } else if (role === "referee") {
+        router.replace("/dashboard/referee");
+      } else if (role === "arena_owner") {
+        router.replace("/dashboard/arena");
+      } else if (role === "team_leader") {
+        router.replace("/dashboard/team");
+      }
+    }
+  }, [session, router]);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -39,19 +56,29 @@ function WelcomePortalForm() {
       return;
     }
 
-    // Direct redirection based on role
-    if (selectedRole === "super_admin" || cleanEmail === "admin@leaguehub.local" || cleanEmail === "superadmin@leaguehub.local") {
+    // Determine actual role from session
+    let userRole = selectedRole;
+    try {
+      const sessionRes = await fetch("/api/auth/session");
+      const sessionData = await sessionRes.json();
+      if (sessionData?.user?.role) {
+        userRole = sessionData.user.role;
+      }
+    } catch {}
+
+    // Direct redirection based on actual user role
+    if (userRole === "super_admin" || cleanEmail === "admin@leaguehub.local" || cleanEmail === "superadmin@leaguehub.local") {
       router.push("/dashboard/admin");
-    } else if (selectedRole === "referee") {
-      router.push("/dashboard/referee");
-    } else if (selectedRole === "arena_owner") {
-      router.push("/dashboard/arena");
-    } else if (selectedRole === "team_leader") {
-      router.push("/dashboard/team");
-    } else if (selectedRole === "player") {
+    } else if (userRole === "player") {
       router.push("/profile");
+    } else if (userRole === "referee") {
+      router.push("/dashboard/referee");
+    } else if (userRole === "arena_owner") {
+      router.push("/dashboard/arena");
+    } else if (userRole === "team_leader") {
+      router.push("/dashboard/team");
     } else {
-      router.push(callbackUrl || "/dashboard");
+      router.push(callbackUrl && callbackUrl !== "/dashboard" ? callbackUrl : "/dashboard");
     }
   }
 

@@ -394,11 +394,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
         <button
           type="button"
           onClick={() => setActiveTab("profile")}
-          className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 ${
-            activeTab === "profile"
+          className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 ${activeTab === "profile"
               ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md"
               : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
-          }`}
+            }`}
         >
           <span className="material-symbols-outlined text-base">account_circle</span>
           <span>Fișă Jucător &amp; Date Personale</span>
@@ -410,11 +409,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
             setActiveTab("notifications");
             loadNotifications();
           }}
-          className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 ${
-            activeTab === "notifications"
+          className={`px-4 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition flex items-center gap-2 ${activeTab === "notifications"
               ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 shadow-md"
               : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
-          }`}
+            }`}
         >
           <span className="material-symbols-outlined text-base">notifications</span>
           <span>Notificări &amp; Invitații Echipă</span>
@@ -499,9 +497,8 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
                 return (
                   <div
                     key={n.id}
-                    className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border ${borderColor} shadow-sm transition flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
-                      !n.read ? "ring-2 ring-lime-400/20" : "opacity-90"
-                    }`}
+                    className={`p-5 rounded-3xl bg-white dark:bg-slate-900 border ${borderColor} shadow-sm transition flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${!n.read ? "ring-2 ring-lime-400/20" : "opacity-90"
+                      }`}
                   >
                     <div className="flex items-start gap-4">
                       <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${badgeClass}`}>
@@ -613,7 +610,7 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
                   Card Prezentare Oficial
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full bg-lime-400 text-slate-950 text-[10px] font-semibold uppercase tracking-wider">
-                  {isEditable ? "Sportiv Înregistrat" : "Vizualizare"}
+                  {isEditable ? "Sportiv" : "Vizualizare"}
                 </span>
               </div>
 
@@ -624,11 +621,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
                 onDrop={(e) => handleDropFile(e, "cover")}
                 onClick={() => isEditable && coverFileInputRef.current?.click()}
                 title={isEditable ? "Apasă sau trage fișierul pentru a încărca poza în picioare (9:16)" : "Profil în mod vizualizare"}
-                className={`aspect-[9/14] w-full rounded-2xl overflow-hidden relative mb-4 bg-slate-900 border transition-all duration-300 shadow-sm cursor-pointer group/cover ${
-                  isDraggingCover
+                className={`aspect-[9/14] w-full rounded-2xl overflow-hidden relative mb-4 bg-slate-900 border transition-all duration-300 shadow-sm cursor-pointer group/cover ${isDraggingCover
                     ? "border-2 border-dashed border-lime-400 ring-4 ring-lime-400/20 scale-[0.99]"
                     : "border-slate-200 dark:border-slate-800 hover:border-lime-400/80"
-                }`}
+                  }`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -696,11 +692,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
                   onDrop={(e) => handleDropFile(e, "avatar")}
                   onClick={() => isEditable && avatarFileInputRef.current?.click()}
                   title={isEditable ? "Apasă sau trage pentru a schimba poza portret (1:1)" : "Poză portret"}
-                  className={`w-16 h-16 rounded-2xl border-2 overflow-hidden shadow-lg -mt-10 z-20 relative bg-slate-900 cursor-pointer group/avatar shrink-0 transition-all ${
-                    isDraggingAvatar
+                  className={`w-16 h-16 rounded-2xl border-2 overflow-hidden shadow-lg -mt-10 z-20 relative bg-slate-900 cursor-pointer group/avatar shrink-0 transition-all ${isDraggingAvatar
                       ? "border-lime-400 ring-4 ring-lime-400/30 scale-105"
                       : "border-white dark:border-slate-900"
-                  }`}
+                    }`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -738,8 +733,9 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
             </div>
 
             {/* Professional Photo Upload Center */}
-            <div className="p-5 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div className="p-3.5 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-3 sm:space-y-4">
+              {/* Desktop header: hidden on mobile per user specification */}
+              <div className="hidden sm:flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-lime-400/20 text-lime-600 dark:text-lime-400 flex items-center justify-center">
                     <span className="material-symbols-outlined text-lg">cloud_upload</span>
@@ -760,6 +756,12 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
                   </span>
                 )}
               </div>
+              {isProcessingPhoto && (
+                <div className="sm:hidden flex items-center justify-center gap-1.5 py-1 text-xs text-lime-600 dark:text-lime-400 font-medium">
+                  <span className="material-symbols-outlined text-xs animate-spin">progress_activity</span>
+                  <span>Procesare fotografie...</span>
+                </div>
+              )}
 
               {/* SECTION 1: Poză Corp Întreg (Full-Body) */}
               <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 space-y-3">
@@ -783,11 +785,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
                   onDragLeave={(e) => handleDragLeave(e, "cover")}
                   onDrop={(e) => handleDropFile(e, "cover")}
                   onClick={() => isEditable && coverFileInputRef.current?.click()}
-                  className={`p-3.5 rounded-xl border-2 border-dashed transition-all cursor-pointer text-center flex flex-col items-center justify-center gap-1.5 ${
-                    isDraggingCover
+                  className={`p-3.5 rounded-xl border-2 border-dashed transition-all cursor-pointer text-center flex flex-col items-center justify-center gap-1.5 ${isDraggingCover
                       ? "border-lime-400 bg-lime-400/10 text-lime-400 ring-2 ring-lime-400/20"
                       : "border-slate-300 dark:border-slate-700/80 hover:border-lime-400 hover:bg-slate-100/60 dark:hover:bg-slate-900/60 text-slate-600 dark:text-slate-400"
-                  }`}
+                    }`}
                 >
                   <span className="material-symbols-outlined text-2xl text-lime-600 dark:text-lime-400">
                     cloud_upload
@@ -863,11 +864,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
                   onDragLeave={(e) => handleDragLeave(e, "avatar")}
                   onDrop={(e) => handleDropFile(e, "avatar")}
                   onClick={() => isEditable && avatarFileInputRef.current?.click()}
-                  className={`p-3.5 rounded-xl border-2 border-dashed transition-all cursor-pointer text-center flex flex-col items-center justify-center gap-1.5 ${
-                    isDraggingAvatar
+                  className={`p-3.5 rounded-xl border-2 border-dashed transition-all cursor-pointer text-center flex flex-col items-center justify-center gap-1.5 ${isDraggingAvatar
                       ? "border-lime-400 bg-lime-400/10 text-lime-400 ring-2 ring-lime-400/20"
                       : "border-slate-300 dark:border-slate-700/80 hover:border-lime-400 hover:bg-slate-100/60 dark:hover:bg-slate-900/60 text-slate-600 dark:text-slate-400"
-                  }`}
+                    }`}
                 >
                   <span className="material-symbols-outlined text-2xl text-lime-600 dark:text-lime-400">
                     add_photo_alternate
@@ -933,338 +933,338 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
               </div>
             </div>
 
-        {/* Privacy Note */}
-        <div className="p-4 bg-slate-100/60 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl space-y-1 text-xs text-slate-500 dark:text-slate-400">
-          <div className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
-            <span className="material-symbols-outlined text-sm text-lime-500">lock</span>
-            <span>Confidențialitate Date Contact</span>
-          </div>
-          <p className="text-[11px] leading-relaxed">
-            Numărul de telefon și adresa de email sunt protejate și vizibile doar managerului de echipă și organizatorilor competiției.
-          </p>
-        </div>
-      </div>
-
-      {/* Right Column: Form Data (8 cols) */}
-      <div className="lg:col-span-8 space-y-6">
-        {message && (
-          <div
-            className={`p-3.5 rounded-xl text-xs font-medium flex items-center gap-2 shadow-sm ${message.type === "success"
-              ? "bg-emerald-50 text-emerald-900 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
-              : "bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800"
-              }`}
-          >
-            <span className="material-symbols-outlined text-base">
-              {message.type === "success" ? "check_circle" : "error"}
-            </span>
-            <span>{message.text}</span>
-          </div>
-        )}
-
-        {/* Section 0: Selecție Sport Principal (Single-Choice) */}
-        <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-lime-400/20 text-lime-600 dark:text-lime-400 flex items-center justify-center">
-                <span className="material-symbols-outlined text-lg">sports</span>
+            {/* Privacy Note */}
+            <div className="p-4 bg-slate-100/60 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl space-y-1 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
+                <span className="material-symbols-outlined text-sm text-lime-500">lock</span>
+                <span>Confidențialitate Date Contact</span>
               </div>
-              <div>
-                <h3 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">
-                  1. Sport Principal Practicat
-                </h3>
-                <p className="text-[11px] text-slate-500 font-normal">
-                  Selectează sportul tău de bază (formularul și pozițiile se adaptează automat)
-                </p>
+              <p className="text-[11px] leading-relaxed">
+                Numărul de telefon și adresa de email sunt protejate și vizibile doar managerului de echipă și organizatorilor competiției.
+              </p>
+            </div>
+          </div>
+
+          {/* Right Column: Form Data (8 cols) */}
+          <div className="lg:col-span-8 space-y-6">
+            {message && (
+              <div
+                className={`p-3.5 rounded-xl text-xs font-medium flex items-center gap-2 shadow-sm ${message.type === "success"
+                  ? "bg-emerald-50 text-emerald-900 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
+                  : "bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800"
+                  }`}
+              >
+                <span className="material-symbols-outlined text-base">
+                  {message.type === "success" ? "check_circle" : "error"}
+                </span>
+                <span>{message.text}</span>
+              </div>
+            )}
+
+            {/* Section 0: Selecție Sport Principal (Single-Choice) */}
+            <div className="p-3.5 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-2.5 sm:space-y-4">
+              <div className="flex items-center justify-between pb-2 sm:pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex items-center gap-2 sm:gap-2.5">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-lime-400/20 text-lime-600 dark:text-lime-400 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-base sm:text-lg">sports</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xs sm:text-base font-semibold text-slate-900 dark:text-white">
+                      1. Sport Principal Practicat
+                    </h3>
+                    <p className="text-[10px] sm:text-[11px] text-slate-500 font-normal hidden sm:block">
+                      Selectează sportul tău de bază (formularul și pozițiile se adaptează automat)
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[9px] sm:text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+                  Alegere Unică
+                </span>
+              </div>
+
+              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-4 gap-1.5 sm:gap-2.5">
+                {SPORT_OPTIONS.map((sp) => {
+                  const isSelected = primarySport === sp.id;
+                  return (
+                    <button
+                      key={sp.id}
+                      type="button"
+                      disabled={!isEditable}
+                      onClick={() => handleSportChange(sp.id)}
+                      className={`p-2 sm:p-3 rounded-xl border text-left transition flex items-center gap-1.5 sm:gap-2.5 ${isSelected
+                        ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-900 dark:border-lime-400 font-semibold shadow-sm"
+                        : "bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:border-slate-400"
+                        }`}
+                    >
+                      <span className="material-symbols-outlined text-base sm:text-lg shrink-0">
+                        {sp.icon}
+                      </span>
+                      <span className="text-[11px] sm:text-xs font-medium truncate">{sp.label}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
-            <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
-              Alegere Unică
-            </span>
-          </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-2.5">
-            {SPORT_OPTIONS.map((sp) => {
-              const isSelected = primarySport === sp.id;
-              return (
+            {/* Section 1: Date Personale & Identitate */}
+            <div className="p-4 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-3 sm:space-y-4">
+              <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-lg">badge</span>
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">
+                    2. Date Personale &amp; Identitate
+                  </h3>
+                  <p className="text-[11px] text-slate-500 font-normal">
+                    Informații afișate pe foaia  ă de joc și în catalogul de sportivi
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                    Prenume *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    disabled={!isEditable}
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="ex: Florin"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                    Nume de Familie *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    disabled={!isEditable}
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="ex: Popescu"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                    Adresă Email (Conectare)
+                  </label>
+                  <input
+                    type="email"
+                    disabled
+                    className="w-full px-3.5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700 rounded-xl text-xs cursor-not-allowed"
+                    value={email}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                    Număr Telefon Mobil
+                  </label>
+                  <input
+                    type="tel"
+                    disabled={!isEditable}
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+40 722 123 456"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section 2: Fișă Tehnică & Poziție adaptată sportului */}
+            <div className="p-4 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-3 sm:space-y-4">
+              <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-lg">tune</span>
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">
+                    3. Poziție &amp; Parametri Fizici ({SPORT_OPTIONS.find((s) => s.id === primarySport)?.label || "Fotbal"})
+                  </h3>
+                  <p className="text-[11px] text-slate-500 font-normal">
+                    Poziționare tactică și atribute sportive
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                    Poziție / Specializare
+                  </label>
+                  <select
+                    disabled={!isEditable}
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
+                    value={position}
+                    onChange={(e) => setPosition(e.target.value)}
+                  >
+                    {currentPositions.map((pos) => (
+                      <option key={pos.value} value={pos.value}>
+                        {pos.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                    Număr Tricou
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={99}
+                    disabled={!isEditable}
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
+                    value={jerseyNumber}
+                    onChange={(e) => setJerseyNumber(parseInt(e.target.value) || 10)}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                    Braț / Picior Preferat
+                  </label>
+                  <select
+                    disabled={!isEditable}
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
+                    value={preferredFoot}
+                    onChange={(e) => setPreferredFoot(e.target.value)}
+                  >
+                    <option value="Drept">Drept (Right)</option>
+                    <option value="Stâng">Stâng (Left)</option>
+                    <option value="Ambele">Ambele / Ambidextru</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                    Înălțime (cm)
+                  </label>
+                  <input
+                    type="number"
+                    min={140}
+                    max={220}
+                    disabled={!isEditable}
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
+                    value={heightCm}
+                    onChange={(e) => setHeightCm(parseInt(e.target.value) || 180)}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                    Greutate (kg)
+                  </label>
+                  <input
+                    type="number"
+                    min={40}
+                    max={140}
+                    disabled={!isEditable}
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
+                    value={weightKg}
+                    onChange={(e) => setWeightKg(parseInt(e.target.value) || 75)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section 3: Rețele Sociale */}
+            <div className="p-4 sm:p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-3 sm:space-y-4">
+              <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-lg">share</span>
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">
+                    4. Profiluri Social Media
+                  </h3>
+                  <p className="text-[11px] text-slate-500 font-normal">
+                    Link-uri afișate public pe fișa de meci și cartonașul de prezentare
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                    Instagram
+                  </label>
+                  <input
+                    type="text"
+                    disabled={!isEditable}
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
+                    value={instagramUrl}
+                    onChange={(e) => setInstagramUrl(e.target.value)}
+                    placeholder="instagram.com/cont"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                    X / Twitter
+                  </label>
+                  <input
+                    type="text"
+                    disabled={!isEditable}
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
+                    value={twitterUrl}
+                    onChange={(e) => setTwitterUrl(e.target.value)}
+                    placeholder="x.com/cont"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
+                    Facebook
+                  </label>
+                  <input
+                    type="text"
+                    disabled={!isEditable}
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
+                    value={facebookUrl}
+                    onChange={(e) => setFacebookUrl(e.target.value)}
+                    placeholder="facebook.com/cont"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Action Save Bar */}
+            <div className="flex justify-between items-center pt-2">
+              <Link
+                href="/clasamente"
+                className="text-xs font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-sm">arrow_back</span>
+                <span>Înapoi la Clasamente</span>
+              </Link>
+
+              {isEditable && (
                 <button
-                  key={sp.id}
                   type="button"
-                  disabled={!isEditable}
-                  onClick={() => handleSportChange(sp.id)}
-                  className={`p-3 rounded-xl border text-left transition flex items-center gap-2.5 ${isSelected
-                    ? "bg-slate-900 text-white dark:bg-lime-400 dark:text-slate-950 border-slate-900 dark:border-lime-400 font-semibold shadow-sm"
-                    : "bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:border-slate-400"
-                    }`}
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="px-5 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-medium text-xs uppercase tracking-wider shadow-sm active:scale-95 transition flex items-center gap-2 disabled:opacity-50"
                 >
-                  <span className="material-symbols-outlined text-lg">
-                    {sp.icon}
-                  </span>
-                  <span className="text-xs font-medium">{sp.label}</span>
+                  <span className="material-symbols-outlined text-base">save</span>
+                  <span>{saving ? "Se salvează..." : "Salvează Profilul"}</span>
                 </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Section 1: Date Personale & Identitate */}
-        <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-4">
-          <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
-            <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
-              <span className="material-symbols-outlined text-lg">badge</span>
-            </div>
-            <div>
-              <h3 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">
-                2. Date Personale &amp; Identitate
-              </h3>
-              <p className="text-[11px] text-slate-500 font-normal">
-                Informații afișate pe foaia  ă de joc și în catalogul de sportivi
-              </p>
+              )}
             </div>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                Prenume *
-              </label>
-              <input
-                type="text"
-                required
-                disabled={!isEditable}
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="ex: Florin"
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                Nume de Familie *
-              </label>
-              <input
-                type="text"
-                required
-                disabled={!isEditable}
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                placeholder="ex: Popescu"
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                Adresă Email (Conectare)
-              </label>
-              <input
-                type="email"
-                disabled
-                className="w-full px-3.5 py-2 bg-slate-100 dark:bg-slate-800 text-slate-400 border border-slate-200 dark:border-slate-700 rounded-xl text-xs cursor-not-allowed"
-                value={email}
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                Număr Telefon Mobil
-              </label>
-              <input
-                type="tel"
-                disabled={!isEditable}
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+40 722 123 456"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Section 2: Fișă Tehnică & Poziție adaptată sportului */}
-        <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-4">
-          <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
-            <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
-              <span className="material-symbols-outlined text-lg">tune</span>
-            </div>
-            <div>
-              <h3 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">
-                3. Poziție &amp; Parametri Fizici ({SPORT_OPTIONS.find((s) => s.id === primarySport)?.label || "Fotbal"})
-              </h3>
-              <p className="text-[11px] text-slate-500 font-normal">
-                Poziționare tactică și atribute sportive
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                Poziție / Specializare
-              </label>
-              <select
-                disabled={!isEditable}
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
-                value={position}
-                onChange={(e) => setPosition(e.target.value)}
-              >
-                {currentPositions.map((pos) => (
-                  <option key={pos.value} value={pos.value}>
-                    {pos.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                Număr Tricou
-              </label>
-              <input
-                type="number"
-                min={1}
-                max={99}
-                disabled={!isEditable}
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
-                value={jerseyNumber}
-                onChange={(e) => setJerseyNumber(parseInt(e.target.value) || 10)}
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                Braț / Picior Preferat
-              </label>
-              <select
-                disabled={!isEditable}
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
-                value={preferredFoot}
-                onChange={(e) => setPreferredFoot(e.target.value)}
-              >
-                <option value="Drept">Drept (Right)</option>
-                <option value="Stâng">Stâng (Left)</option>
-                <option value="Ambele">Ambele / Ambidextru</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                Înălțime (cm)
-              </label>
-              <input
-                type="number"
-                min={140}
-                max={220}
-                disabled={!isEditable}
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
-                value={heightCm}
-                onChange={(e) => setHeightCm(parseInt(e.target.value) || 180)}
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                Greutate (kg)
-              </label>
-              <input
-                type="number"
-                min={40}
-                max={140}
-                disabled={!isEditable}
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
-                value={weightKg}
-                onChange={(e) => setWeightKg(parseInt(e.target.value) || 75)}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Section 3: Rețele Sociale */}
-        <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-4">
-          <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800">
-            <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center">
-              <span className="material-symbols-outlined text-lg">share</span>
-            </div>
-            <div>
-              <h3 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">
-                4. Profiluri Social Media
-              </h3>
-              <p className="text-[11px] text-slate-500 font-normal">
-                Link-uri afișate public pe fișa de meci și cartonașul de prezentare
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                Instagram
-              </label>
-              <input
-                type="text"
-                disabled={!isEditable}
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
-                value={instagramUrl}
-                onChange={(e) => setInstagramUrl(e.target.value)}
-                placeholder="instagram.com/cont"
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                X / Twitter
-              </label>
-              <input
-                type="text"
-                disabled={!isEditable}
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
-                value={twitterUrl}
-                onChange={(e) => setTwitterUrl(e.target.value)}
-                placeholder="x.com/cont"
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-medium text-slate-700 dark:text-slate-300 block mb-1">
-                Facebook
-              </label>
-              <input
-                type="text"
-                disabled={!isEditable}
-                className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-lime-400"
-                value={facebookUrl}
-                onChange={(e) => setFacebookUrl(e.target.value)}
-                placeholder="facebook.com/cont"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Action Save Bar */}
-        <div className="flex justify-between items-center pt-2">
-          <Link
-            href="/clasamente"
-            className="text-xs font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-1"
-          >
-            <span className="material-symbols-outlined text-sm">arrow_back</span>
-            <span>Înapoi la Clasamente</span>
-          </Link>
-
-          {isEditable && (
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={saving}
-              className="px-5 py-2.5 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-medium text-xs uppercase tracking-wider shadow-sm active:scale-95 transition flex items-center gap-2 disabled:opacity-50"
-            >
-              <span className="material-symbols-outlined text-base">save</span>
-              <span>{saving ? "Se salvează..." : "Salvează Profilul"}</span>
-            </button>
-          )}
-        </div>
-      </div>
-    </>
-  )}
+        </>
+      )}
 
       {/* Interactive Photo Upload Modal */}
       {activePhotoModal && (
@@ -1298,11 +1298,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
               <button
                 type="button"
                 onClick={() => setActivePhotoModal("cover")}
-                className={`py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 ${
-                  activePhotoModal === "cover"
+                className={`py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 ${activePhotoModal === "cover"
                     ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <span className="material-symbols-outlined text-sm">accessibility_new</span>
                 <span>Full-Body (9:16)</span>
@@ -1310,11 +1309,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
               <button
                 type="button"
                 onClick={() => setActivePhotoModal("avatar")}
-                className={`py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 ${
-                  activePhotoModal === "avatar"
+                className={`py-2 px-3 rounded-lg text-xs font-semibold transition flex items-center justify-center gap-1.5 ${activePhotoModal === "avatar"
                     ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm"
                     : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <span className="material-symbols-outlined text-sm">face</span>
                 <span>Portret Față (1:1)</span>
@@ -1326,11 +1324,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
               <button
                 type="button"
                 onClick={() => setPhotoModalTab("upload")}
-                className={`pb-2 text-xs font-semibold transition flex items-center gap-1.5 border-b-2 ${
-                  photoModalTab === "upload"
+                className={`pb-2 text-xs font-semibold transition flex items-center gap-1.5 border-b-2 ${photoModalTab === "upload"
                     ? "border-lime-500 text-lime-600 dark:text-lime-400"
                     : "border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <span className="material-symbols-outlined text-base">upload_file</span>
                 <span>Încarcă din Dispozitiv</span>
@@ -1338,11 +1335,10 @@ export function PlayerProfileForm({ initialUser, isEditable = true }: PlayerProf
               <button
                 type="button"
                 onClick={() => setPhotoModalTab("url")}
-                className={`pb-2 text-xs font-semibold transition flex items-center gap-1.5 border-b-2 ${
-                  photoModalTab === "url"
+                className={`pb-2 text-xs font-semibold transition flex items-center gap-1.5 border-b-2 ${photoModalTab === "url"
                     ? "border-lime-500 text-lime-600 dark:text-lime-400"
                     : "border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white"
-                }`}
+                  }`}
               >
                 <span className="material-symbols-outlined text-base">link</span>
                 <span>Link URL Imagine</span>

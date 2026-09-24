@@ -216,7 +216,7 @@ export function AdminSuperPanel() {
   });
   const [newPasswordVal, setNewPasswordVal] = useState("");
   const [savingUser, setSavingUser] = useState(false);
-  const [userAccountTypeFilter, setUserAccountTypeFilter] = useState<"all" | "real" | "demo">("all");
+  const [userAccountTypeFilter, setUserAccountTypeFilter] = useState<"all" | "real" | "demo" | "blocked">("all");
   const [togglingDemoUsers, setTogglingDemoUsers] = useState(false);
   const [newSuperAdminPassModal, setNewSuperAdminPassModal] = useState<string | null>(null);
 
@@ -895,6 +895,54 @@ export function AdminSuperPanel() {
     }
   }
 
+  // Force Activate Account (Unblock user stuck in activation)
+  async function handleForceActivateUser(u: UserItem) {
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: u.id, action: "force_activate" }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message || `Contul ${u.email} a fost activat și deblocat cu succes!`);
+        setUsers(users.map((item) => (item.id === u.id ? { ...item, isActive: true } : item)));
+      } else {
+        alert(data.error || "Eroare la activarea contului.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Eroare de rețea la activarea contului.");
+    }
+  }
+
+  // Bulk Activate All Blocked / Pending Accounts
+  async function handleActivateAllBlocked() {
+    const confirmed = confirm(
+      "Activare Toate Conturile Blocate\n\n" +
+      "Ești sigur că dorești să activezi și să deblochezi toate conturile blocate sau aflate în procedură de activare?"
+    );
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "activate_all_blocked" }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showToast(data.message || "Toate conturile au fost activate cu succes!");
+        setUsers(users.map((item) => ({ ...item, isActive: true })));
+      } else {
+        alert(data.error || "Eroare la activarea conturilor.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Eroare de rețea la activarea conturilor.");
+    }
+  }
+
   function openEditUserModal(u: UserItem) {
     setSelectedUser(u);
     setEditUserForm({
@@ -1107,6 +1155,7 @@ export function AdminSuperPanel() {
 
   const realUsersCount = useMemo(() => users.filter((u) => !isDemoUser(u.email)).length, [users]);
   const demoUsersCount = useMemo(() => users.filter((u) => isDemoUser(u.email)).length, [users]);
+  const blockedUsersCount = useMemo(() => users.filter((u) => u.isActive === false).length, [users]);
 
   // Filter users
   const filteredUsers = users.filter((u) => {
@@ -1119,7 +1168,8 @@ export function AdminSuperPanel() {
     const matchesType =
       userAccountTypeFilter === "all" ||
       (userAccountTypeFilter === "demo" && isDemo) ||
-      (userAccountTypeFilter === "real" && !isDemo);
+      (userAccountTypeFilter === "real" && !isDemo) ||
+      (userAccountTypeFilter === "blocked" && u.isActive === false);
     const q = userSearchQuery.toLowerCase();
     const matchesQuery =
       !q ||
@@ -2122,6 +2172,18 @@ export function AdminSuperPanel() {
                   <span className="material-symbols-outlined text-sm">block</span>
                   <span>{togglingDemoUsers ? "Se procesează..." : "Dezactivează Useri Demo"}</span>
                 </button>
+                {blockedUsersCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleActivateAllBlocked}
+                    className="px-3.5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider rounded-xl shadow-md border border-emerald-400/50 flex items-center gap-1.5 transition active:scale-95"
+                    title="Activează și deblochează instant toate conturile blocate sau în așteptare"
+                  >
+                    <span className="material-symbols-outlined text-sm">how_to_reg</span>
+                    <span>Activează Toate Blocate ({blockedUsersCount})</span>
+                  </button>
+                )}
+
                 <button
                   type="button"
                   disabled={togglingDemoUsers}
@@ -2262,6 +2324,28 @@ export function AdminSuperPanel() {
                     }`}
                   >
                     {realUsersCount}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setUserAccountTypeFilter("blocked")}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-headline font-bold uppercase transition-all duration-200 flex items-center gap-1.5 ${
+                    userAccountTypeFilter === "blocked"
+                      ? "bg-white dark:bg-slate-900 text-slate-950 dark:text-white shadow-sm font-black scale-[1.02]"
+                      : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-sm text-red-500">lock_open</span>
+                  <span>Blocate / În Activare</span>
+                  <span
+                    className={`ml-1 px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold ${
+                      userAccountTypeFilter === "blocked"
+                        ? "bg-red-500 text-white"
+                        : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
+                    }`}
+                  >
+                    {blockedUsersCount}
                   </span>
                 </button>
 
@@ -2434,19 +2518,33 @@ export function AdminSuperPanel() {
                           </select>
                         </td>
 
-                        {/* Status Active / Inactive Toggle */}
+                        {/* Status Active / Inactive Toggle / Force Activate */}
                         <td className="py-3.5 px-4 text-center">
-                          <button
-                            type="button"
-                            onClick={() => handleToggleUserStatus(u)}
-                            className={`px-3 py-1 rounded-full text-[10px] font-black uppercase font-mono border transition ${u.isActive !== false
-                              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20"
-                              : "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30 hover:bg-red-500/20 animate-pulse"
-                              }`}
-                            title="Apasă pentru a schimba statusul contului"
-                          >
-                            {u.isActive !== false ? "ACTIV" : "DEZACTIVAT"}
-                          </button>
+                          {u.isActive !== false ? (
+                            <button
+                              type="button"
+                              onClick={() => handleToggleUserStatus(u)}
+                              className="px-3 py-1 rounded-full text-[10px] font-black uppercase font-mono border transition bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20"
+                              title="Cont activ. Apasă pentru a suspenda contul."
+                            >
+                              ACTIV
+                            </button>
+                          ) : (
+                            <div className="flex flex-col items-center gap-1">
+                              <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase font-mono bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30">
+                                BLOCAT / ÎN ACTIVARE
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleForceActivateUser(u)}
+                                className="px-2.5 py-1 rounded-lg bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-headline font-black text-[10px] uppercase shadow-sm flex items-center gap-1 transition active:scale-95"
+                                title="Activează contul imediat (validează email, statut jucător și deblochează conectarea)"
+                              >
+                                <span className="material-symbols-outlined text-[13px]">how_to_reg</span>
+                                <span>Activează Acum</span>
+                              </button>
+                            </div>
+                          )}
                         </td>
 
                         {/* Counts */}
@@ -2467,6 +2565,19 @@ export function AdminSuperPanel() {
                         {/* Admin Action Buttons */}
                         <td className="py-3.5 px-4 text-right">
                           <div className="flex items-center justify-end gap-1.5">
+                            {/* Quick Activate button if user is blocked */}
+                            {u.isActive === false && (
+                              <button
+                                type="button"
+                                onClick={() => handleForceActivateUser(u)}
+                                className="px-2.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-600 dark:text-emerald-400 border border-emerald-500/40 text-[11px] font-bold uppercase transition flex items-center gap-1"
+                                title="Activează contul și deblochează accesul"
+                              >
+                                <span className="material-symbols-outlined text-sm">how_to_reg</span>
+                                <span>Activează</span>
+                              </button>
+                            )}
+
                             {/* Impersonate User Quick Action */}
                             <button
                               type="button"
@@ -3942,15 +4053,32 @@ export function AdminSuperPanel() {
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => selectedUser && handleImpersonateUser(selectedUser)}
-                  disabled={Boolean(impersonatingUserId) || selectedUser?.isActive === false}
-                  className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm active:scale-95 transition disabled:opacity-50"
-                >
-                  <span className="material-symbols-outlined text-sm">switch_account</span>
-                  <span>{impersonatingUserId === selectedUser?.id ? "Conectare..." : "Conectare Cont (Impersonate)"}</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => selectedUser && handleImpersonateUser(selectedUser)}
+                    disabled={Boolean(impersonatingUserId) || selectedUser?.isActive === false}
+                    className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm active:scale-95 transition disabled:opacity-50"
+                  >
+                    <span className="material-symbols-outlined text-sm">switch_account</span>
+                    <span>{impersonatingUserId === selectedUser?.id ? "Conectare..." : "Conectare Cont"}</span>
+                  </button>
+
+                  {selectedUser?.isActive === false && (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (!selectedUser) return;
+                        await handleForceActivateUser(selectedUser);
+                        setEditUserModalOpen(false);
+                      }}
+                      className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm active:scale-95 transition"
+                    >
+                      <span className="material-symbols-outlined text-sm">how_to_reg</span>
+                      <span>Activează &amp; Deblochează Imediat</span>
+                    </button>
+                  )}
+                </div>
 
                 <div className="flex items-center gap-2 ml-auto">
                   <button

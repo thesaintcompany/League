@@ -164,7 +164,7 @@ export default async function PublicPlayerDetailPage({
                   </div>
                 </div>
 
-                {/* Full-Body Standing Portrait + Action Shot Carousel with Slide Left */}
+                {/* Standing Portrait (Primary) + Profile Headshot (Secondary) with Slide Left */}
                 <PlayerPhotoCarousel
                   playerName={player.name}
                   playerNumber={player.number}
@@ -172,8 +172,8 @@ export default async function PublicPlayerDetailPage({
                   teamName={player.team?.name}
                   teamColor={player.team?.color}
                   teamLogoUrl={player.team?.logoUrl}
-                  primaryImage={player.image || player.user?.image}
-                  secondaryImage={player.secondaryImage || player.user?.coverPhotoUrl}
+                  primaryImage={player.secondaryImage || player.user?.coverPhotoUrl || player.image || player.user?.image}
+                  secondaryImage={player.image || player.user?.image}
                 />
 
                 {/* FUT 6-Attributes Matrix */}

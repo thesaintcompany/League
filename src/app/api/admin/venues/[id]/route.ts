@@ -115,8 +115,8 @@ export async function PATCH(
   if (updateData.galleryImages !== undefined) {
     updateData.galleryImages = updateData.galleryImages
       ? (typeof updateData.galleryImages === "string"
-          ? updateData.galleryImages
-          : JSON.stringify(updateData.galleryImages))
+        ? updateData.galleryImages
+        : JSON.stringify(updateData.galleryImages))
       : null;
   }
 

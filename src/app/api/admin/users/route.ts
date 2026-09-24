@@ -170,6 +170,18 @@ export async function PATCH(req: Request) {
       });
     }
 
+    if (action === "activate_all_blocked") {
+      const result = await prisma.user.updateMany({
+        where: { isActive: false },
+        data: { isActive: true, emailVerified: new Date() },
+      });
+      return NextResponse.json({
+        success: true,
+        count: result.count,
+        message: `${result.count} conturi blocate au fost activate cu succes!`,
+      });
+    }
+
     if (!userId) {
       return NextResponse.json({ error: "userId este obligatoriu" }, { status: 400 });
     }
@@ -233,6 +245,62 @@ export async function PATCH(req: Request) {
         success: true,
         user: updated,
         message: `Contul ${updated.email} este acum ${newStatus ? "ACTIV" : "SUSPENDAT / DEZACTIVAT"}.`,
+      });
+    }
+
+    // 3. Force Activate Account (Unblock user, verify email, activate player profiles & external invites)
+    if (action === "force_activate" || action === "activate_account") {
+      const updated = await prisma.user.update({
+        where: { id: userId },
+        data: {
+          isActive: true,
+          emailVerified: targetUser.emailVerified || new Date(),
+        },
+      });
+
+      // Synchronize associated player records to active
+      await prisma.player.updateMany({
+        where: {
+          OR: [
+            { userId: targetUser.id },
+            { email: targetUser.email },
+          ],
+        },
+        data: { status: "active" },
+      });
+
+      // Update external invites to active / extend validity
+      await prisma.externalInvite.updateMany({
+        where: {
+          OR: [
+            { inviteeEmail: targetUser.email },
+            { inviterId: targetUser.id },
+          ],
+        },
+        data: {
+          stage: "account_created",
+          accountOfferExpires: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        },
+      });
+
+      await logAuditAction({
+        userId: currentUser.id,
+        userEmail: currentUser.email,
+        userName: currentUser.name,
+        userRole: currentUser.role,
+        action: "ACCOUNT_FORCE_ACTIVATE",
+        details: `Activare și deblocare definitivă cont pentru ${updated.email} (inclusiv profiluri jucător și invitații). IP: ${clientInfo.ipAddress}`,
+        ipAddress: clientInfo.ipAddress,
+        userAgent: clientInfo.userAgent,
+        status: "success",
+        entityType: "user",
+        entityId: updated.id,
+      });
+
+      return NextResponse.json({
+        success: true,
+        user: updated,
+        message: `Contul utilizatorului ${updated.email} a fost ACTIVAT și DEBLOCAT cu succes!`,
       });
     }
 
