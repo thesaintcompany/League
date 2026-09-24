@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isSuperAdmin } from "@/lib/permissions";
 
 const updateSchema = z.object({
   status: z.enum(["scheduled", "live", "finished"]).optional(),
@@ -121,20 +122,21 @@ export async function PATCH(
   if (!match) return NextResponse.json({ error: "Meciul nu a fost găsit" }, { status: 404 });
 
   // Check strict RBAC authorization:
-  // 1. Organizer owner or organizer role
-  // 2. Assigned referee matching name or referee role
-  const isOrganizer = user.role === "organizer" || match.championship.ownerId === user.id;
+  // 1. SuperAdmin or Championship owner
+  // 2. Officially assigned referee matching name
+  const isSuper = isSuperAdmin(user);
+  const isChampionshipOwner = match.championship.ownerId === user.id;
   const isAssignedReferee =
     user.role === "referee" &&
-    (!match.referee ||
-      match.referee.toLowerCase().includes(user.name?.toLowerCase() || "") ||
-      (user.name && user.name.toLowerCase().includes(match.referee.toLowerCase())));
+    Boolean(match.referee) &&
+    (match.referee!.toLowerCase().includes(user.name?.toLowerCase() || "") ||
+      (user.name && user.name.toLowerCase().includes(match.referee!.toLowerCase())));
 
-  if (!isOrganizer && !isAssignedReferee) {
+  if (!isSuper && !isChampionshipOwner && !isAssignedReferee) {
     return NextResponse.json(
       {
         error:
-          "Acces interzis: Doar arbitrul delegat la acest meci sau organizatorul campionatului pot modifica scorul, telemetria și raportul  .",
+          "Acces interzis: Doar organizatorul campionatului, arbitrul delegat sau SuperAdmin pot modifica scorul, telemetria și raportul de meci.",
       },
       { status: 403 }
     );

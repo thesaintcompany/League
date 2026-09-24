@@ -90,11 +90,22 @@ export async function POST(req: Request) {
     const feePercent = setting?.platformFeePercent ?? 10.0;
 
     const createdTickets = [];
-
     for (let i = 0; i < count; i++) {
-      // Generate Unique Ticket Code (e.g. TCK-2026-98F12A)
-      const randomPart = crypto.randomBytes(3).toString("hex").toUpperCase();
-      const ticketCode = `TCK-2026-${randomPart}`;
+      // Generate Unique Ticket Code with collision check (8 hex characters)
+      let ticketCode = "";
+      let attempts = 0;
+      while (attempts < 5) {
+        const candidate = `TCK-2026-${crypto.randomBytes(4).toString("hex").toUpperCase()}`;
+        const existingTicket = await prisma.ticket.findFirst({ where: { ticketCode: candidate } });
+        if (!existingTicket) {
+          ticketCode = candidate;
+          break;
+        }
+        attempts++;
+      }
+      if (!ticketCode) {
+        ticketCode = `TCK-2026-${crypto.randomBytes(6).toString("hex").toUpperCase()}`;
+      }
 
       // Calculate splits
       const platformFee = Math.round((unitPrice * (feePercent / 100)) * 100) / 100;

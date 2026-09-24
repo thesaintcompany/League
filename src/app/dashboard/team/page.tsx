@@ -24,8 +24,8 @@ export default async function TeamManagerDashboardPage(props: {
   }
 
   const tabParam = searchParams.tab;
-  const validTabs = ["roster", "tactics", "invites", "staff", "calendar", "matches", "news", "payments"];
-  const defaultTab = validTabs.includes(tabParam || "") ? (tabParam as any) : "roster";
+  const validTabs = ["overview", "roster", "tactics", "invites", "staff", "calendar", "matches", "news", "payments"];
+  const defaultTab = validTabs.includes(tabParam || "") ? (tabParam as any) : "overview";
 
   const session = await getServerSession(authOptions);
   if (!session?.user) redirect("/signin");
@@ -143,6 +143,18 @@ export default async function TeamManagerDashboardPage(props: {
     });
   }
 
+  // Look up any platform users that match player emails
+  const playerEmails = (team.players || [])
+    .map((p) => p.email?.toLowerCase().trim())
+    .filter(Boolean) as string[];
+  const matchingUsers = playerEmails.length > 0
+    ? await prisma.user.findMany({
+        where: { email: { in: playerEmails } },
+        select: { id: true, email: true, image: true, coverPhotoUrl: true },
+      })
+    : [];
+  const userByEmail = new Map(matchingUsers.map((u) => [u.email.toLowerCase().trim(), u]));
+
   const teamData = {
     id: team.id,
     name: team.name,
@@ -175,21 +187,35 @@ export default async function TeamManagerDashboardPage(props: {
         season: team.championship.season,
       }
       : undefined,
-    players: (team.players || []).map((p) => ({
-      id: p.id,
-      name: p.name,
-      email: p.email,
-      number: p.number,
-      position: p.position,
-      status: p.status,
-      isStarter: p.isStarter,
-      goals: p.goals,
-      assists: p.assists,
-      rating: p.rating,
-      yellowCards: p.yellowCards,
-      redCards: p.redCards,
-      suspensions: p.suspensions,
-    })),
+    players: (team.players || []).map((p) => {
+      const emailKey = p.email ? p.email.toLowerCase().trim() : "";
+      const linkedUser = (p as any).user || (emailKey ? userByEmail.get(emailKey) : null);
+      const playerPhoto = p.image || linkedUser?.image || linkedUser?.coverPhotoUrl || null;
+      return {
+        id: p.id,
+        name: p.name,
+        email: p.email,
+        phone: (p as any).phone || null,
+        number: p.number,
+        position: p.position,
+        status: p.status,
+        isStarter: p.isStarter,
+        goals: p.goals,
+        assists: p.assists,
+        rating: p.rating,
+        yellowCards: p.yellowCards,
+        redCards: p.redCards,
+        suspensions: p.suspensions,
+        image: playerPhoto,
+        secondaryImage: (p as any).secondaryImage || linkedUser?.coverPhotoUrl || null,
+        userId: (p as any).userId || linkedUser?.id || null,
+        preferredFoot: (p as any).preferredFoot || null,
+        birthDate: (p as any).birthDate || null,
+        heightCm: (p as any).heightCm || null,
+        weightKg: (p as any).weightKg || null,
+        bio: (p as any).bio || null,
+      };
+    }),
     homeMatches: (team.homeMatches || []).map((m) => ({
       id: m.id,
       scheduledAt: m.scheduledAt ? m.scheduledAt.toISOString() : new Date().toISOString(),

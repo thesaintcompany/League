@@ -64,8 +64,20 @@ export async function PATCH(
     );
   }
 
+  const existing = await prisma.venue.findUnique({ where: { id: ctx.params.id } });
+  if (!existing) {
+    return NextResponse.json({ error: "Arena nu a fost găsită" }, { status: 404 });
+  }
+
+  const isSuperUser = isSuperAdmin(user);
+  if (!isSuperUser && existing.ownerId !== user.id) {
+    return NextResponse.json(
+      { error: "Acces interzis: Doar proprietarul acestei arene sau SuperAdmin o pot modifica." },
+      { status: 403 }
+    );
+  }
+
   // Arena demo: protejată. Doar SuperAdmin poate reseta la valorile implicite.
-  const isSuperUser = user.role === "super_admin" || user.role === "superadmin";
   if (parsed.data.resetToDefaults && !isSuperUser) {
     return NextResponse.json(
       { error: "Acces interzis: Doar SuperAdmin poate reseta arene demo." },
@@ -74,10 +86,6 @@ export async function PATCH(
   }
 
   if (parsed.data.resetToDefaults) {
-    const existing = await prisma.venue.findUnique({ where: { id: ctx.params.id } });
-    if (!existing) {
-      return NextResponse.json({ error: "Arena nu a fost găsită" }, { status: 404 });
-    }
     if (!existing.isDemo) {
       return NextResponse.json(
         { error: "Resetarea la valorile implicate este permisă doar pentru arene demo." },
@@ -145,13 +153,21 @@ export async function DELETE(
     );
   }
 
-  // Arena demo: protejată 100% — nu poate fi ștearsă decât de către SuperAdmin ( și cu confirmare explicită )
   const existing = await prisma.venue.findUnique({ where: { id: ctx.params.id } });
   if (!existing) {
     return NextResponse.json({ error: "Arena nu a fost găsită" }, { status: 404 });
   }
 
-  if (existing.isDemo && !isSuperAdmin(user)) {
+  const isSuper = isSuperAdmin(user);
+  if (!isSuper && existing.ownerId !== user.id) {
+    return NextResponse.json(
+      { error: "Acces interzis: Doar proprietarul acestei arene sau SuperAdmin o pot șterge." },
+      { status: 403 }
+    );
+  }
+
+  // Arena demo: protejată 100% — nu poate fi ștearsă decât de către SuperAdmin
+  if (existing.isDemo && !isSuper) {
     return NextResponse.json(
       { error: "Acces interzis: Arena demo este protejată de ștergere. Doar SuperAdmin poate șterge arene demo." },
       { status: 403 }

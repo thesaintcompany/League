@@ -52,7 +52,17 @@ function WelcomePortalForm() {
     });
     setLoading(false);
     if (res?.error) {
-      setError("Email sau parolă incorectă.");
+      const errStr = res.error.toLowerCase();
+      if (
+        errStr.includes("dezactivat") ||
+        errStr.includes("suspendat") ||
+        errStr.includes("blocat") ||
+        errStr.includes("activare")
+      ) {
+        setError("Contul tău este în procedură de activare sau a fost suspendat. Te rugăm să contactezi un administrator.");
+      } else {
+        setError("Email sau parolă incorectă.");
+      }
       return;
     }
 

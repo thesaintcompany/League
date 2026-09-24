@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isSuperAdmin } from "@/lib/permissions";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -9,14 +10,19 @@ export async function GET() {
     return NextResponse.json({ error: "Neautorizat" }, { status: 401 });
   }
 
-  const userId = (session.user as any).id;
+  const user = session.user as any;
 
-  // Find team managed by this user or fallback to first available team
-  let team = await prisma.team.findFirst({
-    where: { managerId: userId },
+  // Find team managed by this user
+  const team = await prisma.team.findFirst({
+    where: { managerId: user.id },
     include: {
       championship: true,
       players: {
+        include: {
+          user: {
+            select: { id: true, email: true, image: true, coverPhotoUrl: true },
+          },
+        },
         orderBy: [{ isStarter: "desc" }, { number: "asc" }],
       },
       homeMatches: {
@@ -31,34 +37,15 @@ export async function GET() {
   });
 
   if (!team) {
-    // If no team explicitly assigned yet, assign the first team or create a default team
-    team = await prisma.team.findFirst({
-      include: {
-        championship: true,
-        players: {
-          orderBy: [{ isStarter: "desc" }, { number: "asc" }],
-        },
-        homeMatches: {
-          include: { awayTeam: true, championship: true },
-          orderBy: { scheduledAt: "asc" },
-        },
-        awayMatches: {
-          include: { homeTeam: true, championship: true },
-          orderBy: { scheduledAt: "asc" },
-        },
-      },
-    });
-
-    if (team) {
-      // Connect this user as manager
-      await prisma.team.update({
-        where: { id: team.id },
-        data: { managerId: userId },
-      });
-    }
+    return NextResponse.json({ team: null });
   }
 
-  return NextResponse.json({ team });
+  const formattedPlayers = (team.players || []).map((p: any) => ({
+    ...p,
+    image: p.image || p.user?.image || p.user?.coverPhotoUrl || null,
+  }));
+
+  return NextResponse.json({ team: { ...team, players: formattedPlayers } });
 }
 
 export async function PUT(req: Request) {
@@ -67,27 +54,34 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Neautorizat" }, { status: 401 });
   }
 
-  const userId = (session.user as any).id;
+  const user = session.user as any;
+  const isSuper = isSuperAdmin(user);
   const body = await req.json();
 
-  let team = await prisma.team.findFirst({
-    where: { managerId: userId },
-  });
+  const targetTeamId = body.teamId;
+  let team = null;
 
-  if (!team && body.teamId) {
-    team = await prisma.team.findUnique({
-      where: { id: body.teamId },
-    });
+  if (targetTeamId) {
+    team = await prisma.team.findUnique({ where: { id: targetTeamId } });
+  } else {
+    team = await prisma.team.findFirst({ where: { managerId: user.id } });
   }
 
   if (!team) {
     return NextResponse.json({ error: "Echipa nu a fost găsită" }, { status: 404 });
   }
 
+  // Authorization check: only the team manager or super admin can edit
+  if (team.managerId !== user.id && !isSuper) {
+    return NextResponse.json(
+      { error: "Acces interzis: Nu aveți permisiunea de a edita această echipă." },
+      { status: 403 }
+    );
+  }
+
   const updated = await prisma.team.update({
     where: { id: team.id },
     data: {
-      managerId: userId,
       name: body.name !== undefined ? body.name : team.name,
       shortName: body.shortName !== undefined ? body.shortName : team.shortName,
       color: body.color !== undefined ? body.color : team.color,

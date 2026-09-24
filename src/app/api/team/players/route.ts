@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isSuperAdmin } from "@/lib/permissions";
 import { createNotification } from "@/lib/notifications";
 import { awardManagerXp } from "@/lib/managerXp";
 import crypto from "crypto";
@@ -45,10 +46,11 @@ export async function POST(req: Request) {
 
   // Check if a platform user already exists with this email
   let matchedUserId: string | null = null;
+  let existingUser: any = null;
   if (normalizedEmail) {
-    const existingUser = await prisma.user.findUnique({
+    existingUser = await prisma.user.findUnique({
       where: { email: normalizedEmail },
-      select: { id: true, image: true, phone: true, position: true, jerseyNumber: true },
+      select: { id: true, image: true, coverPhotoUrl: true, phone: true, position: true, jerseyNumber: true },
     });
     if (existingUser) {
       matchedUserId = existingUser.id;
@@ -57,8 +59,20 @@ export async function POST(req: Request) {
 
   const team = await prisma.team.findUnique({
     where: { id: teamId },
-    select: { id: true, name: true, logoUrl: true, championship: { select: { name: true } } },
+    select: { id: true, name: true, logoUrl: true, managerId: true, championship: { select: { name: true } } },
   });
+
+  if (!team) {
+    return NextResponse.json({ error: "Echipa nu a fost găsită" }, { status: 404 });
+  }
+
+  const currentUser = session.user as any;
+  if (team.managerId !== currentUser.id && !isSuperAdmin(currentUser)) {
+    return NextResponse.json(
+      { error: "Acces interzis: Doar managerul echipei sau SuperAdmin pot adăuga jucători." },
+      { status: 403 }
+    );
+  }
 
   const invitationToken = crypto.randomBytes(20).toString("hex");
 
@@ -85,8 +99,8 @@ export async function POST(req: Request) {
         ...(position !== undefined && { position: position?.trim() || "Mijlocaș" }),
         ...(typeof isStarter === "boolean" && { isStarter }),
         ...(status && { status }),
-        ...(image && { image: image.trim() }),
-        ...(secondaryImage && { secondaryImage: secondaryImage.trim() }),
+        ...(image ? { image: image.trim() } : (existingUser?.image && !existingPlayer.image ? { image: existingUser.image } : {})),
+        ...(secondaryImage ? { secondaryImage: secondaryImage.trim() } : (existingUser?.coverPhotoUrl && !existingPlayer.secondaryImage ? { secondaryImage: existingUser.coverPhotoUrl } : {})),
         ...(preferredFoot && { preferredFoot: preferredFoot.trim() }),
         ...(birthDate && { birthDate: birthDate.trim() }),
         ...(heightCm && { heightCm: Number(heightCm) }),
@@ -121,8 +135,8 @@ export async function POST(req: Request) {
       position: position?.trim() || "Mijlocaș",
       isStarter: typeof isStarter === "boolean" ? isStarter : true,
       status: status || (matchedUserId ? "active" : "active"),
-      image: image?.trim() || null,
-      secondaryImage: secondaryImage?.trim() || null,
+      image: image?.trim() || existingUser?.image || null,
+      secondaryImage: secondaryImage?.trim() || existingUser?.coverPhotoUrl || null,
       preferredFoot: preferredFoot?.trim() || null,
       birthDate: birthDate?.trim() || null,
       heightCm: heightCm ? Number(heightCm) : null,
@@ -217,6 +231,18 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Jucătorul nu a fost găsit" }, { status: 404 });
   }
 
+  const currentUser = session.user as any;
+  const isSuper = isSuperAdmin(currentUser);
+  const isManager = existingPlayer.team.managerId === currentUser.id;
+  const isSelf = existingPlayer.userId && existingPlayer.userId === currentUser.id;
+
+  if (!isManager && !isSuper && !isSelf) {
+    return NextResponse.json(
+      { error: "Acces interzis: Nu aveți permisiunea de a modifica datele acestui jucător." },
+      { status: 403 }
+    );
+  }
+
   const normalizedEmail = email !== undefined ? (email ? email.trim().toLowerCase() : null) : existingPlayer.email;
 
   // Check if a platform user matches
@@ -299,10 +325,23 @@ export async function DELETE(req: Request) {
           id: true,
           name: true,
           logoUrl: true,
+          managerId: true,
         },
       },
     },
   });
+
+  if (!player) {
+    return NextResponse.json({ error: "Jucătorul nu a fost găsit" }, { status: 404 });
+  }
+
+  const currentUser = session.user as any;
+  if (player.team.managerId !== currentUser.id && !isSuperAdmin(currentUser)) {
+    return NextResponse.json(
+      { error: "Acces interzis: Doar managerul echipei sau SuperAdmin pot elimina jucători din lot." },
+      { status: 403 }
+    );
+  }
 
   if (player) {
     if (player.email) {

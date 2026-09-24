@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { name, shortName, color, description, paymentMethod, paymentConfirmed } = body;
+    const { name, shortName, color, description, championshipId, paymentMethod, paymentConfirmed } = body;
 
     if (!name || !name.trim()) {
       return NextResponse.json({ error: "Numele echipei este obligatoriu" }, { status: 400 });
@@ -69,8 +69,13 @@ export async function POST(req: Request) {
     const computedShortName = (shortName?.trim() || name.trim().substring(0, 3)).toUpperCase();
     const computedColor = color || "#84cc16";
 
-    const defaultChamp = await prisma.championship.findFirst();
-    if (!defaultChamp) {
+    let targetChampId = championshipId;
+    if (!targetChampId) {
+      const activeChamp = await prisma.championship.findFirst({ where: { status: "active" } }) || await prisma.championship.findFirst();
+      targetChampId = activeChamp?.id;
+    }
+
+    if (!targetChampId) {
       return NextResponse.json({ error: "Nu există niciun campionat în sistem. Contactează administratorul." }, { status: 400 });
     }
 
@@ -84,7 +89,7 @@ export async function POST(req: Request) {
         shortName: computedShortName,
         color: computedColor,
         description: description?.trim() || null,
-        championshipId: defaultChamp.id,
+        championshipId: targetChampId,
         managerId: user.id,
         managerEmail: user.email,
         subscriptionActive: teamCount >= freeTeamLimit,

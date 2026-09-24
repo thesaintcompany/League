@@ -111,7 +111,7 @@ interface TeamManagerPanelProps {
     companyCui?: string | null;
     billingAddress?: string | null;
   } | null;
-  defaultTab?: "roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "news" | "payments";
+  defaultTab?: "overview" | "roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "news" | "payments";
 }
 
 export function TeamManagerPanel({
@@ -122,10 +122,10 @@ export function TeamManagerPanel({
   freeTeamLimit = 1,
   invitations: initialInvitations = [],
   currentUser = null,
-  defaultTab = "roster",
+  defaultTab = "overview",
 }: TeamManagerPanelProps) {
   const [team, setTeam] = useState<TeamData>(initialTeam);
-  const [activeTab, setActiveTabState] = useState<"roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "news" | "payments">(defaultTab);
+  const [activeTab, setActiveTabState] = useState<"overview" | "roster" | "tactics" | "invites" | "staff" | "calendar" | "matches" | "news" | "payments">(defaultTab);
 
   // Sync activeTab when sidebar navigation causes a full page re-render (defaultTab changes)
   useEffect(() => {
@@ -135,7 +135,8 @@ export function TeamManagerPanel({
   function setActiveTab(tab: string) {
     setActiveTabState(tab as any);
     // Update URL for sidebar highlight without triggering a full page navigation
-    window.history.replaceState(null, "", `/dashboard/team?tab=${tab}`);
+    const targetUrl = tab === "overview" ? "/dashboard/team" : `/dashboard/team?tab=${tab}`;
+    window.history.replaceState(null, "", targetUrl);
   }
 
   // Edit Team State
@@ -880,12 +881,59 @@ export function TeamManagerPanel({
 
   return (
     <div className="space-y-8 font-body text-white">
-      {/* 1. Header Hero Card (Dedicated Ultra-Professional View & Editable Mode) */}
-      <div
-        className={`card p-6 sm:p-8 bg-slate-900 rounded-3xl shadow-2xl space-y-6 relative overflow-hidden transition-all duration-300 ${
-          editingHero ? "border-2 border-lime-400/50 ring-4 ring-lime-400/10" : "border border-slate-800"
-        }`}
-      >
+      {/* Sleek Compact Team Context Bar (Shown when inside specific sections like Staff, Tactică, Lot, etc.) */}
+      {activeTab !== "overview" && (
+        <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-md">
+          <div className="flex items-center gap-3 min-w-0">
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center font-headline font-black text-sm text-white shadow-sm uppercase shrink-0 border border-white/10 overflow-hidden"
+              style={{ backgroundColor: team.color || "#84cc16" }}
+            >
+              {team.logoUrl ? (
+                <img src={team.logoUrl} alt={team.name} className="w-full h-full object-cover" />
+              ) : (
+                <span>{team.shortName?.substring(0, 3) || team.name.substring(0, 3).toUpperCase()}</span>
+              )}
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-headline font-black uppercase text-white truncate text-sm sm:text-base">
+                  {team.name}
+                </span>
+                <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-lime-400/10 text-lime-400 text-[10px] font-mono font-bold uppercase border border-lime-400/20">
+                  <span className="material-symbols-outlined text-xs">shield</span>
+                  Echipa Activă
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 font-label truncate">
+                {team.championship?.name || "Liga Pro România 2026"} • {team.players.length} Jucători
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("overview")}
+            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-headline font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition active:scale-95 shrink-0 border border-slate-700/80 cursor-pointer"
+            title="Mergi la panoul principal al clubului"
+          >
+            <span className="material-symbols-outlined text-base text-lime-400">dashboard</span>
+            <span>Panou Club ↗</span>
+          </button>
+        </div>
+      )}
+
+      {/* =========================================================================
+         PANOU CLUB (OVERVIEW) — Dedicated Club Administration & Multi-Team Hub
+         ========================================================================= */}
+      {activeTab === "overview" && (
+        <>
+          {/* 1. Header Hero Card (Dedicated Ultra-Professional View & Editable Mode) */}
+          <div
+            className={`card p-6 sm:p-8 bg-slate-900 rounded-3xl shadow-2xl space-y-6 relative overflow-hidden transition-all duration-300 ${
+              editingHero ? "border-2 border-lime-400/50 ring-4 ring-lime-400/10" : "border border-slate-800"
+            }`}
+          >
         <div className="absolute top-0 right-0 w-96 h-96 bg-lime-400/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top Badges & Status Bar */}
@@ -1547,6 +1595,129 @@ export function TeamManagerPanel({
         </div>
       )}
 
+          {/* Quick Access Hub Grid for Club Overview */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800/80">
+              <h3 className="font-headline font-black text-sm uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                <span className="material-symbols-outlined text-lime-400 text-lg">widgets</span>
+                <span>Comenzi Rapide &amp; Module Club</span>
+              </h3>
+              <span className="text-[11px] font-mono text-slate-500">Panou Centralizat</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Tile 1: Lot Jucători */}
+              <div
+                onClick={() => setActiveTab("roster")}
+                className="p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-lime-400/50 transition-all duration-200 cursor-pointer group shadow-lg flex flex-col justify-between space-y-3"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-lime-400/10 text-lime-400 flex items-center justify-center border border-lime-400/20 group-hover:scale-105 transition">
+                    <span className="material-symbols-outlined text-xl">groups</span>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-lime-400 bg-lime-400/10 px-2 py-0.5 rounded-full">
+                    {team.players.length} Jucători
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-headline font-black text-base text-white uppercase group-hover:text-lime-400 transition">
+                    Lot Jucători
+                  </h4>
+                  <p className="text-[11px] text-slate-400 font-label mt-1">
+                    {starters.length} Titulari • {reserves.length} Rezerve
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs font-headline font-bold text-lime-400">
+                  <span>Deschide Lotul</span>
+                  <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition">arrow_forward</span>
+                </div>
+              </div>
+
+              {/* Tile 2: Așezare Tactică */}
+              <div
+                onClick={() => setActiveTab("tactics")}
+                className="p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-400/50 transition-all duration-200 cursor-pointer group shadow-lg flex flex-col justify-between space-y-3"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-cyan-400/10 text-cyan-400 flex items-center justify-center border border-cyan-400/20 group-hover:scale-105 transition">
+                    <span className="material-symbols-outlined text-xl">sports</span>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded-full">
+                    {formation}
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-headline font-black text-base text-white uppercase group-hover:text-cyan-400 transition">
+                    Tactică &amp; Teren
+                  </h4>
+                  <p className="text-[11px] text-slate-400 font-label mt-1">
+                    Dispunere primii 11 și stil de joc
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs font-headline font-bold text-cyan-400">
+                  <span>Tabla Tactică</span>
+                  <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition">arrow_forward</span>
+                </div>
+              </div>
+
+              {/* Tile 3: Staff Tehnic */}
+              <div
+                onClick={() => setActiveTab("staff")}
+                className="p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-400/50 transition-all duration-200 cursor-pointer group shadow-lg flex flex-col justify-between space-y-3"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-amber-400/10 text-amber-400 flex items-center justify-center border border-amber-400/20 group-hover:scale-105 transition">
+                    <span className="material-symbols-outlined text-xl">badge</span>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full">
+                    Staff
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-headline font-black text-base text-white uppercase group-hover:text-amber-400 transition">
+                    Staff Tehnic
+                  </h4>
+                  <p className="text-[11px] text-slate-400 font-label mt-1 truncate">
+                    {headCoach ? `Antrenor: ${headCoach}` : "Antrenori & Personal Medical"}
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs font-headline font-bold text-amber-400">
+                  <span>Gestionează Staff</span>
+                  <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition">arrow_forward</span>
+                </div>
+              </div>
+
+              {/* Tile 4: Calendar Meciuri */}
+              <div
+                onClick={() => setActiveTab("calendar")}
+                className="p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-sky-400/50 transition-all duration-200 cursor-pointer group shadow-lg flex flex-col justify-between space-y-3"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-sky-400/10 text-sky-400 flex items-center justify-center border border-sky-400/20 group-hover:scale-105 transition">
+                    <span className="material-symbols-outlined text-xl">calendar_month</span>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-sky-400 bg-sky-400/10 px-2 py-0.5 rounded-full">
+                    {team.homeMatches.length + team.awayMatches.length} Meciuri
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-headline font-black text-base text-white uppercase group-hover:text-sky-400 transition">
+                    Calendar &amp; Etape
+                  </h4>
+                  <p className="text-[11px] text-slate-400 font-label mt-1">
+                    Ore de joc, arene și adversari
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs font-headline font-bold text-sky-400">
+                  <span>Vezi Calendarul</span>
+                  <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition">arrow_forward</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Create Team Modal */}
       {showCreateTeamModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
@@ -1761,11 +1932,17 @@ export function TeamManagerPanel({
                     <div className="flex justify-between items-start gap-3">
                       <div className="flex items-center gap-3">
                         <div className="relative">
-                          <div className="w-12 h-12 rounded-xl bg-slate-800 border border-lime-400/40 overflow-hidden flex items-center justify-center text-white font-black text-sm shrink-0 shadow">
-                            {p.image ? (
-                              <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
-                            ) : (
-                              <span className="text-lime-400">{initials}</span>
+                          <div className="w-12 h-12 rounded-xl bg-slate-800 border border-lime-400/40 overflow-hidden flex items-center justify-center text-white font-black text-sm shrink-0 shadow relative">
+                            <span className="text-lime-400">{initials}</span>
+                            {p.image && (
+                              <img
+                                src={p.image}
+                                alt={p.name}
+                                className="absolute inset-0 w-full h-full object-cover"
+                                onError={(e) => {
+                                  (e.currentTarget as HTMLElement).style.display = "none";
+                                }}
+                              />
                             )}
                           </div>
                           <span className="absolute -bottom-1 -right-1 px-1.5 py-0.2 rounded bg-lime-400 text-slate-950 font-mono font-black text-[9px] shadow">
@@ -1909,11 +2086,17 @@ export function TeamManagerPanel({
                       <div className="flex justify-between items-start gap-3">
                         <div className="flex items-center gap-3">
                           <div className="relative">
-                            <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 overflow-hidden flex items-center justify-center text-white font-bold text-sm shrink-0">
-                              {p.image ? (
-                                <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
-                              ) : (
-                                <span className="text-slate-400">{initials}</span>
+                            <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 overflow-hidden flex items-center justify-center text-white font-bold text-sm shrink-0 relative">
+                              <span className="text-slate-400">{initials}</span>
+                              {p.image && (
+                                <img
+                                  src={p.image}
+                                  alt={p.name}
+                                  className="absolute inset-0 w-full h-full object-cover"
+                                  onError={(e) => {
+                                    (e.currentTarget as HTMLElement).style.display = "none";
+                                  }}
+                                />
                               )}
                             </div>
                             <span className="absolute -bottom-1 -right-1 px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 font-mono font-black text-[9px] border border-slate-700">
