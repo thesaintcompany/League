@@ -8,11 +8,13 @@ import { getCurrentSeasonYear, getAutoSeasonYear } from "@/lib/season";
 import { ARENA_SPORTS_OPTIONS, parseVenueSports, getVenueSpecsTemplates, sanitizeVenueSpecs } from "@/lib/constants";
 
 import { AdminManagementPanel } from "./AdminManagementPanel";
+import { AdminEmailGatewayPanel, EmailGatewaySettings } from "./AdminEmailGatewayPanel";
 
 export type AdminTab =
   | "branding"
   | "api_integrations"
   | "users"
+  | "email_gateway"
   | "analytics"
   | "login_history"
   | "venues"
@@ -70,8 +72,30 @@ export function AdminSuperPanel() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const queryTab = searchParams?.get("tab") as AdminTab | null;
+  const querySub = searchParams?.get("sub") as "accounts" | "email_gateway" | null;
 
-  const [activeTab, setActiveTab] = useState<AdminTab>(queryTab || "branding");
+  const [activeTab, setActiveTab] = useState<AdminTab>(
+    queryTab === "email_gateway" ? "users" : (queryTab || "branding")
+  );
+  const [userSubTab, setUserSubTab] = useState<"accounts" | "email_gateway">(
+    queryTab === "email_gateway" || querySub === "email_gateway" ? "email_gateway" : "accounts"
+  );
+
+  const [emailGatewaySettings, setEmailGatewaySettings] = useState<EmailGatewaySettings>({
+    emailGatewayEnabled: false,
+    emailProvider: "smtp",
+    emailSenderEmail: "noreply@ligue.ro",
+    emailSenderName: "Pro Ligue România",
+    emailReplyTo: "contact@ligue.ro",
+    emailSmtpHost: "",
+    emailSmtpPort: 587,
+    emailSmtpSecure: false,
+    emailSmtpUser: "",
+    emailSmtpPass: "",
+    emailZeptoToken: "",
+    emailZeptoRegion: "eu",
+    emailSendmailPath: "/usr/sbin/sendmail",
+  });
   const [venues, setVenues] = useState<VenueItem[]>([]);
   const [users, setUsers] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -274,10 +298,20 @@ export function AdminSuperPanel() {
 
   // Sync tab with URL query parameter
   useEffect(() => {
-    if (queryTab && queryTab !== activeTab) {
-      setActiveTab(queryTab);
+    if (queryTab) {
+      if (queryTab === "email_gateway") {
+        setActiveTab("users");
+        setUserSubTab("email_gateway");
+      } else if (queryTab !== activeTab) {
+        setActiveTab(queryTab);
+      }
     }
-  }, [queryTab, activeTab]);
+    if (querySub === "email_gateway") {
+      setUserSubTab("email_gateway");
+    } else if (querySub === "accounts") {
+      setUserSubTab("accounts");
+    }
+  }, [queryTab, querySub, activeTab]);
 
   function switchTab(tab: AdminTab) {
     setActiveTab(tab);
@@ -308,6 +342,21 @@ export function AdminSuperPanel() {
         if (sData.settings.activeLogoUrl) {
           setActiveLogoUrl(sData.settings.activeLogoUrl);
         }
+        setEmailGatewaySettings({
+          emailGatewayEnabled: Boolean(sData.settings.emailGatewayEnabled),
+          emailProvider: sData.settings.emailProvider || "smtp",
+          emailSenderEmail: sData.settings.emailSenderEmail || "noreply@ligue.ro",
+          emailSenderName: sData.settings.emailSenderName || "Pro Ligue România",
+          emailReplyTo: sData.settings.emailReplyTo || "contact@ligue.ro",
+          emailSmtpHost: sData.settings.emailSmtpHost || "",
+          emailSmtpPort: sData.settings.emailSmtpPort ?? 587,
+          emailSmtpSecure: Boolean(sData.settings.emailSmtpSecure),
+          emailSmtpUser: sData.settings.emailSmtpUser || "",
+          emailSmtpPass: sData.settings.emailSmtpPass || "",
+          emailZeptoToken: sData.settings.emailZeptoToken || "",
+          emailZeptoRegion: sData.settings.emailZeptoRegion || "eu",
+          emailSendmailPath: sData.settings.emailSendmailPath || "/usr/sbin/sendmail",
+        });
         if (sData.stats) setTicketStats(sData.stats);
         if (sData.recentTransactions) setRecentTransactions(sData.recentTransactions);
       }
@@ -1975,10 +2024,70 @@ export function AdminSuperPanel() {
       )}
 
       {/* ========================================================================= */}
-      {/* 3. PERMISSIONS & USERS RBAC TAB */}
+      {/* 3. PERMISSIONS, USERS & EMAIL GATEWAY TAB */}
       {/* ========================================================================= */}
-      {activeTab === "users" && (
+      {(activeTab === "users" || (activeTab as any) === "email_gateway") && (
         <div className="space-y-6 animate-in fade-in">
+          {/* Sub-Navigation: Conturi Utilizatori vs Gateway Emailuri Tranzactionale */}
+          <div className="flex flex-wrap items-center justify-between gap-4 p-2.5 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setUserSubTab("accounts");
+                  setActiveTab("users");
+                  router.push("/dashboard/admin?tab=users&sub=accounts", { scroll: false });
+                }}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition ${
+                  userSubTab === "accounts" && activeTab !== "email_gateway"
+                    ? "bg-lime-400 text-slate-950 shadow-md font-black"
+                    : "text-slate-400 hover:text-white hover:bg-slate-800"
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">manage_accounts</span>
+                <span>Conturi Utilizatori &amp; Roluri ({users.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setUserSubTab("email_gateway");
+                  router.push("/dashboard/admin?tab=users&sub=email_gateway", { scroll: false });
+                }}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-headline font-bold uppercase tracking-wider transition ${
+                  userSubTab === "email_gateway" || activeTab === "email_gateway"
+                    ? "bg-lime-400 text-slate-950 shadow-md font-black"
+                    : "text-slate-400 hover:text-white hover:bg-slate-800"
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">forward_to_inbox</span>
+                <span>Gateway Emailuri Tranzacționale</span>
+                <span
+                  className={`ml-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black ${
+                    emailGatewaySettings.emailGatewayEnabled
+                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+                      : "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                  }`}
+                >
+                  {emailGatewaySettings.emailGatewayEnabled ? "ACTIV" : "SIMULATOR"}
+                </span>
+              </button>
+            </div>
+
+            <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400 font-mono pr-3">
+              <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+              <span>Invitații • Remindere • Notificări automate</span>
+            </div>
+          </div>
+
+          {(userSubTab === "email_gateway" || activeTab === "email_gateway") ? (
+            <AdminEmailGatewayPanel
+              initialSettings={emailGatewaySettings}
+              currentUserEmail={users.find((u) => u.role === "super_admin" || u.role === "superadmin")?.email || "contact@ligue.ro"}
+              onSaved={(newSettings) => setEmailGatewaySettings(newSettings)}
+            />
+          ) : (
+            <>
           {/* Permissions Matrix Overview */}
           <div className="card p-6 bg-slate-950 text-white border-2 border-lime-400/40 rounded-3xl shadow-xl space-y-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-800">
@@ -2417,6 +2526,8 @@ export function AdminSuperPanel() {
               </table>
             </div>
           </div>
+          </>
+          )}
         </div>
       )}
 

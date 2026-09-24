@@ -135,6 +135,7 @@ export async function PATCH(req: Request) {
       },
       data: {
         ...(updateData.image !== undefined && { image: updateData.image }),
+        ...(updateData.coverPhotoUrl !== undefined && { secondaryImage: updateData.coverPhotoUrl }),
         ...(updateData.position !== undefined && { position: updateData.position }),
         ...(updateData.jerseyNumber !== undefined && { number: updateData.jerseyNumber }),
         ...(updateData.preferredFoot !== undefined && { preferredFoot: updateData.preferredFoot }),

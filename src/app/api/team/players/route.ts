@@ -22,6 +22,7 @@ export async function POST(req: Request) {
     email,
     phone,
     image,
+    secondaryImage,
     preferredFoot,
     birthDate,
     heightCm,
@@ -85,6 +86,7 @@ export async function POST(req: Request) {
         ...(typeof isStarter === "boolean" && { isStarter }),
         ...(status && { status }),
         ...(image && { image: image.trim() }),
+        ...(secondaryImage && { secondaryImage: secondaryImage.trim() }),
         ...(preferredFoot && { preferredFoot: preferredFoot.trim() }),
         ...(birthDate && { birthDate: birthDate.trim() }),
         ...(heightCm && { heightCm: Number(heightCm) }),
@@ -93,6 +95,18 @@ export async function POST(req: Request) {
         ...(matchedUserId && { userId: matchedUserId }),
       },
     });
+
+    if (matchedUserId && (image || secondaryImage)) {
+      try {
+        await prisma.user.update({
+          where: { id: matchedUserId },
+          data: {
+            ...(image && { image: image.trim() }),
+            ...(secondaryImage && { coverPhotoUrl: secondaryImage.trim() }),
+          },
+        });
+      } catch {}
+    }
 
     return NextResponse.json({ ok: true, player: updated, updated: true }, { status: 200 });
   }
@@ -108,6 +122,7 @@ export async function POST(req: Request) {
       isStarter: typeof isStarter === "boolean" ? isStarter : true,
       status: status || (matchedUserId ? "active" : "active"),
       image: image?.trim() || null,
+      secondaryImage: secondaryImage?.trim() || null,
       preferredFoot: preferredFoot?.trim() || null,
       birthDate: birthDate?.trim() || null,
       heightCm: heightCm ? Number(heightCm) : null,
@@ -123,6 +138,18 @@ export async function POST(req: Request) {
       invitationToken,
     },
   });
+
+  if (matchedUserId && (image || secondaryImage)) {
+    try {
+      await prisma.user.update({
+        where: { id: matchedUserId },
+        data: {
+          ...(image && { image: image.trim() }),
+          ...(secondaryImage && { coverPhotoUrl: secondaryImage.trim() }),
+        },
+      });
+    } catch {}
+  }
 
   // Notify player if they have an email or user profile on platform
   if (normalizedEmail) {
@@ -209,6 +236,7 @@ export async function PUT(req: Request) {
       ...(email !== undefined && { email: normalizedEmail }),
       ...(phone !== undefined && { phone: phone ? phone.trim() : null }),
       ...(image !== undefined && { image: image ? image.trim() : null }),
+      ...(body.secondaryImage !== undefined && { secondaryImage: body.secondaryImage ? body.secondaryImage.trim() : null }),
       ...(preferredFoot !== undefined && { preferredFoot: preferredFoot ? preferredFoot.trim() : null }),
       ...(birthDate !== undefined && { birthDate: birthDate ? birthDate.trim() : null }),
       ...(heightCm !== undefined && { heightCm: heightCm ? Number(heightCm) : null }),
@@ -232,6 +260,7 @@ export async function PUT(req: Request) {
         where: { id: matchedUserId },
         data: {
           ...(image && { image: image.trim() }),
+          ...(body.secondaryImage && { coverPhotoUrl: body.secondaryImage.trim() }),
           ...(phone && { phone: phone.trim() }),
           ...(position && { position: position.trim() }),
           ...(number !== undefined && number !== null && number !== "" && { jerseyNumber: Number(number) }),

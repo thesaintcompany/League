@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createNotification } from "@/lib/notifications";
+import { sendTeamInvitationEmail } from "@/lib/email";
 import crypto from "crypto";
 
 function tok(n = 32): string {
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
   // Fetch team + championship to obtain sport + championshipId if missing
   const team = await prisma.team.findUnique({
     where: { id: effectiveTeamId },
-    select: { id: true, championshipId: true, name: true, sport: true },
+    select: { id: true, championshipId: true, name: true, sport: true, color: true, logoUrl: true },
   });
   if (!team) {
     return NextResponse.json({ error: "Echipa nu a fost găsită" }, { status: 404 });
@@ -152,6 +153,24 @@ export async function POST(req: Request) {
       playerId: playerRecord?.id,
     },
   });
+
+  // Dispatch Transactional Email via configured Gateway (SMTP / ZeptoMail / Sendmail)
+  let emailDispatched = false;
+  try {
+    emailDispatched = await sendTeamInvitationEmail({
+      inviteeEmail: effectiveEmail,
+      inviteeName: effectiveName || playerRecord?.name,
+      teamName: team.name,
+      teamColor: team.color,
+      teamLogoUrl: team.logoUrl,
+      inviterName: session.user.name || "Manager Echipă",
+      sport: sportVal,
+      acceptLink,
+      directSignupLink,
+    });
+  } catch (emailErr) {
+    console.warn("[invite:mail] Could not send invitation email:", emailErr);
+  }
 
   return NextResponse.json({
     ok: true,

@@ -12,6 +12,7 @@ export interface EditablePlayerData {
   isStarter?: boolean;
   status?: string;
   image?: string | null;
+  secondaryImage?: string | null;
   preferredFoot?: string | null;
   birthDate?: string | null;
   heightCm?: number | string | null;
@@ -82,6 +83,7 @@ export function PlayerProfileEditorModal({
   const [position, setPosition] = useState("Mijlocaș Central");
   const [isStarter, setIsStarter] = useState(true);
   const [image, setImage] = useState("");
+  const [secondaryImage, setSecondaryImage] = useState("");
   const [preferredFoot, setPreferredFoot] = useState("Drept");
   const [birthDate, setBirthDate] = useState("");
   const [heightCm, setHeightCm] = useState<number | string>("");
@@ -105,6 +107,7 @@ export function PlayerProfileEditorModal({
       setPosition(player.position || "Mijlocaș Central");
       setIsStarter(player.isStarter ?? true);
       setImage(player.image || "");
+      setSecondaryImage(player.secondaryImage || "");
       setPreferredFoot(player.preferredFoot || "Drept");
       setBirthDate(player.birthDate || "");
       setHeightCm(player.heightCm ?? "");
@@ -119,6 +122,7 @@ export function PlayerProfileEditorModal({
       setPosition("Mijlocaș Central");
       setIsStarter(true);
       setImage("");
+      setSecondaryImage("");
       setPreferredFoot("Drept");
       setBirthDate("");
       setHeightCm("");
@@ -153,6 +157,7 @@ export function PlayerProfileEditorModal({
         position: position.trim(),
         isStarter,
         image: image.trim() ? image.trim() : null,
+        secondaryImage: secondaryImage.trim() ? secondaryImage.trim() : null,
         preferredFoot,
         birthDate: birthDate.trim() ? birthDate.trim() : null,
         heightCm: heightCm !== "" ? Number(heightCm) : null,
@@ -187,6 +192,7 @@ export function PlayerProfileEditorModal({
         number: number !== "" ? Number(number) : null,
         position,
         image: image.trim() || null,
+        secondaryImage: secondaryImage.trim() || null,
         isStarter,
       });
 
@@ -245,17 +251,31 @@ export function PlayerProfileEditorModal({
         {/* Live Profile Card Preview */}
         <div className="p-5 bg-slate-950/60 border-b border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <div className="w-16 h-16 rounded-2xl bg-slate-800 border-2 border-lime-400/50 overflow-hidden flex items-center justify-center text-white font-black text-lg shadow-lg">
-                {image ? (
-                  <img src={image} alt="Preview" className="w-full h-full object-cover" />
-                ) : (
-                  <span>{initials}</span>
-                )}
+            {/* Dual Photo Preview Display */}
+            <div className="flex items-center gap-2">
+              <div className="relative group">
+                <div className="w-16 h-20 rounded-2xl bg-slate-800 border-2 border-amber-400/60 overflow-hidden flex items-center justify-center text-white font-black text-lg shadow-lg">
+                  {image ? (
+                    <img src={image} alt="Portret în picioare" className="w-full h-full object-cover object-top" />
+                  ) : (
+                    <span>{initials}</span>
+                  )}
+                </div>
+                <span className="absolute -bottom-1 -right-1 px-1.5 py-0.2 rounded-md bg-amber-400 text-slate-950 font-mono font-black text-[9px] shadow">
+                  P1
+                </span>
               </div>
-              <span className="absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded-md bg-lime-400 text-slate-950 font-mono font-black text-[10px] shadow">
-                #{number || "?"}
-              </span>
+
+              {secondaryImage && (
+                <div className="relative group">
+                  <div className="w-16 h-20 rounded-2xl bg-slate-800 border-2 border-lime-400/60 overflow-hidden flex items-center justify-center text-white font-black text-lg shadow-lg">
+                    <img src={secondaryImage} alt="Poză secundară meci" className="w-full h-full object-cover object-center" />
+                  </div>
+                  <span className="absolute -bottom-1 -right-1 px-1.5 py-0.2 rounded-md bg-lime-400 text-slate-950 font-mono font-black text-[9px] shadow">
+                    P2
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="space-y-0.5">
@@ -268,7 +288,7 @@ export function PlayerProfileEditorModal({
                 </span>
               </div>
               <p className="text-xs text-slate-400 font-label">
-                {position} • {teamName} • Picior: {preferredFoot}
+                #{number || "?"} • {position} • {teamName}
               </p>
               {email && (
                 <p className="text-[11px] font-mono text-slate-500 flex items-center gap-1">
@@ -456,20 +476,34 @@ export function PlayerProfileEditorModal({
             </div>
           )}
 
-          {/* TAB 2: Photo & Avatar */}
+          {/* TAB 2: Dual Photos (Standing Portrait + Action Slide Left) */}
           {activeTab === "photo" && (
-            <div className="space-y-4 animate-in fade-in duration-150">
-              <div>
-                <label className="text-[11px] font-bold font-label text-slate-300 uppercase block mb-1.5">
-                  URL Poză / Avatar Jucător
-                </label>
+            <div className="space-y-6 animate-in fade-in duration-150">
+              {/* Photo 1: Standing Portrait */}
+              <div className="p-4 rounded-2xl bg-slate-950 border border-amber-400/40 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-lg bg-amber-400 text-slate-950 font-black text-xs flex items-center justify-center font-mono">
+                      1
+                    </span>
+                    <div>
+                      <label className="text-xs font-bold font-headline text-white uppercase block">
+                        Poza Principală: Portret în Picioare (Full-Body)
+                      </label>
+                      <span className="text-[11px] text-slate-400 font-label block">
+                        Apare mare și impunătoare pe pagina publică a profilului ca portret vertical în picioare.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="flex gap-2">
                   <input
                     type="url"
                     value={image}
                     onChange={(e) => setImage(e.target.value)}
-                    placeholder="https://exemplu.ro/poza-jucator.jpg"
-                    className="flex-1 p-3 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-lime-400 transition"
+                    placeholder="https://exemplu.ro/portret-in-picioare.jpg"
+                    className="flex-1 p-3 rounded-2xl bg-slate-900 border border-slate-800 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-400 transition"
                   />
                   {image && (
                     <button
@@ -481,27 +515,105 @@ export function PlayerProfileEditorModal({
                     </button>
                   )}
                 </div>
+
+                <div>
+                  <span className="text-[10px] font-bold font-label text-slate-400 uppercase block mb-1.5">
+                    Sau alege un avatar preset:
+                  </span>
+                  <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
+                    {PRESET_AVATARS.map((url, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setImage(url)}
+                        className={`relative aspect-square rounded-xl overflow-hidden border-2 transition active:scale-95 ${
+                          image === url
+                            ? "border-amber-400 ring-2 ring-amber-400/40 scale-105"
+                            : "border-slate-800 hover:border-slate-600 opacity-70 hover:opacity-100"
+                        }`}
+                      >
+                        <img src={url} alt={`Avatar ${i + 1}`} className="w-full h-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <span className="text-[11px] font-bold font-label text-slate-400 uppercase block mb-2">
-                  Sau alege un avatar preset stilizat:
-                </span>
-                <div className="grid grid-cols-4 sm:grid-cols-8 gap-2.5">
-                  {PRESET_AVATARS.map((url, i) => (
+              {/* Photo 2: Secondary / Action Shot (Slide Left) */}
+              <div className="p-4 rounded-2xl bg-slate-950 border border-lime-400/40 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-lg bg-lime-400 text-slate-950 font-black text-xs flex items-center justify-center font-mono">
+                      2
+                    </span>
+                    <div>
+                      <label className="text-xs font-bold font-headline text-white uppercase block">
+                        Poza Secundară: În Acțiune pe Teren (Slide Left)
+                      </label>
+                      <span className="text-[11px] text-slate-400 font-label block">
+                        Apare când vizitatorul dă slide/swipe stânga pe cardul jucătorului (fotografie de meci).
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    value={secondaryImage}
+                    onChange={(e) => setSecondaryImage(e.target.value)}
+                    placeholder="https://exemplu.ro/poza-actiune-meci.jpg"
+                    className="flex-1 p-3 rounded-2xl bg-slate-900 border border-slate-800 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-lime-400 transition"
+                  />
+                  {secondaryImage && (
                     <button
-                      key={i}
                       type="button"
-                      onClick={() => setImage(url)}
-                      className={`relative aspect-square rounded-2xl overflow-hidden border-2 transition active:scale-95 ${
-                        image === url
-                          ? "border-lime-400 ring-2 ring-lime-400/30 scale-105"
-                          : "border-slate-800 hover:border-slate-600 opacity-70 hover:opacity-100"
-                      }`}
+                      onClick={() => setSecondaryImage("")}
+                      className="px-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-400 hover:text-white"
                     >
-                      <img src={url} alt={`Avatar ${i + 1}`} className="w-full h-full object-cover" />
+                      Șterge
                     </button>
-                  ))}
+                  )}
+                </div>
+
+                <div>
+                  <span className="text-[10px] font-bold font-label text-slate-400 uppercase block mb-1.5">
+                    Sugestii cadre meci / acțiune teren:
+                  </span>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {[
+                      {
+                        name: "Șut pe poartă",
+                        url: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=500&auto=format&fit=crop&q=80",
+                      },
+                      {
+                        name: "Duel pe teren",
+                        url: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=500&auto=format&fit=crop&q=80",
+                      },
+                      {
+                        name: "Preluare minge",
+                        url: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=500&auto=format&fit=crop&q=80",
+                      },
+                      {
+                        name: "Acțiune nocturnă",
+                        url: "https://images.unsplash.com/photo-1526232761682-d26e03ac148e?w=500&auto=format&fit=crop&q=80",
+                      },
+                    ].map((preset, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setSecondaryImage(preset.url)}
+                        className={`p-2 rounded-xl border text-left flex items-center gap-2 transition ${
+                          secondaryImage === preset.url
+                            ? "border-lime-400 bg-lime-400/10 text-lime-300"
+                            : "border-slate-800 bg-slate-900/80 hover:border-slate-700 text-slate-300"
+                        }`}
+                      >
+                        <img src={preset.url} alt={preset.name} className="w-8 h-8 rounded-lg object-cover shrink-0" />
+                        <span className="text-[11px] font-semibold truncate">{preset.name}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

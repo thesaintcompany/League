@@ -94,6 +94,7 @@ export function Sidebar({ variant, teamTabCounts = {} }: SidebarProps) {
       { name: "Setări", href: "/dashboard/admin?tab=branding", icon: "tune" },
       { name: "API & Plăți", href: "/dashboard/admin?tab=api_integrations", icon: "key" },
       { name: "Utilizatori", href: "/dashboard/admin?tab=users", icon: "manage_accounts" },
+      { name: "Gateway Emailuri", href: "/dashboard/admin?tab=email_gateway", icon: "forward_to_inbox" },
       { name: "Statistici Utilizare", href: "/dashboard/admin?tab=analytics", icon: "analytics" },
       { name: "Istoric Login", href: "/dashboard/admin?tab=login_history", icon: "history" },
       { name: "Arene", href: "/dashboard/admin?tab=venues", icon: "domain" },

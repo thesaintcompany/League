@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PublicHeader } from "@/components/PublicHeader";
 import { PublicFooter } from "@/components/PublicFooter";
+import { PlayerPhotoCarousel } from "@/components/PlayerPhotoCarousel";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,7 @@ export default async function PublicPlayerDetailPage({
   const player = await prisma.player.findUnique({
     where: { id: params.id },
     include: {
+      user: true,
       team: {
         include: {
           championship: true,
@@ -162,26 +164,17 @@ export default async function PublicPlayerDetailPage({
                   </div>
                 </div>
 
-                {/* 9:16 Full-Body Shot in Card */}
-                <div className="aspect-[9/12] w-full rounded-2xl overflow-hidden relative bg-slate-900 border border-amber-400/30 shadow-inner group">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={defaultAvatar}
-                    alt={player.name}
-                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-5">
-                    <span className="text-[10px] font-label font-bold text-amber-400 uppercase tracking-widest">
-                      Fișă Oficială Atlet
-                    </span>
-                    <h2 className="font-headline font-black text-white text-2xl uppercase tracking-tight leading-tight">
-                      {player.name}
-                    </h2>
-                    <p className="text-xs text-slate-300 font-label">
-                      {player.position || "Atacant Central"} • {player.team?.name}
-                    </p>
-                  </div>
-                </div>
+                {/* Full-Body Standing Portrait + Action Shot Carousel with Slide Left */}
+                <PlayerPhotoCarousel
+                  playerName={player.name}
+                  playerNumber={player.number}
+                  playerPosition={player.position}
+                  teamName={player.team?.name}
+                  teamColor={player.team?.color}
+                  teamLogoUrl={player.team?.logoUrl}
+                  primaryImage={player.image || player.user?.image}
+                  secondaryImage={player.secondaryImage || player.user?.coverPhotoUrl}
+                />
 
                 {/* FUT 6-Attributes Matrix */}
                 <div className="grid grid-cols-6 gap-2 pt-2 border-t border-slate-800 text-center font-headline">
