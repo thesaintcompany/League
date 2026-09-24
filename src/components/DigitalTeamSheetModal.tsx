@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 interface Player {
   id: string;
   name: string;
+  email?: string | null;
   number: number | null;
   position: string | null;
   isStarter: boolean;
@@ -120,7 +121,26 @@ export function DigitalTeamSheetModal({ team, onClose }: DigitalTeamSheetModalPr
   // Summary counts
   const validatedList = team.players.filter((p) => squadState[p.id]?.validated);
   const startersList = validatedList.filter((p) => squadState[p.id]?.isStarter);
-  const reservesList = validatedList.filter((p) => !squadState[p.id]?.isStarter);
+  const starterNames = new Set(startersList.map((p) => p.name.trim().toLowerCase()));
+  const starterEmails = new Set(startersList.map((p) => p.email?.trim().toLowerCase()).filter(Boolean));
+  const starterIds = new Set(startersList.map((p) => p.id));
+  const seenReserveNames = new Set<string>();
+  const seenReserveEmails = new Set<string>();
+  const reservesList = validatedList.filter((p) => {
+    if (squadState[p.id]?.isStarter) return false;
+    if (starterIds.has(p.id)) return false;
+    const normName = p.name.trim().toLowerCase();
+    const normEmail = p.email?.trim().toLowerCase();
+    if (starterNames.has(normName)) return false;
+    if (normEmail && starterEmails.has(normEmail)) return false;
+
+    if (seenReserveNames.has(normName)) return false;
+    if (normEmail && seenReserveEmails.has(normEmail)) return false;
+
+    seenReserveNames.add(normName);
+    if (normEmail) seenReserveEmails.add(normEmail);
+    return true;
+  });
   const captain = validatedList.find((p) => squadState[p.id]?.isCaptain);
 
   function toggleValidation(playerId: string) {

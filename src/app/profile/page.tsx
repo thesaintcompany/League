@@ -36,6 +36,15 @@ export default async function ProfilePage({
           championship: true,
         },
       },
+      players: {
+        include: {
+          team: {
+            include: {
+              championship: true,
+            },
+          },
+        },
+      },
     },
   });
 

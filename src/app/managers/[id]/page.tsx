@@ -42,6 +42,15 @@ export default async function ManagerPublicProfilePage({
   const manager = await prisma.user.findUnique({
     where: { id },
     include: {
+      players: {
+        include: {
+          team: {
+            include: {
+              championship: true,
+            },
+          },
+        },
+      },
       managedTeams: {
         include: {
           championship: true,
@@ -437,6 +446,51 @@ export default async function ManagerPublicProfilePage({
             </div>
           )}
         </section>
+
+        {/* 4.5. ACTIVITATE SPORTIVĂ CA JUCĂTOR (DACĂ ESTE ȘI SPORTIV PE TEREN) */}
+        {manager.players && manager.players.length > 0 && (
+          <section className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-headline font-black uppercase text-white tracking-tight flex items-center gap-2">
+                <span className="material-symbols-outlined text-amber-400">sports_soccer</span>
+                Legitimare &amp; Activitate ca Jucător pe Teren
+              </h2>
+              <span className="text-xs font-mono text-amber-400/90 font-bold uppercase tracking-wider">
+                Jucător-Antrenor / Sportiv Activ
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {manager.players.map((p) => (
+                <div
+                  key={p.id}
+                  className="p-5 rounded-3xl bg-slate-900 border border-amber-500/25 shadow-xl flex items-center justify-between gap-4"
+                >
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 font-headline font-black text-xl flex items-center justify-center font-mono">
+                      #{p.number ?? "—"}
+                    </div>
+                    <div>
+                      <h4 className="text-base font-headline font-black uppercase text-white">
+                        {p.position || "Jucător"} • {p.team?.name || "Echipă"}
+                      </h4>
+                      <p className="text-xs text-slate-400 font-label">
+                        {p.team?.championship?.name || "Competiție activă"}
+                        {p.preferredFoot && ` • Picior: ${p.preferredFoot}`}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 text-right">
+                    <div>
+                      <span className="text-[10px] text-slate-500 font-mono uppercase block">Statistici</span>
+                      <strong className="text-lime-400 font-mono text-sm">{p.goals} Goluri • {p.assists} Assist-uri</strong>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* 5. BIO & SPORTING PHILOSOPHY */}
         {manager.bio && (

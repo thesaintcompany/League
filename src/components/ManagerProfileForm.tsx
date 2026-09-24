@@ -14,6 +14,24 @@ interface ManagedTeam {
   players?: { id: string }[];
 }
 
+interface PlayerAffiliation {
+  id: string;
+  name: string;
+  number?: number | null;
+  position?: string | null;
+  isStarter: boolean;
+  status: string;
+  goals?: number;
+  assists?: number;
+  team: {
+    id: string;
+    name: string;
+    logoUrl?: string | null;
+    color?: string | null;
+    championship?: { id: string; name: string } | null;
+  };
+}
+
 interface ManagerProfileFormProps {
   initialUser: {
     id: string;
@@ -34,6 +52,12 @@ interface ManagerProfileFormProps {
     companyCui?: string | null;
     billingAddress?: string | null;
     managedTeams?: ManagedTeam[];
+    players?: PlayerAffiliation[];
+    position?: string | null;
+    jerseyNumber?: number | null;
+    preferredFoot?: string | null;
+    heightCm?: number | null;
+    weightKg?: number | null;
   };
 }
 
@@ -48,6 +72,13 @@ export function ManagerProfileForm({ initialUser }: ManagerProfileFormProps) {
   const [instagramUrl, setInstagramUrl] = useState(initialUser.instagramUrl || "");
   const [twitterUrl, setTwitterUrl] = useState(initialUser.twitterUrl || "");
   const [facebookUrl, setFacebookUrl] = useState(initialUser.facebookUrl || "");
+
+  // Athlete Profile State (separated from club)
+  const [position, setPosition] = useState(initialUser.position || "Mijlocaș");
+  const [jerseyNumber, setJerseyNumber] = useState<number | "">(initialUser.jerseyNumber ?? "");
+  const [preferredFoot, setPreferredFoot] = useState(initialUser.preferredFoot || "Drept");
+  const [heightCm, setHeightCm] = useState<number | "">(initialUser.heightCm ?? "");
+  const [weightKg, setWeightKg] = useState<number | "">(initialUser.weightKg ?? "");
 
   // Billing Fields
   const [companyName, setCompanyName] = useState(initialUser.companyName || "");
@@ -123,12 +154,17 @@ export function ManagerProfileForm({ initialUser }: ManagerProfileFormProps) {
           companyName: companyName.trim() || null,
           companyCui: companyCui.trim() || null,
           billingAddress: billingAddress.trim() || null,
+          position: position?.trim() || null,
+          jerseyNumber: jerseyNumber === "" ? null : Number(jerseyNumber),
+          preferredFoot: preferredFoot || null,
+          heightCm: heightCm === "" ? null : Number(heightCm),
+          weightKg: weightKg === "" ? null : Number(weightKg),
         }),
       });
 
       const data = await res.json();
       if (res.ok) {
-        setMessage({ text: "Profilul de manager și datele de facturare au fost salvate cu succes!", type: "success" });
+        setMessage({ text: "Profilul de manager, fișa de jucător și datele de facturare au fost salvate cu succes!", type: "success" });
         setTimeout(() => setMessage(null), 5000);
       } else {
         setMessage({ text: data.error || "Eroare la salvarea profilului", type: "error" });
@@ -236,7 +272,250 @@ export function ManagerProfileForm({ initialUser }: ManagerProfileFormProps) {
         </div>
       </div>
 
-      {/* 2. MANAGER PROFILE & CREDENTIALS */}
+      {/* 2. CLUBS & MANAGED TEAMS (Echipele Tale din Club) */}
+      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-lime-400/20 text-lime-600 dark:text-lime-400 flex items-center justify-center">
+              <span className="material-symbols-outlined text-2xl">shield</span>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-headline font-black text-lg sm:text-xl uppercase text-slate-900 dark:text-white">
+                  Echipele Tale din Club
+                </h3>
+                <span className="px-2.5 py-0.5 rounded-full bg-lime-400/20 text-lime-600 dark:text-lime-400 font-bold text-xs font-mono">
+                  {(initialUser.managedTeams || []).length} {((initialUser.managedTeams || []).length === 1) ? "Club" : "Cluburi"}
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Aici vezi și accesezi cluburile pe care le coordonezi ca Manager
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href="/dashboard/team"
+            className="px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-lime-400 text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-lime-300 font-headline font-bold text-xs uppercase tracking-wider transition shadow-sm flex items-center gap-1.5 self-start sm:self-auto"
+          >
+            <span className="material-symbols-outlined text-sm">add_circle</span>
+            <span>+ Adaugă / Deschide Echipă</span>
+          </Link>
+        </div>
+
+        {(!initialUser.managedTeams || initialUser.managedTeams.length === 0) ? (
+          <div className="p-8 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-center space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center mx-auto text-slate-400">
+              <span className="material-symbols-outlined text-2xl">groups</span>
+            </div>
+            <div>
+              <p className="font-bold text-sm text-slate-800 dark:text-slate-200">
+                Nu ai nicio echipă configurată încă
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Poți crea și administra echipe sportive direct din Panoul de Manager.
+              </p>
+            </div>
+            <Link
+              href="/dashboard/team"
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-lime-400 text-slate-950 font-headline font-bold text-xs uppercase tracking-wider shadow-sm hover:bg-lime-300 transition"
+            >
+              <span className="material-symbols-outlined text-sm">add</span>
+              <span>Creează Prima Echipă</span>
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {initialUser.managedTeams.map((team) => (
+              <div
+                key={team.id}
+                className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-4 hover:border-lime-400/40 transition"
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-black text-sm shrink-0 border border-white/20 shadow-sm"
+                    style={{ backgroundColor: team.color || "#84cc16" }}
+                  >
+                    {team.logoUrl ? (
+                      <img src={team.logoUrl} alt={team.name} className="w-full h-full object-cover rounded-2xl" />
+                    ) : (
+                      team.shortName || team.name.substring(0, 3).toUpperCase()
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="font-headline font-bold text-sm text-slate-900 dark:text-white truncate">
+                      {team.name}
+                    </h4>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                      {team.championship?.name || "Campionat activ"}
+                    </p>
+                    <span className="text-[10px] font-mono text-lime-600 dark:text-lime-400 font-bold">
+                      {team.players?.length || 0} sportivi în lot
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 pt-2 border-t border-slate-200 dark:border-slate-800/80">
+                  <Link
+                    href={`/dashboard/team?teamId=${team.id}`}
+                    className="flex-1 py-2 px-3 rounded-xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-bold text-xs uppercase text-center transition tracking-wider"
+                  >
+                    Panou Club ↗
+                  </Link>
+                  <Link
+                    href={`/teams/${team.id}`}
+                    className="py-2 px-3 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs uppercase text-center transition"
+                    title="Vezi pagina publică"
+                  >
+                    Public ↗
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* 3. INDIVIDUAL ATHLETE & PLAYER PROFILE (Distinct de Club) */}
+      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-sky-400/20 text-sky-600 dark:text-sky-400 flex items-center justify-center">
+              <span className="material-symbols-outlined text-2xl">person</span>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-headline font-black text-lg sm:text-xl uppercase text-slate-900 dark:text-white">
+                  Fișa Ta Personală de Jucător / Sportiv
+                </h3>
+                <span className="px-2.5 py-0.5 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 font-bold text-xs">
+                  Sportiv în Teren
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Profilul tău de atlet (post, număr, parametri fizici) — complet separat de clubul pe care îl administrezi
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Informative distinction notice */}
+        <div className="p-4 rounded-2xl bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800 flex items-start gap-3 text-xs text-sky-900 dark:text-sky-200">
+          <span className="material-symbols-outlined text-sky-500 shrink-0 text-lg mt-0.5">info</span>
+          <div className="space-y-1">
+            <p className="font-bold">Ești și sportiv în teren (Jucător-Manager / Delegat)?</p>
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-[11px]">
+              Echipa este clubul colectiv pe care îl conduci, iar profilul de mai jos este fișa ta individuală ca jucător în meciuri. Poți fi titular sau rezervă în lotul clubului tău, fără a confunda profilul de sportiv cu echipa însăși.
+            </p>
+          </div>
+        </div>
+
+        {/* Enrolled player status badge if present */}
+        {initialUser.players && initialUser.players.length > 0 && (
+          <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2.5">
+              <span className="material-symbols-outlined text-emerald-500 text-lg">how_to_reg</span>
+              <div>
+                <span className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold block">Legitimat în Lot</span>
+                <span className="font-bold text-slate-900 dark:text-white">
+                  {initialUser.players.map((p) => `${p.team.name} (#${p.number ?? "—"} • ${p.position || "Mijlocaș"} • ${p.isStarter ? "Titular" : "Rezervă"})`).join(", ")}
+                </span>
+              </div>
+            </div>
+            <Link
+              href={`/players/${initialUser.players[0].id}`}
+              className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
+            >
+              Vezi Fișa Publică de Jucător ↗
+            </Link>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+          <div className="space-y-1">
+            <label className="font-bold uppercase text-[10px] text-slate-500 dark:text-slate-400">
+              Postul Tău Principal pe Teren
+            </label>
+            <select
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
+              className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-400"
+            >
+              <option value="Atacant Central">Atacant Central (ST)</option>
+              <option value="Extremă">Extremă (LW / RW)</option>
+              <option value="Mijlocaș Ofensiv">Mijlocaș Ofensiv (CAM)</option>
+              <option value="Mijlocaș Central">Mijlocaș Central (CM)</option>
+              <option value="Mijlocaș Defensiv">Mijlocaș Defensiv (CDM)</option>
+              <option value="Fundaș Lateral">Fundaș Lateral (LB / RB)</option>
+              <option value="Fundaș Central">Fundaș Central (CB)</option>
+              <option value="Portar">Portar (GK)</option>
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <label className="font-bold uppercase text-[10px] text-slate-500 dark:text-slate-400">
+              Număr Preferat Tricou
+            </label>
+            <input
+              type="number"
+              min={1}
+              max={99}
+              placeholder="ex: 10"
+              value={jerseyNumber}
+              onChange={(e) => setJerseyNumber(e.target.value === "" ? "" : Number(e.target.value))}
+              className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-400 font-mono"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="font-bold uppercase text-[10px] text-slate-500 dark:text-slate-400">
+              Picior Preferat
+            </label>
+            <select
+              value={preferredFoot}
+              onChange={(e) => setPreferredFoot(e.target.value)}
+              className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-400"
+            >
+              <option value="Drept">Drept</option>
+              <option value="Stâng">Stâng</option>
+              <option value="Ambele">Ambele (Ambidextru)</option>
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-1">
+              <label className="font-bold uppercase text-[10px] text-slate-500 dark:text-slate-400">
+                Înălțime (cm)
+              </label>
+              <input
+                type="number"
+                min={120}
+                max={225}
+                placeholder="180"
+                value={heightCm}
+                onChange={(e) => setHeightCm(e.target.value === "" ? "" : Number(e.target.value))}
+                className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-400 font-mono"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="font-bold uppercase text-[10px] text-slate-500 dark:text-slate-400">
+                Greutate (kg)
+              </label>
+              <input
+                type="number"
+                min={40}
+                max={140}
+                placeholder="75"
+                value={weightKg}
+                onChange={(e) => setWeightKg(e.target.value === "" ? "" : Number(e.target.value))}
+                className="w-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-sky-400 font-mono"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. MANAGER PROFILE & CREDENTIALS */}
       <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
         <div className="flex items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
           <div className="w-10 h-10 rounded-2xl bg-lime-400/20 text-lime-600 dark:text-lime-400 flex items-center justify-center">

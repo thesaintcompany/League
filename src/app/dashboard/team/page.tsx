@@ -117,17 +117,10 @@ export default async function TeamManagerDashboardPage(props: {
 
     team = await prisma.team.create({
       data: {
-        name: `${user.name || "Echipa Mea"} F.C.`,
-        shortName: user.name
-          ? user.name
-            .split(" ")
-            .map((w: string) => w[0])
-            .join("")
-            .substring(0, 3)
-            .toUpperCase()
-          : "F.C.",
+        name: "Club Sportiv Nou",
+        shortName: "CSN",
         color: "#581c87",
-        description: `Echipa mea de fotbal – îți poți schimba numele, culoarea și sigla din panoul de configurare.`,
+        description: `Echipa clubului tău – îți poți schimba numele, culoarea și sigla din panoul de configurare.`,
         championshipId: defaultChamp.id,
         managerId: validOwnerId,
         managerEmail: userEmail || undefined,

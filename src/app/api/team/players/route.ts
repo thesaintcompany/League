@@ -61,6 +61,42 @@ export async function POST(req: Request) {
 
   const invitationToken = crypto.randomBytes(20).toString("hex");
 
+  // Check if player already exists in this team by email, userId, or name to prevent duplicates
+  const existingPlayer = await prisma.player.findFirst({
+    where: {
+      teamId,
+      OR: [
+        ...(normalizedEmail ? [{ email: normalizedEmail }] : []),
+        ...(matchedUserId ? [{ userId: matchedUserId }] : []),
+        { name: name.trim() },
+      ],
+    },
+  });
+
+  if (existingPlayer) {
+    const updated = await prisma.player.update({
+      where: { id: existingPlayer.id },
+      data: {
+        name: name.trim(),
+        ...(normalizedEmail && { email: normalizedEmail }),
+        ...(phone !== undefined && { phone: phone?.trim() || null }),
+        ...(number !== undefined && number !== null && number !== "" && { number: Number(number) }),
+        ...(position !== undefined && { position: position?.trim() || "Mijlocaș" }),
+        ...(typeof isStarter === "boolean" && { isStarter }),
+        ...(status && { status }),
+        ...(image && { image: image.trim() }),
+        ...(preferredFoot && { preferredFoot: preferredFoot.trim() }),
+        ...(birthDate && { birthDate: birthDate.trim() }),
+        ...(heightCm && { heightCm: Number(heightCm) }),
+        ...(weightKg && { weightKg: Number(weightKg) }),
+        ...(bio && { bio: bio.trim() }),
+        ...(matchedUserId && { userId: matchedUserId }),
+      },
+    });
+
+    return NextResponse.json({ ok: true, player: updated, updated: true }, { status: 200 });
+  }
+
   const player = await prisma.player.create({
     data: {
       teamId,

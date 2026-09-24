@@ -94,7 +94,13 @@ export async function POST(req: Request) {
     });
   } else {
     const existingPlayer = await prisma.player.findFirst({
-      where: { teamId: effectiveTeamId, email: effectiveEmail },
+      where: {
+        teamId: effectiveTeamId,
+        OR: [
+          ...(effectiveEmail ? [{ email: effectiveEmail }] : []),
+          ...(effectiveName ? [{ name: effectiveName }] : []),
+        ],
+      },
     });
     if (existingPlayer) {
       playerRecord = await prisma.player.update({

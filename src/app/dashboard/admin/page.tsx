@@ -25,7 +25,7 @@ export default async function AdminMasterPage() {
 
       <div className="flex-1 lg:ml-64 ml-0 flex flex-col min-w-0">
         <TopHeader
-          title="Consolă SuperAdministrator • Setări Globale & Control Sistem"
+          title="Consolă SuperAdministrator • Setări Globale"
           subtitle="Setări aplicație, logo-uri, integrări API, permisiuni utilizatori, telemetrie și audit de securitate"
         />
 

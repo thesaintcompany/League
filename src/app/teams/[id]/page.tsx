@@ -130,7 +130,32 @@ export default async function TeamPublicPage({ params }: { params: Promise<{ id:
   const goalDiff = goalsScored - goalsConceded;
 
   const starters = team.players.filter((p) => p.isStarter);
-  const reserves = team.players.filter((p) => !p.isStarter);
+  const starterIds = new Set(starters.map((p) => p.id));
+  const starterNames = new Set(starters.map((p) => p.name.trim().toLowerCase()));
+  const starterEmails = new Set(starters.map((p) => p.email?.trim().toLowerCase()).filter(Boolean));
+  const starterUserIds = new Set(starters.map((p) => p.userId).filter(Boolean));
+  const seenReserveNames = new Set<string>();
+  const seenReserveEmails = new Set<string>();
+  const seenReserveUserIds = new Set<string>();
+  const reserves = team.players.filter((p) => {
+    if (p.isStarter) return false;
+    if (starterIds.has(p.id)) return false;
+    const normName = p.name.trim().toLowerCase();
+    const normEmail = p.email?.trim().toLowerCase();
+    const uId = p.userId;
+    if (starterNames.has(normName)) return false;
+    if (normEmail && starterEmails.has(normEmail)) return false;
+    if (uId && starterUserIds.has(uId)) return false;
+
+    if (seenReserveNames.has(normName)) return false;
+    if (normEmail && seenReserveEmails.has(normEmail)) return false;
+    if (uId && seenReserveUserIds.has(uId)) return false;
+
+    seenReserveNames.add(normName);
+    if (normEmail) seenReserveEmails.add(normEmail);
+    if (uId) seenReserveUserIds.add(uId);
+    return true;
+  });
 
   // Generate automated & manual club news feed
   const newsFeed = generateClubNewsFeed(team);

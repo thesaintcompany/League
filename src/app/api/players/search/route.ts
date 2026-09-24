@@ -35,7 +35,23 @@ export async function GET(req: Request) {
         jerseyNumber: true,
         image: true,
         role: true,
-        primarySport: true,
+        players: {
+          select: {
+            team: {
+              select: {
+                id: true,
+                name: true,
+                logoUrl: true,
+                championship: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+          take: 1,
+        },
         managedTeams: {
           select: {
             id: true,
@@ -149,6 +165,8 @@ export async function GET(req: Request) {
       const key = `${u.name.toLowerCase()}_${(u.email || "").toLowerCase()}`;
       if (!seen.has(key)) {
         seen.add(key);
+        const playedTeam = (u as any).players?.[0]?.team;
+        const managedClub = u.managedTeams?.[0]?.name;
         results.push({
           id: u.id,
           name: u.name,
@@ -156,8 +174,9 @@ export async function GET(req: Request) {
           number: u.jerseyNumber,
           position: u.position || "Jucător",
           image: u.image,
-          teamName: u.managedTeams[0]?.name || null,
-          teamLogo: u.managedTeams[0]?.logoUrl || null,
+          teamName: playedTeam ? playedTeam.name : (managedClub ? `Manager Club: ${managedClub}` : null),
+          championshipName: playedTeam?.championship?.name || null,
+          teamLogo: playedTeam ? playedTeam.logoUrl : (u.managedTeams?.[0]?.logoUrl || null),
           source: "user",
         });
       }
