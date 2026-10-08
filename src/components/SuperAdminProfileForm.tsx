@@ -20,6 +20,14 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
   const [savingUser, setSavingUser] = useState(false);
   const [userSuccess, setUserSuccess] = useState(false);
 
+  const [changePassModalOpen, setChangePassModalOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
+
   // System Legal & Payment Settings State
   const [settings, setSettings] = useState({
     companyName: initialSettings?.companyName || "TSC Q - ligue.ro",
@@ -75,6 +83,52 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
       console.error(err);
     } finally {
       setSavingUser(false);
+    }
+  }
+
+  async function handleChangePassword(e: React.FormEvent) {
+    e.preventDefault();
+    setPasswordError("");
+    setPasswordSuccess(false);
+
+    if (newPassword.length < 6) {
+      setPasswordError("Noua parolă trebuie să aibă minim 6 caractere");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("Parolele nu coincid");
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      const res = await fetch("/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "change_password",
+          currentPassword,
+          newPassword,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setPasswordSuccess(true);
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setTimeout(() => {
+          setPasswordSuccess(false);
+          setChangePassModalOpen(false);
+        }, 2000);
+      } else {
+        setPasswordError(data.error || "Eroare la schimbarea parolei");
+      }
+    } catch (err) {
+      setPasswordError("Eroare de conexiune");
+    } finally {
+      setChangingPassword(false);
     }
   }
 
@@ -162,6 +216,13 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
                 Nume actualizat cu succes!
               </span>
             )}
+            <button
+              type="button"
+              onClick={() => setChangePassModalOpen(true)}
+              className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-headline font-bold text-xs uppercase tracking-wider transition"
+            >
+              Schimbă Parola
+            </button>
             <button
               type="submit"
               disabled={savingUser}
@@ -891,6 +952,106 @@ export function SuperAdminProfileForm({ initialUser, initialSettings }: SuperAdm
           </button>
         </div>
       </div>
+
+      {/* CHANGE PASSWORD MODAL */}
+      {changePassModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-500 block">
+                  SCHIMBARE PAROLĂ
+                </span>
+                <h3 className="font-headline font-black text-lg text-slate-900 dark:text-white uppercase">
+                  Schimbă Parola Contului
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setChangePassModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center font-bold"
+              >
+                <span className="material-symbols-outlined text-sm">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleChangePassword} className="space-y-4">
+              {passwordError && (
+                <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-2xl text-red-600 dark:text-red-400 text-xs font-body">
+                  <span className="material-symbols-outlined text-sm">error</span> {passwordError}
+                </div>
+              )}
+
+              {passwordSuccess && (
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-600 dark:text-emerald-400 text-xs font-body">
+                  <span className="material-symbols-outlined text-sm">check_circle</span> Parola a fost schimbată cu succes!
+                </div>
+              )}
+
+              <div>
+                <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                  Parola Curentă *
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="input text-xs font-mono font-bold"
+                  placeholder="Introdu parola curentă"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                  Parola Nouă (Minim 6 caractere) *
+                </label>
+                <input
+                  type="password"
+                  required
+                  minLength={6}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="input text-xs font-mono font-bold"
+                  placeholder="Introdu noua parolă"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] font-label font-bold uppercase text-slate-400 block mb-1">
+                  Confirmă Parola Nouă *
+                </label>
+                <input
+                  type="password"
+                  required
+                  minLength={6}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="input text-xs font-mono font-bold"
+                  placeholder="Confirmă noua parolă"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setChangePassModalOpen(false)}
+                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold font-label text-slate-600 hover:bg-slate-100"
+                >
+                  Anulează
+                </button>
+                <button
+                  type="submit"
+                  disabled={changingPassword}
+                  className="px-6 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-headline font-black text-xs uppercase tracking-wider shadow-md"
+                >
+                  {changingPassword ? "Se procesează..." : "Schimbă Parola"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import bcrypt from "bcryptjs";
 
 import { canEditPlayerProfile, isTeamLeader } from "@/lib/permissions";
 
@@ -150,4 +151,54 @@ export async function PATCH(req: Request) {
   }
 
   return NextResponse.json({ user: updatedUser });
+}
+
+export async function PUT(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json({ error: "Neautorizat" }, { status: 401 });
+  }
+
+  const sessionUser = session.user as any;
+  const body = await req.json();
+
+  if (body.action === "change_password") {
+    const { currentPassword, newPassword } = body;
+
+    if (!currentPassword || !newPassword) {
+      return NextResponse.json({ error: "Parola curentă și noua parolă sunt obligatorii" }, { status: 400 });
+    }
+
+    if (newPassword.length < 6) {
+      return NextResponse.json({ error: "Noua parolă trebuie să aibă minim 6 caractere" }, { status: 400 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: sessionUser.id },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "Utilizatorul nu a fost găsit" }, { status: 404 });
+    }
+
+    if (!user.passwordHash) {
+      return NextResponse.json({ error: "Contul nu are parolă setată" }, { status: 400 });
+    }
+
+    const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!isValid) {
+      return NextResponse.json({ error: "Parola curentă este incorectă" }, { status: 401 });
+    }
+
+    const newPasswordHash = await bcrypt.hash(newPassword, 10);
+
+    await prisma.user.update({
+      where: { id: sessionUser.id },
+      data: { passwordHash: newPasswordHash },
+    });
+
+    return NextResponse.json({ success: true, message: "Parola a fost schimbată cu succes" });
+  }
+
+  return NextResponse.json({ error: "Acțiune invalidă" }, { status: 400 });
 }
